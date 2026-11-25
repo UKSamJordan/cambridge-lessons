@@ -6,18 +6,9 @@
   <title>Grade 5 Maths — Lesson 1: Averages &amp; 2D Shapes</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --navy: #0f172a;
-      --blue: #1d4ed8;
-      --indigo: #4338ca;
-      --teal: #0f766e;
-      --amber: #b45309;
-      --purple: #6d28d9;
-      --red: #dc2626;
-    }
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: #f1f5f9;
+      background: linear-gradient(160deg, #eff6ff 0%, #f5f3ff 48%, #ecfeff 100%);
       color: #0f172a;
       overflow-x: hidden;
     }
@@ -50,7 +41,7 @@
       inset: 0;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
-      border-radius: 1.25rem;
+      border-radius: 1.5rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -66,6 +57,17 @@
     .station-section.active-station {
       display: block;
     }
+    /* Full-Screen I Do Mode */
+    #iDoStage.ido-fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      border-radius: 0;
+      overflow-y: auto;
+      padding: 1.75rem 2.25rem;
+      background: linear-gradient(155deg, #0f172a 0%, #1e1b4b 55%, #0f172a 100%);
+      color: #ffffff;
+    }
     /* David's Board 32px squared grid */
     #whiteboardCanvas {
       background-color: #ffffff;
@@ -76,57 +78,75 @@
       touch-action: none;
       cursor: crosshair;
     }
-    /* Mean bar transition */
     .mean-bar {
       transition: height 0.55s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s ease;
     }
-    /* Rotational symmetry spinner */
     #rotShapeGroup {
       transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
       transform-origin: 120px 120px;
     }
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.86) translateY(8px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .pop-in {
+      animation: popIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
     @keyframes pulseAlert {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.04); }
+      50% { transform: scale(1.03); }
     }
     .boards-up-pulse {
       animation: pulseAlert 0.65s ease-in-out infinite;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(140px) rotate(360deg); opacity: 0; }
+    }
+    .confetti-piece {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 90;
+      animation: confettiFall 0.9s ease-out forwards;
     }
   </style>
 </head>
 <body class="min-h-screen">
 
   <!-- AUTO-HIDING FIXED TOP HEADER -->
-  <header id="topHeader" class="fixed top-0 left-0 right-0 bg-slate-900 text-white shadow-lg border-b border-slate-700">
+  <header id="topHeader" class="fixed top-0 left-0 right-0 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white shadow-xl border-b border-indigo-500/30">
     <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3 flex-wrap">
       <div class="flex items-center gap-3">
-        <img src="https://drive.google.com/thumbnail?id=1Kg1bBSYXCEgvY67Joe2uEnTYLETpUcpj&sz=w1000" alt="School Logo" class="h-10 w-auto bg-white rounded-md px-1.5 py-0.5 object-contain">
+        <img src="https://drive.google.com/thumbnail?id=1Kg1bBSYXCEgvY67Joe2uEnTYLETpUcpj&sz=w1000" alt="School Logo" class="h-10 w-auto bg-white rounded-lg px-1.5 py-0.5 object-contain shadow">
         <div>
-          <h1 class="text-base md:text-lg font-extrabold tracking-tight leading-tight">Grade 5 Maths &bull; Lesson 1: Averages &amp; 2D Shapes</h1>
-          <p class="text-xs text-slate-300 leading-tight">LO: Analyse averages, quadrilaterals, circles and rotational symmetry. <span class="text-slate-400">(6Ss.03, 6Gg.01, 6Gg.02, 6Gg.08, 6Gg.11)</span></p>
+          <h1 class="text-base md:text-lg font-black tracking-tight leading-tight">Grade 5 Maths &bull; Lesson 1: Averages &amp; 2D Shapes</h1>
+          <p class="text-xs text-indigo-200 leading-tight font-medium">LO: Analyse averages, quadrilaterals, circles and rotational symmetry. <span class="text-indigo-300/80">(6Ss.03, 6Gg.01, 6Gg.02, 6Gg.08)</span></p>
         </div>
       </div>
 
       <div class="flex items-center gap-2 flex-wrap">
         <!-- Live Team Red vs Team Blue Score Pill -->
-        <div class="flex items-center bg-slate-800 border border-slate-600 rounded-full px-3 py-1 gap-2 text-sm font-bold" aria-label="Team Scoreboard">
-          <button type="button" onclick="adjustScore('red', 1)" class="text-rose-400 hover:text-rose-300 flex items-center gap-1" title="Add 1 point to Team Red">
-            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> Red: <span id="hdrRedScore" class="text-white text-base">0</span>
+        <div class="flex items-center bg-white/10 backdrop-blur border border-white/20 rounded-full px-3.5 py-1 gap-2.5 text-sm font-extrabold" aria-label="Team Scoreboard">
+          <button type="button" onclick="adjustScore('red', 1)" class="text-rose-300 hover:text-white flex items-center gap-1.5 transition" title="Add 1 point to Team Red">
+            <span class="w-3 h-3 rounded-full bg-rose-500 inline-block shadow"></span> Red: <span id="hdrRedScore" class="text-white text-base">0</span>
           </button>
-          <span class="text-slate-500">|</span>
-          <button type="button" onclick="adjustScore('blue', 1)" class="text-sky-400 hover:text-sky-300 flex items-center gap-1" title="Add 1 point to Team Blue">
-            <span class="w-2.5 h-2.5 rounded-full bg-sky-500 inline-block"></span> Blue: <span id="hdrBlueScore" class="text-white text-base">0</span>
+          <span class="text-indigo-400">|</span>
+          <button type="button" onclick="adjustScore('blue', 1)" class="text-sky-300 hover:text-white flex items-center gap-1.5 transition" title="Add 1 point to Team Blue">
+            <span class="w-3 h-3 rounded-full bg-sky-400 inline-block shadow"></span> Blue: <span id="hdrBlueScore" class="text-white text-base">0</span>
           </button>
-          <button type="button" onclick="resetScores()" class="text-xs text-slate-400 hover:text-white ml-1" title="Reset Scores">↺</button>
+          <button type="button" onclick="resetScores()" class="text-xs text-indigo-300 hover:text-white ml-0.5" title="Reset Scores">↺</button>
         </div>
 
-        <button type="button" id="btnWhiteboard" onclick="openWhiteboard()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs md:text-sm px-3 py-1.5 rounded-lg transition">
+        <button type="button" id="btnWhiteboard" onclick="openWhiteboard()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs md:text-sm px-3.5 py-1.5 rounded-xl shadow transition">
           ✏️ David's Board (W)
         </button>
-        <button type="button" id="btnTeacher" onclick="toggleTeacherDrawer()" class="bg-slate-700 hover:bg-slate-600 text-white font-semibold text-xs md:text-sm px-3 py-1.5 rounded-lg transition" title="Toggle Teacher Notes (T)">
+        <button type="button" id="btnTeacher" onclick="toggleTeacherDrawer()" class="bg-white/15 hover:bg-white/25 text-white font-bold text-xs md:text-sm px-3 py-1.5 rounded-xl transition" title="Toggle Teacher Notes (T)">
           📋 Teacher (T)
         </button>
-        <button type="button" id="btnMute" onclick="toggleMute()" class="bg-slate-700 hover:bg-slate-600 text-white font-semibold text-xs md:text-sm px-3 py-1.5 rounded-lg transition" title="Mute Audio (M)">
+        <button type="button" id="btnMute" onclick="toggleMute()" class="bg-white/15 hover:bg-white/25 text-white font-bold text-xs md:text-sm px-3 py-1.5 rounded-xl transition" title="Mute Audio (M)">
           🔊 Sound
         </button>
       </div>
@@ -136,42 +156,66 @@
   <!-- MAIN CONTAINER WITH TOP CLEARANCE -->
   <main class="max-w-7xl mx-auto px-4 pt-28 pb-16">
 
-    <!-- STATION NAVIGATION BAR (flex-wrap so tabs never squash) -->
-    <nav class="bg-white rounded-2xl shadow-sm border border-slate-200 p-2.5 mb-6" aria-label="Lesson Stations">
+    <!-- COLOURFUL STATION NAVIGATION BAR (flex-wrap so tabs never squash) -->
+    <nav class="bg-white/90 backdrop-blur rounded-2xl shadow-md border border-indigo-100 p-2.5 mb-6" aria-label="Lesson Stations">
       <div class="flex flex-wrap gap-2" id="stationNav">
-        <button type="button" data-station="0" onclick="showStation(0)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-blue-700 text-white shadow-sm">0. LO &amp; Criteria</button>
-        <button type="button" data-station="1" onclick="showStation(1)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">1. Flashback 3</button>
-        <button type="button" data-station="2" onclick="showStation(2)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">2. Vocabulary</button>
-        <button type="button" data-station="3" onclick="showStation(3)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">3. I Do / We Do</button>
-        <button type="button" data-station="4" onclick="showStation(4)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">4. You Do Practice</button>
-        <button type="button" data-station="5" onclick="showStation(5)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">5. Reasoning Lab</button>
-        <button type="button" data-station="6" onclick="showStation(6)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">6. Quickfire</button>
+        <button type="button" data-station="0" onclick="showStation(0)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-indigo-600 text-white shadow">🎯 0. LO &amp; Criteria</button>
+        <button type="button" data-station="1" onclick="showStation(1)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">⚡ 1. Flashback 3</button>
+        <button type="button" data-station="2" onclick="showStation(2)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">🗣️ 2. Vocabulary</button>
+        <button type="button" data-station="3" onclick="showStation(3)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">🎨 3. I Do / We Do</button>
+        <button type="button" data-station="4" onclick="showStation(4)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">📝 4. You Do Practice</button>
+        <button type="button" data-station="5" onclick="showStation(5)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">🧠 5. Reasoning Lab</button>
+        <button type="button" data-station="6" onclick="showStation(6)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">✅ 6. Success Check</button>
+        <button type="button" data-station="7" onclick="showStation(7)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">🏆 7. Quickfire</button>
       </div>
     </nav>
 
     <!-- ============================================================ -->
-    <!-- STATION 0: LO & SUCCESS CRITERIA (ZERO CLUTTER)              -->
+    <!-- STATION 0: VIBRANT LO & SUCCESS CRITERIA                     -->
     <!-- ============================================================ -->
     <section id="station-0" class="station-section active-station">
       <div class="space-y-6">
-        <div class="bg-gradient-to-br from-blue-900 to-indigo-900 text-white rounded-3xl p-8 md:p-10 shadow-lg">
-          <p class="uppercase tracking-widest text-xs font-bold text-blue-200 mb-2">Cambridge Stage 6 &bull; Units 3 &amp; 5 Revision</p>
-          <h2 class="text-3xl md:text-5xl font-black leading-tight mb-3">Analyse averages, quadrilaterals, circles and rotational symmetry.</h2>
-          <p class="text-blue-200 text-sm md:text-base font-medium">Objectives: 6Ss.03 &bull; 6Gg.01 &bull; 6Gg.02 &bull; 6Gg.11 &bull; 6Gg.08</p>
+        <div class="bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-700 text-white rounded-3xl p-8 md:p-11 shadow-xl relative overflow-hidden">
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="max-w-3xl">
+              <span class="inline-block bg-white/20 backdrop-blur text-white uppercase tracking-widest text-xs font-black px-3.5 py-1 rounded-full mb-3">Cambridge Stage 6 &bull; Units 3 &amp; 5 Revision</span>
+              <h2 class="text-3xl md:text-5xl font-black leading-tight mb-3">Analyse averages, quadrilaterals, circles and rotational symmetry.</h2>
+              <p class="text-indigo-100 text-sm md:text-base font-semibold">Objectives: 6Ss.03 &bull; 6Gg.01 &bull; 6Gg.02 &bull; 6Gg.08</p>
+            </div>
+            <!-- Visual Preview Icons -->
+            <div class="flex gap-3 shrink-0">
+              <div class="bg-white/15 backdrop-blur rounded-2xl p-3 border border-white/20">
+                <svg viewBox="0 0 80 80" class="w-16 h-16">
+                  <rect x="8" y="42" width="14" height="30" rx="3" fill="#fde047"/>
+                  <rect x="33" y="24" width="14" height="48" rx="3" fill="#34d399"/>
+                  <rect x="58" y="12" width="14" height="60" rx="3" fill="#38bdf8"/>
+                  <line x1="4" y1="32" x2="76" y2="32" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="4 3"/>
+                </svg>
+              </div>
+              <div class="bg-white/15 backdrop-blur rounded-2xl p-3 border border-white/20">
+                <svg viewBox="0 0 80 80" class="w-16 h-16">
+                  <circle cx="40" cy="40" r="30" fill="none" stroke="#fde047" stroke-width="4"/>
+                  <line x1="10" y1="40" x2="70" y2="40" stroke="#34d399" stroke-width="3" stroke-dasharray="4 3"/>
+                  <line x1="40" y1="40" x2="40" y2="10" stroke="#fb7185" stroke-width="4"/>
+                  <circle cx="40" cy="40" r="4" fill="#ffffff"/>
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div class="bg-white rounded-2xl border-t-4 border-emerald-600 p-6 shadow-sm">
-            <span class="inline-block bg-emerald-100 text-emerald-800 font-extrabold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-3">Must &bull; Level 1</span>
-            <p class="text-2xl font-bold text-slate-900 leading-snug">Find mode, median, mean, range and label circle parts.</p>
+          <div class="bg-gradient-to-br from-emerald-50 to-white rounded-3xl border-2 border-emerald-300 p-6 shadow-md">
+            <span class="inline-block bg-emerald-600 text-white font-black text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-full mb-3 shadow-sm">🟢 Must &bull; Level 1</span>
+            <p class="text-2xl font-black text-slate-900 leading-snug">Find mode, median, mean, range and label circle parts.</p>
           </div>
-          <div class="bg-white rounded-2xl border-t-4 border-amber-500 p-6 shadow-sm">
-            <span class="inline-block bg-amber-100 text-amber-800 font-extrabold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-3">Should &bull; Level 2</span>
-            <p class="text-2xl font-bold text-slate-900 leading-snug">Classify quadrilaterals by diagonals and state rotational symmetry order.</p>
+          <div class="bg-gradient-to-br from-amber-50 to-white rounded-3xl border-2 border-amber-300 p-6 shadow-md">
+            <span class="inline-block bg-amber-500 text-white font-black text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-full mb-3 shadow-sm">🟠 Should &bull; Level 2</span>
+            <p class="text-2xl font-black text-slate-900 leading-snug">Classify quadrilaterals by diagonals and state rotational symmetry order.</p>
           </div>
-          <div class="bg-white rounded-2xl border-t-4 border-purple-600 p-6 shadow-sm">
-            <span class="inline-block bg-purple-100 text-purple-800 font-extrabold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-3">Could &bull; Level 3</span>
-            <p class="text-2xl font-bold text-slate-900 leading-snug">Choose the best average and justify geometric claims.</p>
+          <div class="bg-gradient-to-br from-purple-50 to-white rounded-3xl border-2 border-purple-300 p-6 shadow-md">
+            <span class="inline-block bg-purple-600 text-white font-black text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-full mb-3 shadow-sm">🟣 Could &bull; Level 3</span>
+            <p class="text-2xl font-black text-slate-900 leading-snug">Choose the best average and justify geometric claims.</p>
           </div>
         </div>
       </div>
@@ -184,34 +228,34 @@
       <div class="space-y-6">
         <div class="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h2 class="text-2xl md:text-3xl font-black text-slate-900">Flashback 3 — Spaced Retrieval</h2>
-            <p class="text-slate-600 font-medium">Solve all three on your mini-whiteboard. Click each card to flip and check.</p>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-900">⚡ Flashback 3 — Spaced Retrieval</h2>
+            <p class="text-slate-600 font-semibold">Solve all three on your mini-whiteboard. Tap each colourful card to flip and check!</p>
           </div>
-          <button type="button" onclick="resetFlashbacks()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm px-4 py-2 rounded-xl">↺ Flip All Back</button>
+          <button type="button" onclick="resetFlashbacks()" class="bg-white hover:bg-slate-100 border-2 border-slate-200 text-slate-800 font-extrabold text-sm px-4 py-2 rounded-xl shadow-sm">↺ Flip All Back</button>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <!-- Card 1: Unit 1 Rounding -->
           <div class="flip-scene" onclick="flipCard(this)" role="button" tabindex="0" aria-label="Flashback Card 1">
             <div class="flip-card">
-              <div class="flip-face bg-white border-2 border-blue-200 shadow-md">
+              <div class="flip-face bg-gradient-to-br from-white to-blue-50 border-4 border-blue-400 shadow-lg">
                 <div class="flex justify-between items-center">
-                  <span class="bg-blue-100 text-blue-800 text-xs font-extrabold px-3 py-1 rounded-full">Card 1 &bull; Unit 1 (6Np.04)</span>
-                  <span class="text-xs font-bold text-slate-400">Click to flip</span>
+                  <span class="bg-blue-600 text-white text-xs font-black px-3 py-1 rounded-full">Card 1 &bull; Unit 1 (6Np.04)</span>
+                  <span class="text-xs font-extrabold text-blue-500">👆 Tap to flip</span>
                 </div>
                 <div class="text-center my-auto">
-                  <p class="text-lg font-bold text-slate-600 mb-3">Round to the nearest tenth:</p>
-                  <p class="text-6xl md:text-7xl font-black text-blue-800 tracking-tight">6.47</p>
+                  <p class="text-lg font-extrabold text-slate-700 mb-3">Round to the nearest tenth:</p>
+                  <p class="text-6xl md:text-7xl font-black text-blue-700 tracking-tight">6.47</p>
                 </div>
-                <p class="text-center text-xs font-semibold text-slate-400">Look at the hundredths digit.</p>
+                <p class="text-center text-xs font-bold text-blue-600/80">Hint: Check the hundredths digit.</p>
               </div>
-              <div class="flip-face flip-back bg-blue-800 text-white shadow-md">
-                <span class="bg-blue-700 text-blue-100 text-xs font-extrabold px-3 py-1 rounded-full self-start">Answer &bull; Unit 1</span>
+              <div class="flip-face flip-back bg-gradient-to-br from-blue-600 to-indigo-800 text-white shadow-lg">
+                <span class="bg-white/20 text-white text-xs font-black px-3 py-1 rounded-full self-start">✓ Answer &bull; Unit 1</span>
                 <div class="text-center my-auto">
                   <p class="text-6xl md:text-7xl font-black mb-3">6.5</p>
-                  <p class="text-base font-medium text-blue-100">The hundredths digit is 7 (5 or more), so 4 tenths rounds up to 5 tenths.</p>
+                  <p class="text-base font-semibold text-blue-100">The hundredths digit is 7 (5 or more), so 4 tenths rounds up to 5 tenths.</p>
                 </div>
-                <p class="text-center text-xs text-blue-200">Click to flip back</p>
+                <p class="text-center text-xs text-blue-200">Tap to flip back</p>
               </div>
             </div>
           </div>
@@ -219,24 +263,24 @@
           <!-- Card 2: Unit 2 Cube Numbers -->
           <div class="flip-scene" onclick="flipCard(this)" role="button" tabindex="0" aria-label="Flashback Card 2">
             <div class="flip-card">
-              <div class="flip-face bg-white border-2 border-teal-200 shadow-md">
+              <div class="flip-face bg-gradient-to-br from-white to-teal-50 border-4 border-teal-400 shadow-lg">
                 <div class="flex justify-between items-center">
-                  <span class="bg-teal-100 text-teal-800 text-xs font-extrabold px-3 py-1 rounded-full">Card 2 &bull; Unit 2 (6Ni.08)</span>
-                  <span class="text-xs font-bold text-slate-400">Click to flip</span>
+                  <span class="bg-teal-600 text-white text-xs font-black px-3 py-1 rounded-full">Card 2 &bull; Unit 2 (6Ni.08)</span>
+                  <span class="text-xs font-extrabold text-teal-600">👆 Tap to flip</span>
                 </div>
                 <div class="text-center my-auto">
-                  <p class="text-lg font-bold text-slate-600 mb-3">Calculate the cube number:</p>
-                  <p class="text-6xl md:text-7xl font-black text-teal-800 tracking-tight">4³</p>
+                  <p class="text-lg font-extrabold text-slate-700 mb-3">Calculate the cube number:</p>
+                  <p class="text-6xl md:text-7xl font-black text-teal-700 tracking-tight">4³</p>
                 </div>
-                <p class="text-center text-xs font-semibold text-slate-400">Remember: NOT 4 × 3!</p>
+                <p class="text-center text-xs font-bold text-teal-700/80">Watch out: NOT 4 × 3!</p>
               </div>
-              <div class="flip-face flip-back bg-teal-800 text-white shadow-md">
-                <span class="bg-teal-700 text-teal-100 text-xs font-extrabold px-3 py-1 rounded-full self-start">Answer &bull; Unit 2</span>
+              <div class="flip-face flip-back bg-gradient-to-br from-teal-600 to-emerald-800 text-white shadow-lg">
+                <span class="bg-white/20 text-white text-xs font-black px-3 py-1 rounded-full self-start">✓ Answer &bull; Unit 2</span>
                 <div class="text-center my-auto">
                   <p class="text-6xl md:text-7xl font-black mb-3">64</p>
-                  <p class="text-base font-medium text-teal-100">4 × 4 × 4 = 16 × 4 = 64.</p>
+                  <p class="text-base font-semibold text-teal-100">4 × 4 × 4 = 16 × 4 = 64.</p>
                 </div>
-                <p class="text-center text-xs text-teal-200">Click to flip back</p>
+                <p class="text-center text-xs text-teal-200">Tap to flip back</p>
               </div>
             </div>
           </div>
@@ -244,24 +288,24 @@
           <!-- Card 3: Unit 6 Simplifying Fractions -->
           <div class="flip-scene" onclick="flipCard(this)" role="button" tabindex="0" aria-label="Flashback Card 3">
             <div class="flip-card">
-              <div class="flip-face bg-white border-2 border-purple-200 shadow-md">
+              <div class="flip-face bg-gradient-to-br from-white to-purple-50 border-4 border-purple-400 shadow-lg">
                 <div class="flex justify-between items-center">
-                  <span class="bg-purple-100 text-purple-800 text-xs font-extrabold px-3 py-1 rounded-full">Card 3 &bull; Unit 6 (6Nf.03)</span>
-                  <span class="text-xs font-bold text-slate-400">Click to flip</span>
+                  <span class="bg-purple-600 text-white text-xs font-black px-3 py-1 rounded-full">Card 3 &bull; Unit 6 (6Nf.03)</span>
+                  <span class="text-xs font-extrabold text-purple-600">👆 Tap to flip</span>
                 </div>
                 <div class="text-center my-auto">
-                  <p class="text-lg font-bold text-slate-600 mb-3">Write in simplest form:</p>
-                  <p class="text-6xl md:text-7xl font-black text-purple-800 tracking-tight">18/24</p>
+                  <p class="text-lg font-extrabold text-slate-700 mb-3">Write in simplest form:</p>
+                  <p class="text-6xl md:text-7xl font-black text-purple-700 tracking-tight">18/24</p>
                 </div>
-                <p class="text-center text-xs font-semibold text-slate-400">Divide by the highest common factor.</p>
+                <p class="text-center text-xs font-bold text-purple-600/80">Divide by the highest common factor.</p>
               </div>
-              <div class="flip-face flip-back bg-purple-800 text-white shadow-md">
-                <span class="bg-purple-700 text-purple-100 text-xs font-extrabold px-3 py-1 rounded-full self-start">Answer &bull; Unit 6</span>
+              <div class="flip-face flip-back bg-gradient-to-br from-purple-600 to-indigo-800 text-white shadow-lg">
+                <span class="bg-white/20 text-white text-xs font-black px-3 py-1 rounded-full self-start">✓ Answer &bull; Unit 6</span>
                 <div class="text-center my-auto">
                   <p class="text-6xl md:text-7xl font-black mb-3">3/4</p>
-                  <p class="text-base font-medium text-purple-100">HCF of 18 and 24 is 6. 18 ÷ 6 = 3 and 24 ÷ 6 = 4.</p>
+                  <p class="text-base font-semibold text-purple-100">HCF of 18 and 24 is 6. 18 ÷ 6 = 3 and 24 ÷ 6 = 4.</p>
                 </div>
-                <p class="text-center text-xs text-purple-200">Click to flip back</p>
+                <p class="text-center text-xs text-purple-200">Tap to flip back</p>
               </div>
             </div>
           </div>
@@ -275,8 +319,8 @@
     <section id="station-2" class="station-section">
       <div class="space-y-6">
         <div>
-          <h2 class="text-2xl md:text-3xl font-black text-slate-900">Key Mathematical Vocabulary</h2>
-          <p class="text-slate-600 font-medium">Tap any word to open its visual diagram, definition and audio pronunciation.</p>
+          <h2 class="text-2xl md:text-3xl font-black text-slate-900">🗣️ Key Mathematical Vocabulary</h2>
+          <p class="text-slate-600 font-semibold">Tap any colourful tile to open its visual diagram, definition and audio pronunciation.</p>
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="vocabGrid"></div>
@@ -284,73 +328,82 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- STATION 3: I DO / WE DO + INTERACTIVE CPA MANIPULATIVES      -->
+    <!-- STATION 3: VISUAL INTERACTIVE I DO / WE DO + FULL SCREEN     -->
     <!-- ============================================================ -->
     <section id="station-3" class="station-section">
       <div class="space-y-6">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <!-- Permanent Steps to Success Sidebar -->
-          <div class="lg:col-span-4 bg-slate-900 text-white rounded-2xl p-6 shadow-md space-y-5">
-            <div>
-              <h3 class="text-lg font-black text-amber-400 uppercase tracking-wide mb-3">Steps to Success — Averages</h3>
-              <ol class="space-y-2 text-sm text-slate-100 list-decimal list-inside">
-                <li><strong>Order</strong> the data from smallest to largest first.</li>
-                <li><strong>Mode:</strong> spot the most frequent value (can be bimodal).</li>
-                <li><strong>Median:</strong> cross off outer pairs to find the middle value.</li>
-                <li><strong>Range:</strong> subtract smallest from largest (Max − Min).</li>
-                <li><strong>Mean:</strong> add all values, then divide by how many values.</li>
-              </ol>
+
+        <!-- VISUAL ANIMATED TEACHING STAGE (WITH FULL-SCREEN MODE!) -->
+        <div id="iDoStage" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 md:p-7 shadow-xl border border-indigo-500/30 space-y-5">
+          <!-- Stage Top Controls -->
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="bg-amber-400 text-slate-950 text-xs font-black uppercase px-3 py-1 rounded-full">I Do / We Do Visual Stage</span>
+              <button type="button" onclick="selectVisualModel(0)" id="vmBtn-0" class="vm-tab px-4 py-2 rounded-xl text-sm font-black bg-sky-500 text-slate-950 shadow transition">📊 1. Averages Visual</button>
+              <button type="button" onclick="selectVisualModel(1)" id="vmBtn-1" class="vm-tab px-4 py-2 rounded-xl text-sm font-extrabold bg-white/10 text-indigo-100 hover:bg-white/20 transition">⭕ 2. Circle &amp; Compass</button>
+              <button type="button" onclick="selectVisualModel(2)" id="vmBtn-2" class="vm-tab px-4 py-2 rounded-xl text-sm font-extrabold bg-white/10 text-indigo-100 hover:bg-white/20 transition">🔷 3. Diagonals &amp; Turns</button>
             </div>
-            <div class="border-t border-slate-700 pt-4">
-              <h3 class="text-lg font-black text-sky-400 uppercase tracking-wide mb-3">Steps to Success — 2D Shapes</h3>
-              <ol class="space-y-2 text-sm text-slate-100 list-decimal list-inside">
-                <li><strong>Circle rule:</strong> Diameter = 2 × Radius (always set compass to <strong>radius</strong>!).</li>
-                <li><strong>Diagonals:</strong> check if equal, if they bisect, and if they cross at 90°.</li>
-                <li><strong>Rotational symmetry:</strong> spin a full 360° and count matches (minimum is always <strong>Order 1</strong>).</li>
-              </ol>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="toggleStepsPopover()" class="bg-white/15 hover:bg-white/25 text-white font-bold px-3.5 py-2 rounded-xl text-xs md:text-sm transition">📌 Steps Checklist</button>
+              <button type="button" id="btnIdoFull" onclick="toggleIdoFullscreen()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-4 py-2 rounded-xl text-xs md:text-sm shadow transition">⛶ Full Screen I Do</button>
             </div>
           </div>
 
-          <!-- Toggleable Worked Examples with Step-by-Step Reveal -->
-          <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
-            <div class="flex items-center justify-between flex-wrap gap-2">
-              <h2 class="text-xl font-black text-slate-900">Guided Examples (I Do / We Do)</h2>
-              <div class="flex flex-wrap gap-2">
-                <button type="button" onclick="selectExample(0)" id="exBtn-0" class="ex-tab px-3 py-1.5 rounded-lg text-sm font-bold bg-blue-700 text-white">Ex 1: Averages</button>
-                <button type="button" onclick="selectExample(1)" id="exBtn-1" class="ex-tab px-3 py-1.5 rounded-lg text-sm font-bold bg-slate-100 text-slate-700">Ex 2: Circle &amp; Compass</button>
-                <button type="button" onclick="selectExample(2)" id="exBtn-2" class="ex-tab px-3 py-1.5 rounded-lg text-sm font-bold bg-slate-100 text-slate-700">Ex 3: Diagonals &amp; Turns</button>
-              </div>
+          <!-- Compact Collapsible Steps to Success Bar (Permanent Access, Zero Wall of Text!) -->
+          <div id="stepsBar" class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-white/10 backdrop-blur border border-white/15 rounded-2xl p-3.5 text-xs md:text-sm">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="font-black text-amber-300 mr-1">AVERAGES:</span>
+              <span class="bg-white/15 px-2.5 py-1 rounded-lg font-bold">1. Order first</span>
+              <span class="bg-teal-500/30 px-2.5 py-1 rounded-lg font-bold">2. Mode = most</span>
+              <span class="bg-amber-500/30 px-2.5 py-1 rounded-lg font-bold">3. Median = middle</span>
+              <span class="bg-purple-500/30 px-2.5 py-1 rounded-lg font-bold">4. Range = Max − Min</span>
+              <span class="bg-rose-500/30 px-2.5 py-1 rounded-lg font-bold">5. Mean = Total ÷ Count</span>
             </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="font-black text-sky-300 mr-1">2D SHAPES:</span>
+              <span class="bg-sky-500/30 px-2.5 py-1 rounded-lg font-bold">1. d = 2 × r</span>
+              <span class="bg-rose-500/30 px-2.5 py-1 rounded-lg font-bold">2. Compass = radius</span>
+              <span class="bg-emerald-500/30 px-2.5 py-1 rounded-lg font-bold">3. Check equal / bisect / 90°</span>
+              <span class="bg-indigo-500/30 px-2.5 py-1 rounded-lg font-bold">4. Min Order = 1</span>
+            </div>
+          </div>
 
-            <div id="exampleBox" class="bg-slate-50 border border-slate-200 rounded-xl p-5 min-h-[240px]"></div>
+          <!-- GIANT INTERACTIVE VISUAL MODEL CANVAS -->
+          <div id="visualCanvas" class="bg-white text-slate-900 rounded-2xl p-5 md:p-7 min-h-[360px] flex flex-col justify-between shadow-inner"></div>
 
+          <!-- Step Animation Controls -->
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-2.5">
+              <button type="button" onclick="prevVisualStep()" class="bg-white/15 hover:bg-white/25 text-white font-extrabold px-4 py-2.5 rounded-xl text-sm">← Back</button>
+              <button type="button" onclick="nextVisualStep()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-6 py-2.5 rounded-xl text-base shadow-lg">▶ Animate Next Step</button>
+              <button type="button" onclick="resetVisualSteps()" class="bg-white/15 hover:bg-white/25 text-white font-bold px-4 py-2.5 rounded-xl text-sm">↺ Reset</button>
+            </div>
             <div class="flex items-center gap-3">
-              <button type="button" onclick="nextExampleStep()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm shadow-sm">▶ Animate Next Step</button>
-              <button type="button" onclick="resetExampleSteps()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2.5 rounded-xl text-sm">↺ Reset</button>
-              <span id="exStepCounter" class="text-sm font-bold text-slate-500 ml-auto"></span>
+              <div id="stepDots" class="flex gap-1.5"></div>
+              <span id="vmStepBadge" class="bg-white/15 text-amber-300 font-black text-sm px-3.5 py-1.5 rounded-full">Step 0 / 5</span>
             </div>
           </div>
         </div>
 
-        <!-- TWO INTERACTIVE CPA MANIPULATIVES -->
+        <!-- TWO HANDS-ON INTERACTIVE EXPLORER LABS (WE DO) -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Manipulative A: Live Mean-Leveller Bar Lab -->
-          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+          <!-- Interactive Lab A: Mean-Leveller Bars -->
+          <div class="bg-white rounded-3xl border-2 border-blue-200 p-6 shadow-md space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-2">
               <div>
-                <h3 class="text-lg font-black text-blue-900">Interactive Lab A: Mean-Leveller Bars</h3>
-                <p class="text-xs text-slate-600">Adjust the 5 bars, then click <strong>Level the Bars</strong> to see the mean visually.</p>
+                <span class="text-xs font-black uppercase text-blue-600">Hands-On Lab A</span>
+                <h3 class="text-xl font-black text-slate-900">⚖️ Mean-Leveller Bars</h3>
               </div>
               <div class="flex gap-2">
-                <button type="button" id="btnLevelMean" onclick="toggleMeanLevel()" class="bg-blue-700 hover:bg-blue-600 text-white font-bold text-xs px-3.5 py-2 rounded-lg">⚖️ Level the Bars</button>
-                <button type="button" onclick="resetMeanBars()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs px-3 py-2 rounded-lg">↺ Reset</button>
+                <button type="button" id="btnLevelMean" onclick="toggleMeanLevel()" class="bg-blue-600 hover:bg-blue-500 text-white font-black text-xs px-4 py-2 rounded-xl shadow">⚖️ Level the Bars</button>
+                <button type="button" onclick="resetMeanBars()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs px-3 py-2 rounded-xl">↺</button>
               </div>
             </div>
 
-            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 h-56 flex flex-col justify-end">
+            <div class="bg-gradient-to-b from-blue-50/70 to-slate-50 border border-blue-100 rounded-2xl p-4 h-56 flex flex-col justify-end">
               <div class="relative w-full flex-1 mt-6">
                 <div id="meanLine" class="absolute left-0 right-0 border-t-2 border-dashed border-rose-600 pointer-events-none transition-all duration-500 z-10" style="bottom: 58.33%;">
-                  <span id="meanLineLabel" class="bg-rose-600 text-white text-xs font-extrabold px-2 py-0.5 rounded absolute -top-3 right-0">Mean = 7</span>
+                  <span id="meanLineLabel" class="bg-rose-600 text-white text-xs font-black px-2.5 py-0.5 rounded-full absolute -top-3 right-0 shadow">Mean = 7</span>
                 </div>
                 <div id="barsContainer" class="w-full h-full flex items-end justify-around gap-3"></div>
               </div>
@@ -358,44 +411,44 @@
 
             <div id="barControls" class="flex justify-around gap-2"></div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center bg-slate-100 rounded-xl p-3">
-              <div><p class="text-xs font-bold text-slate-500">MEAN</p><p id="statMean" class="text-xl font-black text-rose-700">7</p></div>
-              <div><p class="text-xs font-bold text-slate-500">MEDIAN</p><p id="statMedian" class="text-xl font-black text-blue-800">8</p></div>
-              <div><p class="text-xs font-bold text-slate-500">MODE</p><p id="statMode" class="text-base font-black text-teal-800">None</p></div>
-              <div><p class="text-xs font-bold text-slate-500">RANGE</p><p id="statRange" class="text-xl font-black text-purple-800">7</p></div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center bg-slate-900 text-white rounded-2xl p-3">
+              <div><p class="text-[11px] font-bold text-rose-300">MEAN</p><p id="statMean" class="text-2xl font-black text-white">7</p></div>
+              <div><p class="text-[11px] font-bold text-sky-300">MEDIAN</p><p id="statMedian" class="text-2xl font-black text-white">8</p></div>
+              <div><p class="text-[11px] font-bold text-emerald-300">MODE</p><p id="statMode" class="text-lg font-black text-white">None</p></div>
+              <div><p class="text-[11px] font-bold text-purple-300">RANGE</p><p id="statRange" class="text-2xl font-black text-white">7</p></div>
             </div>
           </div>
 
-          <!-- Manipulative B: Live Rotational Symmetry & Circle Explorer -->
-          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+          <!-- Interactive Lab B: Rotation & Circle Explorer -->
+          <div class="bg-white rounded-3xl border-2 border-purple-200 p-6 shadow-md space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-2">
               <div>
-                <h3 class="text-lg font-black text-indigo-900">Interactive Lab B: Rotation &amp; Circle Dial</h3>
-                <p class="text-xs text-slate-600">Spin shapes a full 360° to count matches, or slide the radius to compare diameter.</p>
+                <span class="text-xs font-black uppercase text-purple-600">Hands-On Lab B</span>
+                <h3 class="text-xl font-black text-slate-900">🔄 Rotation &amp; Circle Dial</h3>
               </div>
               <div class="flex gap-1.5">
-                <button type="button" onclick="setGeomMode('rot')" id="gmRotBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-700 text-white">Rotation Dial</button>
-                <button type="button" onclick="setGeomMode('circle')" id="gmCircBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 text-slate-700">Circle Slider</button>
+                <button type="button" onclick="setGeomMode('rot')" id="gmRotBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-black bg-purple-600 text-white shadow">Rotation Dial</button>
+                <button type="button" onclick="setGeomMode('circle')" id="gmCircBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700">Circle Slider</button>
               </div>
             </div>
 
             <!-- Rotation Panel -->
             <div id="rotPanel" class="space-y-3">
               <div class="flex flex-wrap gap-1.5" id="shapeButtons"></div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center bg-slate-50 border border-slate-200 rounded-xl p-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center bg-gradient-to-b from-purple-50/70 to-slate-50 border border-purple-100 rounded-2xl p-3">
                 <svg viewBox="0 0 240 240" class="w-48 h-48 mx-auto">
                   <g id="rotGhostGroup" opacity="0.22"></g>
                   <g id="rotShapeGroup"></g>
-                  <circle cx="120" cy="120" r="4" fill="#dc2626"/>
+                  <circle cx="120" cy="120" r="4.5" fill="#dc2626"/>
                 </svg>
-                <div class="space-y-2 text-sm">
-                  <p class="font-bold text-slate-700">Turn Angle: <span id="rotAngleText" class="text-indigo-700 text-lg font-black">0°</span></p>
-                  <p class="font-bold text-slate-700">Matches in 360°: <span id="rotMatchesText" class="text-emerald-700 text-lg font-black">0</span></p>
-                  <p id="rotOrderBadge" class="bg-indigo-100 text-indigo-900 font-extrabold px-3 py-1.5 rounded-lg inline-block">Order: ? (Spin 360° to discover)</p>
+                <div class="space-y-2.5 text-sm">
+                  <p class="font-bold text-slate-700">Turn Angle: <span id="rotAngleText" class="text-purple-700 text-xl font-black">0°</span></p>
+                  <p class="font-bold text-slate-700">Matches in 360°: <span id="rotMatchesText" class="text-emerald-700 text-xl font-black">0</span></p>
+                  <p id="rotOrderBadge" class="bg-purple-100 text-purple-900 font-black px-3 py-1.5 rounded-xl inline-block text-xs">Order: ? (Spin 360° to discover)</p>
                   <div class="flex flex-wrap gap-2 pt-1">
-                    <button type="button" id="btnStepRotate" onclick="stepRotate()" class="bg-indigo-700 hover:bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs">↻ +90°</button>
-                    <button type="button" onclick="spinFull360()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs">▶ Spin 360°</button>
-                    <button type="button" onclick="resetRotation()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-3 py-1.5 rounded-lg text-xs">↺ Reset</button>
+                    <button type="button" id="btnStepRotate" onclick="stepRotate()" class="bg-purple-600 hover:bg-purple-500 text-white font-black px-3.5 py-2 rounded-xl text-xs shadow">↻ +90°</button>
+                    <button type="button" onclick="spinFull360()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-3.5 py-2 rounded-xl text-xs shadow">▶ Spin 360°</button>
+                    <button type="button" onclick="resetRotation()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-3 py-2 rounded-xl text-xs">↺</button>
                   </div>
                 </div>
               </div>
@@ -403,22 +456,22 @@
 
             <!-- Circle Panel -->
             <div id="circlePanel" class="hidden space-y-3">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center bg-gradient-to-b from-sky-50 to-slate-50 border border-sky-100 rounded-2xl p-4">
                 <svg viewBox="0 0 240 240" class="w-48 h-48 mx-auto">
-                  <circle id="liveCircle" cx="120" cy="120" r="70" fill="#eff6ff" stroke="#1d4ed8" stroke-width="4"/>
-                  <line id="liveDiameter" x1="50" y1="120" x2="190" y2="120" stroke="#0f766e" stroke-width="3" stroke-dasharray="6 4"/>
-                  <line id="liveRadius" x1="120" y1="120" x2="120" y2="50" stroke="#dc2626" stroke-width="4"/>
+                  <circle id="liveCircle" cx="120" cy="120" r="70" fill="#dbeafe" stroke="#1d4ed8" stroke-width="4.5"/>
+                  <line id="liveDiameter" x1="50" y1="120" x2="190" y2="120" stroke="#0f766e" stroke-width="3.5" stroke-dasharray="6 4"/>
+                  <line id="liveRadius" x1="120" y1="120" x2="120" y2="50" stroke="#dc2626" stroke-width="4.5"/>
                   <circle cx="120" cy="120" r="5" fill="#0f172a"/>
-                  <text id="lblR" x="128" y="90" font-size="13" font-weight="bold" fill="#dc2626">r = 5 cm</text>
-                  <text id="lblD" x="72" y="142" font-size="13" font-weight="bold" fill="#0f766e">d = 10 cm</text>
+                  <text id="lblR" x="128" y="90" font-size="13" font-weight="bold" fill="#dc2626">r = 5.0 cm</text>
+                  <text id="lblD" x="72" y="142" font-size="13" font-weight="bold" fill="#0f766e">d = 10.0 cm</text>
                 </svg>
                 <div class="space-y-3">
                   <label for="radiusSlider" class="block text-sm font-bold text-slate-700">Compass Width (Radius): <span id="radVal" class="text-rose-600 font-black">5.0 cm</span></label>
-                  <input id="radiusSlider" type="range" min="2" max="10" step="0.5" value="5" oninput="updateCircleSlider()" class="w-full accent-blue-700">
+                  <input id="radiusSlider" type="range" min="2" max="10" step="0.5" value="5" oninput="updateCircleSlider()" class="w-full accent-blue-600">
                   <div class="bg-white border border-slate-200 rounded-xl p-3 space-y-1 text-sm">
-                    <p><strong>Radius (r):</strong> <span id="outR" class="text-rose-700 font-bold">5.0 cm</span></p>
-                    <p><strong>Diameter (d = 2 × r):</strong> <span id="outD" class="text-teal-700 font-bold">10.0 cm</span></p>
-                    <p class="text-xs text-slate-500 pt-1">Outer edge = <strong>Circumference</strong>. Centre dot = compass pin.</p>
+                    <p><strong>Radius (r):</strong> <span id="outR" class="text-rose-700 font-black">5.0 cm</span></p>
+                    <p><strong>Diameter (d = 2 × r):</strong> <span id="outD" class="text-teal-700 font-black">10.0 cm</span></p>
+                    <p class="text-xs text-slate-500 pt-1">Outer edge = <strong>Circumference</strong>.</p>
                   </div>
                 </div>
               </div>
@@ -429,23 +482,25 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- STATION 4: YOU DO PRACTICE (EXACTLY 3 HORIZONTAL CARDS/TIER) -->
+    <!-- STATION 4: YOU DO PRACTICE — ALL TIERS VISIBLE SIDE-BY-SIDE  -->
     <!-- ============================================================ -->
     <section id="station-4" class="station-section">
-      <div class="space-y-6">
+      <div class="space-y-5">
         <div class="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h2 class="text-2xl md:text-3xl font-black text-slate-900">You Do Practice — Choose Your Tier</h2>
-            <p class="text-slate-600 font-medium">Work neatly in your maths book. Click any card for <strong>Giant Projection Mode</strong>.</p>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-900">📝 You Do Practice — Pick Your Challenge</h2>
+            <p class="text-slate-600 font-semibold">All 9 challenges are visible so you can start at your level and move up! Tap any card for <strong>Giant Projection Mode</strong>.</p>
           </div>
-          <div class="flex gap-2">
-            <button type="button" onclick="selectTier('must')" id="tierBtn-must" class="tier-btn px-5 py-2.5 rounded-xl font-extrabold text-sm bg-emerald-600 text-white shadow-sm">Must (Level 1)</button>
-            <button type="button" onclick="selectTier('should')" id="tierBtn-should" class="tier-btn px-5 py-2.5 rounded-xl font-extrabold text-sm bg-slate-200 text-slate-700">Should (Level 2)</button>
-            <button type="button" onclick="selectTier('could')" id="tierBtn-could" class="tier-btn px-5 py-2.5 rounded-xl font-extrabold text-sm bg-slate-200 text-slate-700">Could (Level 3)</button>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="setYouDoView('all')" id="ydBtn-all" class="yd-btn px-4 py-2 rounded-xl font-black text-sm bg-slate-900 text-white shadow">All Tiers (Board View)</button>
+            <button type="button" onclick="setYouDoView('must')" id="ydBtn-must" class="yd-btn px-3.5 py-2 rounded-xl font-extrabold text-sm bg-emerald-100 text-emerald-900">🟢 Must</button>
+            <button type="button" onclick="setYouDoView('should')" id="ydBtn-should" class="yd-btn px-3.5 py-2 rounded-xl font-extrabold text-sm bg-amber-100 text-amber-900">🟠 Should</button>
+            <button type="button" onclick="setYouDoView('could')" id="ydBtn-could" class="yd-btn px-3.5 py-2 rounded-xl font-extrabold text-sm bg-purple-100 text-purple-900">🟣 Could</button>
           </div>
         </div>
 
-        <div id="tierCardsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-5"></div>
+        <!-- Dynamic Grid: 3 Columns (Must | Should | Could) in All View, or 3 Wide Cards in Single Tier View -->
+        <div id="youDoContainer"></div>
       </div>
     </section>
 
@@ -454,13 +509,13 @@
     <!-- ============================================================ -->
     <section id="station-5" class="station-section">
       <div class="space-y-6">
-        <div class="bg-indigo-950 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-900 text-white rounded-3xl p-6 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 class="text-2xl md:text-3xl font-black">🧠 Reasoning &amp; Justification Lab (TWM)</h2>
-            <p class="text-indigo-200 text-sm md:text-base">Discuss with your partner using the English sentence stems below before clicking to reveal the proof.</p>
+            <p class="text-indigo-200 text-sm md:text-base font-medium">Discuss with your partner using the English stems before tapping to reveal the proof.</p>
           </div>
-          <div class="bg-indigo-900 border border-indigo-700 rounded-xl p-3.5 text-xs md:text-sm space-y-1 max-w-md">
-            <p class="font-extrabold text-amber-300 uppercase tracking-wider text-xs">English Reasoning Stems</p>
+          <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-3.5 text-xs md:text-sm space-y-1 max-w-md">
+            <p class="font-black text-amber-300 uppercase tracking-wider text-xs">English Reasoning Stems</p>
             <p>&bull; "I agree / disagree because ..."</p>
             <p>&bull; "An example that proves this false is ..."</p>
             <p>&bull; "First we must order the data, so ..."</p>
@@ -468,39 +523,71 @@
           </div>
         </div>
 
-        <!-- Part A: True or False Matrix (Genuine Mix: 2 True, 2 False) -->
         <div>
-          <h3 class="text-xl font-black text-slate-900 mb-3">Part A — True or False Matrix (Click to Reveal Proof)</h3>
+          <h3 class="text-xl font-black text-slate-900 mb-3">Part A — True or False Matrix (Tap Any Card to Reveal Proof)</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="tfMatrix"></div>
         </div>
 
-        <!-- Part B: Spot the Mistake, Always/Sometimes/Never, Convince Me -->
         <div>
-          <h3 class="text-xl font-black text-slate-900 mb-3">Part B — Mathematical Challenges</h3>
+          <h3 class="text-xl font-black text-slate-900 mb-3">Part B — Deeper Mathematical Challenges</h3>
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-5" id="twmChallenges"></div>
         </div>
       </div>
     </section>
 
     <!-- ============================================================ -->
-    <!-- STATION 6: QUICKFIRE ENGINE (BOARDS UP! RED VS BLUE)         -->
+    <!-- STATION 6 (NEW!): SUCCESS CRITERIA WHITEBOARD CHECK          -->
     <!-- ============================================================ -->
     <section id="station-6" class="station-section">
       <div class="space-y-6">
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-md p-6 md:p-8 space-y-6">
+        <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white rounded-3xl p-6 md:p-7 shadow-lg flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <span class="inline-block bg-white/20 text-white text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full mb-2">AfL Checkpoint &bull; Mini-Whiteboards Up!</span>
+            <h2 class="text-2xl md:text-4xl font-black">✅ Did We Meet Our Success Criteria?</h2>
+            <p class="text-emerald-50 text-sm md:text-base font-medium mt-1">Answer each check on your whiteboard, reveal the answer, and tick off each goal as a class before Quickfire!</p>
+          </div>
+          <div class="flex items-center gap-2 bg-white/15 backdrop-blur rounded-2xl px-4 py-3 border border-white/25">
+            <span class="text-sm font-extrabold">Class Progress:</span>
+            <span id="scProgressBadge" class="text-2xl font-black text-amber-300">0 / 3 Met</span>
+          </div>
+        </div>
+
+        <!-- 3 Interactive Success Criteria Diagnostic Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5" id="scCheckGrid"></div>
+
+        <!-- Ready Banner -->
+        <div id="scAllMetBanner" class="hidden bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 rounded-2xl p-5 shadow-lg flex items-center justify-between flex-wrap gap-4 pop-in">
+          <div class="flex items-center gap-3">
+            <span class="text-3xl">🎉</span>
+            <div>
+              <p class="text-xl font-black">All 3 Success Criteria Checked!</p>
+              <p class="text-sm font-bold text-slate-800">Time to put it to the test in the Quickfire Team Showdown!</p>
+            </div>
+          </div>
+          <button type="button" onclick="showStation(7)" class="bg-slate-900 hover:bg-slate-800 text-white font-black px-6 py-3 rounded-xl text-sm shadow">🏆 Launch Quickfire →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 7: QUICKFIRE ENGINE (BOARDS UP! RED VS BLUE)         -->
+    <!-- ============================================================ -->
+    <section id="station-7" class="station-section">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl border-2 border-indigo-200 shadow-xl p-6 md:p-8 space-y-6">
           <div class="flex items-center justify-between flex-wrap gap-3 border-b border-slate-200 pb-4">
             <div>
-              <span id="qfCounter" class="bg-blue-100 text-blue-800 font-extrabold text-xs uppercase px-3 py-1 rounded-full">Question 1 of 10</span>
-              <h2 class="text-2xl md:text-3xl font-black text-slate-900 mt-1">Quickfire Engine — Mini-Whiteboards Ready!</h2>
+              <span id="qfCounter" class="bg-indigo-600 text-white font-black text-xs uppercase px-3.5 py-1 rounded-full">Question 1 of 10</span>
+              <h2 class="text-2xl md:text-3xl font-black text-slate-900 mt-1">🏆 Quickfire Engine — Mini-Whiteboards Ready!</h2>
             </div>
             <div class="flex items-center gap-2 flex-wrap">
-              <label for="qfDuration" class="text-xs font-bold text-slate-500">Timer:</label>
-              <select id="qfDuration" onchange="resetQfTimer()" class="border border-slate-300 rounded-lg px-2.5 py-1.5 text-sm font-bold">
+              <label for="qfDuration" class="text-xs font-extrabold text-slate-500">Timer:</label>
+              <select id="qfDuration" onchange="resetQfTimer()" class="border-2 border-slate-300 rounded-xl px-2.5 py-1.5 text-sm font-bold">
                 <option value="15">15s</option>
                 <option value="20" selected>20s</option>
                 <option value="30">30s</option>
               </select>
-              <button type="button" onclick="startQfTimer()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm">▶ Start Timer</button>
+              <button type="button" onclick="startQfTimer()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2 rounded-xl text-sm shadow">▶ Start Timer</button>
               <button type="button" onclick="resetQfTimer()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-3 py-2 rounded-xl text-sm">↺</button>
             </div>
           </div>
@@ -508,23 +595,23 @@
           <!-- Timer Bar & Boards Up Banner -->
           <div class="flex items-center gap-4">
             <div class="flex-1 bg-slate-200 rounded-full h-5 overflow-hidden">
-              <div id="qfProgress" class="bg-blue-600 h-full transition-all duration-300" style="width: 100%;"></div>
+              <div id="qfProgress" class="bg-indigo-600 h-full transition-all duration-300" style="width: 100%;"></div>
             </div>
             <span id="qfClock" class="text-3xl font-black text-slate-900 w-16 text-right">20s</span>
           </div>
 
-          <div id="boardsUpBanner" class="hidden bg-rose-600 text-white text-center py-4 rounded-2xl font-black text-3xl md:text-4xl tracking-wider boards-up-pulse shadow-lg">
+          <div id="boardsUpBanner" class="hidden bg-gradient-to-r from-rose-600 to-orange-600 text-white text-center py-4 rounded-2xl font-black text-3xl md:text-4xl tracking-wider boards-up-pulse shadow-lg">
             🚨 BOARDS UP! SHOW YOUR ANSWERS! 🚨
           </div>
 
           <!-- Question Display -->
-          <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-8 text-center min-h-[210px] flex flex-col justify-center items-center">
-            <p id="qfTopicTag" class="text-xs font-extrabold uppercase tracking-wider text-indigo-700 mb-2"></p>
+          <div class="bg-gradient-to-br from-indigo-50 to-sky-50 border-2 border-indigo-200 rounded-3xl p-8 text-center min-h-[210px] flex flex-col justify-center items-center">
+            <p id="qfTopicTag" class="text-xs font-black uppercase tracking-wider text-indigo-700 mb-2"></p>
             <p id="qfQuestion" class="text-3xl md:text-5xl font-black text-slate-900 leading-tight"></p>
-            <div id="qfAnswerBox" class="hidden mt-6 bg-emerald-100 border-2 border-emerald-500 text-emerald-950 rounded-2xl px-8 py-4">
-              <p class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">Answer</p>
+            <div id="qfAnswerBox" class="hidden mt-6 bg-emerald-100 border-2 border-emerald-500 text-emerald-950 rounded-2xl px-8 py-4 pop-in">
+              <p class="text-xs font-black uppercase tracking-wider text-emerald-700">Answer</p>
               <p id="qfAnswerText" class="text-3xl md:text-4xl font-black"></p>
-              <p id="qfWorkingText" class="text-sm font-semibold text-emerald-800 mt-1"></p>
+              <p id="qfWorkingText" class="text-sm font-bold text-emerald-800 mt-1"></p>
             </div>
           </div>
 
@@ -532,14 +619,14 @@
           <div class="flex items-center justify-between flex-wrap gap-3">
             <div class="flex gap-2">
               <button type="button" onclick="prevQf()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2.5 rounded-xl text-sm">← Previous</button>
-              <button type="button" onclick="revealQfAnswer()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-6 py-2.5 rounded-xl text-sm shadow-sm">👁 Reveal Answer</button>
-              <button type="button" onclick="nextQf()" class="bg-blue-700 hover:bg-blue-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm">Next →</button>
+              <button type="button" onclick="revealQfAnswer()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-6 py-2.5 rounded-xl text-sm shadow">👁 Reveal Answer</button>
+              <button type="button" onclick="nextQf()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black px-5 py-2.5 rounded-xl text-sm shadow">Next →</button>
             </div>
 
             <div class="flex items-center gap-2 bg-slate-100 p-2 rounded-2xl border border-slate-200">
-              <span class="text-xs font-extrabold text-slate-500 px-2">AWARD POINT:</span>
-              <button type="button" onclick="awardPoint('red')" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold px-4 py-2 rounded-xl text-sm">+1 Team Red (<span id="qfRedScore">0</span>)</button>
-              <button type="button" onclick="awardPoint('blue')" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-4 py-2 rounded-xl text-sm">+1 Team Blue (<span id="qfBlueScore">0</span>)</button>
+              <span class="text-xs font-black text-slate-500 px-2">AWARD POINT:</span>
+              <button type="button" onclick="awardPoint('red')" class="bg-rose-600 hover:bg-rose-500 text-white font-black px-4 py-2 rounded-xl text-sm shadow">+1 Team Red (<span id="qfRedScore">0</span>)</button>
+              <button type="button" onclick="awardPoint('blue')" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-sm shadow">+1 Team Blue (<span id="qfBlueScore">0</span>)</button>
             </div>
           </div>
         </div>
@@ -551,22 +638,22 @@
   <!-- STATION 2 VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION)       -->
   <!-- ============================================================ -->
   <div id="vocabModal" class="hidden fixed inset-0 z-50 bg-slate-950/75 flex items-center justify-center p-4" onclick="if(event.target===this) closeVocabModal()">
-    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl space-y-5 relative">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl space-y-5 relative pop-in">
       <button type="button" onclick="closeVocabModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-black w-10 h-10 rounded-full text-lg">✕</button>
       <div>
-        <span class="text-xs font-extrabold uppercase tracking-wider text-blue-700">Bilingual Vocabulary &bull; EN / VN</span>
+        <span class="text-xs font-black uppercase tracking-wider text-indigo-600">Bilingual Vocabulary &bull; EN / VN</span>
         <h3 id="vmEn" class="text-4xl font-black text-slate-900 mt-1"></h3>
         <p id="vmVn" class="text-2xl font-bold text-teal-700 mt-1"></p>
       </div>
       <div class="flex flex-wrap gap-3">
-        <button type="button" onclick="speakVocab('en-GB')" class="bg-blue-700 hover:bg-blue-600 text-white font-bold px-4 py-2.5 rounded-xl text-sm">🔊 Listen (British English)</button>
-        <button type="button" onclick="speakVocab('vi-VN')" class="bg-teal-700 hover:bg-teal-600 text-white font-bold px-4 py-2.5 rounded-xl text-sm">🔊 Nghe (Tiếng Việt)</button>
+        <button type="button" onclick="speakVocab('en-GB')" class="bg-blue-600 hover:bg-blue-500 text-white font-black px-4 py-2.5 rounded-xl text-sm shadow">🔊 Listen (British English)</button>
+        <button type="button" onclick="speakVocab('vi-VN')" class="bg-teal-600 hover:bg-teal-500 text-white font-black px-4 py-2.5 rounded-xl text-sm shadow">🔊 Nghe (Tiếng Việt)</button>
       </div>
       <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2">
         <p id="vmDefEn" class="text-lg font-semibold text-slate-800"></p>
         <p id="vmDefVn" class="text-base font-medium text-teal-800"></p>
       </div>
-      <div id="vmSvgBox" class="bg-white border-2 border-slate-200 rounded-2xl p-4 flex justify-center items-center"></div>
+      <div id="vmSvgBox" class="bg-white border-2 border-indigo-100 rounded-2xl p-4 flex justify-center items-center"></div>
     </div>
   </div>
 
@@ -574,12 +661,12 @@
   <!-- GIANT PROJECTION MODAL (STATION 4 CARDS)                     -->
   <!-- ============================================================ -->
   <div id="giantModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 flex items-center justify-center p-4" onclick="if(event.target===this) closeGiantModal()">
-    <div class="bg-white rounded-3xl max-w-5xl w-full p-8 md:p-12 shadow-2xl relative space-y-6">
+    <div class="bg-white rounded-3xl max-w-5xl w-full p-8 md:p-12 shadow-2xl relative space-y-6 pop-in">
       <button type="button" onclick="closeGiantModal()" class="absolute top-5 right-5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-black w-12 h-12 rounded-full text-xl">✕</button>
-      <span id="gmBadge" class="inline-block px-4 py-1.5 rounded-full text-sm font-extrabold uppercase tracking-wider"></span>
+      <span id="gmBadge" class="inline-block px-4 py-1.5 rounded-full text-sm font-black uppercase tracking-wider"></span>
       <p id="gmText" class="text-4xl md:text-6xl font-black text-slate-900 leading-tight"></p>
       <div id="gmAnsWrap" class="hidden bg-emerald-100 border-2 border-emerald-600 rounded-2xl p-6">
-        <p class="text-xs font-extrabold uppercase text-emerald-700">Solution</p>
+        <p class="text-xs font-black uppercase text-emerald-700">Solution</p>
         <p id="gmAns" class="text-2xl md:text-3xl font-black text-emerald-950 mt-1"></p>
       </div>
       <div class="flex items-center justify-between flex-wrap gap-3 pt-2">
@@ -588,7 +675,7 @@
           <button type="button" onclick="stepGiantCard(1)" class="bg-slate-200 hover:bg-slate-300 text-slate-900 font-extrabold px-4 py-3 rounded-xl text-base">Next Card →</button>
         </div>
         <div class="flex gap-3">
-          <button type="button" onclick="document.getElementById('gmAnsWrap').classList.toggle('hidden')" class="bg-blue-700 hover:bg-blue-600 text-white font-extrabold px-6 py-3 rounded-xl text-base">👁 Toggle Answer</button>
+          <button type="button" onclick="document.getElementById('gmAnsWrap').classList.toggle('hidden')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black px-6 py-3 rounded-xl text-base shadow">👁 Toggle Answer</button>
           <button type="button" onclick="closeGiantModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-6 py-3 rounded-xl text-base">Close</button>
         </div>
       </div>
@@ -598,7 +685,7 @@
   <!-- ============================================================ -->
   <!-- DAVID'S BOARD FULL-SCREEN WHITEBOARD MODAL (W)               -->
   <!-- ============================================================ -->
-  <div id="whiteboardModal" class="hidden fixed inset-0 z-50 bg-slate-900 flex flex-col">
+  <div id="whiteboardModal" class="hidden fixed inset-0 z-[70] bg-slate-900 flex flex-col">
     <div class="bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between flex-wrap gap-3 border-b border-slate-700">
       <div class="flex items-center gap-3">
         <span class="font-black text-base text-amber-400">✏️ David's Board</span>
@@ -618,7 +705,7 @@
       <div class="flex items-center gap-2">
         <button type="button" id="btnEraser" onclick="toggleEraser()" class="bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-lg text-xs font-bold">🧽 Eraser</button>
         <button type="button" onclick="clearWhiteboard()" class="bg-rose-600 hover:bg-rose-500 px-3 py-1.5 rounded-lg text-xs font-bold">🗑 Clear</button>
-        <button type="button" onclick="closeWhiteboard()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-1.5 rounded-lg text-xs font-black">Done (Esc)</button>
+        <button type="button" onclick="closeWhiteboard()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 px-4 py-1.5 rounded-lg text-xs font-black">Done (Esc)</button>
       </div>
     </div>
     <div class="flex-1 relative overflow-hidden">
@@ -629,7 +716,7 @@
   <!-- ============================================================ -->
   <!-- HIDDEN TEACHER PROMPT DRAWER (T)                             -->
   <!-- ============================================================ -->
-  <aside id="teacherDrawer" class="hidden fixed top-20 right-4 z-50 w-96 max-w-[92vw] bg-amber-50 border-2 border-amber-500 rounded-2xl shadow-2xl p-5 space-y-3 text-sm">
+  <aside id="teacherDrawer" class="hidden fixed top-20 right-4 z-[65] w-96 max-w-[92vw] bg-amber-50 border-2 border-amber-500 rounded-2xl shadow-2xl p-5 space-y-3 text-sm">
     <div class="flex items-center justify-between border-b border-amber-200 pb-2">
       <h3 class="font-black text-amber-900">📋 Teacher Notes &amp; Live Intervention</h3>
       <button type="button" onclick="toggleTeacherDrawer()" class="text-amber-800 font-black">✕</button>
@@ -646,12 +733,12 @@
       <p class="font-extrabold text-blue-900">Whole-Class Backup Pivot (&gt;30% Stuck):</p>
       <p class="text-slate-800">Pause the Page 2/4 Info Gap, press <strong>W</strong> for David's Board, and run two guided whiteboard rounds on Must-level fluency before resuming Page 1/3.</p>
     </div>
-    <p class="text-xs text-slate-500 pt-1 border-t border-amber-200">Shortcuts: ← / → Stations &bull; W Board &bull; M Mute &bull; T Teacher</p>
+    <p class="text-xs text-slate-500 pt-1 border-t border-amber-200">Shortcuts: ← / → Stations &bull; W Board &bull; M Mute &bull; T Teacher &bull; Esc Close</p>
   </aside>
 
   <script>
     // ============================================================
-    // 1. AUTO-HIDING HEADER & GLOBAL STATE
+    // 1. AUTO-HIDING HEADER, CONFETTI & GLOBAL STATE
     // ============================================================
     let lastScroll = 0;
     const topHeader = document.getElementById('topHeader');
@@ -669,7 +756,6 @@
     let isMuted = false;
     let scores = { red: 0, blue: 0 };
 
-    // Offline Web Audio synthesizer
     let audioCtx = null;
     function playTone(freq, dur = 0.12, type = 'sine', vol = 0.14) {
       if (isMuted) return;
@@ -688,11 +774,24 @@
       } catch (e) {}
     }
 
+    function burstConfetti(originColor) {
+      const palette = originColor ? [originColor, '#fbbf24', '#34d399', '#ffffff'] : ['#f43f5e', '#38bdf8', '#fbbf24', '#34d399', '#a855f7'];
+      for (let i = 0; i < 18; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'confetti-piece';
+        dot.style.left = (25 + Math.random() * 50) + 'vw';
+        dot.style.top = (18 + Math.random() * 18) + 'vh';
+        dot.style.background = palette[i % palette.length];
+        dot.style.animationDelay = (Math.random() * 0.18) + 's';
+        document.body.appendChild(dot);
+        setTimeout(() => dot.remove(), 1150);
+      }
+    }
+
     function toggleMute() {
       isMuted = !isMuted;
       document.getElementById('btnMute').textContent = isMuted ? '🔇 Muted' : '🔊 Sound';
     }
-
     function toggleTeacherDrawer() {
       document.getElementById('teacherDrawer').classList.toggle('hidden');
     }
@@ -704,31 +803,30 @@
       document.getElementById('qfRedScore').textContent = scores.red;
       document.getElementById('qfBlueScore').textContent = scores.blue;
       playTone(team === 'red' ? 587 : 659, 0.15, 'triangle');
+      if (delta > 0) burstConfetti(team === 'red' ? '#f43f5e' : '#38bdf8');
     }
     function awardPoint(team) { adjustScore(team, 1); }
     function resetScores() {
       scores.red = 0; scores.blue = 0;
-      document.getElementById('hdrRedScore').textContent = '0';
-      document.getElementById('hdrBlueScore').textContent = '0';
-      document.getElementById('qfRedScore').textContent = '0';
-      document.getElementById('qfBlueScore').textContent = '0';
+      ['hdrRedScore','hdrBlueScore','qfRedScore','qfBlueScore'].forEach(id => document.getElementById(id).textContent = '0');
     }
 
     function showStation(idx) {
-      if (currentStation === 6 && idx !== 6 && qfInterval) {
+      if (currentStation === 7 && idx !== 7 && qfInterval) {
         clearInterval(qfInterval);
         qfInterval = null;
+      }
+      if (document.getElementById('iDoStage').classList.contains('ido-fullscreen')) {
+        toggleIdoFullscreen();
       }
       currentStation = idx;
       document.querySelectorAll('.station-section').forEach((sec, i) => {
         sec.classList.toggle('active-station', i === idx);
       });
       document.querySelectorAll('.station-tab').forEach((btn, i) => {
-        if (i === idx) {
-          btn.className = 'station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-blue-700 text-white shadow-sm';
-        } else {
-          btn.className = 'station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200';
-        }
+        btn.className = i === idx
+          ? 'station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-indigo-600 text-white shadow'
+          : 'station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50';
       });
       window.scrollTo({ top: 0, behavior: 'smooth' });
       playTone(520, 0.07, 'sine', 0.08);
@@ -740,7 +838,6 @@
              !document.getElementById('whiteboardModal').classList.contains('hidden');
     }
 
-    // Keyboard shortcuts (guarded when modals are open)
     document.addEventListener('keydown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
       if (e.key === 'Escape') {
@@ -748,12 +845,13 @@
         closeGiantModal();
         closeWhiteboard();
         document.getElementById('teacherDrawer').classList.add('hidden');
+        if (document.getElementById('iDoStage').classList.contains('ido-fullscreen')) toggleIdoFullscreen();
         return;
       }
       const wbOpen = !document.getElementById('whiteboardModal').classList.contains('hidden');
       if (e.key.toLowerCase() === 'w') {
         if (wbOpen) { closeWhiteboard(); return; }
-        if (!isAnyModalOpen()) { openWhiteboard(); }
+        if (!isAnyModalOpen()) openWhiteboard();
         return;
       }
       if (isAnyModalOpen()) {
@@ -763,7 +861,7 @@
         }
         return;
       }
-      if (e.key === 'ArrowRight' && currentStation < 6) showStation(currentStation + 1);
+      if (e.key === 'ArrowRight' && currentStation < 7) showStation(currentStation + 1);
       if (e.key === 'ArrowLeft' && currentStation > 0) showStation(currentStation - 1);
       if (e.key.toLowerCase() === 'm') toggleMute();
       if (e.key.toLowerCase() === 't') toggleTeacherDrawer();
@@ -785,49 +883,49 @@
     // ============================================================
     const VOCAB = [
       {
-        en: 'Mean', vn: 'Trung bình cộng',
+        en: 'Mean', vn: 'Trung bình cộng', badge: 'bg-blue-100 text-blue-800', border: 'border-blue-300 hover:border-blue-600',
         defEn: 'The total of all values divided by how many values there are (equal share).',
         defVn: 'Tổng tất cả các giá trị chia cho số lượng giá trị (chia đều).',
         svg: '<svg viewBox="0 0 260 110" class="h-28"><rect x="30" y="55" width="32" height="45" fill="#93c5fd" stroke="#1d4ed8" stroke-width="2"/><rect x="75" y="35" width="32" height="65" fill="#93c5fd" stroke="#1d4ed8" stroke-width="2"/><rect x="120" y="15" width="32" height="85" fill="#93c5fd" stroke="#1d4ed8" stroke-width="2"/><line x1="20" y1="35" x2="170" y2="35" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6 4"/><text x="176" y="40" font-size="13" font-weight="bold" fill="#dc2626">Mean = 6</text><text x="41" y="95" font-size="12" font-weight="bold">4</text><text x="86" y="95" font-size="12" font-weight="bold">6</text><text x="131" y="95" font-size="12" font-weight="bold">8</text></svg>'
       },
       {
-        en: 'Median', vn: 'Trung vị (số ở giữa)',
+        en: 'Median', vn: 'Trung vị (số ở giữa)', badge: 'bg-amber-100 text-amber-900', border: 'border-amber-300 hover:border-amber-600',
         defEn: 'The middle value when a data set is placed in order from smallest to largest.',
         defVn: 'Giá trị nằm chính giữa khi sắp xếp dãy số từ bé đến lớn.',
         svg: '<svg viewBox="0 0 280 90" class="h-24"><text x="20" y="52" font-size="22" font-weight="bold" fill="#64748b">3,  5,</text><rect x="92" y="22" width="46" height="42" rx="8" fill="#dbeafe" stroke="#1d4ed8" stroke-width="3"/><text x="108" y="51" font-size="24" font-weight="black" fill="#1d4ed8">7</text><text x="148" y="52" font-size="22" font-weight="bold" fill="#64748b">,  9,  14</text><text x="84" y="82" font-size="12" font-weight="bold" fill="#1d4ed8">Middle value</text></svg>'
       },
       {
-        en: 'Mode & Bimodal', vn: 'Mốt (số xuất hiện nhiều nhất) & Hai mốt',
+        en: 'Mode & Bimodal', vn: 'Mốt (số xuất hiện nhiều nhất) & Hai mốt', badge: 'bg-teal-100 text-teal-900', border: 'border-teal-300 hover:border-teal-600',
         defEn: 'The value appearing most often. Bimodal means two values tie for the most frequent.',
         defVn: 'Giá trị xuất hiện nhiều lần nhất. Hai mốt nghĩa là có hai giá trị cùng xuất hiện nhiều nhất.',
         svg: '<svg viewBox="0 0 280 95" class="h-24"><text x="18" y="46" font-size="22" font-weight="bold" fill="#0f172a">2, </text><text x="48" y="46" font-size="22" font-weight="black" fill="#0f766e">5, 5</text><text x="98" y="46" font-size="22" font-weight="bold" fill="#0f172a">, 7, </text><text x="138" y="46" font-size="22" font-weight="black" fill="#0f766e">9, 9</text><text x="186" y="46" font-size="22" font-weight="bold" fill="#0f172a">, 11</text><text x="40" y="76" font-size="13" font-weight="bold" fill="#0f766e">Bimodal: modes are 5 and 9</text></svg>'
       },
       {
-        en: 'Range', vn: 'Khoảng biến thiên (độ chênh lệch)',
+        en: 'Range', vn: 'Khoảng biến thiên (độ chênh lệch)', badge: 'bg-purple-100 text-purple-900', border: 'border-purple-300 hover:border-purple-600',
         defEn: 'The difference between the largest value and the smallest value (Spread = Max − Min).',
         defVn: 'Hiệu giữa giá trị lớn nhất và giá trị nhỏ nhất (Lớn nhất − Nhỏ nhất).',
         svg: '<svg viewBox="0 0 280 90" class="h-24"><line x1="30" y1="50" x2="250" y2="50" stroke="#0f172a" stroke-width="3"/><circle cx="45" cy="50" r="6" fill="#1d4ed8"/><circle cx="235" cy="50" r="6" fill="#dc2626"/><text x="36" y="74" font-size="14" font-weight="bold">4</text><text x="224" y="74" font-size="14" font-weight="bold">19</text><path d="M52 38 Q140 8 228 38" fill="none" stroke="#6d28d9" stroke-width="2.5"/><text x="90" y="22" font-size="13" font-weight="bold" fill="#6d28d9">19 − 4 = 15</text></svg>'
       },
       {
-        en: 'Radius', vn: 'Bán kính',
+        en: 'Radius', vn: 'Bán kính', badge: 'bg-rose-100 text-rose-900', border: 'border-rose-300 hover:border-rose-600',
         defEn: 'The straight line from the centre of a circle to any point on its edge (half the diameter).',
         defVn: 'Đoạn thẳng nối từ tâm hình tròn đến một điểm trên đường tròn (bằng nửa đường kính).',
         svg: '<svg viewBox="0 0 180 120" class="h-28"><circle cx="90" cy="60" r="46" fill="#eff6ff" stroke="#1d4ed8" stroke-width="3"/><line x1="90" y1="60" x2="136" y2="60" stroke="#dc2626" stroke-width="4"/><circle cx="90" cy="60" r="4" fill="#0f172a"/><text x="98" y="52" font-size="13" font-weight="bold" fill="#dc2626">radius</text></svg>'
       },
       {
-        en: 'Diameter', vn: 'Đường kính',
+        en: 'Diameter', vn: 'Đường kính', badge: 'bg-emerald-100 text-emerald-900', border: 'border-emerald-300 hover:border-emerald-600',
         defEn: 'A straight line going all the way across a circle through its exact centre (d = 2 × r).',
         defVn: 'Đoạn thẳng đi qua tâm nối hai điểm trên đường tròn (d = 2 × r).',
         svg: '<svg viewBox="0 0 180 120" class="h-28"><circle cx="90" cy="60" r="46" fill="#f0fdfa" stroke="#0f766e" stroke-width="3"/><line x1="44" y1="60" x2="136" y2="60" stroke="#0f766e" stroke-width="4"/><circle cx="90" cy="60" r="4" fill="#0f172a"/><text x="62" y="52" font-size="13" font-weight="bold" fill="#0f766e">diameter</text></svg>'
       },
       {
-        en: 'Circumference', vn: 'Chu vi hình tròn',
+        en: 'Circumference', vn: 'Chu vi hình tròn', badge: 'bg-indigo-100 text-indigo-900', border: 'border-indigo-300 hover:border-indigo-600',
         defEn: 'The total distance all the way around the outside edge of a circle.',
         defVn: 'Độ dài đường viền xung quanh hình tròn (độ dài của đường tròn).',
         svg: '<svg viewBox="0 0 210 120" class="h-28"><circle cx="105" cy="60" r="44" fill="#ffffff" stroke="#6d28d9" stroke-width="5"/><circle cx="105" cy="60" r="3" fill="#0f172a"/><text x="58" y="116" font-size="12" font-weight="bold" fill="#6d28d9">outer edge = circumference</text></svg>'
       },
       {
-        en: 'Rotational Symmetry', vn: 'Đối xứng quay (bậc đối xứng quay)',
+        en: 'Rotational Symmetry', vn: 'Đối xứng quay (bậc đối xứng quay)', badge: 'bg-orange-100 text-orange-900', border: 'border-orange-300 hover:border-orange-600',
         defEn: 'How many times a shape matches its exact outline during one full 360° turn (described as Order x).',
         defVn: 'Số lần một hình trùng khớp hoàn toàn với vị trí ban đầu trong một vòng quay 360° (gọi là Bậc x).',
         svg: '<svg viewBox="0 0 200 120" class="h-28"><rect x="65" y="25" width="70" height="70" fill="#fef3c7" stroke="#b45309" stroke-width="3"/><circle cx="100" cy="60" r="4" fill="#dc2626"/><path d="M148 40 A52 52 0 0 1 148 80" fill="none" stroke="#1d4ed8" stroke-width="3"/><polygon points="148,84 142,74 154,75" fill="#1d4ed8"/><text x="155" y="65" font-size="12" font-weight="bold" fill="#1d4ed8">Order 4</text></svg>'
@@ -839,8 +937,8 @@
     VOCAB.forEach((v, idx) => {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'bg-white hover:bg-blue-50 border-2 border-slate-200 hover:border-blue-500 rounded-2xl p-5 text-left shadow-sm transition group';
-      btn.innerHTML = '<span class="text-xs font-extrabold text-blue-700 uppercase">Tap to open</span><p class="text-xl font-black text-slate-900 mt-1 group-hover:text-blue-800">' + v.en + '</p>';
+      btn.className = 'bg-white rounded-2xl border-2 ' + v.border + ' p-5 text-left shadow-md hover:-translate-y-0.5 transition flex flex-col justify-between min-h-[125px]';
+      btn.innerHTML = '<span class="inline-block self-start text-[11px] font-black uppercase px-2.5 py-0.5 rounded-full ' + v.badge + '">🔊 Tap to explore</span><p class="text-xl font-black text-slate-900 mt-2">' + v.en + '</p>';
       btn.onclick = () => openVocabModal(idx);
       vocabGrid.appendChild(btn);
     });
@@ -872,81 +970,193 @@
     }
 
     // ============================================================
-    // 4. STATION 3: WORKED EXAMPLES + INTERACTIVE LABS
+    // 4. STATION 3: VISUAL ANIMATED I DO STAGE (FULL-SCREEN READY)
     // ============================================================
-    const EXAMPLES = [
-      {
-        title: 'Example 1: Find Mode, Median, Mean & Range',
-        prompt: 'Five pupils scored the following marks in a maths quiz: 7, 12, 4, 10, 7.',
-        steps: [
-          'Step 1 — Order smallest to largest: 4, 7, 7, 10, 12.',
-          'Step 2 — Mode (most frequent): 7 appears twice ➔ Mode = 7.',
-          'Step 3 — Median (middle value): cross off 4 & 12, then 7 & 10 ➔ Median = 7.',
-          'Step 4 — Range (spread): Largest − Smallest = 12 − 4 = 8.',
-          'Step 5 — Mean (equal share): Total = 4 + 7 + 7 + 10 + 12 = 40. Divide by 5 values: 40 ÷ 5 = 8.'
-        ]
-      },
-      {
-        title: 'Example 2: Circle Parts & The Compass Trap',
-        prompt: 'A bicycle wheel drawing shows a diameter of 14 cm. What is its radius, and how wide should you set your compass?',
-        steps: [
-          'Step 1 — Recall the rule: Diameter goes all the way across (d = 2 × r).',
-          'Step 2 — Halve the diameter to find the radius: r = 14 cm ÷ 2 = 7 cm.',
-          'Step 3 — Compass rule: Place the pin on the centre and set the pencil to the RADIUS (7 cm, never 14 cm!).',
-          'Step 4 — Check: Spinning a 7 cm radius draws a circle 14 cm wide across the middle.'
-        ]
-      },
-      {
-        title: 'Example 3: Classifying Quadrilaterals by Diagonals & Rotation',
-        prompt: 'Compare the diagonals and rotational symmetry of a non-square Rectangle, a non-square Rhombus and a Square.',
-        steps: [
-          'Non-square Rectangle: Diagonals are EQUAL and bisect each other, but do NOT cross at 90°. Rotational symmetry: Order 2.',
-          'Non-square Rhombus: Diagonals are UNEQUAL, bisect each other, and DO cross at 90°. Rotational symmetry: Order 2.',
-          'Square (special rectangle & special rhombus): Diagonals are EQUAL, bisect each other, AND cross at 90°. Rotational symmetry: Order 4.',
-          'Key Trap: A Kite has NO rotational matches until 360° — so we describe it as Order 1 (never Order 0!).'
-        ]
-      }
-    ];
+    let activeModel = 0;
+    let modelStep = 0;
+    const MODEL_MAX = [5, 4, 4];
 
-    let activeExIdx = 0;
-    let exStepsShown = 0;
-    function selectExample(idx) {
-      activeExIdx = idx;
-      exStepsShown = 0;
-      document.querySelectorAll('.ex-tab').forEach((b, i) => {
+    function toggleIdoFullscreen() {
+      const stage = document.getElementById('iDoStage');
+      const isFs = stage.classList.toggle('ido-fullscreen');
+      document.getElementById('btnIdoFull').textContent = isFs ? '✕ Exit Full Screen (Esc)' : '⛶ Full Screen I Do';
+    }
+    function toggleStepsPopover() {
+      document.getElementById('stepsBar').classList.toggle('hidden');
+    }
+
+    function selectVisualModel(idx) {
+      activeModel = idx;
+      modelStep = 0;
+      document.querySelectorAll('.vm-tab').forEach((b, i) => {
         b.className = i === idx
-          ? 'ex-tab px-3 py-1.5 rounded-lg text-sm font-bold bg-blue-700 text-white'
-          : 'ex-tab px-3 py-1.5 rounded-lg text-sm font-bold bg-slate-100 text-slate-700';
+          ? 'vm-tab px-4 py-2 rounded-xl text-sm font-black bg-sky-400 text-slate-950 shadow transition'
+          : 'vm-tab px-4 py-2 rounded-xl text-sm font-extrabold bg-white/10 text-indigo-100 hover:bg-white/20 transition';
       });
-      renderExample();
+      renderVisualModel();
     }
-    function renderExample() {
-      const ex = EXAMPLES[activeExIdx];
-      let html = '<h4 class="text-lg font-black text-blue-900 mb-1">' + ex.title + '</h4>' +
-                 '<p class="text-base font-bold text-slate-800 mb-4">' + ex.prompt + '</p>' +
-                 '<div class="space-y-2">';
-      for (let i = 0; i < exStepsShown; i++) {
-        html += '<div class="bg-white border-l-4 border-blue-600 rounded-r-xl px-4 py-2.5 text-sm md:text-base font-semibold text-slate-800 shadow-sm">' + ex.steps[i] + '</div>';
-      }
-      if (exStepsShown === 0) {
-        html += '<p class="text-sm italic text-slate-500">Click "Animate Next Step" to walk through the worked example step by step.</p>';
-      }
-      html += '</div>';
-      document.getElementById('exampleBox').innerHTML = html;
-      document.getElementById('exStepCounter').textContent = 'Step ' + exStepsShown + ' / ' + ex.steps.length;
-    }
-    function nextExampleStep() {
-      if (exStepsShown < EXAMPLES[activeExIdx].steps.length) {
-        exStepsShown++;
-        renderExample();
-        playTone(540 + exStepsShown * 40, 0.1, 'triangle');
+    function nextVisualStep() {
+      if (modelStep < MODEL_MAX[activeModel]) {
+        modelStep++;
+        renderVisualModel();
+        playTone(520 + modelStep * 55, 0.11, 'triangle');
       }
     }
-    function resetExampleSteps() {
-      exStepsShown = 0;
-      renderExample();
+    function prevVisualStep() {
+      if (modelStep > 0) {
+        modelStep--;
+        renderVisualModel();
+        playTone(420, 0.08, 'sine');
+      }
     }
-    selectExample(0);
+    function resetVisualSteps() {
+      modelStep = 0;
+      renderVisualModel();
+    }
+
+    function renderVisualModel() {
+      const canvas = document.getElementById('visualCanvas');
+      const maxS = MODEL_MAX[activeModel];
+      document.getElementById('vmStepBadge').textContent = 'Step ' + modelStep + ' / ' + maxS;
+      let dots = '';
+      for (let i = 1; i <= maxS; i++) {
+        dots += '<span class="w-3 h-3 rounded-full ' + (i <= modelStep ? 'bg-emerald-400' : 'bg-white/25') + '"></span>';
+      }
+      document.getElementById('stepDots').innerHTML = dots;
+
+      if (activeModel === 0) {
+        // VISUAL MODEL 1: AVERAGES [7, 12, 4, 10, 7]
+        const unsorted = [7, 12, 4, 10, 7];
+        const sorted = [4, 7, 7, 10, 12];
+        const shown = modelStep === 0 ? unsorted : sorted;
+
+        const tilesHtml = shown.map((n, idx) => {
+          let cls = 'bg-blue-600 text-white border-blue-800';
+          let tag = '';
+          if (modelStep === 2 && n === 7) {
+            cls = 'bg-teal-500 text-white border-teal-700 scale-110 ring-4 ring-teal-200';
+            tag = '<span class="text-xs font-black text-teal-700 mt-1">MOST!</span>';
+          } else if (modelStep === 3) {
+            if (idx === 2) {
+              cls = 'bg-amber-400 text-slate-950 border-amber-600 scale-110 ring-4 ring-amber-200';
+              tag = '<span class="text-xs font-black text-amber-700 mt-1">MIDDLE!</span>';
+            } else {
+              cls = 'bg-slate-200 text-slate-400 border-slate-300 line-through';
+            }
+          } else if (modelStep === 4 && (idx === 0 || idx === 4)) {
+            cls = 'bg-purple-600 text-white border-purple-800 scale-110 ring-4 ring-purple-200';
+            tag = '<span class="text-xs font-black text-purple-700 mt-1">' + (idx === 0 ? 'MIN' : 'MAX') + '</span>';
+          }
+          return '<div class="flex flex-col items-center pop-in"><div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl border-b-4 flex items-center justify-center text-4xl md:text-5xl font-black shadow-md transition-all ' + cls + '">' + n + '</div>' + tag + '</div>';
+        }).join('');
+
+        let visualStage = '';
+        let caption = 'Quiz scores from 5 pupils: 7, 12, 4, 10, 7. Click "Animate Next Step"!';
+        if (modelStep === 1) caption = 'Step 1 — ORDER FIRST: Line up the tiles from smallest (4) to largest (12).';
+        if (modelStep === 2) caption = 'Step 2 — MODE = 7: Two tiles show 7 — the most frequent score!';
+        if (modelStep === 3) caption = 'Step 3 — MEDIAN = 7: Cross off outer pairs (4 & 12, then 7 & 10) to spot the middle.';
+        if (modelStep === 4) {
+          caption = 'Step 4 — RANGE = 8: Spread from smallest (4) to largest (12) ➔ 12 − 4 = 8.';
+          visualStage = '<div class="mt-4 bg-purple-50 border-2 border-purple-300 rounded-2xl p-4 text-center pop-in"><p class="text-2xl md:text-3xl font-black text-purple-900">12 − 4 = <span class="bg-purple-600 text-white px-3 py-0.5 rounded-xl">8</span></p></div>';
+        }
+        if (modelStep === 5) {
+          caption = 'Step 5 — MEAN = 8: Total = 4 + 7 + 7 + 10 + 12 = 40. Share equally across 5 bars ➔ 40 ÷ 5 = 8!';
+          const bars = [4, 7, 7, 10, 12].map(v =>
+            '<div class="flex flex-col items-center justify-end h-36 w-14"><span class="text-xs font-black text-rose-700 mb-1">8</span><div class="w-12 rounded-t-xl bg-rose-500 shadow" style="height:67%;"></div><span class="text-[11px] font-bold text-slate-400 mt-1">was ' + v + '</span></div>'
+          ).join('');
+          visualStage = '<div class="mt-4 bg-rose-50 border-2 border-rose-300 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-around gap-4 pop-in"><div class="flex items-end gap-3">' + bars + '</div><div class="text-center md:text-left"><p class="text-sm font-black uppercase text-rose-600">Levelled Equal Share</p><p class="text-3xl md:text-4xl font-black text-slate-900">40 ÷ 5 = <span class="text-rose-600">8</span></p></div></div>';
+        }
+
+        canvas.innerHTML =
+          '<div class="space-y-4">' +
+            '<div class="flex items-center justify-between flex-wrap gap-2"><h3 class="text-xl md:text-2xl font-black text-slate-900">Model 1: Finding All 4 Averages</h3><span class="bg-blue-100 text-blue-900 font-black text-xs px-3 py-1 rounded-full">Data: 7, 12, 4, 10, 7</span></div>' +
+            '<div class="flex justify-center flex-wrap gap-4 py-4">' + tilesHtml + '</div>' +
+            visualStage +
+          '</div>' +
+          '<div class="mt-4 bg-slate-900 text-white rounded-2xl px-5 py-3.5 text-base md:text-xl font-black text-center pop-in">' + caption + '</div>';
+
+      } else if (activeModel === 1) {
+        // VISUAL MODEL 2: CIRCLE & COMPASS ANIMATED SVG
+        const showDiam = modelStep >= 1;
+        const showRad = modelStep >= 2;
+        const showComp = modelStep >= 3;
+        const showCirc = modelStep >= 4;
+        const captions = [
+          'A bicycle wheel drawing has a diameter of 14 cm. How wide should we set our compass?',
+          'Step 1 — DIAMETER (14 cm): Goes all the way across the circle through the centre.',
+          'Step 2 — RADIUS (7 cm): Half the diameter! 14 cm ÷ 2 = 7 cm.',
+          'Step 3 — COMPASS TRAP: Pin on centre, pencil set to RADIUS (7 cm — NEVER 14 cm!).',
+          'Step 4 — CIRCUMFERENCE: Spin the compass 360° to trace the purple outer edge!'
+        ];
+
+        canvas.innerHTML =
+          '<div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center my-auto">' +
+            '<div class="md:col-span-7 flex justify-center">' +
+              '<svg viewBox="0 0 360 270" class="w-full max-w-md">' +
+                '<circle cx="180" cy="135" r="95" fill="#eff6ff" stroke="' + (showCirc ? '#7c3aed' : '#94a3b8') + '" stroke-width="' + (showCirc ? '8' : '4') + '" ' + (showCirc ? '' : 'stroke-dasharray="8 6"') + '/>' +
+                (showDiam ? '<line x1="85" y1="135" x2="275" y2="135" stroke="#0f766e" stroke-width="5"/><polygon points="85,135 97,128 97,142" fill="#0f766e"/><polygon points="275,135 263,128 263,142" fill="#0f766e"/><rect x="122" y="145" width="116" height="26" rx="8" fill="#0f766e"/><text x="180" y="163" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">Diameter = 14 cm</text>' : '') +
+                (showRad ? '<line x1="180" y1="135" x2="275" y2="135" stroke="#dc2626" stroke-width="7"/><rect x="192" y="96" width="98" height="26" rx="8" fill="#dc2626"/><text x="241" y="114" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">Radius = 7 cm</text>' : '') +
+                (showComp ? '<line x1="228" y1="30" x2="180" y2="135" stroke="#334155" stroke-width="5"/><line x1="228" y1="30" x2="275" y2="135" stroke="#f59e0b" stroke-width="5"/><circle cx="228" cy="30" r="8" fill="#0f172a"/><text x="228" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="#0f172a">Compass Pin → Pencil = 7 cm</text>' : '') +
+                '<circle cx="180" cy="135" r="7" fill="#0f172a"/>' +
+                '<text x="164" y="122" font-size="13" font-weight="bold" fill="#0f172a">Centre</text>' +
+                (showCirc ? '<text x="180" y="255" text-anchor="middle" font-size="15" font-weight="bold" fill="#7c3aed">Outer Edge = Circumference</text>' : '') +
+              '</svg>' +
+            '</div>' +
+            '<div class="md:col-span-5 space-y-3">' +
+              '<div class="p-4 rounded-2xl border-2 ' + (showDiam ? 'bg-teal-50 border-teal-500 pop-in' : 'bg-slate-50 border-slate-200 opacity-40') + '"><p class="text-xs font-black text-teal-700 uppercase">Diameter (d)</p><p class="text-2xl font-black text-slate-900">14 cm (all the way across)</p></div>' +
+              '<div class="p-4 rounded-2xl border-2 ' + (showRad ? 'bg-rose-50 border-rose-500 pop-in' : 'bg-slate-50 border-slate-200 opacity-40') + '"><p class="text-xs font-black text-rose-700 uppercase">Radius (r = d ÷ 2)</p><p class="text-2xl font-black text-slate-900">14 ÷ 2 = 7 cm</p></div>' +
+              '<div class="p-4 rounded-2xl border-2 ' + (showComp ? 'bg-amber-50 border-amber-500 pop-in' : 'bg-slate-50 border-slate-200 opacity-40') + '"><p class="text-xs font-black text-amber-800 uppercase">Compass Setting</p><p class="text-lg font-black text-emerald-700">✓ Set to 7 cm <span class="text-rose-600 ml-2">✗ NOT 14 cm!</span></p></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="mt-4 bg-slate-900 text-white rounded-2xl px-5 py-3.5 text-base md:text-xl font-black text-center pop-in">' + captions[modelStep] + '</div>';
+
+      } else {
+        // VISUAL MODEL 3: QUADRILATERAL DIAGONALS & ROTATIONAL ORDER
+        const cards = [
+          {
+            show: modelStep >= 1, name: 'Non-Square Rectangle', bg: 'bg-teal-50 border-teal-400', badge: 'Order 2',
+            svg: '<svg viewBox="0 0 180 110" class="h-24 mx-auto"><rect x="20" y="20" width="140" height="70" fill="#ccfbf1" stroke="#0f766e" stroke-width="3.5"/><line x1="20" y1="20" x2="160" y2="90" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5 4"/><line x1="160" y1="20" x2="20" y2="90" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5 4"/><circle cx="90" cy="55" r="4" fill="#0f172a"/></svg>',
+            facts: ['✓ Equal diagonals', '✓ Bisect each other', '✗ Do NOT cross at 90°']
+          },
+          {
+            show: modelStep >= 2, name: 'Non-Square Rhombus', bg: 'bg-emerald-50 border-emerald-400', badge: 'Order 2',
+            svg: '<svg viewBox="0 0 180 110" class="h-24 mx-auto"><polygon points="90,10 155,55 90,100 25,55" fill="#dcfce7" stroke="#15803d" stroke-width="3.5"/><line x1="90" y1="10" x2="90" y2="100" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5 4"/><line x1="25" y1="55" x2="155" y2="55" stroke="#1d4ed8" stroke-width="2.5" stroke-dasharray="5 4"/><rect x="90" y="45" width="10" height="10" fill="none" stroke="#0f172a" stroke-width="2"/></svg>',
+            facts: ['✗ Unequal diagonals', '✓ Bisect each other', '✓ Cross at 90°']
+          },
+          {
+            show: modelStep >= 3, name: 'Square (Special Both!)', bg: 'bg-blue-50 border-blue-500', badge: 'Order 4',
+            svg: '<svg viewBox="0 0 180 110" class="h-24 mx-auto"><rect x="50" y="15" width="80" height="80" fill="#dbeafe" stroke="#1d4ed8" stroke-width="3.5"/><line x1="50" y1="15" x2="130" y2="95" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5 4"/><line x1="130" y1="15" x2="50" y2="95" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5 4"/><circle cx="90" cy="55" r="4" fill="#0f172a"/><text x="97" y="50" font-size="11" font-weight="bold" fill="#0f172a">90°</text></svg>',
+            facts: ['✓ Equal diagonals', '✓ Bisect each other', '✓ Cross at 90°']
+          },
+          {
+            show: modelStep >= 4, name: 'Kite (Watch the Trap!)', bg: 'bg-rose-50 border-rose-400', badge: 'Order 1',
+            svg: '<svg viewBox="0 0 180 110" class="h-24 mx-auto"><polygon points="90,8 135,40 90,102 45,40" fill="#ffe4e6" stroke="#be123c" stroke-width="3.5"/><line x1="90" y1="8" x2="90" y2="102" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5 4"/><line x1="45" y1="40" x2="135" y2="40" stroke="#1d4ed8" stroke-width="2.5" stroke-dasharray="5 4"/><rect x="90" y="30" width="9" height="10" fill="none" stroke="#0f172a" stroke-width="2"/></svg>',
+            facts: ['✗ Unequal diagonals', 'Only 1 bisected', '✓ Cross at 90° • Order 1 (NEVER 0!)']
+          }
+        ];
+
+        const captions = [
+          'How do diagonals tell quadrilaterals apart? Click "Animate Next Step" to inspect all 4 shapes!',
+          'Non-Square Rectangle: Equal diagonals that bisect, NOT at 90° — Order 2.',
+          'Non-Square Rhombus: Unequal diagonals that bisect AT 90° — Order 2.',
+          'Square: Has EVERY super-property (equal + bisect + 90°) — Order 4!',
+          'Kite: Diagonals cross at 90°, matches only at 360° — Order 1 (never Order 0!).'
+        ];
+
+        canvas.innerHTML =
+          '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-auto">' +
+            cards.map(c =>
+              '<div class="rounded-2xl border-2 p-4 flex flex-col justify-between transition-all ' + (c.show ? c.bg + ' pop-in shadow-sm' : 'bg-slate-50 border-slate-200 opacity-30') + '">' +
+                '<div class="flex items-center justify-between gap-1 mb-2"><p class="font-black text-sm text-slate-900">' + c.name + '</p><span class="bg-slate-900 text-amber-300 text-xs font-black px-2 py-0.5 rounded-full">' + c.badge + '</span></div>' +
+                c.svg +
+                '<ul class="mt-2 space-y-1 text-xs font-extrabold text-slate-800">' + c.facts.map(f => '<li>' + f + '</li>').join('') + '</ul>' +
+              '</div>'
+            ).join('') +
+          '</div>' +
+          '<div class="mt-4 bg-slate-900 text-white rounded-2xl px-5 py-3.5 text-base md:text-xl font-black text-center pop-in">' + captions[modelStep] + '</div>';
+      }
+    }
+    selectVisualModel(0);
 
     // Interactive Lab A: Mean-Leveller Bars
     let barValues = [3, 5, 8, 9, 10];
@@ -956,7 +1166,7 @@
       const sorted = [...arr].sort((a, b) => a - b);
       const sum = arr.reduce((a, b) => a + b, 0);
       const mean = sum / arr.length;
-      const median = sorted[2]; // 5 values
+      const median = sorted[2];
       const range = sorted[sorted.length - 1] - sorted[0];
       const freq = {};
       arr.forEach(v => freq[v] = (freq[v] || 0) + 1);
@@ -974,13 +1184,14 @@
       barsEl.innerHTML = '';
       ctrlEl.innerHTML = '';
 
+      const palette = ['bg-blue-500', 'bg-indigo-500', 'bg-teal-500', 'bg-purple-500', 'bg-sky-500'];
       barValues.forEach((v, i) => {
         const displayVal = barsLevelled ? st.mean : v;
         const pct = Math.min(100, (displayVal / maxScale) * 100);
-        const barCol = barsLevelled ? 'bg-rose-500' : 'bg-blue-600';
+        const barCol = barsLevelled ? 'bg-rose-500' : palette[i % palette.length];
         barsEl.innerHTML +=
           '<div class="flex flex-col items-center justify-end h-full flex-1">' +
-            '<div class="mean-bar relative w-10 sm:w-12 rounded-t-lg ' + barCol + '" style="height:' + pct + '%;">' +
+            '<div class="mean-bar relative w-10 sm:w-12 rounded-t-xl shadow-sm ' + barCol + '" style="height:' + pct + '%;">' +
               '<span class="absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-black text-slate-800 whitespace-nowrap">' + (barsLevelled ? st.mean.toFixed(1).replace(/\.0$/, '') : v) + '</span>' +
             '</div>' +
           '</div>';
@@ -1018,7 +1229,7 @@
     }
     renderMeanBars();
 
-    // Interactive Lab B: Rotation & Circle Dial (includes Rhombus + monotonic angle + inquiry reveal)
+    // Interactive Lab B: Rotation & Circle Dial
     const SHAPES = [
       { id: 'square', name: 'Square', order: 4, step: 90, angles: [90, 180, 270, 360], svg: '<rect x="55" y="55" width="130" height="130" fill="#dbeafe" stroke="#1d4ed8" stroke-width="4"/><line x1="55" y1="55" x2="185" y2="185" stroke="#1d4ed8" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.5"/><line x1="185" y1="55" x2="55" y2="185" stroke="#1d4ed8" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.5"/><circle cx="120" cy="68" r="5" fill="#dc2626"/>' },
       { id: 'rect', name: 'Rectangle', order: 2, step: 90, angles: [180, 360], svg: '<rect x="35" y="75" width="170" height="90" fill="#ccfbf1" stroke="#0f766e" stroke-width="4"/><line x1="35" y1="75" x2="205" y2="165" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.5"/><line x1="205" y1="75" x2="35" y2="165" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.5"/><circle cx="120" cy="86" r="5" fill="#dc2626"/>' },
@@ -1045,15 +1256,13 @@
     });
 
     function selectShape(idx) {
-      if (spinTimer) clearInterval(spinTimer);
+      if (spinTimer) { clearInterval(spinTimer); spinTimer = null; }
       curShapeIdx = idx;
-      totalDeg = 0;
-      curAngle = 0;
-      matchCount = 0;
+      totalDeg = 0; curAngle = 0; matchCount = 0;
       SHAPES.forEach((_, i) => {
         const b = document.getElementById('shBtn-' + i);
         b.className = i === idx
-          ? 'px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-700 text-white border border-indigo-700'
+          ? 'px-2.5 py-1 rounded-lg text-xs font-black bg-purple-600 text-white border border-purple-600 shadow-sm'
           : 'px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100';
       });
       const sh = SHAPES[curShapeIdx];
@@ -1070,8 +1279,7 @@
       if (!fromTimer && spinTimer) { clearInterval(spinTimer); spinTimer = null; }
       const sh = SHAPES[curShapeIdx];
       if (curAngle >= 360) {
-        curAngle = 0;
-        matchCount = 0;
+        curAngle = 0; matchCount = 0;
         document.getElementById('rotOrderBadge').textContent = 'Order: ? (Spin 360° to discover)';
       }
       totalDeg += sh.step;
@@ -1086,7 +1294,7 @@
       }
       document.getElementById('rotMatchesText').textContent = matchCount;
       if (curAngle >= 360) {
-        document.getElementById('rotOrderBadge').textContent = 'Discovered: Order ' + sh.order;
+        document.getElementById('rotOrderBadge').textContent = '✓ Discovered: Order ' + sh.order;
       }
     }
 
@@ -1107,8 +1315,8 @@
     function setGeomMode(mode) {
       document.getElementById('rotPanel').classList.toggle('hidden', mode !== 'rot');
       document.getElementById('circlePanel').classList.toggle('hidden', mode !== 'circle');
-      document.getElementById('gmRotBtn').className = mode === 'rot' ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-700 text-white' : 'px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 text-slate-700';
-      document.getElementById('gmCircBtn').className = mode === 'circle' ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-700 text-white' : 'px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 text-slate-700';
+      document.getElementById('gmRotBtn').className = mode === 'rot' ? 'px-3.5 py-1.5 rounded-xl text-xs font-black bg-purple-600 text-white shadow' : 'px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700';
+      document.getElementById('gmCircBtn').className = mode === 'circle' ? 'px-3.5 py-1.5 rounded-xl text-xs font-black bg-purple-600 text-white shadow' : 'px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700';
     }
 
     function updateCircleSlider() {
@@ -1128,87 +1336,116 @@
     updateCircleSlider();
 
     // ============================================================
-    // 5. STATION 4: YOU DO PRACTICE (EXACTLY 3 HORIZONTAL CARDS)
+    // 5. STATION 4: YOU DO PRACTICE — ALL TIERS VISIBLE AT ONCE!
     // ============================================================
     const TIERS = {
       must: {
-        badgeClass: 'bg-emerald-100 text-emerald-800',
+        headerBg: 'bg-emerald-600 text-white',
+        colBg: 'bg-emerald-50/70 border-emerald-300',
+        badgeClass: 'bg-emerald-100 text-emerald-900',
         borderClass: 'border-emerald-500',
-        label: 'Must • Level 1',
+        label: '🟢 Must • Level 1',
         cards: [
-          { title: 'Card 1 — Core Averages', q: 'Find the mode, median, mean and range of: 6, 4, 8, 6, 11.', a: 'Ordered: 4, 6, 6, 8, 11. Mode = 6 | Median = 6 | Mean = 35 ÷ 5 = 7 | Range = 11 − 4 = 7.' },
-          { title: 'Card 2 — Circle Parts', q: 'A circle has a radius of 6.5 cm. Find its diameter, and name the distance around the outside edge.', a: 'Diameter = 2 × 6.5 cm = 13 cm. The outside edge is called the circumference.' },
-          { title: 'Card 3 — Rotational Symmetry', q: 'State the order of rotational symmetry for: (a) a Rectangle, and (b) a Square.', a: '(a) Rectangle = Order 2 (matches at 180° and 360°). (b) Square = Order 4 (matches every 90°).' }
+          { title: 'M1 • Core Averages', q: 'Find the mode, median, mean and range of: 6, 4, 8, 6, 11.', a: 'Ordered: 4, 6, 6, 8, 11. Mode = 6 | Median = 6 | Mean = 35 ÷ 5 = 7 | Range = 11 − 4 = 7.' },
+          { title: 'M2 • Circle Parts', q: 'Radius = 6.5 cm. Find the diameter, and name the outside edge of a circle.', a: 'Diameter = 2 × 6.5 cm = 13 cm. The outside edge is called the circumference.' },
+          { title: 'M3 • Rotational Order', q: 'State the order of rotational symmetry for: (a) Rectangle, (b) Square.', a: '(a) Rectangle = Order 2 (matches at 180° & 360°). (b) Square = Order 4 (matches every 90°).' }
         ]
       },
       should: {
+        headerBg: 'bg-amber-500 text-slate-950',
+        colBg: 'bg-amber-50/70 border-amber-300',
         badgeClass: 'bg-amber-100 text-amber-900',
         borderClass: 'border-amber-500',
-        label: 'Should • Level 2',
+        label: '🟠 Should • Level 2',
         cards: [
-          { title: 'Card 1 — Bimodal Data', q: 'Find the mode, median, mean and range of: 5, 9, 5, 12, 9, 14.', a: 'Ordered: 5, 5, 9, 9, 12, 14. Bimodal modes = 5 and 9 | Median = 9 | Mean = 54 ÷ 6 = 9 | Range = 9.' },
-          { title: 'Card 2 — Mystery Quadrilateral', q: 'All 4 sides are equal. No right angles. Diagonals cross at 90° and bisect each other. Name the shape and its rotational order.', a: 'Rhombus. Rotational symmetry = Order 2.' },
-          { title: 'Card 3 — Setting a Compass', q: 'Mai sets her compass to 4.5 cm to draw Circle A. What is Circle A’s diameter? To draw Circle B with diameter 11 cm, what must her compass width be?', a: 'Circle A diameter = 9 cm. Circle B compass radius = 11 ÷ 2 = 5.5 cm.' }
+          { title: 'S1 • Bimodal Data', q: 'Find mode, median, mean and range of: 5, 9, 5, 12, 9, 14.', a: 'Ordered: 5, 5, 9, 9, 12, 14. Bimodal modes = 5 & 9 | Median = 9 | Mean = 54 ÷ 6 = 9 | Range = 9.' },
+          { title: 'S2 • Mystery Shape', q: '4 equal sides, no 90° corners, diagonals bisect at 90°. Name it & give its order.', a: 'Rhombus. Rotational symmetry = Order 2.' },
+          { title: 'S3 • Setting a Compass', q: 'Compass = 4.5 cm ➔ find diameter. For diameter 11 cm ➔ find compass width.', a: 'Diameter = 9 cm. Compass radius for 11 cm diameter = 11 ÷ 2 = 5.5 cm.' }
         ]
       },
       could: {
+        headerBg: 'bg-purple-600 text-white',
+        colBg: 'bg-purple-50/70 border-purple-300',
         badgeClass: 'bg-purple-100 text-purple-900',
         borderClass: 'border-purple-600',
-        label: 'Could • Level 3',
+        label: '🟣 Could • Level 3',
         cards: [
-          { title: 'Card 1 — Reverse Mean', q: 'Five pupils have a mean score of 9. Four of the scores are 6, 8, 10 and 12. Work out the 5th score.', a: 'Total needed = 5 × 9 = 45. Sum of four scores = 36. 5th score = 45 − 36 = 9.' },
-          { title: 'Card 2 — Choosing the Best Average', q: 'Five drink prices (thousand VND): 25, 28, 30, 32, 95. Find the mean and median. Which average represents the shop more fairly?', a: 'Mean = 210 ÷ 5 = 42. Median = 30. The median (30) is fairer because the outlier 95 pulls the mean far too high.' },
-          { title: 'Card 3 — Twin Circles in a Box', q: 'Two identical circles fit tightly side-by-side inside a rectangle of length 24 cm. Find the radius of one circle and the height of the rectangle.', a: '2 diameters = 24 cm ➔ 1 diameter = 12 cm. Radius = 6 cm. Rectangle height = 1 diameter = 12 cm.' }
+          { title: 'C1 • Reverse Mean', q: 'Mean of 5 scores is 9. Four scores are 6, 8, 10, 12. Find the 5th score.', a: 'Total = 5 × 9 = 45. Sum of 4 scores = 36. 5th score = 45 − 36 = 9.' },
+          { title: 'C2 • Best Average', q: 'Drink prices (k VND): 25, 28, 30, 32, 95. Compare mean & median — which is fairer?', a: 'Mean = 210 ÷ 5 = 42. Median = 30. Median (30) is fairer because outlier 95 pulls the mean up.' },
+          { title: 'C3 • Twin Circles', q: 'Two identical circles fit tightly side-by-side inside a 24 cm long box. Find radius & height.', a: '2 diameters = 24 cm ➔ 1 diameter = 12 cm. Radius = 6 cm. Box height = 12 cm.' }
         ]
       }
     };
 
-    let activeTier = 'must';
-    let giantCardIdx = 0;
-    function selectTier(tier) {
-      activeTier = tier;
-      ['must', 'should', 'could'].forEach(t => {
-        const b = document.getElementById('tierBtn-' + t);
-        if (t === tier) {
-          const col = t === 'must' ? 'bg-emerald-600' : (t === 'should' ? 'bg-amber-600' : 'bg-purple-700');
-          b.className = 'tier-btn px-5 py-2.5 rounded-xl font-extrabold text-sm text-white shadow-sm ' + col;
+    const ALL_FLAT_CARDS = [];
+    ['must', 'should', 'could'].forEach(t => {
+      TIERS[t].cards.forEach((c, idx) => {
+        ALL_FLAT_CARDS.push({ tier: t, idx, label: TIERS[t].label, badgeClass: TIERS[t].badgeClass, ...c });
+      });
+    });
+
+    let youDoView = 'all';
+    let giantFlatIdx = 0;
+
+    function setYouDoView(view) {
+      youDoView = view;
+      ['all', 'must', 'should', 'could'].forEach(v => {
+        const b = document.getElementById('ydBtn-' + v);
+        if (v === view) {
+          const activeStyles = { all: 'bg-slate-900 text-white', must: 'bg-emerald-600 text-white', should: 'bg-amber-500 text-slate-950', could: 'bg-purple-600 text-white' };
+          b.className = 'yd-btn px-4 py-2 rounded-xl font-black text-sm shadow ' + activeStyles[v];
         } else {
-          b.className = 'tier-btn px-5 py-2.5 rounded-xl font-extrabold text-sm bg-slate-200 text-slate-700';
+          const idleStyles = { all: 'bg-slate-200 text-slate-800', must: 'bg-emerald-100 text-emerald-900', should: 'bg-amber-100 text-amber-900', could: 'bg-purple-100 text-purple-900' };
+          b.className = 'yd-btn px-3.5 py-2 rounded-xl font-extrabold text-sm ' + idleStyles[v];
         }
       });
-      const cfg = TIERS[tier];
-      const grid = document.getElementById('tierCardsGrid');
-      grid.innerHTML = '';
-      cfg.cards.forEach((c, idx) => {
-        const div = document.createElement('div');
-        div.className = 'bg-white rounded-2xl border-t-4 ' + cfg.borderClass + ' p-6 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between min-h-[240px]';
-        div.onclick = () => openGiantModal(idx);
-        div.innerHTML =
-          '<div>' +
-            '<span class="inline-block text-xs font-extrabold px-2.5 py-1 rounded-full ' + cfg.badgeClass + '">' + c.title + '</span>' +
-            '<p class="text-xl font-bold text-slate-900 mt-3 leading-snug">' + c.q + '</p>' +
-          '</div>' +
-          '<p class="text-xs font-extrabold text-blue-700 mt-4 pt-3 border-t border-slate-100">🔍 Click for Giant Projection Mode</p>';
-        grid.appendChild(div);
-      });
-    }
-    selectTier('must');
 
-    function openGiantModal(idx) {
-      giantCardIdx = idx;
-      const cfg = TIERS[activeTier];
-      const c = cfg.cards[giantCardIdx];
+      const wrap = document.getElementById('youDoContainer');
+      if (view === 'all') {
+        wrap.innerHTML = '<div class="grid grid-cols-1 lg:grid-cols-3 gap-5">' +
+          ['must', 'should', 'could'].map(t => {
+            const cfg = TIERS[t];
+            return '<div class="rounded-3xl border-2 ' + cfg.colBg + ' p-4 space-y-3 shadow-sm">' +
+              '<div class="rounded-2xl px-4 py-2.5 font-black text-base text-center shadow-sm ' + cfg.headerBg + '">' + cfg.label + '</div>' +
+              cfg.cards.map((c, ci) => {
+                const flatIdx = ALL_FLAT_CARDS.findIndex(x => x.tier === t && x.idx === ci);
+                return '<button type="button" onclick="openGiantModal(' + flatIdx + ')" class="w-full text-left bg-white hover:bg-slate-50 border-2 border-white hover:border-indigo-400 rounded-2xl p-4 shadow-sm transition group">' +
+                  '<div class="flex items-center justify-between gap-2"><span class="text-xs font-black px-2.5 py-0.5 rounded-full ' + cfg.badgeClass + '">' + c.title + '</span><span class="text-xs font-bold text-indigo-600 opacity-75 group-hover:opacity-100">🔍 Zoom</span></div>' +
+                  '<p class="text-base md:text-lg font-extrabold text-slate-900 mt-2 leading-snug">' + c.q + '</p>' +
+                '</button>';
+              }).join('') +
+            '</div>';
+          }).join('') +
+        '</div>';
+      } else {
+        const cfg = TIERS[view];
+        wrap.innerHTML = '<div class="grid grid-cols-1 md:grid-cols-3 gap-5">' +
+          cfg.cards.map((c, ci) => {
+            const flatIdx = ALL_FLAT_CARDS.findIndex(x => x.tier === view && x.idx === ci);
+            return '<button type="button" onclick="openGiantModal(' + flatIdx + ')" class="text-left bg-white rounded-3xl border-t-4 ' + cfg.borderClass + ' p-6 shadow-md hover:shadow-xl transition flex flex-col justify-between min-h-[250px]">' +
+              '<div><span class="inline-block text-xs font-black px-3 py-1 rounded-full ' + cfg.badgeClass + '">' + c.title + '</span>' +
+              '<p class="text-2xl font-black text-slate-900 mt-3 leading-snug">' + c.q + '</p></div>' +
+              '<p class="text-xs font-black text-indigo-600 mt-4 pt-3 border-t border-slate-100">🔍 Click for Giant Projection Mode</p>' +
+            '</button>';
+          }).join('') +
+        '</div>';
+      }
+    }
+    setYouDoView('all');
+
+    function openGiantModal(flatIdx) {
+      giantFlatIdx = flatIdx;
+      const c = ALL_FLAT_CARDS[giantFlatIdx];
       const gmB = document.getElementById('gmBadge');
-      gmB.textContent = cfg.label + ' • ' + c.title;
-      gmB.className = 'inline-block px-4 py-1.5 rounded-full text-sm font-extrabold uppercase tracking-wider ' + cfg.badgeClass;
+      gmB.textContent = c.label + ' • ' + c.title;
+      gmB.className = 'inline-block px-4 py-1.5 rounded-full text-sm font-black uppercase tracking-wider ' + c.badgeClass;
       document.getElementById('gmText').textContent = c.q;
       document.getElementById('gmAns').textContent = c.a;
       document.getElementById('gmAnsWrap').classList.add('hidden');
       document.getElementById('giantModal').classList.remove('hidden');
     }
     function stepGiantCard(delta) {
-      const len = TIERS[activeTier].cards.length;
-      openGiantModal((giantCardIdx + delta + len) % len);
+      openGiantModal((giantFlatIdx + delta + ALL_FLAT_CARDS.length) % ALL_FLAT_CARDS.length);
     }
     function closeGiantModal() {
       document.getElementById('giantModal').classList.add('hidden');
@@ -1227,16 +1464,16 @@
     const tfGrid = document.getElementById('tfMatrix');
     TF_CARDS.forEach((item, i) => {
       const card = document.createElement('div');
-      card.className = 'bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm cursor-pointer hover:border-indigo-400 transition';
+      card.className = 'bg-white border-2 border-indigo-200 rounded-2xl p-5 shadow-md cursor-pointer hover:border-indigo-500 transition';
       card.onclick = () => {
         document.getElementById('tfProof-' + i).classList.toggle('hidden');
         playTone(item.verdict === 'TRUE' ? 620 : 340, 0.12, 'triangle');
       };
       const vBadge = item.verdict === 'TRUE' ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white';
       card.innerHTML =
-        '<p class="text-lg font-extrabold text-slate-900">' + item.stmt + '</p>' +
-        '<p class="text-xs font-bold text-indigo-600 mt-2">Click to reveal mathematical proof</p>' +
-        '<div id="tfProof-' + i + '" class="hidden mt-3 pt-3 border-t border-slate-200 space-y-1.5">' +
+        '<p class="text-lg font-black text-slate-900">' + item.stmt + '</p>' +
+        '<p class="text-xs font-extrabold text-indigo-600 mt-2">👆 Tap to reveal mathematical proof</p>' +
+        '<div id="tfProof-' + i + '" class="hidden mt-3 pt-3 border-t border-slate-200 space-y-1.5 pop-in">' +
           '<span class="inline-block text-xs font-black px-3 py-1 rounded-full ' + vBadge + '">' + item.verdict + '</span>' +
           '<p class="text-sm font-semibold text-slate-700">' + item.proof + '</p>' +
         '</div>';
@@ -1245,20 +1482,17 @@
 
     const TWM_LIST = [
       {
-        tag: 'Spot the Mistake • Who is Correct?',
-        color: 'border-rose-500',
+        tag: 'Spot the Mistake • Who is Correct?', color: 'border-rose-500',
         prompt: 'Nam finds the median of 9, 3, 12, 5, 7 and writes "12" because 12 sits in the middle. Linh says the median is 7. Who is correct?',
         proof: 'Linh is correct. You MUST order the data first: 3, 5, 7, 9, 12. The true middle number is 7.'
       },
       {
-        tag: 'Always, Sometimes, or Never True?',
-        color: 'border-amber-500',
+        tag: 'Always, Sometimes, or Never True?', color: 'border-amber-500',
         prompt: '"The diagonals of a quadrilateral cross at right angles (90°)." Decide and give one example for each case.',
         proof: 'SOMETIMES TRUE. True for a square, rhombus or kite. False for a non-square rectangle, a non-rhombus parallelogram, or most trapeziums.'
       },
       {
-        tag: 'Convince Me • Prove It!',
-        color: 'border-emerald-600',
+        tag: 'Convince Me • Prove It!', color: 'border-emerald-600',
         prompt: 'Adding a score of 0 to {6, 8, 10} does NOT change the total (24), yet it DOES change the mean. Convince your partner!',
         proof: 'With 3 values, Mean = 24 ÷ 3 = 8. Adding 0 makes 4 values {0, 6, 8, 10}, so Mean = 24 ÷ 4 = 6. Zero still counts as a data item!'
       }
@@ -1267,21 +1501,92 @@
     const twmWrap = document.getElementById('twmChallenges');
     TWM_LIST.forEach((ch, i) => {
       const el = document.createElement('div');
-      el.className = 'bg-white rounded-2xl border-t-4 ' + ch.color + ' p-5 shadow-sm flex flex-col justify-between space-y-3';
+      el.className = 'bg-white rounded-2xl border-t-4 ' + ch.color + ' p-5 shadow-md flex flex-col justify-between space-y-3';
       el.innerHTML =
         '<div>' +
-          '<span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">' + ch.tag + '</span>' +
-          '<p class="text-base font-bold text-slate-900 mt-2">' + ch.prompt + '</p>' +
+          '<span class="text-xs font-black uppercase tracking-wider text-slate-500">' + ch.tag + '</span>' +
+          '<p class="text-base font-extrabold text-slate-900 mt-2">' + ch.prompt + '</p>' +
         '</div>' +
         '<div>' +
-          '<button type="button" onclick="document.getElementById(\'twmAns-' + i + '\').classList.toggle(\'hidden\')" class="bg-slate-900 hover:bg-slate-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg">Reveal Justification</button>' +
-          '<p id="twmAns-' + i + '" class="hidden mt-3 bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-semibold text-slate-800">' + ch.proof + '</p>' +
+          '<button type="button" onclick="document.getElementById(\'twmAns-' + i + '\').classList.toggle(\'hidden\')" class="bg-slate-900 hover:bg-slate-700 text-white text-xs font-black px-3.5 py-2 rounded-xl">👁 Reveal Justification</button>' +
+          '<p id="twmAns-' + i + '" class="hidden mt-3 bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-semibold text-slate-800 pop-in">' + ch.proof + '</p>' +
         '</div>';
       twmWrap.appendChild(el);
     });
 
     // ============================================================
-    // 7. STATION 6: QUICKFIRE ENGINE (10 FRESH QUESTIONS)
+    // 7. STATION 6 (NEW!): SUCCESS CRITERIA WHITEBOARD CHECK
+    // ============================================================
+    const SC_CHECKS = [
+      {
+        tier: '🟢 Must Check',
+        badge: 'bg-emerald-600 text-white',
+        border: 'border-emerald-400',
+        criterion: 'Find mode, median, mean, range and label circle parts.',
+        prompt: 'On your whiteboard — Data: 3, 8, 3, 10, 6. Write the Mode, Median, Mean and Range. Bonus: If radius = 3.5 cm, write the diameter!',
+        answer: 'Ordered: 3, 3, 6, 8, 10 ➔ Mode = 3 | Median = 6 | Mean = 30 ÷ 5 = 6 | Range = 10 − 3 = 7 | Diameter = 7 cm.'
+      },
+      {
+        tier: '🟠 Should Check',
+        badge: 'bg-amber-500 text-slate-950',
+        border: 'border-amber-400',
+        criterion: 'Classify quadrilaterals by diagonals and state rotational symmetry order.',
+        prompt: 'On your whiteboard — "My diagonals are EQUAL and bisect each other, but do NOT cross at 90°." Write my shape name and rotational symmetry order!',
+        answer: 'Non-square Rectangle — Rotational Symmetry: Order 2 (matches at 180° and 360°).'
+      },
+      {
+        tier: '🟣 Could Check',
+        badge: 'bg-purple-600 text-white',
+        border: 'border-purple-400',
+        criterion: 'Choose the best average and justify geometric claims.',
+        prompt: 'On your whiteboard — Daily bike sales: 4, 5, 5, 6, 30. Mean = 10, Median = 5. Which average is fairer to report, and why in 1 sentence?',
+        answer: 'Median (5) is fairer — the extreme outlier (30) pulls the mean (10) way above a typical day’s sales.'
+      }
+    ];
+    const scMetState = [false, false, false];
+
+    function renderScChecks() {
+      const grid = document.getElementById('scCheckGrid');
+      grid.innerHTML = '';
+      SC_CHECKS.forEach((sc, i) => {
+        const isMet = scMetState[i];
+        const card = document.createElement('div');
+        card.className = 'rounded-3xl border-2 p-6 shadow-md flex flex-col justify-between space-y-4 transition ' +
+          (isMet ? 'bg-emerald-50 border-emerald-500 ring-2 ring-emerald-300' : 'bg-white ' + sc.border);
+        card.innerHTML =
+          '<div class="space-y-3">' +
+            '<div class="flex items-center justify-between gap-2">' +
+              '<span class="text-xs font-black uppercase px-3 py-1 rounded-full ' + sc.badge + '">' + sc.tier + '</span>' +
+              (isMet ? '<span class="text-xs font-black text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">✅ MET!</span>' : '<span class="text-xs font-bold text-slate-400">Whiteboards up</span>') +
+            '</div>' +
+            '<p class="text-xs font-extrabold uppercase tracking-wide text-slate-500">Criterion: <span class="text-slate-800 normal-case">' + sc.criterion + '</span></p>' +
+            '<div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">' +
+              '<p class="text-lg font-black text-slate-900 leading-snug">' + sc.prompt + '</p>' +
+            '</div>' +
+            '<div id="scAns-' + i + '" class="hidden bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-3.5 text-sm font-extrabold text-emerald-950 pop-in">' + sc.answer + '</div>' +
+          '</div>' +
+          '<div class="flex gap-2 pt-2">' +
+            '<button type="button" onclick="document.getElementById(\'scAns-' + i + '\').classList.toggle(\'hidden\'); playTone(600,0.1,\'triangle\')" class="flex-1 bg-slate-900 hover:bg-slate-700 text-white font-black text-xs py-2.5 px-3 rounded-xl">👁 Reveal Answer</button>' +
+            '<button type="button" onclick="toggleScMet(' + i + ')" class="flex-1 font-black text-xs py-2.5 px-3 rounded-xl transition ' + (isMet ? 'bg-emerald-600 text-white' : 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900') + '">' + (isMet ? '✅ Met!' : '☐ Tick as Met') + '</button>' +
+          '</div>';
+        grid.appendChild(card);
+      });
+      const count = scMetState.filter(Boolean).length;
+      document.getElementById('scProgressBadge').textContent = count + ' / 3 Met';
+      document.getElementById('scAllMetBanner').classList.toggle('hidden', count < 3);
+    }
+    function toggleScMet(i) {
+      scMetState[i] = !scMetState[i];
+      renderScChecks();
+      if (scMetState[i]) {
+        playTone(740, 0.14, 'triangle');
+        if (scMetState.every(Boolean)) burstConfetti();
+      }
+    }
+    renderScChecks();
+
+    // ============================================================
+    // 8. STATION 7: QUICKFIRE ENGINE (10 FRESH QUESTIONS)
     // ============================================================
     const QUICKFIRE = [
       { topic: 'Mean (6Ss.03)', q: 'Find the mean of: 5, 7 and 9', a: '7', w: '(5 + 7 + 9) ÷ 3 = 21 ÷ 3 = 7' },
@@ -1312,20 +1617,18 @@
       resetQfTimer();
     }
     function resetQfTimer() {
-      if (qfInterval) clearInterval(qfInterval);
+      if (qfInterval) { clearInterval(qfInterval); qfInterval = null; }
       const total = parseInt(document.getElementById('qfDuration').value, 10);
       qfLeft = total;
       document.getElementById('qfClock').textContent = qfLeft + 's';
       document.getElementById('qfProgress').style.width = '100%';
-      document.getElementById('qfProgress').className = 'bg-blue-600 h-full transition-all duration-300';
+      document.getElementById('qfProgress').className = 'bg-indigo-600 h-full transition-all duration-300';
       document.getElementById('boardsUpBanner').classList.add('hidden');
     }
     function startQfTimer() {
-      if (qfInterval) clearInterval(qfInterval);
+      if (qfInterval) { clearInterval(qfInterval); qfInterval = null; }
       const total = parseInt(document.getElementById('qfDuration').value, 10);
-      if (qfLeft <= 0) {
-        resetQfTimer();
-      }
+      if (qfLeft <= 0) resetQfTimer();
       playTone(520, 0.08, 'sine');
       qfInterval = setInterval(() => {
         qfLeft--;
@@ -1338,14 +1641,14 @@
           playTone(760, 0.06, 'square', 0.08);
         }
         if (qfLeft <= 0) {
-          clearInterval(qfInterval);
+          clearInterval(qfInterval); qfInterval = null;
           document.getElementById('boardsUpBanner').classList.remove('hidden');
           playTone(880, 0.35, 'sawtooth', 0.16);
         }
       }, 1000);
     }
     function revealQfAnswer() {
-      if (qfInterval) clearInterval(qfInterval);
+      if (qfInterval) { clearInterval(qfInterval); qfInterval = null; }
       document.getElementById('qfAnswerBox').classList.remove('hidden');
       playTone(660, 0.16, 'triangle');
     }
@@ -1354,7 +1657,7 @@
     renderQf();
 
     // ============================================================
-    // 8. DAVID'S BOARD FULL-SCREEN WHITEBOARD
+    // 9. DAVID'S BOARD FULL-SCREEN WHITEBOARD
     // ============================================================
     const wbCanvas = document.getElementById('whiteboardCanvas');
     const wbCtx = wbCanvas.getContext('2d');
@@ -1362,6 +1665,7 @@
     let wbColor = '#0f172a';
     let wbWidth = 6;
     let wbEraser = false;
+    let wbLast = null;
 
     function resizeWhiteboard() {
       const rect = wbCanvas.parentElement.getBoundingClientRect();
@@ -1412,7 +1716,6 @@
       const r = wbCanvas.getBoundingClientRect();
       return { x: e.clientX - r.left, y: e.clientY - r.top };
     }
-    let wbLast = null;
     wbCanvas.addEventListener('pointerdown', (e) => {
       wbDrawing = true;
       const p = wbPos(e);
