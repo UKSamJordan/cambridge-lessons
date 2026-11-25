@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grade 5 Maths — Lesson 1: Averages &amp; 2D Shapes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --navy: #0f172a;
+      --blue: #1d4ed8;
+      --indigo: #4338ca;
+      --teal: #0f766e;
+      --amber: #b45309;
+      --purple: #6d28d9;
+      --red: #dc2626;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+    /* Smart Auto-Hiding Top Bar */
+    #topHeader {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    #topHeader.header-hidden {
+      transform: translateY(-100%);
+    }
+    /* 3D Flip Cards (Station 1) */
+    .flip-scene {
+      perspective: 1200px;
+      height: 350px;
+      cursor: pointer;
+    }
+    .flip-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .flip-card.flipped {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.5rem;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+    /* Tab Switching: NEVER put flex/grid directly on toggleable <section> */
+    .station-section {
+      display: none;
+    }
+    .station-section.active-station {
+      display: block;
+    }
+    /* David's Board 32px squared grid */
+    #whiteboardCanvas {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, #cbd5e1 1px, transparent 1px),
+        linear-gradient(to bottom, #cbd5e1 1px, transparent 1px);
+      background-size: 32px 32px;
+      touch-action: none;
+      cursor: crosshair;
+    }
+    /* Mean bar transition */
+    .mean-bar {
+      transition: height 0.55s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s ease;
+    }
+    /* Rotational symmetry spinner */
+    #rotShapeGroup {
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-origin: 120px 120px;
+    }
+    @keyframes pulseAlert {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+    .boards-up-pulse {
+      animation: pulseAlert 0.65s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- AUTO-HIDING FIXED TOP HEADER -->
+  <header id="topHeader" class="fixed top-0 left-0 right-0 bg-slate-900 text-white shadow-lg border-b border-slate-700">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3 flex-wrap">
+      <div class="flex items-center gap-3">
+        <img src="https://drive.google.com/thumbnail?id=1Kg1bBSYXCEgvY67Joe2uEnTYLETpUcpj&sz=w1000" alt="School Logo" class="h-10 w-auto bg-white rounded-md px-1.5 py-0.5 object-contain">
+        <div>
+          <h1 class="text-base md:text-lg font-extrabold tracking-tight leading-tight">Grade 5 Maths &bull; Lesson 1: Averages &amp; 2D Shapes</h1>
+          <p class="text-xs text-slate-300 leading-tight">LO: Analyse averages, quadrilaterals, circles and rotational symmetry. <span class="text-slate-400">(6Ss.03, 6Gg.01, 6Gg.02, 6Gg.08, 6Gg.11)</span></p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- Live Team Red vs Team Blue Score Pill -->
+        <div class="flex items-center bg-slate-800 border border-slate-600 rounded-full px-3 py-1 gap-2 text-sm font-bold" aria-label="Team Scoreboard">
+          <button type="button" onclick="adjustScore('red', 1)" class="text-rose-400 hover:text-rose-300 flex items-center gap-1" title="Add 1 point to Team Red">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> Red: <span id="hdrRedScore" class="text-white text-base">0</span>
+          </button>
+          <span class="text-slate-500">|</span>
+          <button type="button" onclick="adjustScore('blue', 1)" class="text-sky-400 hover:text-sky-300 flex items-center gap-1" title="Add 1 point to Team Blue">
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-500 inline-block"></span> Blue: <span id="hdrBlueScore" class="text-white text-base">0</span>
+          </button>
+          <button type="button" onclick="resetScores()" class="text-xs text-slate-400 hover:text-white ml-1" title="Reset Scores">↺</button>
+        </div>
+
+        <button type="button" id="btnWhiteboard" onclick="openWhiteboard()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs md:text-sm px-3 py-1.5 rounded-lg transition">
+          ✏️ David's Board (W)
+        </button>
+        <button type="button" id="btnTeacher" onclick="toggleTeacherDrawer()" class="bg-slate-700 hover:bg-slate-600 text-white font-semibold text-xs md:text-sm px-3 py-1.5 rounded-lg transition" title="Toggle Teacher Notes (T)">
+          📋 Teacher (T)
+        </button>
+        <button type="button" id="btnMute" onclick="toggleMute()" class="bg-slate-700 hover:bg-slate-600 text-white font-semibold text-xs md:text-sm px-3 py-1.5 rounded-lg transition" title="Mute Audio (M)">
+          🔊 Sound
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER WITH TOP CLEARANCE -->
+  <main class="max-w-7xl mx-auto px-4 pt-28 pb-16">
+
+    <!-- STATION NAVIGATION BAR (flex-wrap so tabs never squash) -->
+    <nav class="bg-white rounded-2xl shadow-sm border border-slate-200 p-2.5 mb-6" aria-label="Lesson Stations">
+      <div class="flex flex-wrap gap-2" id="stationNav">
+        <button type="button" data-station="0" onclick="showStation(0)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-blue-700 text-white shadow-sm">0. LO &amp; Criteria</button>
+        <button type="button" data-station="1" onclick="showStation(1)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">1. Flashback 3</button>
+        <button type="button" data-station="2" onclick="showStation(2)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">2. Vocabulary</button>
+        <button type="button" data-station="3" onclick="showStation(3)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">3. I Do / We Do</button>
+        <button type="button" data-station="4" onclick="showStation(4)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">4. You Do Practice</button>
+        <button type="button" data-station="5" onclick="showStation(5)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">5. Reasoning Lab</button>
+        <button type="button" data-station="6" onclick="showStation(6)" class="station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">6. Quickfire</button>
+      </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- STATION 0: LO & SUCCESS CRITERIA (ZERO CLUTTER)              -->
+    <!-- ============================================================ -->
+    <section id="station-0" class="station-section active-station">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-br from-blue-900 to-indigo-900 text-white rounded-3xl p-8 md:p-10 shadow-lg">
+          <p class="uppercase tracking-widest text-xs font-bold text-blue-200 mb-2">Cambridge Stage 6 &bull; Units 3 &amp; 5 Revision</p>
+          <h2 class="text-3xl md:text-5xl font-black leading-tight mb-3">Analyse averages, quadrilaterals, circles and rotational symmetry.</h2>
+          <p class="text-blue-200 text-sm md:text-base font-medium">Objectives: 6Ss.03 &bull; 6Gg.01 &bull; 6Gg.02 &bull; 6Gg.11 &bull; 6Gg.08</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="bg-white rounded-2xl border-t-4 border-emerald-600 p-6 shadow-sm">
+            <span class="inline-block bg-emerald-100 text-emerald-800 font-extrabold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-3">Must &bull; Level 1</span>
+            <p class="text-2xl font-bold text-slate-900 leading-snug">Find mode, median, mean, range and label circle parts.</p>
+          </div>
+          <div class="bg-white rounded-2xl border-t-4 border-amber-500 p-6 shadow-sm">
+            <span class="inline-block bg-amber-100 text-amber-800 font-extrabold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-3">Should &bull; Level 2</span>
+            <p class="text-2xl font-bold text-slate-900 leading-snug">Classify quadrilaterals by diagonals and state rotational symmetry order.</p>
+          </div>
+          <div class="bg-white rounded-2xl border-t-4 border-purple-600 p-6 shadow-sm">
+            <span class="inline-block bg-purple-100 text-purple-800 font-extrabold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-3">Could &bull; Level 3</span>
+            <p class="text-2xl font-bold text-slate-900 leading-snug">Choose the best average and justify geometric claims.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 1: SPACED FLASHBACK 3 (EARLIER SEMESTER 1 UNITS)     -->
+    <!-- ============================================================ -->
+    <section id="station-1" class="station-section">
+      <div class="space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-900">Flashback 3 — Spaced Retrieval</h2>
+            <p class="text-slate-600 font-medium">Solve all three on your mini-whiteboard. Click each card to flip and check.</p>
+          </div>
+          <button type="button" onclick="resetFlashbacks()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm px-4 py-2 rounded-xl">↺ Flip All Back</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 1 Rounding -->
+          <div class="flip-scene" onclick="flipCard(this)" role="button" tabindex="0" aria-label="Flashback Card 1">
+            <div class="flip-card">
+              <div class="flip-face bg-white border-2 border-blue-200 shadow-md">
+                <div class="flex justify-between items-center">
+                  <span class="bg-blue-100 text-blue-800 text-xs font-extrabold px-3 py-1 rounded-full">Card 1 &bull; Unit 1 (6Np.04)</span>
+                  <span class="text-xs font-bold text-slate-400">Click to flip</span>
+                </div>
+                <div class="text-center my-auto">
+                  <p class="text-lg font-bold text-slate-600 mb-3">Round to the nearest tenth:</p>
+                  <p class="text-6xl md:text-7xl font-black text-blue-800 tracking-tight">6.47</p>
+                </div>
+                <p class="text-center text-xs font-semibold text-slate-400">Look at the hundredths digit.</p>
+              </div>
+              <div class="flip-face flip-back bg-blue-800 text-white shadow-md">
+                <span class="bg-blue-700 text-blue-100 text-xs font-extrabold px-3 py-1 rounded-full self-start">Answer &bull; Unit 1</span>
+                <div class="text-center my-auto">
+                  <p class="text-6xl md:text-7xl font-black mb-3">6.5</p>
+                  <p class="text-base font-medium text-blue-100">The hundredths digit is 7 (5 or more), so 4 tenths rounds up to 5 tenths.</p>
+                </div>
+                <p class="text-center text-xs text-blue-200">Click to flip back</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 2 Cube Numbers -->
+          <div class="flip-scene" onclick="flipCard(this)" role="button" tabindex="0" aria-label="Flashback Card 2">
+            <div class="flip-card">
+              <div class="flip-face bg-white border-2 border-teal-200 shadow-md">
+                <div class="flex justify-between items-center">
+                  <span class="bg-teal-100 text-teal-800 text-xs font-extrabold px-3 py-1 rounded-full">Card 2 &bull; Unit 2 (6Ni.08)</span>
+                  <span class="text-xs font-bold text-slate-400">Click to flip</span>
+                </div>
+                <div class="text-center my-auto">
+                  <p class="text-lg font-bold text-slate-600 mb-3">Calculate the cube number:</p>
+                  <p class="text-6xl md:text-7xl font-black text-teal-800 tracking-tight">4³</p>
+                </div>
+                <p class="text-center text-xs font-semibold text-slate-400">Remember: NOT 4 × 3!</p>
+              </div>
+              <div class="flip-face flip-back bg-teal-800 text-white shadow-md">
+                <span class="bg-teal-700 text-teal-100 text-xs font-extrabold px-3 py-1 rounded-full self-start">Answer &bull; Unit 2</span>
+                <div class="text-center my-auto">
+                  <p class="text-6xl md:text-7xl font-black mb-3">64</p>
+                  <p class="text-base font-medium text-teal-100">4 × 4 × 4 = 16 × 4 = 64.</p>
+                </div>
+                <p class="text-center text-xs text-teal-200">Click to flip back</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 6 Simplifying Fractions -->
+          <div class="flip-scene" onclick="flipCard(this)" role="button" tabindex="0" aria-label="Flashback Card 3">
+            <div class="flip-card">
+              <div class="flip-face bg-white border-2 border-purple-200 shadow-md">
+                <div class="flex justify-between items-center">
+                  <span class="bg-purple-100 text-purple-800 text-xs font-extrabold px-3 py-1 rounded-full">Card 3 &bull; Unit 6 (6Nf.03)</span>
+                  <span class="text-xs font-bold text-slate-400">Click to flip</span>
+                </div>
+                <div class="text-center my-auto">
+                  <p class="text-lg font-bold text-slate-600 mb-3">Write in simplest form:</p>
+                  <p class="text-6xl md:text-7xl font-black text-purple-800 tracking-tight">18/24</p>
+                </div>
+                <p class="text-center text-xs font-semibold text-slate-400">Divide by the highest common factor.</p>
+              </div>
+              <div class="flip-face flip-back bg-purple-800 text-white shadow-md">
+                <span class="bg-purple-700 text-purple-100 text-xs font-extrabold px-3 py-1 rounded-full self-start">Answer &bull; Unit 6</span>
+                <div class="text-center my-auto">
+                  <p class="text-6xl md:text-7xl font-black mb-3">3/4</p>
+                  <p class="text-base font-medium text-purple-100">HCF of 18 and 24 is 6. 18 ÷ 6 = 3 and 24 ÷ 6 = 4.</p>
+                </div>
+                <p class="text-center text-xs text-purple-200">Click to flip back</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 2: VOCABULARY (SOLE VIETNAMESE EXCEPTION IN MODAL)   -->
+    <!-- ============================================================ -->
+    <section id="station-2" class="station-section">
+      <div class="space-y-6">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-black text-slate-900">Key Mathematical Vocabulary</h2>
+          <p class="text-slate-600 font-medium">Tap any word to open its visual diagram, definition and audio pronunciation.</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="vocabGrid"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 3: I DO / WE DO + INTERACTIVE CPA MANIPULATIVES      -->
+    <!-- ============================================================ -->
+    <section id="station-3" class="station-section">
+      <div class="space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Permanent Steps to Success Sidebar -->
+          <div class="lg:col-span-4 bg-slate-900 text-white rounded-2xl p-6 shadow-md space-y-5">
+            <div>
+              <h3 class="text-lg font-black text-amber-400 uppercase tracking-wide mb-3">Steps to Success — Averages</h3>
+              <ol class="space-y-2 text-sm text-slate-100 list-decimal list-inside">
+                <li><strong>Order</strong> the data from smallest to largest first.</li>
+                <li><strong>Mode:</strong> spot the most frequent value (can be bimodal).</li>
+                <li><strong>Median:</strong> cross off outer pairs to find the middle value.</li>
+                <li><strong>Range:</strong> subtract smallest from largest (Max − Min).</li>
+                <li><strong>Mean:</strong> add all values, then divide by how many values.</li>
+              </ol>
+            </div>
+            <div class="border-t border-slate-700 pt-4">
+              <h3 class="text-lg font-black text-sky-400 uppercase tracking-wide mb-3">Steps to Success — 2D Shapes</h3>
+              <ol class="space-y-2 text-sm text-slate-100 list-decimal list-inside">
+                <li><strong>Circle rule:</strong> Diameter = 2 × Radius (always set compass to <strong>radius</strong>!).</li>
+                <li><strong>Diagonals:</strong> check if equal, if they bisect, and if they cross at 90°.</li>
+                <li><strong>Rotational symmetry:</strong> spin a full 360° and count matches (minimum is always <strong>Order 1</strong>).</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- Toggleable Worked Examples with Step-by-Step Reveal -->
+          <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <h2 class="text-xl font-black text-slate-900">Guided Examples (I Do / We Do)</h2>
+              <div class="flex flex-wrap gap-2">
+                <button type="button" onclick="selectExample(0)" id="exBtn-0" class="ex-tab px-3 py-1.5 rounded-lg text-sm font-bold bg-blue-700 text-white">Ex 1: Averages</button>
+                <button type="button" onclick="selectExample(1)" id="exBtn-1" class="ex-tab px-3 py-1.5 rounded-lg text-sm font-bold bg-slate-100 text-slate-700">Ex 2: Circle &amp; Compass</button>
+                <button type="button" onclick="selectExample(2)" id="exBtn-2" class="ex-tab px-3 py-1.5 rounded-lg text-sm font-bold bg-slate-100 text-slate-700">Ex 3: Diagonals &amp; Turns</button>
+              </div>
+            </div>
+
+            <div id="exampleBox" class="bg-slate-50 border border-slate-200 rounded-xl p-5 min-h-[240px]"></div>
+
+            <div class="flex items-center gap-3">
+              <button type="button" onclick="nextExampleStep()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm shadow-sm">▶ Animate Next Step</button>
+              <button type="button" onclick="resetExampleSteps()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2.5 rounded-xl text-sm">↺ Reset</button>
+              <span id="exStepCounter" class="text-sm font-bold text-slate-500 ml-auto"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TWO INTERACTIVE CPA MANIPULATIVES -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Manipulative A: Live Mean-Leveller Bar Lab -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div>
+                <h3 class="text-lg font-black text-blue-900">Interactive Lab A: Mean-Leveller Bars</h3>
+                <p class="text-xs text-slate-600">Adjust the 5 bars, then click <strong>Level the Bars</strong> to see the mean visually.</p>
+              </div>
+              <div class="flex gap-2">
+                <button type="button" id="btnLevelMean" onclick="toggleMeanLevel()" class="bg-blue-700 hover:bg-blue-600 text-white font-bold text-xs px-3.5 py-2 rounded-lg">⚖️ Level the Bars</button>
+                <button type="button" onclick="resetMeanBars()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs px-3 py-2 rounded-lg">↺ Reset</button>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 h-56 flex flex-col justify-end">
+              <div class="relative w-full flex-1 mt-6">
+                <div id="meanLine" class="absolute left-0 right-0 border-t-2 border-dashed border-rose-600 pointer-events-none transition-all duration-500 z-10" style="bottom: 58.33%;">
+                  <span id="meanLineLabel" class="bg-rose-600 text-white text-xs font-extrabold px-2 py-0.5 rounded absolute -top-3 right-0">Mean = 7</span>
+                </div>
+                <div id="barsContainer" class="w-full h-full flex items-end justify-around gap-3"></div>
+              </div>
+            </div>
+
+            <div id="barControls" class="flex justify-around gap-2"></div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center bg-slate-100 rounded-xl p-3">
+              <div><p class="text-xs font-bold text-slate-500">MEAN</p><p id="statMean" class="text-xl font-black text-rose-700">7</p></div>
+              <div><p class="text-xs font-bold text-slate-500">MEDIAN</p><p id="statMedian" class="text-xl font-black text-blue-800">8</p></div>
+              <div><p class="text-xs font-bold text-slate-500">MODE</p><p id="statMode" class="text-base font-black text-teal-800">None</p></div>
+              <div><p class="text-xs font-bold text-slate-500">RANGE</p><p id="statRange" class="text-xl font-black text-purple-800">7</p></div>
+            </div>
+          </div>
+
+          <!-- Manipulative B: Live Rotational Symmetry & Circle Explorer -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div>
+                <h3 class="text-lg font-black text-indigo-900">Interactive Lab B: Rotation &amp; Circle Dial</h3>
+                <p class="text-xs text-slate-600">Spin shapes a full 360° to count matches, or slide the radius to compare diameter.</p>
+              </div>
+              <div class="flex gap-1.5">
+                <button type="button" onclick="setGeomMode('rot')" id="gmRotBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-700 text-white">Rotation Dial</button>
+                <button type="button" onclick="setGeomMode('circle')" id="gmCircBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 text-slate-700">Circle Slider</button>
+              </div>
+            </div>
+
+            <!-- Rotation Panel -->
+            <div id="rotPanel" class="space-y-3">
+              <div class="flex flex-wrap gap-1.5" id="shapeButtons"></div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center bg-slate-50 border border-slate-200 rounded-xl p-3">
+                <svg viewBox="0 0 240 240" class="w-48 h-48 mx-auto">
+                  <g id="rotGhostGroup" opacity="0.22"></g>
+                  <g id="rotShapeGroup"></g>
+                  <circle cx="120" cy="120" r="4" fill="#dc2626"/>
+                </svg>
+                <div class="space-y-2 text-sm">
+                  <p class="font-bold text-slate-700">Turn Angle: <span id="rotAngleText" class="text-indigo-700 text-lg font-black">0°</span></p>
+                  <p class="font-bold text-slate-700">Matches in 360°: <span id="rotMatchesText" class="text-emerald-700 text-lg font-black">0</span></p>
+                  <p id="rotOrderBadge" class="bg-indigo-100 text-indigo-900 font-extrabold px-3 py-1.5 rounded-lg inline-block">Order: ? (Spin 360° to discover)</p>
+                  <div class="flex flex-wrap gap-2 pt-1">
+                    <button type="button" id="btnStepRotate" onclick="stepRotate()" class="bg-indigo-700 hover:bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs">↻ +90°</button>
+                    <button type="button" onclick="spinFull360()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs">▶ Spin 360°</button>
+                    <button type="button" onclick="resetRotation()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-3 py-1.5 rounded-lg text-xs">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Circle Panel -->
+            <div id="circlePanel" class="hidden space-y-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center bg-slate-50 border border-slate-200 rounded-xl p-4">
+                <svg viewBox="0 0 240 240" class="w-48 h-48 mx-auto">
+                  <circle id="liveCircle" cx="120" cy="120" r="70" fill="#eff6ff" stroke="#1d4ed8" stroke-width="4"/>
+                  <line id="liveDiameter" x1="50" y1="120" x2="190" y2="120" stroke="#0f766e" stroke-width="3" stroke-dasharray="6 4"/>
+                  <line id="liveRadius" x1="120" y1="120" x2="120" y2="50" stroke="#dc2626" stroke-width="4"/>
+                  <circle cx="120" cy="120" r="5" fill="#0f172a"/>
+                  <text id="lblR" x="128" y="90" font-size="13" font-weight="bold" fill="#dc2626">r = 5 cm</text>
+                  <text id="lblD" x="72" y="142" font-size="13" font-weight="bold" fill="#0f766e">d = 10 cm</text>
+                </svg>
+                <div class="space-y-3">
+                  <label for="radiusSlider" class="block text-sm font-bold text-slate-700">Compass Width (Radius): <span id="radVal" class="text-rose-600 font-black">5.0 cm</span></label>
+                  <input id="radiusSlider" type="range" min="2" max="10" step="0.5" value="5" oninput="updateCircleSlider()" class="w-full accent-blue-700">
+                  <div class="bg-white border border-slate-200 rounded-xl p-3 space-y-1 text-sm">
+                    <p><strong>Radius (r):</strong> <span id="outR" class="text-rose-700 font-bold">5.0 cm</span></p>
+                    <p><strong>Diameter (d = 2 × r):</strong> <span id="outD" class="text-teal-700 font-bold">10.0 cm</span></p>
+                    <p class="text-xs text-slate-500 pt-1">Outer edge = <strong>Circumference</strong>. Centre dot = compass pin.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 4: YOU DO PRACTICE (EXACTLY 3 HORIZONTAL CARDS/TIER) -->
+    <!-- ============================================================ -->
+    <section id="station-4" class="station-section">
+      <div class="space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-900">You Do Practice — Choose Your Tier</h2>
+            <p class="text-slate-600 font-medium">Work neatly in your maths book. Click any card for <strong>Giant Projection Mode</strong>.</p>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" onclick="selectTier('must')" id="tierBtn-must" class="tier-btn px-5 py-2.5 rounded-xl font-extrabold text-sm bg-emerald-600 text-white shadow-sm">Must (Level 1)</button>
+            <button type="button" onclick="selectTier('should')" id="tierBtn-should" class="tier-btn px-5 py-2.5 rounded-xl font-extrabold text-sm bg-slate-200 text-slate-700">Should (Level 2)</button>
+            <button type="button" onclick="selectTier('could')" id="tierBtn-could" class="tier-btn px-5 py-2.5 rounded-xl font-extrabold text-sm bg-slate-200 text-slate-700">Could (Level 3)</button>
+          </div>
+        </div>
+
+        <div id="tierCardsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-5"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 5: REASONING & JUSTIFICATION LAB (TWM FOCUS)         -->
+    <!-- ============================================================ -->
+    <section id="station-5" class="station-section">
+      <div class="space-y-6">
+        <div class="bg-indigo-950 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-black">🧠 Reasoning &amp; Justification Lab (TWM)</h2>
+            <p class="text-indigo-200 text-sm md:text-base">Discuss with your partner using the English sentence stems below before clicking to reveal the proof.</p>
+          </div>
+          <div class="bg-indigo-900 border border-indigo-700 rounded-xl p-3.5 text-xs md:text-sm space-y-1 max-w-md">
+            <p class="font-extrabold text-amber-300 uppercase tracking-wider text-xs">English Reasoning Stems</p>
+            <p>&bull; "I agree / disagree because ..."</p>
+            <p>&bull; "An example that proves this false is ..."</p>
+            <p>&bull; "First we must order the data, so ..."</p>
+            <p>&bull; "This shape has order ___ because it matches ___ times in 360°."</p>
+          </div>
+        </div>
+
+        <!-- Part A: True or False Matrix (Genuine Mix: 2 True, 2 False) -->
+        <div>
+          <h3 class="text-xl font-black text-slate-900 mb-3">Part A — True or False Matrix (Click to Reveal Proof)</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="tfMatrix"></div>
+        </div>
+
+        <!-- Part B: Spot the Mistake, Always/Sometimes/Never, Convince Me -->
+        <div>
+          <h3 class="text-xl font-black text-slate-900 mb-3">Part B — Mathematical Challenges</h3>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5" id="twmChallenges"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 6: QUICKFIRE ENGINE (BOARDS UP! RED VS BLUE)         -->
+    <!-- ============================================================ -->
+    <section id="station-6" class="station-section">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-md p-6 md:p-8 space-y-6">
+          <div class="flex items-center justify-between flex-wrap gap-3 border-b border-slate-200 pb-4">
+            <div>
+              <span id="qfCounter" class="bg-blue-100 text-blue-800 font-extrabold text-xs uppercase px-3 py-1 rounded-full">Question 1 of 10</span>
+              <h2 class="text-2xl md:text-3xl font-black text-slate-900 mt-1">Quickfire Engine — Mini-Whiteboards Ready!</h2>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <label for="qfDuration" class="text-xs font-bold text-slate-500">Timer:</label>
+              <select id="qfDuration" onchange="resetQfTimer()" class="border border-slate-300 rounded-lg px-2.5 py-1.5 text-sm font-bold">
+                <option value="15">15s</option>
+                <option value="20" selected>20s</option>
+                <option value="30">30s</option>
+              </select>
+              <button type="button" onclick="startQfTimer()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm">▶ Start Timer</button>
+              <button type="button" onclick="resetQfTimer()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-3 py-2 rounded-xl text-sm">↺</button>
+            </div>
+          </div>
+
+          <!-- Timer Bar & Boards Up Banner -->
+          <div class="flex items-center gap-4">
+            <div class="flex-1 bg-slate-200 rounded-full h-5 overflow-hidden">
+              <div id="qfProgress" class="bg-blue-600 h-full transition-all duration-300" style="width: 100%;"></div>
+            </div>
+            <span id="qfClock" class="text-3xl font-black text-slate-900 w-16 text-right">20s</span>
+          </div>
+
+          <div id="boardsUpBanner" class="hidden bg-rose-600 text-white text-center py-4 rounded-2xl font-black text-3xl md:text-4xl tracking-wider boards-up-pulse shadow-lg">
+            🚨 BOARDS UP! SHOW YOUR ANSWERS! 🚨
+          </div>
+
+          <!-- Question Display -->
+          <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-8 text-center min-h-[210px] flex flex-col justify-center items-center">
+            <p id="qfTopicTag" class="text-xs font-extrabold uppercase tracking-wider text-indigo-700 mb-2"></p>
+            <p id="qfQuestion" class="text-3xl md:text-5xl font-black text-slate-900 leading-tight"></p>
+            <div id="qfAnswerBox" class="hidden mt-6 bg-emerald-100 border-2 border-emerald-500 text-emerald-950 rounded-2xl px-8 py-4">
+              <p class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">Answer</p>
+              <p id="qfAnswerText" class="text-3xl md:text-4xl font-black"></p>
+              <p id="qfWorkingText" class="text-sm font-semibold text-emerald-800 mt-1"></p>
+            </div>
+          </div>
+
+          <!-- Controls & Team Award -->
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <div class="flex gap-2">
+              <button type="button" onclick="prevQf()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2.5 rounded-xl text-sm">← Previous</button>
+              <button type="button" onclick="revealQfAnswer()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-6 py-2.5 rounded-xl text-sm shadow-sm">👁 Reveal Answer</button>
+              <button type="button" onclick="nextQf()" class="bg-blue-700 hover:bg-blue-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm">Next →</button>
+            </div>
+
+            <div class="flex items-center gap-2 bg-slate-100 p-2 rounded-2xl border border-slate-200">
+              <span class="text-xs font-extrabold text-slate-500 px-2">AWARD POINT:</span>
+              <button type="button" onclick="awardPoint('red')" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold px-4 py-2 rounded-xl text-sm">+1 Team Red (<span id="qfRedScore">0</span>)</button>
+              <button type="button" onclick="awardPoint('blue')" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-4 py-2 rounded-xl text-sm">+1 Team Blue (<span id="qfBlueScore">0</span>)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- STATION 2 VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION)       -->
+  <!-- ============================================================ -->
+  <div id="vocabModal" class="hidden fixed inset-0 z-50 bg-slate-950/75 flex items-center justify-center p-4" onclick="if(event.target===this) closeVocabModal()">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl space-y-5 relative">
+      <button type="button" onclick="closeVocabModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-black w-10 h-10 rounded-full text-lg">✕</button>
+      <div>
+        <span class="text-xs font-extrabold uppercase tracking-wider text-blue-700">Bilingual Vocabulary &bull; EN / VN</span>
+        <h3 id="vmEn" class="text-4xl font-black text-slate-900 mt-1"></h3>
+        <p id="vmVn" class="text-2xl font-bold text-teal-700 mt-1"></p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <button type="button" onclick="speakVocab('en-GB')" class="bg-blue-700 hover:bg-blue-600 text-white font-bold px-4 py-2.5 rounded-xl text-sm">🔊 Listen (British English)</button>
+        <button type="button" onclick="speakVocab('vi-VN')" class="bg-teal-700 hover:bg-teal-600 text-white font-bold px-4 py-2.5 rounded-xl text-sm">🔊 Nghe (Tiếng Việt)</button>
+      </div>
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2">
+        <p id="vmDefEn" class="text-lg font-semibold text-slate-800"></p>
+        <p id="vmDefVn" class="text-base font-medium text-teal-800"></p>
+      </div>
+      <div id="vmSvgBox" class="bg-white border-2 border-slate-200 rounded-2xl p-4 flex justify-center items-center"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- GIANT PROJECTION MODAL (STATION 4 CARDS)                     -->
+  <!-- ============================================================ -->
+  <div id="giantModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 flex items-center justify-center p-4" onclick="if(event.target===this) closeGiantModal()">
+    <div class="bg-white rounded-3xl max-w-5xl w-full p-8 md:p-12 shadow-2xl relative space-y-6">
+      <button type="button" onclick="closeGiantModal()" class="absolute top-5 right-5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-black w-12 h-12 rounded-full text-xl">✕</button>
+      <span id="gmBadge" class="inline-block px-4 py-1.5 rounded-full text-sm font-extrabold uppercase tracking-wider"></span>
+      <p id="gmText" class="text-4xl md:text-6xl font-black text-slate-900 leading-tight"></p>
+      <div id="gmAnsWrap" class="hidden bg-emerald-100 border-2 border-emerald-600 rounded-2xl p-6">
+        <p class="text-xs font-extrabold uppercase text-emerald-700">Solution</p>
+        <p id="gmAns" class="text-2xl md:text-3xl font-black text-emerald-950 mt-1"></p>
+      </div>
+      <div class="flex items-center justify-between flex-wrap gap-3 pt-2">
+        <div class="flex gap-2">
+          <button type="button" onclick="stepGiantCard(-1)" class="bg-slate-200 hover:bg-slate-300 text-slate-900 font-extrabold px-4 py-3 rounded-xl text-base">← Prev Card</button>
+          <button type="button" onclick="stepGiantCard(1)" class="bg-slate-200 hover:bg-slate-300 text-slate-900 font-extrabold px-4 py-3 rounded-xl text-base">Next Card →</button>
+        </div>
+        <div class="flex gap-3">
+          <button type="button" onclick="document.getElementById('gmAnsWrap').classList.toggle('hidden')" class="bg-blue-700 hover:bg-blue-600 text-white font-extrabold px-6 py-3 rounded-xl text-base">👁 Toggle Answer</button>
+          <button type="button" onclick="closeGiantModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-6 py-3 rounded-xl text-base">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- DAVID'S BOARD FULL-SCREEN WHITEBOARD MODAL (W)               -->
+  <!-- ============================================================ -->
+  <div id="whiteboardModal" class="hidden fixed inset-0 z-50 bg-slate-900 flex flex-col">
+    <div class="bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between flex-wrap gap-3 border-b border-slate-700">
+      <div class="flex items-center gap-3">
+        <span class="font-black text-base text-amber-400">✏️ David's Board</span>
+        <div class="flex items-center gap-1.5" id="wbColorBtns">
+          <button type="button" data-col="#0f172a" onclick="setPenColor('#0f172a')" class="wb-col w-7 h-7 rounded-full bg-slate-900 border-2 border-white ring-2 ring-amber-400 scale-110 transition" title="Black"></button>
+          <button type="button" data-col="#1d4ed8" onclick="setPenColor('#1d4ed8')" class="wb-col w-7 h-7 rounded-full bg-blue-600 border-2 border-white transition" title="Blue"></button>
+          <button type="button" data-col="#dc2626" onclick="setPenColor('#dc2626')" class="wb-col w-7 h-7 rounded-full bg-rose-600 border-2 border-white transition" title="Red"></button>
+          <button type="button" data-col="#15803d" onclick="setPenColor('#15803d')" class="wb-col w-7 h-7 rounded-full bg-emerald-600 border-2 border-white transition" title="Green"></button>
+          <button type="button" data-col="#7c3aed" onclick="setPenColor('#7c3aed')" class="wb-col w-7 h-7 rounded-full bg-purple-600 border-2 border-white transition" title="Purple"></button>
+        </div>
+        <div class="flex items-center gap-1.5 ml-2" id="wbWidthBtns">
+          <button type="button" data-w="3" onclick="setPenWidth(3)" class="wb-w px-2.5 py-1 rounded bg-slate-700 hover:bg-slate-600 text-xs font-bold">Thin</button>
+          <button type="button" data-w="6" onclick="setPenWidth(6)" class="wb-w px-2.5 py-1 rounded bg-amber-500 text-slate-950 text-xs font-black">Med</button>
+          <button type="button" data-w="12" onclick="setPenWidth(12)" class="wb-w px-2.5 py-1 rounded bg-slate-700 hover:bg-slate-600 text-xs font-bold">Thick</button>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" id="btnEraser" onclick="toggleEraser()" class="bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-lg text-xs font-bold">🧽 Eraser</button>
+        <button type="button" onclick="clearWhiteboard()" class="bg-rose-600 hover:bg-rose-500 px-3 py-1.5 rounded-lg text-xs font-bold">🗑 Clear</button>
+        <button type="button" onclick="closeWhiteboard()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-1.5 rounded-lg text-xs font-black">Done (Esc)</button>
+      </div>
+    </div>
+    <div class="flex-1 relative overflow-hidden">
+      <canvas id="whiteboardCanvas" class="w-full h-full block"></canvas>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- HIDDEN TEACHER PROMPT DRAWER (T)                             -->
+  <!-- ============================================================ -->
+  <aside id="teacherDrawer" class="hidden fixed top-20 right-4 z-50 w-96 max-w-[92vw] bg-amber-50 border-2 border-amber-500 rounded-2xl shadow-2xl p-5 space-y-3 text-sm">
+    <div class="flex items-center justify-between border-b border-amber-200 pb-2">
+      <h3 class="font-black text-amber-900">📋 Teacher Notes &amp; Live Intervention</h3>
+      <button type="button" onclick="toggleTeacherDrawer()" class="text-amber-800 font-black">✕</button>
+    </div>
+    <div>
+      <p class="font-extrabold text-rose-800">Red-Flag Hinge Check (Station 3):</p>
+      <p class="text-slate-800">Watch for pupils setting compass to diameter, forgetting to order data before median, or writing "order 0" instead of "order 1".</p>
+    </div>
+    <div>
+      <p class="font-extrabold text-amber-900">Teacher Support Table (Station 4):</p>
+      <p class="text-slate-800">Pull 4–6 pupils to the back table with snap-cube towers (level bars for mean), cut-out card quadrilaterals pinned through the centre to spin, and a bold <strong>D = 2 × r</strong> strip.</p>
+    </div>
+    <div>
+      <p class="font-extrabold text-blue-900">Whole-Class Backup Pivot (&gt;30% Stuck):</p>
+      <p class="text-slate-800">Pause the Page 2/4 Info Gap, press <strong>W</strong> for David's Board, and run two guided whiteboard rounds on Must-level fluency before resuming Page 1/3.</p>
+    </div>
+    <p class="text-xs text-slate-500 pt-1 border-t border-amber-200">Shortcuts: ← / → Stations &bull; W Board &bull; M Mute &bull; T Teacher</p>
+  </aside>
+
+  <script>
+    // ============================================================
+    // 1. AUTO-HIDING HEADER & GLOBAL STATE
+    // ============================================================
+    let lastScroll = 0;
+    const topHeader = document.getElementById('topHeader');
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+      if (currentScroll > lastScroll && currentScroll > 60) {
+        topHeader.classList.add('header-hidden');
+      } else if (currentScroll < lastScroll) {
+        topHeader.classList.remove('header-hidden');
+      }
+      lastScroll = Math.max(0, currentScroll);
+    });
+
+    let currentStation = 0;
+    let isMuted = false;
+    let scores = { red: 0, blue: 0 };
+
+    // Offline Web Audio synthesizer
+    let audioCtx = null;
+    function playTone(freq, dur = 0.12, type = 'sine', vol = 0.14) {
+      if (isMuted) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.value = vol;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+        osc.stop(audioCtx.currentTime + dur);
+      } catch (e) {}
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('btnMute').textContent = isMuted ? '🔇 Muted' : '🔊 Sound';
+    }
+
+    function toggleTeacherDrawer() {
+      document.getElementById('teacherDrawer').classList.toggle('hidden');
+    }
+
+    function adjustScore(team, delta) {
+      scores[team] = Math.max(0, scores[team] + delta);
+      document.getElementById('hdrRedScore').textContent = scores.red;
+      document.getElementById('hdrBlueScore').textContent = scores.blue;
+      document.getElementById('qfRedScore').textContent = scores.red;
+      document.getElementById('qfBlueScore').textContent = scores.blue;
+      playTone(team === 'red' ? 587 : 659, 0.15, 'triangle');
+    }
+    function awardPoint(team) { adjustScore(team, 1); }
+    function resetScores() {
+      scores.red = 0; scores.blue = 0;
+      document.getElementById('hdrRedScore').textContent = '0';
+      document.getElementById('hdrBlueScore').textContent = '0';
+      document.getElementById('qfRedScore').textContent = '0';
+      document.getElementById('qfBlueScore').textContent = '0';
+    }
+
+    function showStation(idx) {
+      if (currentStation === 6 && idx !== 6 && qfInterval) {
+        clearInterval(qfInterval);
+        qfInterval = null;
+      }
+      currentStation = idx;
+      document.querySelectorAll('.station-section').forEach((sec, i) => {
+        sec.classList.toggle('active-station', i === idx);
+      });
+      document.querySelectorAll('.station-tab').forEach((btn, i) => {
+        if (i === idx) {
+          btn.className = 'station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-blue-700 text-white shadow-sm';
+        } else {
+          btn.className = 'station-tab px-4 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200';
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      playTone(520, 0.07, 'sine', 0.08);
+    }
+
+    function isAnyModalOpen() {
+      return !document.getElementById('vocabModal').classList.contains('hidden') ||
+             !document.getElementById('giantModal').classList.contains('hidden') ||
+             !document.getElementById('whiteboardModal').classList.contains('hidden');
+    }
+
+    // Keyboard shortcuts (guarded when modals are open)
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+      if (e.key === 'Escape') {
+        closeVocabModal();
+        closeGiantModal();
+        closeWhiteboard();
+        document.getElementById('teacherDrawer').classList.add('hidden');
+        return;
+      }
+      const wbOpen = !document.getElementById('whiteboardModal').classList.contains('hidden');
+      if (e.key.toLowerCase() === 'w') {
+        if (wbOpen) { closeWhiteboard(); return; }
+        if (!isAnyModalOpen()) { openWhiteboard(); }
+        return;
+      }
+      if (isAnyModalOpen()) {
+        if (!document.getElementById('giantModal').classList.contains('hidden')) {
+          if (e.key === 'ArrowRight') stepGiantCard(1);
+          if (e.key === 'ArrowLeft') stepGiantCard(-1);
+        }
+        return;
+      }
+      if (e.key === 'ArrowRight' && currentStation < 6) showStation(currentStation + 1);
+      if (e.key === 'ArrowLeft' && currentStation > 0) showStation(currentStation - 1);
+      if (e.key.toLowerCase() === 'm') toggleMute();
+      if (e.key.toLowerCase() === 't') toggleTeacherDrawer();
+    });
+
+    // ============================================================
+    // 2. STATION 1: FLASHBACK 3 FLIP CARDS
+    // ============================================================
+    function flipCard(scene) {
+      scene.querySelector('.flip-card').classList.toggle('flipped');
+      playTone(440, 0.09, 'triangle');
+    }
+    function resetFlashbacks() {
+      document.querySelectorAll('#station-1 .flip-card').forEach(c => c.classList.remove('flipped'));
+    }
+
+    // ============================================================
+    // 3. STATION 2: VOCABULARY (SOLE VIETNAMESE EXCEPTION)
+    // ============================================================
+    const VOCAB = [
+      {
+        en: 'Mean', vn: 'Trung bình cộng',
+        defEn: 'The total of all values divided by how many values there are (equal share).',
+        defVn: 'Tổng tất cả các giá trị chia cho số lượng giá trị (chia đều).',
+        svg: '<svg viewBox="0 0 260 110" class="h-28"><rect x="30" y="55" width="32" height="45" fill="#93c5fd" stroke="#1d4ed8" stroke-width="2"/><rect x="75" y="35" width="32" height="65" fill="#93c5fd" stroke="#1d4ed8" stroke-width="2"/><rect x="120" y="15" width="32" height="85" fill="#93c5fd" stroke="#1d4ed8" stroke-width="2"/><line x1="20" y1="35" x2="170" y2="35" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6 4"/><text x="176" y="40" font-size="13" font-weight="bold" fill="#dc2626">Mean = 6</text><text x="41" y="95" font-size="12" font-weight="bold">4</text><text x="86" y="95" font-size="12" font-weight="bold">6</text><text x="131" y="95" font-size="12" font-weight="bold">8</text></svg>'
+      },
+      {
+        en: 'Median', vn: 'Trung vị (số ở giữa)',
+        defEn: 'The middle value when a data set is placed in order from smallest to largest.',
+        defVn: 'Giá trị nằm chính giữa khi sắp xếp dãy số từ bé đến lớn.',
+        svg: '<svg viewBox="0 0 280 90" class="h-24"><text x="20" y="52" font-size="22" font-weight="bold" fill="#64748b">3,  5,</text><rect x="92" y="22" width="46" height="42" rx="8" fill="#dbeafe" stroke="#1d4ed8" stroke-width="3"/><text x="108" y="51" font-size="24" font-weight="black" fill="#1d4ed8">7</text><text x="148" y="52" font-size="22" font-weight="bold" fill="#64748b">,  9,  14</text><text x="84" y="82" font-size="12" font-weight="bold" fill="#1d4ed8">Middle value</text></svg>'
+      },
+      {
+        en: 'Mode & Bimodal', vn: 'Mốt (số xuất hiện nhiều nhất) & Hai mốt',
+        defEn: 'The value appearing most often. Bimodal means two values tie for the most frequent.',
+        defVn: 'Giá trị xuất hiện nhiều lần nhất. Hai mốt nghĩa là có hai giá trị cùng xuất hiện nhiều nhất.',
+        svg: '<svg viewBox="0 0 280 95" class="h-24"><text x="18" y="46" font-size="22" font-weight="bold" fill="#0f172a">2, </text><text x="48" y="46" font-size="22" font-weight="black" fill="#0f766e">5, 5</text><text x="98" y="46" font-size="22" font-weight="bold" fill="#0f172a">, 7, </text><text x="138" y="46" font-size="22" font-weight="black" fill="#0f766e">9, 9</text><text x="186" y="46" font-size="22" font-weight="bold" fill="#0f172a">, 11</text><text x="40" y="76" font-size="13" font-weight="bold" fill="#0f766e">Bimodal: modes are 5 and 9</text></svg>'
+      },
+      {
+        en: 'Range', vn: 'Khoảng biến thiên (độ chênh lệch)',
+        defEn: 'The difference between the largest value and the smallest value (Spread = Max − Min).',
+        defVn: 'Hiệu giữa giá trị lớn nhất và giá trị nhỏ nhất (Lớn nhất − Nhỏ nhất).',
+        svg: '<svg viewBox="0 0 280 90" class="h-24"><line x1="30" y1="50" x2="250" y2="50" stroke="#0f172a" stroke-width="3"/><circle cx="45" cy="50" r="6" fill="#1d4ed8"/><circle cx="235" cy="50" r="6" fill="#dc2626"/><text x="36" y="74" font-size="14" font-weight="bold">4</text><text x="224" y="74" font-size="14" font-weight="bold">19</text><path d="M52 38 Q140 8 228 38" fill="none" stroke="#6d28d9" stroke-width="2.5"/><text x="90" y="22" font-size="13" font-weight="bold" fill="#6d28d9">19 − 4 = 15</text></svg>'
+      },
+      {
+        en: 'Radius', vn: 'Bán kính',
+        defEn: 'The straight line from the centre of a circle to any point on its edge (half the diameter).',
+        defVn: 'Đoạn thẳng nối từ tâm hình tròn đến một điểm trên đường tròn (bằng nửa đường kính).',
+        svg: '<svg viewBox="0 0 180 120" class="h-28"><circle cx="90" cy="60" r="46" fill="#eff6ff" stroke="#1d4ed8" stroke-width="3"/><line x1="90" y1="60" x2="136" y2="60" stroke="#dc2626" stroke-width="4"/><circle cx="90" cy="60" r="4" fill="#0f172a"/><text x="98" y="52" font-size="13" font-weight="bold" fill="#dc2626">radius</text></svg>'
+      },
+      {
+        en: 'Diameter', vn: 'Đường kính',
+        defEn: 'A straight line going all the way across a circle through its exact centre (d = 2 × r).',
+        defVn: 'Đoạn thẳng đi qua tâm nối hai điểm trên đường tròn (d = 2 × r).',
+        svg: '<svg viewBox="0 0 180 120" class="h-28"><circle cx="90" cy="60" r="46" fill="#f0fdfa" stroke="#0f766e" stroke-width="3"/><line x1="44" y1="60" x2="136" y2="60" stroke="#0f766e" stroke-width="4"/><circle cx="90" cy="60" r="4" fill="#0f172a"/><text x="62" y="52" font-size="13" font-weight="bold" fill="#0f766e">diameter</text></svg>'
+      },
+      {
+        en: 'Circumference', vn: 'Chu vi hình tròn',
+        defEn: 'The total distance all the way around the outside edge of a circle.',
+        defVn: 'Độ dài đường viền xung quanh hình tròn (độ dài của đường tròn).',
+        svg: '<svg viewBox="0 0 210 120" class="h-28"><circle cx="105" cy="60" r="44" fill="#ffffff" stroke="#6d28d9" stroke-width="5"/><circle cx="105" cy="60" r="3" fill="#0f172a"/><text x="58" y="116" font-size="12" font-weight="bold" fill="#6d28d9">outer edge = circumference</text></svg>'
+      },
+      {
+        en: 'Rotational Symmetry', vn: 'Đối xứng quay (bậc đối xứng quay)',
+        defEn: 'How many times a shape matches its exact outline during one full 360° turn (described as Order x).',
+        defVn: 'Số lần một hình trùng khớp hoàn toàn với vị trí ban đầu trong một vòng quay 360° (gọi là Bậc x).',
+        svg: '<svg viewBox="0 0 200 120" class="h-28"><rect x="65" y="25" width="70" height="70" fill="#fef3c7" stroke="#b45309" stroke-width="3"/><circle cx="100" cy="60" r="4" fill="#dc2626"/><path d="M148 40 A52 52 0 0 1 148 80" fill="none" stroke="#1d4ed8" stroke-width="3"/><polygon points="148,84 142,74 154,75" fill="#1d4ed8"/><text x="155" y="65" font-size="12" font-weight="bold" fill="#1d4ed8">Order 4</text></svg>'
+      }
+    ];
+
+    let activeVocab = null;
+    const vocabGrid = document.getElementById('vocabGrid');
+    VOCAB.forEach((v, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'bg-white hover:bg-blue-50 border-2 border-slate-200 hover:border-blue-500 rounded-2xl p-5 text-left shadow-sm transition group';
+      btn.innerHTML = '<span class="text-xs font-extrabold text-blue-700 uppercase">Tap to open</span><p class="text-xl font-black text-slate-900 mt-1 group-hover:text-blue-800">' + v.en + '</p>';
+      btn.onclick = () => openVocabModal(idx);
+      vocabGrid.appendChild(btn);
+    });
+
+    function openVocabModal(idx) {
+      activeVocab = VOCAB[idx];
+      document.getElementById('vmEn').textContent = activeVocab.en;
+      document.getElementById('vmVn').textContent = activeVocab.vn;
+      document.getElementById('vmDefEn').textContent = activeVocab.defEn;
+      document.getElementById('vmDefVn').textContent = activeVocab.defVn;
+      document.getElementById('vmSvgBox').innerHTML = activeVocab.svg;
+      document.getElementById('vocabModal').classList.remove('hidden');
+      playTone(580, 0.1, 'sine');
+    }
+    function closeVocabModal() {
+      document.getElementById('vocabModal').classList.add('hidden');
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    }
+    function speakVocab(langCode) {
+      if (!activeVocab || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const text = langCode === 'en-GB'
+        ? activeVocab.en + '. ' + activeVocab.defEn
+        : activeVocab.vn + '. ' + activeVocab.defVn;
+      const utt = new SpeechSynthesisUtterance(text);
+      utt.lang = langCode;
+      utt.rate = 0.92;
+      window.speechSynthesis.speak(utt);
+    }
+
+    // ============================================================
+    // 4. STATION 3: WORKED EXAMPLES + INTERACTIVE LABS
+    // ============================================================
+    const EXAMPLES = [
+      {
+        title: 'Example 1: Find Mode, Median, Mean & Range',
+        prompt: 'Five pupils scored the following marks in a maths quiz: 7, 12, 4, 10, 7.',
+        steps: [
+          'Step 1 — Order smallest to largest: 4, 7, 7, 10, 12.',
+          'Step 2 — Mode (most frequent): 7 appears twice ➔ Mode = 7.',
+          'Step 3 — Median (middle value): cross off 4 & 12, then 7 & 10 ➔ Median = 7.',
+          'Step 4 — Range (spread): Largest − Smallest = 12 − 4 = 8.',
+          'Step 5 — Mean (equal share): Total = 4 + 7 + 7 + 10 + 12 = 40. Divide by 5 values: 40 ÷ 5 = 8.'
+        ]
+      },
+      {
+        title: 'Example 2: Circle Parts & The Compass Trap',
+        prompt: 'A bicycle wheel drawing shows a diameter of 14 cm. What is its radius, and how wide should you set your compass?',
+        steps: [
+          'Step 1 — Recall the rule: Diameter goes all the way across (d = 2 × r).',
+          'Step 2 — Halve the diameter to find the radius: r = 14 cm ÷ 2 = 7 cm.',
+          'Step 3 — Compass rule: Place the pin on the centre and set the pencil to the RADIUS (7 cm, never 14 cm!).',
+          'Step 4 — Check: Spinning a 7 cm radius draws a circle 14 cm wide across the middle.'
+        ]
+      },
+      {
+        title: 'Example 3: Classifying Quadrilaterals by Diagonals & Rotation',
+        prompt: 'Compare the diagonals and rotational symmetry of a non-square Rectangle, a non-square Rhombus and a Square.',
+        steps: [
+          'Non-square Rectangle: Diagonals are EQUAL and bisect each other, but do NOT cross at 90°. Rotational symmetry: Order 2.',
+          'Non-square Rhombus: Diagonals are UNEQUAL, bisect each other, and DO cross at 90°. Rotational symmetry: Order 2.',
+          'Square (special rectangle & special rhombus): Diagonals are EQUAL, bisect each other, AND cross at 90°. Rotational symmetry: Order 4.',
+          'Key Trap: A Kite has NO rotational matches until 360° — so we describe it as Order 1 (never Order 0!).'
+        ]
+      }
+    ];
+
+    let activeExIdx = 0;
+    let exStepsShown = 0;
+    function selectExample(idx) {
+      activeExIdx = idx;
+      exStepsShown = 0;
+      document.querySelectorAll('.ex-tab').forEach((b, i) => {
+        b.className = i === idx
+          ? 'ex-tab px-3 py-1.5 rounded-lg text-sm font-bold bg-blue-700 text-white'
+          : 'ex-tab px-3 py-1.5 rounded-lg text-sm font-bold bg-slate-100 text-slate-700';
+      });
+      renderExample();
+    }
+    function renderExample() {
+      const ex = EXAMPLES[activeExIdx];
+      let html = '<h4 class="text-lg font-black text-blue-900 mb-1">' + ex.title + '</h4>' +
+                 '<p class="text-base font-bold text-slate-800 mb-4">' + ex.prompt + '</p>' +
+                 '<div class="space-y-2">';
+      for (let i = 0; i < exStepsShown; i++) {
+        html += '<div class="bg-white border-l-4 border-blue-600 rounded-r-xl px-4 py-2.5 text-sm md:text-base font-semibold text-slate-800 shadow-sm">' + ex.steps[i] + '</div>';
+      }
+      if (exStepsShown === 0) {
+        html += '<p class="text-sm italic text-slate-500">Click "Animate Next Step" to walk through the worked example step by step.</p>';
+      }
+      html += '</div>';
+      document.getElementById('exampleBox').innerHTML = html;
+      document.getElementById('exStepCounter').textContent = 'Step ' + exStepsShown + ' / ' + ex.steps.length;
+    }
+    function nextExampleStep() {
+      if (exStepsShown < EXAMPLES[activeExIdx].steps.length) {
+        exStepsShown++;
+        renderExample();
+        playTone(540 + exStepsShown * 40, 0.1, 'triangle');
+      }
+    }
+    function resetExampleSteps() {
+      exStepsShown = 0;
+      renderExample();
+    }
+    selectExample(0);
+
+    // Interactive Lab A: Mean-Leveller Bars
+    let barValues = [3, 5, 8, 9, 10];
+    let barsLevelled = false;
+
+    function computeStats(arr) {
+      const sorted = [...arr].sort((a, b) => a - b);
+      const sum = arr.reduce((a, b) => a + b, 0);
+      const mean = sum / arr.length;
+      const median = sorted[2]; // 5 values
+      const range = sorted[sorted.length - 1] - sorted[0];
+      const freq = {};
+      arr.forEach(v => freq[v] = (freq[v] || 0) + 1);
+      const maxF = Math.max(...Object.values(freq));
+      const modes = Object.keys(freq).filter(k => freq[k] === maxF).map(Number).sort((a, b) => a - b);
+      const modeLabel = maxF === 1 ? 'None' : (modes.length === 2 ? modes.join(' & ') + ' (Bi)' : modes.join(', '));
+      return { mean, median, range, modeLabel };
+    }
+
+    function renderMeanBars() {
+      const st = computeStats(barValues);
+      const maxScale = 12;
+      const barsEl = document.getElementById('barsContainer');
+      const ctrlEl = document.getElementById('barControls');
+      barsEl.innerHTML = '';
+      ctrlEl.innerHTML = '';
+
+      barValues.forEach((v, i) => {
+        const displayVal = barsLevelled ? st.mean : v;
+        const pct = Math.min(100, (displayVal / maxScale) * 100);
+        const barCol = barsLevelled ? 'bg-rose-500' : 'bg-blue-600';
+        barsEl.innerHTML +=
+          '<div class="flex flex-col items-center justify-end h-full flex-1">' +
+            '<div class="mean-bar relative w-10 sm:w-12 rounded-t-lg ' + barCol + '" style="height:' + pct + '%;">' +
+              '<span class="absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-black text-slate-800 whitespace-nowrap">' + (barsLevelled ? st.mean.toFixed(1).replace(/\.0$/, '') : v) + '</span>' +
+            '</div>' +
+          '</div>';
+        ctrlEl.innerHTML +=
+          '<div class="flex items-center gap-1">' +
+            '<button type="button" onclick="changeBar(' + i + ',-1)" class="w-7 h-7 rounded-lg bg-slate-200 hover:bg-slate-300 font-black text-sm">−</button>' +
+            '<button type="button" onclick="changeBar(' + i + ',1)" class="w-7 h-7 rounded-lg bg-slate-200 hover:bg-slate-300 font-black text-sm">+</button>' +
+          '</div>';
+      });
+
+      const meanPct = Math.min(100, (st.mean / maxScale) * 100);
+      document.getElementById('meanLine').style.bottom = meanPct + '%';
+      const meanFmt = st.mean.toFixed(1).replace(/\.0$/, '');
+      document.getElementById('meanLineLabel').textContent = 'Mean = ' + meanFmt;
+      document.getElementById('statMean').textContent = meanFmt;
+      document.getElementById('statMedian').textContent = st.median;
+      document.getElementById('statMode').textContent = st.modeLabel;
+      document.getElementById('statRange').textContent = st.range;
+      document.getElementById('btnLevelMean').textContent = barsLevelled ? '↩ Show Original Bars' : '⚖️ Level the Bars';
+    }
+    function changeBar(i, delta) {
+      barsLevelled = false;
+      barValues[i] = Math.max(1, Math.min(12, barValues[i] + delta));
+      renderMeanBars();
+    }
+    function toggleMeanLevel() {
+      barsLevelled = !barsLevelled;
+      renderMeanBars();
+      playTone(barsLevelled ? 660 : 440, 0.14, 'triangle');
+    }
+    function resetMeanBars() {
+      barsLevelled = false;
+      barValues = [3, 5, 8, 9, 10];
+      renderMeanBars();
+    }
+    renderMeanBars();
+
+    // Interactive Lab B: Rotation & Circle Dial (includes Rhombus + monotonic angle + inquiry reveal)
+    const SHAPES = [
+      { id: 'square', name: 'Square', order: 4, step: 90, angles: [90, 180, 270, 360], svg: '<rect x="55" y="55" width="130" height="130" fill="#dbeafe" stroke="#1d4ed8" stroke-width="4"/><line x1="55" y1="55" x2="185" y2="185" stroke="#1d4ed8" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.5"/><line x1="185" y1="55" x2="55" y2="185" stroke="#1d4ed8" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.5"/><circle cx="120" cy="68" r="5" fill="#dc2626"/>' },
+      { id: 'rect', name: 'Rectangle', order: 2, step: 90, angles: [180, 360], svg: '<rect x="35" y="75" width="170" height="90" fill="#ccfbf1" stroke="#0f766e" stroke-width="4"/><line x1="35" y1="75" x2="205" y2="165" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.5"/><line x1="205" y1="75" x2="35" y2="165" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.5"/><circle cx="120" cy="86" r="5" fill="#dc2626"/>' },
+      { id: 'rhombus', name: 'Rhombus', order: 2, step: 90, angles: [180, 360], svg: '<polygon points="120,38 182,120 120,202 58,120" fill="#dcfce7" stroke="#15803d" stroke-width="4"/><line x1="120" y1="38" x2="120" y2="202" stroke="#15803d" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.55"/><line x1="58" y1="120" x2="182" y2="120" stroke="#15803d" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.55"/><circle cx="120" cy="54" r="5" fill="#dc2626"/>' },
+      { id: 'para', name: 'Parallelogram', order: 2, step: 90, angles: [180, 360], svg: '<polygon points="65,75 205,75 175,165 35,165" fill="#ede9fe" stroke="#6d28d9" stroke-width="4"/><circle cx="135" cy="86" r="5" fill="#dc2626"/>' },
+      { id: 'tri', name: 'Equilateral △', order: 3, step: 120, angles: [120, 240, 360], svg: '<polygon points="120,40 189.28,160 50.72,160" fill="#fef3c7" stroke="#b45309" stroke-width="4"/><circle cx="120" cy="56" r="5" fill="#dc2626"/>' },
+      { id: 'kite', name: 'Kite', order: 1, step: 90, angles: [360], svg: '<polygon points="120,38 178,100 120,202 62,100" fill="#ffe4e6" stroke="#be123c" stroke-width="4"/><line x1="120" y1="38" x2="120" y2="202" stroke="#be123c" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.5"/><line x1="62" y1="100" x2="178" y2="100" stroke="#be123c" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.5"/><circle cx="120" cy="54" r="5" fill="#0f172a"/>' }
+    ];
+    let curShapeIdx = 0;
+    let totalDeg = 0;
+    let curAngle = 0;
+    let matchCount = 0;
+    let spinTimer = null;
+
+    const shapeBtnWrap = document.getElementById('shapeButtons');
+    SHAPES.forEach((s, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.id = 'shBtn-' + i;
+      b.textContent = s.name;
+      b.className = 'px-2.5 py-1 rounded-lg text-xs font-bold border transition';
+      b.onclick = () => selectShape(i);
+      shapeBtnWrap.appendChild(b);
+    });
+
+    function selectShape(idx) {
+      if (spinTimer) clearInterval(spinTimer);
+      curShapeIdx = idx;
+      totalDeg = 0;
+      curAngle = 0;
+      matchCount = 0;
+      SHAPES.forEach((_, i) => {
+        const b = document.getElementById('shBtn-' + i);
+        b.className = i === idx
+          ? 'px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-700 text-white border border-indigo-700'
+          : 'px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100';
+      });
+      const sh = SHAPES[curShapeIdx];
+      document.getElementById('rotGhostGroup').innerHTML = sh.svg;
+      document.getElementById('rotShapeGroup').innerHTML = sh.svg;
+      document.getElementById('rotShapeGroup').style.transform = 'rotate(0deg)';
+      document.getElementById('rotAngleText').textContent = '0°';
+      document.getElementById('rotMatchesText').textContent = '0';
+      document.getElementById('rotOrderBadge').textContent = 'Order: ? (Spin 360° to discover)';
+      document.getElementById('btnStepRotate').textContent = '↻ +' + sh.step + '°';
+    }
+
+    function stepRotate(fromTimer = false) {
+      if (!fromTimer && spinTimer) { clearInterval(spinTimer); spinTimer = null; }
+      const sh = SHAPES[curShapeIdx];
+      if (curAngle >= 360) {
+        curAngle = 0;
+        matchCount = 0;
+        document.getElementById('rotOrderBadge').textContent = 'Order: ? (Spin 360° to discover)';
+      }
+      totalDeg += sh.step;
+      curAngle += sh.step;
+      document.getElementById('rotShapeGroup').style.transform = 'rotate(' + totalDeg + 'deg)';
+      document.getElementById('rotAngleText').textContent = curAngle + '°';
+      if (sh.angles.includes(curAngle)) {
+        matchCount++;
+        playTone(720, 0.14, 'triangle');
+      } else {
+        playTone(300, 0.06, 'sine', 0.06);
+      }
+      document.getElementById('rotMatchesText').textContent = matchCount;
+      if (curAngle >= 360) {
+        document.getElementById('rotOrderBadge').textContent = 'Discovered: Order ' + sh.order;
+      }
+    }
+
+    function spinFull360() {
+      if (spinTimer) { clearInterval(spinTimer); spinTimer = null; }
+      curAngle = 0; matchCount = 0;
+      document.getElementById('rotAngleText').textContent = '0°';
+      document.getElementById('rotMatchesText').textContent = '0';
+      document.getElementById('rotOrderBadge').textContent = 'Order: ? (Spinning...)';
+      spinTimer = setInterval(() => {
+        stepRotate(true);
+        if (curAngle >= 360) { clearInterval(spinTimer); spinTimer = null; }
+      }, 650);
+    }
+    function resetRotation() { selectShape(curShapeIdx); }
+    selectShape(0);
+
+    function setGeomMode(mode) {
+      document.getElementById('rotPanel').classList.toggle('hidden', mode !== 'rot');
+      document.getElementById('circlePanel').classList.toggle('hidden', mode !== 'circle');
+      document.getElementById('gmRotBtn').className = mode === 'rot' ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-700 text-white' : 'px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 text-slate-700';
+      document.getElementById('gmCircBtn').className = mode === 'circle' ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-700 text-white' : 'px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 text-slate-700';
+    }
+
+    function updateCircleSlider() {
+      const r = parseFloat(document.getElementById('radiusSlider').value);
+      const d = r * 2;
+      const px = 22 + r * 8.2;
+      document.getElementById('liveCircle').setAttribute('r', px);
+      document.getElementById('liveDiameter').setAttribute('x1', 120 - px);
+      document.getElementById('liveDiameter').setAttribute('x2', 120 + px);
+      document.getElementById('liveRadius').setAttribute('y2', 120 - px);
+      document.getElementById('lblR').textContent = 'r = ' + r.toFixed(1) + ' cm';
+      document.getElementById('lblD').textContent = 'd = ' + d.toFixed(1) + ' cm';
+      document.getElementById('radVal').textContent = r.toFixed(1) + ' cm';
+      document.getElementById('outR').textContent = r.toFixed(1) + ' cm';
+      document.getElementById('outD').textContent = d.toFixed(1) + ' cm';
+    }
+    updateCircleSlider();
+
+    // ============================================================
+    // 5. STATION 4: YOU DO PRACTICE (EXACTLY 3 HORIZONTAL CARDS)
+    // ============================================================
+    const TIERS = {
+      must: {
+        badgeClass: 'bg-emerald-100 text-emerald-800',
+        borderClass: 'border-emerald-500',
+        label: 'Must • Level 1',
+        cards: [
+          { title: 'Card 1 — Core Averages', q: 'Find the mode, median, mean and range of: 6, 4, 8, 6, 11.', a: 'Ordered: 4, 6, 6, 8, 11. Mode = 6 | Median = 6 | Mean = 35 ÷ 5 = 7 | Range = 11 − 4 = 7.' },
+          { title: 'Card 2 — Circle Parts', q: 'A circle has a radius of 6.5 cm. Find its diameter, and name the distance around the outside edge.', a: 'Diameter = 2 × 6.5 cm = 13 cm. The outside edge is called the circumference.' },
+          { title: 'Card 3 — Rotational Symmetry', q: 'State the order of rotational symmetry for: (a) a Rectangle, and (b) a Square.', a: '(a) Rectangle = Order 2 (matches at 180° and 360°). (b) Square = Order 4 (matches every 90°).' }
+        ]
+      },
+      should: {
+        badgeClass: 'bg-amber-100 text-amber-900',
+        borderClass: 'border-amber-500',
+        label: 'Should • Level 2',
+        cards: [
+          { title: 'Card 1 — Bimodal Data', q: 'Find the mode, median, mean and range of: 5, 9, 5, 12, 9, 14.', a: 'Ordered: 5, 5, 9, 9, 12, 14. Bimodal modes = 5 and 9 | Median = 9 | Mean = 54 ÷ 6 = 9 | Range = 9.' },
+          { title: 'Card 2 — Mystery Quadrilateral', q: 'All 4 sides are equal. No right angles. Diagonals cross at 90° and bisect each other. Name the shape and its rotational order.', a: 'Rhombus. Rotational symmetry = Order 2.' },
+          { title: 'Card 3 — Setting a Compass', q: 'Mai sets her compass to 4.5 cm to draw Circle A. What is Circle A’s diameter? To draw Circle B with diameter 11 cm, what must her compass width be?', a: 'Circle A diameter = 9 cm. Circle B compass radius = 11 ÷ 2 = 5.5 cm.' }
+        ]
+      },
+      could: {
+        badgeClass: 'bg-purple-100 text-purple-900',
+        borderClass: 'border-purple-600',
+        label: 'Could • Level 3',
+        cards: [
+          { title: 'Card 1 — Reverse Mean', q: 'Five pupils have a mean score of 9. Four of the scores are 6, 8, 10 and 12. Work out the 5th score.', a: 'Total needed = 5 × 9 = 45. Sum of four scores = 36. 5th score = 45 − 36 = 9.' },
+          { title: 'Card 2 — Choosing the Best Average', q: 'Five drink prices (thousand VND): 25, 28, 30, 32, 95. Find the mean and median. Which average represents the shop more fairly?', a: 'Mean = 210 ÷ 5 = 42. Median = 30. The median (30) is fairer because the outlier 95 pulls the mean far too high.' },
+          { title: 'Card 3 — Twin Circles in a Box', q: 'Two identical circles fit tightly side-by-side inside a rectangle of length 24 cm. Find the radius of one circle and the height of the rectangle.', a: '2 diameters = 24 cm ➔ 1 diameter = 12 cm. Radius = 6 cm. Rectangle height = 1 diameter = 12 cm.' }
+        ]
+      }
+    };
+
+    let activeTier = 'must';
+    let giantCardIdx = 0;
+    function selectTier(tier) {
+      activeTier = tier;
+      ['must', 'should', 'could'].forEach(t => {
+        const b = document.getElementById('tierBtn-' + t);
+        if (t === tier) {
+          const col = t === 'must' ? 'bg-emerald-600' : (t === 'should' ? 'bg-amber-600' : 'bg-purple-700');
+          b.className = 'tier-btn px-5 py-2.5 rounded-xl font-extrabold text-sm text-white shadow-sm ' + col;
+        } else {
+          b.className = 'tier-btn px-5 py-2.5 rounded-xl font-extrabold text-sm bg-slate-200 text-slate-700';
+        }
+      });
+      const cfg = TIERS[tier];
+      const grid = document.getElementById('tierCardsGrid');
+      grid.innerHTML = '';
+      cfg.cards.forEach((c, idx) => {
+        const div = document.createElement('div');
+        div.className = 'bg-white rounded-2xl border-t-4 ' + cfg.borderClass + ' p-6 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between min-h-[240px]';
+        div.onclick = () => openGiantModal(idx);
+        div.innerHTML =
+          '<div>' +
+            '<span class="inline-block text-xs font-extrabold px-2.5 py-1 rounded-full ' + cfg.badgeClass + '">' + c.title + '</span>' +
+            '<p class="text-xl font-bold text-slate-900 mt-3 leading-snug">' + c.q + '</p>' +
+          '</div>' +
+          '<p class="text-xs font-extrabold text-blue-700 mt-4 pt-3 border-t border-slate-100">🔍 Click for Giant Projection Mode</p>';
+        grid.appendChild(div);
+      });
+    }
+    selectTier('must');
+
+    function openGiantModal(idx) {
+      giantCardIdx = idx;
+      const cfg = TIERS[activeTier];
+      const c = cfg.cards[giantCardIdx];
+      const gmB = document.getElementById('gmBadge');
+      gmB.textContent = cfg.label + ' • ' + c.title;
+      gmB.className = 'inline-block px-4 py-1.5 rounded-full text-sm font-extrabold uppercase tracking-wider ' + cfg.badgeClass;
+      document.getElementById('gmText').textContent = c.q;
+      document.getElementById('gmAns').textContent = c.a;
+      document.getElementById('gmAnsWrap').classList.add('hidden');
+      document.getElementById('giantModal').classList.remove('hidden');
+    }
+    function stepGiantCard(delta) {
+      const len = TIERS[activeTier].cards.length;
+      openGiantModal((giantCardIdx + delta + len) % len);
+    }
+    function closeGiantModal() {
+      document.getElementById('giantModal').classList.add('hidden');
+    }
+
+    // ============================================================
+    // 6. STATION 5: REASONING & JUSTIFICATION LAB
+    // ============================================================
+    const TF_CARDS = [
+      { stmt: 'Linh says: "Every square is also a rhombus."', verdict: 'TRUE', proof: 'A rhombus needs 4 equal sides. A square has 4 equal sides (plus four 90° angles), so every square belongs to the rhombus family.' },
+      { stmt: 'Nam says: "A kite has rotational symmetry of order 0."', verdict: 'FALSE', proof: 'Every 2D shape matches its outline at least once after a full 360° turn. A kite has rotational symmetry of ORDER 1 — never order 0.' },
+      { stmt: 'Linh says: "The data set 3, 5, 5, 8, 8, 10 is bimodal."', verdict: 'TRUE', proof: 'Both 5 and 8 occur twice (the highest frequency), so this data set has two modes — it is bimodal.' },
+      { stmt: 'Nam says: "To draw a circle with diameter 12 cm, set your compass to 12 cm."', verdict: 'FALSE', proof: 'A compass measures the RADIUS (half the diameter). Setting it to 12 cm draws a circle with a 24 cm diameter! Set it to 6 cm.' }
+    ];
+
+    const tfGrid = document.getElementById('tfMatrix');
+    TF_CARDS.forEach((item, i) => {
+      const card = document.createElement('div');
+      card.className = 'bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm cursor-pointer hover:border-indigo-400 transition';
+      card.onclick = () => {
+        document.getElementById('tfProof-' + i).classList.toggle('hidden');
+        playTone(item.verdict === 'TRUE' ? 620 : 340, 0.12, 'triangle');
+      };
+      const vBadge = item.verdict === 'TRUE' ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white';
+      card.innerHTML =
+        '<p class="text-lg font-extrabold text-slate-900">' + item.stmt + '</p>' +
+        '<p class="text-xs font-bold text-indigo-600 mt-2">Click to reveal mathematical proof</p>' +
+        '<div id="tfProof-' + i + '" class="hidden mt-3 pt-3 border-t border-slate-200 space-y-1.5">' +
+          '<span class="inline-block text-xs font-black px-3 py-1 rounded-full ' + vBadge + '">' + item.verdict + '</span>' +
+          '<p class="text-sm font-semibold text-slate-700">' + item.proof + '</p>' +
+        '</div>';
+      tfGrid.appendChild(card);
+    });
+
+    const TWM_LIST = [
+      {
+        tag: 'Spot the Mistake • Who is Correct?',
+        color: 'border-rose-500',
+        prompt: 'Nam finds the median of 9, 3, 12, 5, 7 and writes "12" because 12 sits in the middle. Linh says the median is 7. Who is correct?',
+        proof: 'Linh is correct. You MUST order the data first: 3, 5, 7, 9, 12. The true middle number is 7.'
+      },
+      {
+        tag: 'Always, Sometimes, or Never True?',
+        color: 'border-amber-500',
+        prompt: '"The diagonals of a quadrilateral cross at right angles (90°)." Decide and give one example for each case.',
+        proof: 'SOMETIMES TRUE. True for a square, rhombus or kite. False for a non-square rectangle, a non-rhombus parallelogram, or most trapeziums.'
+      },
+      {
+        tag: 'Convince Me • Prove It!',
+        color: 'border-emerald-600',
+        prompt: 'Adding a score of 0 to {6, 8, 10} does NOT change the total (24), yet it DOES change the mean. Convince your partner!',
+        proof: 'With 3 values, Mean = 24 ÷ 3 = 8. Adding 0 makes 4 values {0, 6, 8, 10}, so Mean = 24 ÷ 4 = 6. Zero still counts as a data item!'
+      }
+    ];
+
+    const twmWrap = document.getElementById('twmChallenges');
+    TWM_LIST.forEach((ch, i) => {
+      const el = document.createElement('div');
+      el.className = 'bg-white rounded-2xl border-t-4 ' + ch.color + ' p-5 shadow-sm flex flex-col justify-between space-y-3';
+      el.innerHTML =
+        '<div>' +
+          '<span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">' + ch.tag + '</span>' +
+          '<p class="text-base font-bold text-slate-900 mt-2">' + ch.prompt + '</p>' +
+        '</div>' +
+        '<div>' +
+          '<button type="button" onclick="document.getElementById(\'twmAns-' + i + '\').classList.toggle(\'hidden\')" class="bg-slate-900 hover:bg-slate-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg">Reveal Justification</button>' +
+          '<p id="twmAns-' + i + '" class="hidden mt-3 bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-semibold text-slate-800">' + ch.proof + '</p>' +
+        '</div>';
+      twmWrap.appendChild(el);
+    });
+
+    // ============================================================
+    // 7. STATION 6: QUICKFIRE ENGINE (10 FRESH QUESTIONS)
+    // ============================================================
+    const QUICKFIRE = [
+      { topic: 'Mean (6Ss.03)', q: 'Find the mean of: 5, 7 and 9', a: '7', w: '(5 + 7 + 9) ÷ 3 = 21 ÷ 3 = 7' },
+      { topic: 'Circles (6Gg.02)', q: 'Radius = 8 cm. What is the diameter?', a: '16 cm', w: 'Diameter = 2 × radius = 2 × 8 = 16 cm' },
+      { topic: 'Rotational Symmetry (6Gg.08)', q: 'State the order of rotational symmetry of a parallelogram.', a: 'Order 2', w: 'Matches at 180° and 360°.' },
+      { topic: 'Range (6Ss.03)', q: 'Find the range of: 19, 4, 11, 27, 8', a: '23', w: 'Largest − Smallest = 27 − 4 = 23' },
+      { topic: 'Circles (6Gg.02)', q: 'Diameter = 15 cm. What is the radius?', a: '7.5 cm', w: 'Radius = 15 ÷ 2 = 7.5 cm' },
+      { topic: 'Median (6Ss.03)', q: 'Find the median of: 14, 6, 10, 2, 18', a: '10', w: 'Ordered: 2, 6, 10, 14, 18 ➔ middle = 10' },
+      { topic: 'Quadrilaterals (6Gg.01)', q: 'Name the quadrilateral with ONLY ONE pair of parallel sides.', a: 'Trapezium', w: 'A trapezium has exactly one pair of parallel sides.' },
+      { topic: 'Mode (6Ss.03)', q: 'Find the mode(s) of: 4, 9, 2, 9, 4, 7', a: '4 and 9 (bimodal)', w: 'Both 4 and 9 appear twice.' },
+      { topic: 'Rotational Symmetry (6Gg.08)', q: 'What is the rotational symmetry order of an isosceles trapezium?', a: 'Order 1', w: 'It only matches its outline after a full 360° turn.' },
+      { topic: 'Reverse Mean (6Ss.03)', q: 'The mean of 4 numbers is 10. What is their total sum?', a: '40', w: 'Total sum = Mean × Count = 10 × 4 = 40' }
+    ];
+
+    let qfIdx = 0;
+    let qfInterval = null;
+    let qfLeft = 20;
+
+    function renderQf() {
+      const item = QUICKFIRE[qfIdx];
+      document.getElementById('qfCounter').textContent = 'Question ' + (qfIdx + 1) + ' of ' + QUICKFIRE.length;
+      document.getElementById('qfTopicTag').textContent = item.topic;
+      document.getElementById('qfQuestion').textContent = item.q;
+      document.getElementById('qfAnswerText').textContent = item.a;
+      document.getElementById('qfWorkingText').textContent = item.w;
+      document.getElementById('qfAnswerBox').classList.add('hidden');
+      document.getElementById('boardsUpBanner').classList.add('hidden');
+      resetQfTimer();
+    }
+    function resetQfTimer() {
+      if (qfInterval) clearInterval(qfInterval);
+      const total = parseInt(document.getElementById('qfDuration').value, 10);
+      qfLeft = total;
+      document.getElementById('qfClock').textContent = qfLeft + 's';
+      document.getElementById('qfProgress').style.width = '100%';
+      document.getElementById('qfProgress').className = 'bg-blue-600 h-full transition-all duration-300';
+      document.getElementById('boardsUpBanner').classList.add('hidden');
+    }
+    function startQfTimer() {
+      if (qfInterval) clearInterval(qfInterval);
+      const total = parseInt(document.getElementById('qfDuration').value, 10);
+      if (qfLeft <= 0) {
+        resetQfTimer();
+      }
+      playTone(520, 0.08, 'sine');
+      qfInterval = setInterval(() => {
+        qfLeft--;
+        document.getElementById('qfClock').textContent = Math.max(0, qfLeft) + 's';
+        const pct = Math.max(0, (qfLeft / total) * 100);
+        const bar = document.getElementById('qfProgress');
+        bar.style.width = pct + '%';
+        if (qfLeft <= 5 && qfLeft > 0) {
+          bar.className = 'bg-rose-600 h-full transition-all duration-300';
+          playTone(760, 0.06, 'square', 0.08);
+        }
+        if (qfLeft <= 0) {
+          clearInterval(qfInterval);
+          document.getElementById('boardsUpBanner').classList.remove('hidden');
+          playTone(880, 0.35, 'sawtooth', 0.16);
+        }
+      }, 1000);
+    }
+    function revealQfAnswer() {
+      if (qfInterval) clearInterval(qfInterval);
+      document.getElementById('qfAnswerBox').classList.remove('hidden');
+      playTone(660, 0.16, 'triangle');
+    }
+    function nextQf() { qfIdx = (qfIdx + 1) % QUICKFIRE.length; renderQf(); }
+    function prevQf() { qfIdx = (qfIdx - 1 + QUICKFIRE.length) % QUICKFIRE.length; renderQf(); }
+    renderQf();
+
+    // ============================================================
+    // 8. DAVID'S BOARD FULL-SCREEN WHITEBOARD
+    // ============================================================
+    const wbCanvas = document.getElementById('whiteboardCanvas');
+    const wbCtx = wbCanvas.getContext('2d');
+    let wbDrawing = false;
+    let wbColor = '#0f172a';
+    let wbWidth = 6;
+    let wbEraser = false;
+
+    function resizeWhiteboard() {
+      const rect = wbCanvas.parentElement.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      const img = wbCanvas.width > 0 ? wbCtx.getImageData(0, 0, wbCanvas.width, wbCanvas.height) : null;
+      wbCanvas.width = rect.width;
+      wbCanvas.height = rect.height;
+      if (img) wbCtx.putImageData(img, 0, 0);
+    }
+    window.addEventListener('resize', () => {
+      if (!document.getElementById('whiteboardModal').classList.contains('hidden')) resizeWhiteboard();
+    });
+    function openWhiteboard() {
+      document.getElementById('whiteboardModal').classList.remove('hidden');
+      setTimeout(resizeWhiteboard, 20);
+    }
+    function closeWhiteboard() {
+      document.getElementById('whiteboardModal').classList.add('hidden');
+    }
+    function setPenColor(c) {
+      wbColor = c; wbEraser = false;
+      document.getElementById('btnEraser').className = 'bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-lg text-xs font-bold';
+      document.querySelectorAll('.wb-col').forEach(btn => {
+        const active = btn.dataset.col === c;
+        btn.classList.toggle('ring-2', active);
+        btn.classList.toggle('ring-amber-400', active);
+        btn.classList.toggle('scale-110', active);
+      });
+    }
+    function setPenWidth(w) {
+      wbWidth = w;
+      document.querySelectorAll('.wb-w').forEach(btn => {
+        const active = parseInt(btn.dataset.w, 10) === w;
+        btn.className = active
+          ? 'wb-w px-2.5 py-1 rounded bg-amber-500 text-slate-950 text-xs font-black'
+          : 'wb-w px-2.5 py-1 rounded bg-slate-700 hover:bg-slate-600 text-xs font-bold';
+      });
+    }
+    function toggleEraser() {
+      wbEraser = !wbEraser;
+      document.getElementById('btnEraser').className = wbEraser
+        ? 'bg-emerald-500 text-slate-950 px-3 py-1.5 rounded-lg text-xs font-black'
+        : 'bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-lg text-xs font-bold';
+    }
+    function clearWhiteboard() { wbCtx.clearRect(0, 0, wbCanvas.width, wbCanvas.height); }
+
+    function wbPos(e) {
+      const r = wbCanvas.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    }
+    let wbLast = null;
+    wbCanvas.addEventListener('pointerdown', (e) => {
+      wbDrawing = true;
+      const p = wbPos(e);
+      wbLast = p;
+      wbCtx.lineCap = 'round';
+      wbCtx.lineJoin = 'round';
+      if (wbEraser) {
+        wbCtx.globalCompositeOperation = 'destination-out';
+        wbCtx.lineWidth = 28;
+      } else {
+        wbCtx.globalCompositeOperation = 'source-over';
+        wbCtx.fillStyle = wbColor;
+        wbCtx.strokeStyle = wbColor;
+        wbCtx.lineWidth = wbWidth;
+        wbCtx.beginPath();
+        wbCtx.arc(p.x, p.y, wbWidth / 2, 0, Math.PI * 2);
+        wbCtx.fill();
+      }
+      wbCanvas.setPointerCapture(e.pointerId);
+    });
+    wbCanvas.addEventListener('pointermove', (e) => {
+      if (!wbDrawing || !wbLast) return;
+      const p = wbPos(e);
+      wbCtx.lineCap = 'round';
+      wbCtx.lineJoin = 'round';
+      if (wbEraser) {
+        wbCtx.globalCompositeOperation = 'destination-out';
+        wbCtx.lineWidth = 28;
+      } else {
+        wbCtx.globalCompositeOperation = 'source-over';
+        wbCtx.strokeStyle = wbColor;
+        wbCtx.lineWidth = wbWidth;
+      }
+      wbCtx.beginPath();
+      wbCtx.moveTo(wbLast.x, wbLast.y);
+      wbCtx.lineTo(p.x, p.y);
+      wbCtx.stroke();
+      wbLast = p;
+    });
+    wbCanvas.addEventListener('pointerup', () => { wbDrawing = false; wbLast = null; });
+    wbCanvas.addEventListener('pointercancel', () => { wbDrawing = false; wbLast = null; });
+  </script>
+</body>
+</html>
