@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Portal — Grade 5 Maths Lesson 1 (Averages &amp; 2D Shapes)</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --blue: #1d4ed8;
+      --teal: #0f766e;
+      --purple: #6d28d9;
+      --amber: #b45309;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, #eff6ff 0%, #f8fafc 50%, #f0fdfa 100%);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .sticky-bar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 16px;
+      box-shadow: 0 4px 12px rgba(15,23,42,0.2);
+    }
+    .sticky-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand img { height: 40px; width: auto; background: #ffffff; padding: 3px 6px; border-radius: 6px; }
+    .brand h1 { margin: 0; font-size: 16px; }
+    .brand p { margin: 1px 0 0; font-size: 12px; color: #cbd5e1; }
+    .lang-toggle {
+      background: #fbbf24;
+      color: #0f172a;
+      border: none;
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    main { max-width: 980px; margin: 20px auto 52px; padding: 0 14px; }
+    .hero {
+      background: linear-gradient(135deg, #1d4ed8, #4338ca);
+      color: #ffffff;
+      border-radius: 18px;
+      padding: 20px 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 6px 18px rgba(29,78,216,0.2);
+    }
+    .hero h2 { margin: 0 0 6px; font-size: 22px; }
+    .hero p { margin: 0; font-size: 14px; color: #e0e7ff; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.05);
+      margin-bottom: 16px;
+    }
+    .card h3 { margin: 0 0 10px; font-size: 17px; color: var(--blue); }
+    .vocab-item {
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .vocab-top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+    .vocab-en { font-weight: 800; font-size: 15px; color: #0f172a; }
+    .vocab-vn { font-weight: 700; font-size: 13px; color: var(--teal); }
+    .vocab-def { font-size: 13px; color: #334155; margin: 0; }
+    .audio-row { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+    .audio-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-en { background: #dbeafe; color: #1e3a8a; }
+    .btn-vn { background: #ccfbf1; color: #115e59; }
+    .talk-card {
+      border-left: 5px solid var(--blue);
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .talk-card.t2 { border-left-color: var(--amber); }
+    .talk-card.t3 { border-left-color: var(--purple); }
+    .tier-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1e3a8a;
+      margin-bottom: 6px;
+    }
+    .talk-card.t2 .tier-badge { background: #fef3c7; color: #92400e; }
+    .talk-card.t3 .tier-badge { background: #ede9fe; color: #5b21b6; }
+    .hint-btn {
+      background: #0f172a;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .hint-box {
+      display: none;
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #ecfdf5;
+      border: 1.5px solid #10b981;
+      font-size: 13px;
+      color: #064e3b;
+    }
+    .hint-box.open { display: block; }
+    .quiz-q {
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      background: #ffffff;
+    }
+    .cheat-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 640px) {
+      .cheat-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .cheat-box {
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 12px;
+      background: #f8fafc;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <header class="sticky-bar">
+    <div class="sticky-inner">
+      <div class="brand">
+        <img src="https://drive.google.com/thumbnail?id=1Kg1bBSYXCEgvY67Joe2uEnTYLETpUcpj&sz=w1000" alt="School Logo">
+        <div>
+          <h1 data-en="Parent Portal — Grade 5 Maths (Lesson 1)" data-vn="Cổng phụ huynh — Toán lớp 5 (Bài 1)">Parent Portal — Grade 5 Maths (Lesson 1)</h1>
+          <p data-en="Week 16 • Averages &amp; 2D Shapes (Stage 6)" data-vn="Tuần 16 • Số trung bình &amp; Hình phẳng 2D (Stage 6)">Week 16 &bull; Averages &amp; 2D Shapes (Stage 6)</p>
+        </div>
+      </div>
+      <button type="button" id="langBtn" class="lang-toggle" onclick="toggleLang()">🇻🇳 Xem tiếng Việt / 🇬🇧 EN</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2 data-en="What Your Child Learned Today" data-vn="Hôm nay con đã học gì?">What Your Child Learned Today</h2>
+      <p data-en="In Lesson 1, pupils revised how to calculate mode (including bimodal data), median, mean and range, choose the fairest average when an extreme value appears, label circle parts (centre, radius, diameter, circumference), classify quadrilaterals by their diagonals, and find rotational symmetry up to Order 4."
+         data-vn="Trong Bài 1, các con ôn tập cách tính mốt (gồm cả dữ liệu hai mốt), trung vị, số trung bình cộng và khoảng biến thiên, chọn số trung bình hợp lý nhất khi có giá trị ngoại lệ, gọi tên các phần của hình tròn (tâm, bán kính, đường kính, chu vi), phân loại tứ giác qua đường chéo và tìm bậc đối xứng quay đến Bậc 4.">
+        In Lesson 1, pupils revised how to calculate mode (including bimodal data), median, mean and range, choose the fairest average when an extreme value appears, label circle parts (centre, radius, diameter, circumference), classify quadrilaterals by their diagonals, and find rotational symmetry up to Order 4.
+      </p>
+    </section>
+
+    <!-- VISUAL CHEAT SHEET -->
+    <section class="card">
+      <h3 data-en="1. Key Concepts at a Glance (Watch Out for Common Traps!)" data-vn="1. Tóm tắt kiến thức trọng tâm (Lưu ý các lỗi hay gặp!)">1. Key Concepts at a Glance (Watch Out for Common Traps!)</h3>
+      <div class="cheat-grid">
+        <div class="cheat-box">
+          <strong data-en="Averages Checklist" data-vn="Lưu ý khi tính số trung bình">Averages Checklist</strong>
+          <ul style="margin:6px 0 0; padding-left:18px;">
+            <li data-en="Mode = most frequent value (a set can have two modes — bimodal — or no mode)." data-vn="Mốt = giá trị xuất hiện nhiều nhất (có thể có hai mốt hoặc không có mốt).">Mode = most frequent value (a set can have two modes — bimodal — or no mode).</li>
+            <li data-en="Always ORDER numbers smallest to largest before finding the Median." data-vn="Luôn SẮP XẾP các số từ nhỏ đến lớn trước khi tìm trung vị.">Always ORDER numbers smallest to largest before finding the Median.</li>
+            <li data-en="Mean = Total sum ÷ How many values (0 still counts as a value!)." data-vn="Số trung bình cộng = Tổng ÷ Số lượng số hạng (số 0 vẫn được tính là một số!).">Mean = Total sum ÷ How many values (0 still counts as a value!).</li>
+            <li data-en="Range = Largest − Smallest (measures spread, not an average)." data-vn="Khoảng biến thiên = Số lớn nhất − Số nhỏ nhất (đo độ trải rộng, không phải số trung bình).">Range = Largest − Smallest (measures spread, not an average).</li>
+          </ul>
+        </div>
+        <div class="cheat-box">
+          <strong data-en="Circles &amp; Rotational Symmetry" data-vn="Hình tròn &amp; Đối xứng quay">Circles &amp; Rotational Symmetry</strong>
+          <ul style="margin:6px 0 0; padding-left:18px;">
+            <li data-en="Diameter = 2 × Radius. Always set a compass to the RADIUS!" data-vn="Đường kính = 2 × Bán kính. Luôn mở compa đúng bằng BÁN KÍNH!">Diameter = 2 × Radius. Always set a compass to the RADIUS!</li>
+            <li data-en="Square = Order 4 | Rectangle, Rhombus, Parallelogram = Order 2." data-vn="Hình vuông = Bậc 4 | Hình chữ nhật, hình thoi, hình bình hành = Bậc 2.">Square = Order 4 | Rectangle, Rhombus, Parallelogram = Order 2.</li>
+            <li data-en="Trap Alert: Minimum rotational symmetry is ALWAYS Order 1 (never Order 0!)." data-vn="Cẩn thận dễ nhầm: Bậc đối xứng quay nhỏ nhất luôn là Bậc 1 (không bao giờ là Bậc 0!).">Trap Alert: Minimum rotational symmetry is ALWAYS Order 1 (never Order 0!).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- BILINGUAL VOCABULARY WITH AUDIO -->
+    <section class="card">
+      <h3 data-en="2. Bilingual Key Vocabulary (Tap to Listen)" data-vn="2. Từ vựng song ngữ trọng tâm (Chạm để nghe phát âm)">2. Bilingual Key Vocabulary (Tap to Listen)</h3>
+      <div class="grid-2" id="portalVocab"></div>
+    </section>
+
+    <!-- 3-TIER DINNER TABLE TALKS -->
+    <section class="card">
+      <h3 data-en="3. Dinner Table Talks — 5-Minute Family Chats" data-vn="3. Trò chuyện bên bàn ăn — 5 phút ôn bài cùng con">3. Dinner Table Talks — 5-Minute Family Chats</h3>
+
+      <div class="talk-card">
+        <span class="tier-badge" data-en="Tier 1 • Starter (Everyday Circles)" data-vn="Mức 1 • Khởi động (Hình tròn quanh ta)">Tier 1 &bull; Starter (Everyday Circles)</span>
+        <p style="margin:0; font-weight:600;"
+           data-en="Look at a dinner plate or bowl on the table. Ask your child: 'If this plate is 22 cm wide across the centre, what is its radius? And what do we call the rim all the way around the outside?'"
+           data-vn="Hãy nhìn một chiếc đĩa hoặc bát trên bàn ăn. Hỏi con: 'Nếu chiều rộng đi qua tâm chiếc đĩa là 22 cm thì bán kính là bao nhiêu? Đường viền xung quanh mép đĩa trong tiếng Anh gọi là gì?'">
+          Look at a dinner plate or bowl on the table. Ask your child: "If this plate is 22 cm wide across the centre, what is its radius? And what do we call the rim all the way around the outside?"
+        </p>
+        <button type="button" class="hint-btn" onclick="toggleHint('h1', this)"
+                data-en="Show Parent Hint" data-vn="Xem gợi ý cho phụ huynh"
+                data-en-open="Hide Parent Hint" data-vn-open="Ẩn gợi ý">Show Parent Hint</button>
+        <div id="h1" class="hint-box"
+             data-en="Radius = 22 ÷ 2 = 11 cm. The distance all the way around the outside edge is the circumference."
+             data-vn="Bán kính (radius) = 22 ÷ 2 = 11 cm. Độ dài đường viền xung quanh bên ngoài gọi là chu vi hình tròn (circumference).">
+          Radius = 22 ÷ 2 = 11 cm. The distance all the way around the outside edge is the circumference.
+        </div>
+      </div>
+
+      <div class="talk-card t2">
+        <span class="tier-badge" data-en="Tier 2 • Core (Rotational Symmetry Hunt)" data-vn="Mức 2 • Cốt lõi (Săn tìm đối xứng quay)">Tier 2 &bull; Core (Rotational Symmetry Hunt)</span>
+        <p style="margin:0; font-weight:600;"
+           data-en="Point to a rectangular dining table or smartphone screen and a ceiling fan with 3 blades. Ask: 'If we spin each one a full 360° turn, how many times does it match its starting shape? What order of rotational symmetry is that?'"
+           data-vn="Chỉ vào mặt bàn hình chữ nhật (hoặc màn hình điện thoại) và chiếc quạt trần 3 cánh. Hỏi con: 'Nếu quay đủ một vòng 360°, mỗi đồ vật trùng khớp với vị trí ban đầu mấy lần? Đó là đối xứng quay bậc mấy?'">
+          Point to a rectangular dining table or smartphone screen and a ceiling fan with 3 blades. Ask: "If we spin each one a full 360° turn, how many times does it match its starting shape? What order of rotational symmetry is that?"
+        </p>
+        <button type="button" class="hint-btn" onclick="toggleHint('h2', this)"
+                data-en="Show Parent Hint" data-vn="Xem gợi ý cho phụ huynh"
+                data-en-open="Hide Parent Hint" data-vn-open="Ẩn gợi ý">Show Parent Hint</button>
+        <div id="h2" class="hint-box"
+             data-en="A rectangle matches twice (at 180° and 360°) ➔ Order 2. A symmetrical 3-blade ceiling fan matches 3 times (every 120°) ➔ Order 3!"
+             data-vn="Hình chữ nhật trùng khớp 2 lần (ở 180° và 360°) ➔ Bậc 2 (Order 2). Quạt trần 3 cánh đều nhau trùng khớp 3 lần (mỗi góc 120°) ➔ Bậc 3 (Order 3)!">
+          A rectangle matches twice (at 180° and 360°) ➔ Order 2. A symmetrical 3-blade ceiling fan matches 3 times (every 120°) ➔ Order 3!
+        </div>
+      </div>
+
+      <div class="talk-card t3">
+        <span class="tier-badge" data-en="Tier 3 • Stretch (Smart Hanoi Shopper)" data-vn="Mức 3 • Nâng cao (Người tiêu dùng thông minh)">Tier 3 &bull; Stretch (Smart Hanoi Shopper)</span>
+        <p style="margin:0; font-weight:600;"
+           data-en="Five bowls of phở on a street cost (thousand VND): 40, 45, 45, 50, and 120 (a luxury wagyu bowl). Ask your child to find the Mean (60) and Median (45) and explain which average tells a tourist the fairest typical price."
+           data-vn="Năm quán phở trên một con phố có giá (nghìn đồng): 40, 45, 45, 50 và 120 (một bát phở bò Wagyu đặc biệt). Đố con tính số trung bình cộng (60) và trung vị (45), rồi giải thích số nào phản ánh đúng giá phổ biến hơn cho khách du lịch.">
+          Five bowls of phở on a street cost (thousand VND): 40, 45, 45, 50, and 120 (a luxury wagyu bowl). Ask your child to find the Mean (60) and Median (45) and explain which average tells a tourist the fairest typical price.
+        </p>
+        <button type="button" class="hint-btn" onclick="toggleHint('h3', this)"
+                data-en="Show Parent Hint" data-vn="Xem gợi ý cho phụ huynh"
+                data-en-open="Hide Parent Hint" data-vn-open="Ẩn gợi ý">Show Parent Hint</button>
+        <div id="h3" class="hint-box"
+             data-en="Total = 300 ➔ Mean = 300 ÷ 5 = 60. Median = 45. The Median (45) is much fairer because the single extreme price (120) pulls the mean higher than four of the five shops!"
+             data-vn="Tổng = 300 ➔ Số trung bình cộng = 300 ÷ 5 = 60. Trung vị = 45. Trung vị (45) hợp lý hơn nhiều vì giá ngoại lệ 120 kéo số trung bình cộng lên cao hơn giá của cả 4 quán bình thường!">
+          Total = 300 ➔ Mean = 300 ÷ 5 = 60. Median = 45. The Median (45) is much fairer because the single extreme price (120) pulls the mean higher than four of the five shops!
+        </div>
+      </div>
+    </section>
+
+    <!-- 3-MINUTE HOME CHECK -->
+    <section class="card">
+      <h3 data-en="4. Quick 3-Minute Home Check" data-vn="4. Kiểm tra nhanh 3 phút tại nhà">4. Quick 3-Minute Home Check</h3>
+      <div class="quiz-q">
+        <p style="margin:0; font-weight:700;" data-en="Q1: Find the median of 15, 7, 21, 9, 13." data-vn="Câu 1: Tìm trung vị của dãy số: 15, 7, 21, 9, 13.">Q1: Find the median of 15, 7, 21, 9, 13.</p>
+        <button type="button" class="hint-btn" onclick="toggleHint('q1', this)"
+                data-en="Check Answer" data-vn="Xem đáp án"
+                data-en-open="Hide Answer" data-vn-open="Ẩn đáp án">Check Answer</button>
+        <div id="q1" class="hint-box" data-en="Order first: 7, 9, 13, 15, 21 ➔ Median = 13." data-vn="Sắp xếp trước: 7, 9, 13, 15, 21 ➔ Trung vị = 13.">Order first: 7, 9, 13, 15, 21 ➔ Median = 13.</div>
+      </div>
+      <div class="quiz-q">
+        <p style="margin:0; font-weight:700;" data-en="Q2: To draw a circle with a 28 cm diameter, what width should you set your compass to?" data-vn="Câu 2: Để vẽ hình tròn có đường kính 28 cm, con cần mở compa rộng bao nhiêu cm?">Q2: To draw a circle with a 28 cm diameter, what width should you set your compass to?</p>
+        <button type="button" class="hint-btn" onclick="toggleHint('q2', this)"
+                data-en="Check Answer" data-vn="Xem đáp án"
+                data-en-open="Hide Answer" data-vn-open="Ẩn đáp án">Check Answer</button>
+        <div id="q2" class="hint-box" data-en="14 cm (always set the compass to the radius = 28 ÷ 2)." data-vn="14 cm (luôn mở compa đúng bằng bán kính = 28 ÷ 2).">14 cm (always set the compass to the radius = 28 ÷ 2).</div>
+      </div>
+      <div class="quiz-q">
+        <p style="margin:0; font-weight:700;" data-en="Q3: True or False — A kite has rotational symmetry of Order 0." data-vn="Câu 3: Đúng hay Sai — Hình diều có bậc đối xứng quay là Bậc 0.">Q3: True or False — A kite has rotational symmetry of Order 0.</p>
+        <button type="button" class="hint-btn" onclick="toggleHint('q3', this)"
+                data-en="Check Answer" data-vn="Xem đáp án"
+                data-en-open="Hide Answer" data-vn-open="Ẩn đáp án">Check Answer</button>
+        <div id="q3" class="hint-box" data-en="FALSE! Every shape matches itself once after a full 360° turn, so a kite has Order 1." data-vn="SAI! Mọi hình đều trùng khớp với chính nó 1 lần sau vòng quay 360°, nên hình diều có đối xứng quay Bậc 1 (Order 1).">FALSE! Every shape matches itself once after a full 360° turn, so a kite has Order 1.</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let currentLang = 'en';
+    const VOCAB = [
+      { en: 'Mean', vn: 'Số trung bình cộng', defEn: 'Total of all values divided by how many values there are.', defVn: 'Tổng tất cả các giá trị chia cho số lượng số hạng.' },
+      { en: 'Median', vn: 'Trung vị (số ở giữa)', defEn: 'Middle value when data is ordered smallest to largest.', defVn: 'Giá trị nằm chính giữa khi sắp xếp từ nhỏ đến lớn.' },
+      { en: 'Mode & Bimodal', vn: 'Mốt & Hai mốt', defEn: 'Most frequent value. Bimodal means two tied modes.', defVn: 'Giá trị xuất hiện nhiều nhất. Hai mốt có hai giá trị cùng nhiều nhất.' },
+      { en: 'Range', vn: 'Khoảng biến thiên', defEn: 'Largest value subtract smallest value (Max − Min).', defVn: 'Hiệu giữa giá trị lớn nhất và giá trị nhỏ nhất (đo độ trải rộng).' },
+      { en: 'Radius', vn: 'Bán kính', defEn: 'Distance from the centre to the edge (half the diameter).', defVn: 'Đoạn thẳng từ tâm đến đường tròn (bằng nửa đường kính).' },
+      { en: 'Diameter', vn: 'Đường kính', defEn: 'Straight line across the circle through the centre (2 × radius).', defVn: 'Đoạn thẳng đi qua tâm nối hai điểm trên đường tròn (2 × bán kính).' },
+      { en: 'Circumference', vn: 'Chu vi hình tròn', defEn: 'Distance all the way around the outside edge of a circle.', defVn: 'Độ dài đường viền xung quanh hình tròn.' },
+      { en: 'Diagonals', vn: 'Đường chéo', defEn: 'Straight lines joining opposite corners inside a polygon.', defVn: 'Đoạn thẳng nối hai đỉnh đối diện bên trong một đa giác.' },
+      { en: 'Line of Symmetry', vn: 'Trục đối xứng', defEn: 'A mirror line that folds a shape into two exact matching halves.', defVn: 'Đường gấp chia một hình thành hai nửa đối xứng khớp hoàn toàn.' },
+      { en: 'Rotational Symmetry', vn: 'Đối xứng quay', defEn: 'How many times a shape matches itself in one 360° turn (Order x).', defVn: 'Số lần hình trùng khớp vị trí ban đầu trong một vòng quay 360° (Bậc x).' },
+      { en: 'Rhombus & Parallelogram', vn: 'Hình thoi & Hình bình hành', defEn: 'Both have 2 pairs of parallel sides and Order 2. A rhombus has 4 equal sides and 90° diagonals.', defVn: 'Đều có 2 cặp cạnh đối song song và đối xứng quay Bậc 2. Hình thoi có 4 cạnh bằng nhau và đường chéo vuông góc.' },
+      { en: 'Trapezium & Kite', vn: 'Hình thang & Hình diều', defEn: 'A trapezium has 1 pair of parallel sides. A kite has 2 pairs of equal adjacent sides and 90° diagonals.', defVn: 'Hình thang có 1 cặp cạnh đối song song. Hình diều có 2 cặp cạnh kề bằng nhau và hai đường chéo vuông góc.' }
+    ];
+
+    function renderVocab() {
+      const box = document.getElementById('portalVocab');
+      box.innerHTML = '';
+      VOCAB.forEach((v, i) => {
+        const div = document.createElement('div');
+        div.className = 'vocab-item';
+        div.innerHTML =
+          '<div class="vocab-top"><span class="vocab-en">' + v.en + '</span><span class="vocab-vn">' + v.vn + '</span></div>' +
+          '<p class="vocab-def">' + (currentLang === 'en' ? v.defEn : v.defVn) + '</p>' +
+          '<div class="audio-row">' +
+            '<button type="button" class="audio-btn btn-en" onclick="speakWord(' + i + ',\'en-GB\')">🔊 EN</button>' +
+            '<button type="button" class="audio-btn btn-vn" onclick="speakWord(' + i + ',\'vi-VN\')">🔊 VN</button>' +
+          '</div>';
+        box.appendChild(div);
+      });
+    }
+
+    function speakWord(idx, langCode) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const v = VOCAB[idx];
+      const text = langCode === 'en-GB' ? (v.en + '. ' + v.defEn) : (v.vn + '. ' + v.defVn);
+      const utt = new SpeechSynthesisUtterance(text);
+      utt.lang = langCode;
+      utt.rate = 0.92;
+      window.speechSynthesis.speak(utt);
+    }
+
+    function updateButtonLabel(btn, isOpen) {
+      const attr = isOpen ? ('data-' + currentLang + '-open') : ('data-' + currentLang);
+      btn.textContent = btn.getAttribute(attr) || btn.getAttribute('data-' + currentLang);
+    }
+
+    function toggleLang() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      currentLang = currentLang === 'en' ? 'vn' : 'en';
+      document.documentElement.lang = currentLang === 'en' ? 'en-GB' : 'vi';
+      document.getElementById('langBtn').textContent = currentLang === 'en' ? '🇻🇳 Xem tiếng Việt / 🇬🇧 EN' : '🇬🇧 Switch to English / 🇻🇳 VN';
+      document.querySelectorAll('[data-en]').forEach(el => {
+        if (el.classList.contains('hint-btn')) {
+          const targetId = el.getAttribute('onclick').match(/'([^']+)'/)[1];
+          const isOpen = document.getElementById(targetId).classList.contains('open');
+          updateButtonLabel(el, isOpen);
+        } else {
+          el.textContent = el.getAttribute('data-' + currentLang);
+        }
+      });
+      renderVocab();
+    }
+
+    function toggleHint(id, btn) {
+      const box = document.getElementById(id);
+      const isOpen = box.classList.toggle('open');
+      if (btn) updateButtonLabel(btn, isOpen);
+    }
+    renderVocab();
+  </script>
+</body>
+</html>
