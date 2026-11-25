@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cambridge Primary Learning Portal — Class Lessons &amp; Parent Guides</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #1d4ed8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    header {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 18px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: 0 2px 10px rgba(15,23,42,0.18);
+    }
+    .hdr-inner {
+      max-width: 1020px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img {
+      height: 46px;
+      width: auto;
+      background: #ffffff;
+      padding: 4px 7px;
+      border-radius: 8px;
+    }
+    .brand h1 { margin: 0; font-size: 19px; }
+    .brand p { margin: 2px 0 0; font-size: 12px; color: #cbd5e1; }
+    .lang-btn {
+      background: #ffffff;
+      color: #0f172a;
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .lang-btn:hover { background: #e2e8f0; }
+    main { max-width: 1020px; margin: 24px auto; padding: 0 16px 56px; }
+    .filter-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 4px rgba(15,23,42,0.05);
+    }
+    .filter-group { margin-bottom: 14px; }
+    .filter-group:last-child { margin-bottom: 0; }
+    .filter-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill {
+      border: 1.5px solid var(--border);
+      background: #ffffff;
+      color: var(--ink);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .pill:hover { border-color: #94a3b8; }
+    .pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+    .week-select {
+      width: 100%;
+      max-width: 440px;
+      padding: 10px 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      background: #ffffff;
+      color: var(--ink);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 1px 4px rgba(15,23,42,0.05);
+    }
+    .panel h2 { margin: 0 0 6px; font-size: 17px; }
+    .panel p.sub { margin: 0 0 14px; font-size: 13px; color: var(--muted); }
+    .link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+      font-size: 15px;
+      border: 1px solid #e2e8f0;
+      transition: transform 0.12s ease, background 0.12s ease;
+    }
+    .link-btn:hover { background: #e0e7ff; transform: translateY(-1px); }
+    .link-btn.portal { background: #ecfdf5; border-color: #a7f3d0; }
+    .link-btn.portal:hover { background: #d1fae5; }
+    .empty {
+      padding: 16px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 28px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hdr-inner">
+      <div class="brand">
+        <img src="https://drive.google.com/thumbnail?id=1Kg1bBSYXCEgvY67Joe2uEnTYLETpUcpj&sz=w1000" alt="School Logo">
+        <div>
+          <h1 id="hdrTitle">Cambridge Primary Learning Portal</h1>
+          <p id="hdrSub">Interactive Lessons &amp; Bilingual Parent Guides</p>
+        </div>
+      </div>
+      <button class="lang-btn" id="langToggle" type="button">🇻🇳 Tiếng Việt / 🇬🇧 English</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="filter-card">
+      <div class="filter-group">
+        <span class="filter-label" id="lblYear">1. Academic Year</span>
+        <div class="pill-row" id="yearPills"></div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label" id="lblSubj">2. Subject &amp; Grade</span>
+        <div class="pill-row" id="subjPills"></div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label" id="lblWeek">3. Select Week</span>
+        <select class="week-select" id="weekSelect"></select>
+      </div>
+    </section>
+
+    <section class="grid" id="contentGrid"></section>
+
+    <footer id="footerNote">Bookmark this single page — new lessons and bilingual parent portals appear here every week.</footer>
+  </main>
+
+  <script>
+    const CATALOG = [{"year":"2026-2027","subjectId":"maths-g5","subjectVn":"Toán Lớp 5 (Stage 6)","color":"#1d4ed8","lessons":[],"weekName":"Week 16 (30 Nov) - EOS1 Revision","portals":[],"subjectEn":"Grade 5 Maths (Stage 6)","weekSlug":"week-16"},{"year":"2026-2027","subjectId":"science-g5","subjectVn":"Khoa học Lớp 5 (Stage 6)","color":"#0f766e","lessons":[],"weekName":"Week 16 (30 Nov) - 5.3 Floating and Sinking","portals":[],"subjectEn":"Grade 5 Science (Stage 6)","weekSlug":"week-16"},{"year":"2026-2027","subjectId":"science-g4","subjectVn":"Khoa học Lớp 4 (Stage 5)","color":"#7c3aed","lessons":[],"weekName":"Week 16 (30 Nov) - 2.4 Changing Pitch","portals":[],"subjectEn":"Grade 4 Science (Stage 5)","weekSlug":"week-16"}];
+    let lang = 'en';
+    let selYear = CATALOG[0]?.year || '2026-2027';
+    let selSubj = CATALOG[0]?.subjectId || 'maths-g5';
+    let selWeek = '';
+
+    const UI = {
+      en: {
+        hdrTitle: 'Cambridge Primary Learning Portal',
+        hdrSub: 'Interactive Lessons & Bilingual Parent Guides',
+        lblYear: '1. Academic Year',
+        lblSubj: '2. Subject & Grade',
+        lblWeek: '3. Select Week',
+        portalsH: 'Parent Portals (Bilingual EN / VN + Audio)',
+        portalsSub: 'Tap any guide below on your phone — includes key vocabulary audio and home discussion prompts.',
+        lessonsH: 'Interactive Lesson Web Apps',
+        lessonsSub: 'Review classroom examples, interactive models and quickfire practice.',
+        emptyPortal: 'Parent Portals for this week will appear here once published.',
+        emptyLesson: 'Interactive Lesson Apps for this week will appear here once published.',
+        open: 'Open →',
+        footer: 'Bookmark this single page — new lessons and bilingual parent portals appear here every week.'
+      },
+      vn: {
+        hdrTitle: 'Cổng Học Tập Cambridge Tiểu Học',
+        hdrSub: 'Bài Giảng Tương Tác & Cổng Phụ Huynh Song Ngữ',
+        lblYear: '1. Năm Học',
+        lblSubj: '2. Môn Học & Khối Lớp',
+        lblWeek: '3. Chọn Tuần Học',
+        portalsH: 'Cổng Phụ Huynh (Song Ngữ Anh / Việt + Âm Thanh)',
+        portalsSub: 'Chạm để mở ngay trên điện thoại — có phát âm từ vựng và gợi ý ôn tập tại nhà.',
+        lessonsH: 'Ứng Dụng Bài Giảng Trên Lớp',
+        lessonsSub: 'Xem lại ví dụ minh họa, mô phỏng tương tác và câu hỏi ôn tập nhanh.',
+        emptyPortal: 'Cổng phụ huynh cho tuần này sẽ hiển thị ngay khi được đăng tải.',
+        emptyLesson: 'Bài giảng tương tác cho tuần này sẽ hiển thị ngay khi được đăng tải.',
+        open: 'Mở →',
+        footer: 'Lưu trang này vào dấu trang — bài học và cổng phụ huynh mới sẽ tự động cập nhật mỗi tuần.'
+      }
+    };
+
+    function render() {
+      const t = UI[lang];
+      document.getElementById('hdrTitle').textContent = t.hdrTitle;
+      document.getElementById('hdrSub').textContent = t.hdrSub;
+      document.getElementById('lblYear').textContent = t.lblYear;
+      document.getElementById('lblSubj').textContent = t.lblSubj;
+      document.getElementById('lblWeek').textContent = t.lblWeek;
+      document.getElementById('footerNote').textContent = t.footer;
+
+      const years = [...new Set(CATALOG.map(c => c.year))];
+      if (!years.includes(selYear) && years.length) selYear = years[0];
+      const yBox = document.getElementById('yearPills');
+      yBox.innerHTML = '';
+      years.forEach(y => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'pill' + (y === selYear ? ' active' : '');
+        b.textContent = y;
+        b.onclick = () => { selYear = y; selWeek = ''; render(); };
+        yBox.appendChild(b);
+      });
+
+      const subjsMap = new Map();
+      CATALOG.filter(c => c.year === selYear).forEach(c => {
+        if (!subjsMap.has(c.subjectId)) subjsMap.set(c.subjectId, c);
+      });
+      const subjs = [...subjsMap.values()];
+      if (!subjsMap.has(selSubj) && subjs.length) selSubj = subjs[0].subjectId;
+      const sBox = document.getElementById('subjPills');
+      sBox.innerHTML = '';
+      subjs.forEach(s => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'pill' + (s.subjectId === selSubj ? ' active' : '');
+        if (s.subjectId === selSubj) { b.style.background = s.color; b.style.borderColor = s.color; }
+        b.textContent = lang === 'en' ? s.subjectEn : s.subjectVn;
+        b.onclick = () => { selSubj = s.subjectId; selWeek = ''; render(); };
+        sBox.appendChild(b);
+      });
+
+      const weeks = CATALOG.filter(c => c.year === selYear && c.subjectId === selSubj);
+      if (!weeks.some(w => w.weekSlug === selWeek) && weeks.length) selWeek = weeks[weeks.length - 1].weekSlug;
+      const wSel = document.getElementById('weekSelect');
+      wSel.innerHTML = '';
+      weeks.forEach(w => {
+        const opt = document.createElement('option');
+        opt.value = w.weekSlug;
+        opt.textContent = w.weekName;
+        if (w.weekSlug === selWeek) opt.selected = true;
+        wSel.appendChild(opt);
+      });
+      wSel.onchange = (e) => { selWeek = e.target.value; render(); };
+
+      const active = weeks.find(w => w.weekSlug === selWeek);
+      const grid = document.getElementById('contentGrid');
+      if (!active) {
+        grid.innerHTML = '<div class="empty">No weeks found yet.</div>';
+        return;
+      }
+
+      const portalsHtml = (active.portals && active.portals.length)
+        ? active.portals.map(p => '<a class="link-btn portal" href="' + p.url + '"><span>' + p.title + '</span><span>' + t.open + '</span></a>').join('')
+        : '<div class="empty">' + t.emptyPortal + '</div>';
+
+      const lessonsHtml = (active.lessons && active.lessons.length)
+        ? active.lessons.map(l => '<a class="link-btn" href="' + l.url + '"><span>' + l.title + '</span><span>' + t.open + '</span></a>').join('')
+        : '<div class="empty">' + t.emptyLesson + '</div>';
+
+      grid.innerHTML =
+        '<div class="panel"><h2>' + t.portalsH + '</h2><p class="sub">' + t.portalsSub + '</p>' + portalsHtml + '</div>' +
+        '<div class="panel"><h2>' + t.lessonsH + '</h2><p class="sub">' + t.lessonsSub + '</p>' + lessonsHtml + '</div>';
+    }
+
+    document.getElementById('langToggle').onclick = () => {
+      lang = (lang === 'en') ? 'vn' : 'en';
+      render();
+    };
+    render();
+  </script>
+</body>
+</html>
