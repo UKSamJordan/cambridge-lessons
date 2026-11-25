@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Portal — Grade 5 Maths Lesson 2 (Semester 1 Review: Units 1, 2 &amp; 4)</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --blue: #2563eb;
+      --indigo: #4338ca;
+      --teal: #0d9488;
+      --purple: #7c3aed;
+      --amber: #d97706;
+      --rose: #e11d48;
+      --green: #059669;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, #eff6ff 0%, #faf5ff 45%, #f0fdfa 100%);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .sticky-bar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: linear-gradient(90deg, #0f172a, #1e293b);
+      color: #ffffff;
+      padding: 11px 16px;
+      box-shadow: 0 4px 16px rgba(15,23,42,0.22);
+    }
+    .sticky-inner {
+      max-width: 1020px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand img { height: 40px; width: auto; background: #ffffff; padding: 3px 6px; border-radius: 7px; }
+    .brand h1 { margin: 0; font-size: 16px; }
+    .brand p { margin: 1px 0 0; font-size: 12px; color: #cbd5e1; }
+    .lang-toggle {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #0f172a;
+      border: none;
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(245,158,11,0.35);
+      transition: transform 0.15s;
+    }
+    .lang-toggle:active { transform: scale(0.96); }
+    main { max-width: 1020px; margin: 18px auto 56px; padding: 0 14px; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #1d4ed8 0%, #4f46e5 55%, #0d9488 100%);
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 20px 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 24px rgba(37,99,235,0.22);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .hero h2 { margin: 0 0 6px; font-size: 22px; }
+    .hero p { margin: 0; font-size: 14px; color: #e0e7ff; }
+
+    /* Jump Pills */
+    .jump-nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .jump-pill {
+      text-decoration: none;
+      background: #ffffff;
+      color: var(--ink);
+      border: 1.5px solid #cbd5e1;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 1px 3px rgba(15,23,42,0.05);
+      transition: all 0.15s;
+    }
+    .jump-pill:hover { border-color: var(--blue); color: var(--blue); transform: translateY(-1px); }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 4px 14px rgba(15,23,42,0.05);
+      margin-bottom: 18px;
+    }
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .card h3 { margin: 0; font-size: 18px; color: var(--indigo); }
+    .sub-note { margin: 0 0 14px; font-size: 13.5px; color: var(--muted); }
+    .grid-2 { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 768px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+
+    /* Interactive Lab Panels */
+    .lab-panel {
+      border: 2px solid #dbeafe;
+      background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 100%);
+      border-radius: 16px;
+      padding: 15px;
+      margin-bottom: 14px;
+    }
+    .lab-panel.purple {
+      border-color: #ddd6fe;
+      background: linear-gradient(180deg, #faf5ff 0%, #f5f3ff 100%);
+    }
+    .lab-panel.teal {
+      border-color: #99f6e4;
+      background: linear-gradient(180deg, #f0fdfa 0%, #ecfeff 100%);
+    }
+    .lab-title { font-weight: 800; font-size: 15.5px; margin: 0 0 4px; color: var(--ink); }
+    .lab-desc { font-size: 12.5px; color: var(--muted); margin: 0 0 12px; }
+
+    /* Place Value Shifter */
+    .pv-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 4px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .pv-head {
+      background: #1e40af;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 5px 2px;
+      border-radius: 7px 7px 0 0;
+    }
+    .pv-head.dec { background: #0d9488; }
+    .pv-head.dot { background: #f59e0b; color: #0f172a; font-size: 15px; }
+    .pv-cell {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 0 0 7px 7px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 900;
+      color: #1e3a8a;
+      transition: transform 0.25s ease, background 0.25s ease;
+    }
+    .pv-cell.active { background: #dbeafe; border-color: #3b82f6; }
+    .pv-cell.dot { background: #fef3c7; border-color: #f59e0b; color: #b45309; font-size: 28px; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .pill-btn {
+      border: 1.5px solid #94a3b8;
+      background: #ffffff;
+      color: var(--ink);
+      border-radius: 9px;
+      padding: 6px 11px;
+      font-weight: 800;
+      font-size: 12.5px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .pill-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .pill-btn.mul { background: #059669; color: #ffffff; border-color: #059669; }
+    .pill-btn.div { background: #e11d48; color: #ffffff; border-color: #e11d48; }
+    .pill-btn.active { background: #4338ca; color: #ffffff; border-color: #4338ca; }
+    .readout-box {
+      background: #ffffff;
+      border: 1.5px solid #93c5fd;
+      border-radius: 11px;
+      padding: 9px 12px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    /* Integer Thermometer Layout */
+    .int-wrap {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+    @media (min-width: 600px) { .int-wrap { grid-template-columns: 1.35fr 0.85fr; } }
+    .int-svg-box {
+      background: #ffffff;
+      border: 1.5px solid #ddd6fe;
+      border-radius: 12px;
+      padding: 6px;
+      display: flex;
+      justify-content: center;
+    }
+    .range-row {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+    .range-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12.5px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    input[type="range"] { width: 100%; accent-color: #4f46e5; cursor: pointer; }
+
+    /* Sequence Machine */
+    .seq-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: #ffffff;
+      border: 1.5px solid #99f6e4;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .seq-box {
+      border-radius: 10px;
+      padding: 8px 14px;
+      text-align: center;
+      font-weight: 900;
+    }
+    .seq-in { background: #e0e7ff; color: #3730a3; }
+    .seq-mach { background: #0d9488; color: #ffffff; }
+    .seq-out { background: #dcfce7; color: #166534; border: 2px solid #22c55e; }
+    .seq-strip {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 12.5px;
+      font-weight: 800;
+    }
+    .seq-chip {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 4px 9px;
+    }
+
+    /* Vocab Grid */
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 11px;
+    }
+    @media (min-width: 640px) { .vocab-grid { grid-template-columns: 1fr 1fr; } }
+    .vocab-card {
+      border: 1.5px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 12px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .vocab-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .v-en { font-size: 16px; font-weight: 900; color: var(--indigo); margin: 0; }
+    .v-vn { font-size: 13.5px; font-weight: 800; color: var(--teal); margin: 2px 0 0; }
+    .v-svg {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 6px;
+      display: flex;
+      justify-content: center;
+    }
+    .v-def { font-size: 12.5px; color: var(--muted); margin: 0; }
+    .audio-row { display: flex; gap: 6px; }
+    .audio-btn {
+      flex: 1;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .audio-en { background: #e0e7ff; color: #3730a3; }
+    .audio-vn { background: #ccfbf1; color: #115e59; }
+
+    /* Dinner Table Talks */
+    .talk-card {
+      border: 1.5px solid #e2e8f0;
+      border-left: 6px solid var(--green);
+      border-radius: 13px;
+      padding: 13px;
+      background: #ffffff;
+      margin-bottom: 10px;
+    }
+    .talk-card.should { border-left-color: var(--amber); }
+    .talk-card.could { border-left-color: var(--purple); }
+    .talk-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-bottom: 5px;
+    }
+    .talk-q { font-weight: 800; font-size: 14px; margin: 0 0 7px; }
+    .hint-btn {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .hint-box {
+      display: none;
+      margin-top: 8px;
+      background: #f8fafc;
+      border: 1px dashed #94a3b8;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 12.5px;
+      color: var(--ink);
+    }
+    .hint-box.open { display: block; }
+
+    /* Home Check Quiz */
+    .quiz-card {
+      border: 1.5px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 13px;
+      background: #ffffff;
+      margin-bottom: 11px;
+    }
+    .quiz-opts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 9px;
+    }
+    .quiz-opt {
+      border: 1.5px solid #cbd5e1;
+      background: #f8fafc;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-weight: 800;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .quiz-opt:hover:not(:disabled) { border-color: var(--blue); background: #eff6ff; }
+    .quiz-opt.correct { background: #dcfce7; border-color: #16a34a; color: #166534; }
+    .quiz-opt.wrong { background: #ffe4e6; border-color: #e11d48; color: #9f1239; }
+    .quiz-fb {
+      display: none;
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 9px;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+    .quiz-fb.show { display: block; }
+    .quiz-fb.ok { background: #dcfce7; color: #166534; }
+    .quiz-fb.no { background: #fef3c7; color: #92400e; }
+    .score-pill {
+      background: #0f172a;
+      color: #fbbf24;
+      font-weight: 900;
+      font-size: 13.5px;
+      padding: 6px 13px;
+      border-radius: 999px;
+    }
+    @keyframes confettiDrop {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(150px) rotate(360deg); opacity: 0; }
+    }
+    .confetti-dot {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      z-index: 120;
+      pointer-events: none;
+      animation: confettiDrop 1.15s ease-out forwards;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- STICKY BILINGUAL HEADER -->
+  <div class="sticky-bar">
+    <div class="sticky-inner">
+      <div class="brand">
+        <img src="https://drive.google.com/thumbnail?id=1Kg1bBSYXCEgvY67Joe2uEnTYLETpUcpj&sz=w1000" alt="School Logo">
+        <div>
+          <h1 data-en="Parent Portal • Grade 5 Maths (Lesson 2)" data-vn="Cổng Phụ Huynh • Toán Lớp 5 (Tiết 2)">Parent Portal • Grade 5 Maths (Lesson 2)</h1>
+          <p data-en="Semester 1 Review Part 1: Units 1, 2 &amp; 4" data-vn="Ôn Tập Học Kỳ 1 (Phần 1): Chương 1, 2 &amp; 4">Semester 1 Review Part 1: Units 1, 2 &amp; 4</p>
+        </div>
+      </div>
+      <button type="button" id="langBtn" class="lang-toggle" onclick="toggleLang()">🇻🇳 Xem tiếng Việt / 🇬🇧 EN</button>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-badge" data-en="Week 16 • Cambridge Primary Stage 6 (0096)" data-vn="Tuần 16 • Toán Tiểu Học Cambridge Cấp Độ 6 (0096)">Week 16 • Cambridge Primary Stage 6 (0096)</div>
+      <h2 data-en="Decimals, Sequences, Special Numbers, Negatives &amp; Algebra" data-vn="Số Thập Phân, Dãy Số, Số Đặc Biệt, Số Âm &amp; Đại Số">Decimals, Sequences, Special Numbers, Negatives &amp; Algebra</h2>
+      <p data-en="Explore 3 interactive visual models together, practise British English maths words with audio, chat over dinner, and beat the 4-question Home Check!" data-vn="Cùng con trải nghiệm 3 mô hình tương tác trực quan, luyện phát âm từ vựng Toán tiếng Anh chuẩn Anh, trò chuyện trên bàn ăn và chinh phục 4 câu hỏi nhanh!">Explore 3 interactive visual models together, practise British English maths words with audio, chat over dinner, and beat the 4-question Home Check!</p>
+    </section>
+
+    <!-- QUICK JUMP NAV -->
+    <nav class="jump-nav" aria-label="Portal sections">
+      <a class="jump-pill" href="#labs" data-en="🎮 1. Interactive Models" data-vn="🎮 1. Mô Hình Tương Tác">🎮 1. Interactive Models</a>
+      <a class="jump-pill" href="#vocab" data-en="🗣️ 2. Bilingual Vocab" data-vn="🗣️ 2. Từ Vựng Song Ngữ">🗣️ 2. Bilingual Vocab</a>
+      <a class="jump-pill" href="#talks" data-en="🍽️ 3. Dinner Table Talks" data-vn="🍽️ 3. Trò Chuyện Bàn Ăn">🍽️ 3. Dinner Table Talks</a>
+      <a class="jump-pill" href="#quiz" data-en="🏆 4. 3-Minute Home Check" data-vn="🏆 4. Kiểm Tra Nhanh 3 Phút">🏆 4. 3-Minute Home Check</a>
+    </nav>
+
+    <!-- ================================================================== -->
+    <!-- SECTION 1: 3 INTERACTIVE VISUAL MODELS                             -->
+    <!-- ================================================================== -->
+    <section class="card" id="labs">
+      <div class="card-head">
+        <h3 data-en="🎮 1. Interactive Family Maths Models" data-vn="🎮 1. Mô Hình Toán Tương Tác Cho Gia Đình">🎮 1. Interactive Family Maths Models</h3>
+      </div>
+      <p class="sub-note" data-en="Tap, slide and explore together — children remember best when they see digits shift and temperatures cross zero!" data-vn="Cùng chạm, kéo và khám phá — trẻ nhớ lâu nhất khi tận mắt thấy chữ số dịch chuyển hàng và nhiệt độ nhảy qua mốc 0!">Tap, slide and explore together — children remember best when they see digits shift and temperatures cross zero!</p>
+
+      <!-- MODEL A: LIVE PLACE-VALUE DIGIT SHIFTER -->
+      <div class="lab-panel">
+        <p class="lab-title" data-en="Model A: Live Place-Value Digit Shifter (×/÷ 10, 100, 1000)" data-vn="Mô Hình A: Bảng Dịch Chuyển Chữ Số Theo Hàng (×/÷ 10, 100, 1000)">Model A: Live Place-Value Digit Shifter (×/÷ 10, 100, 1000)</p>
+        <p class="lab-desc" data-en="Notice the golden decimal point NEVER moves — the digits jump LEFT to get bigger (×) and RIGHT to get smaller (÷)!" data-vn="Chú ý dấu chấm thập phân màu vàng KHÔNG BAO GIỜ di chuyển — các chữ số dịch TRÁI khi nhân (×) và dịch PHẢI khi chia (÷)!">Notice the golden decimal point NEVER moves — the digits jump LEFT to get bigger (×) and RIGHT to get smaller (÷)!</p>
+
+        <div class="btn-row">
+          <button type="button" class="pill-btn" onclick="setPPStart(3.28)">3.28</button>
+          <button type="button" class="pill-btn" onclick="setPPStart(0.54)">0.54</button>
+          <button type="button" class="pill-btn" onclick="setPPStart(74.9)">74.9</button>
+          <button type="button" class="pill-btn" onclick="setPPStart(210)">210</button>
+          <button type="button" class="pill-btn" onclick="resetPPPV()" data-en="↺ Reset" data-vn="↺ Đặt lại">↺ Reset</button>
+        </div>
+
+        <div class="pv-grid">
+          <div class="pv-head">Th</div>
+          <div class="pv-head">H</div>
+          <div class="pv-head">T</div>
+          <div class="pv-head">O</div>
+          <div class="pv-head dot">&bull;</div>
+          <div class="pv-head dec">t</div>
+          <div class="pv-head dec">h</div>
+          <div class="pv-head dec">th</div>
+
+          <div id="pp-pv-3" class="pv-cell"></div>
+          <div id="pp-pv-2" class="pv-cell"></div>
+          <div id="pp-pv-1" class="pv-cell"></div>
+          <div id="pp-pv-0" class="pv-cell active">3</div>
+          <div class="pv-cell dot">.</div>
+          <div id="pp-pv--1" class="pv-cell active">2</div>
+          <div id="pp-pv--2" class="pv-cell active">8</div>
+          <div id="pp-pv--3" class="pv-cell"></div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="pill-btn mul" onclick="shiftPPPV(1)">⬅ × 10</button>
+          <button type="button" class="pill-btn mul" onclick="shiftPPPV(2)">⬅ × 100</button>
+          <button type="button" class="pill-btn mul" onclick="shiftPPPV(3)">⬅ × 1000</button>
+          <button type="button" class="pill-btn div" onclick="shiftPPPV(-1)">÷ 10 ➡</button>
+          <button type="button" class="pill-btn div" onclick="shiftPPPV(-2)">÷ 100 ➡</button>
+          <button type="button" class="pill-btn div" onclick="shiftPPPV(-3)">÷ 1000 ➡</button>
+        </div>
+        <div id="ppPVOut" class="readout-box">Current Value: 3.28</div>
+      </div>
+
+      <div class="grid-2">
+        <!-- MODEL B: VERTICAL TEMPERATURE / INTEGER JUMPER -->
+        <div class="lab-panel purple" style="margin-bottom: 0;">
+          <p class="lab-title" data-en="Model B: Temperature &amp; Integer Jumper (−20°C to +20°C)" data-vn="Mô Hình B: Nhiệt Kế Nhảy Số Nguyên (−20°C đến +20°C)">Model B: Temperature &amp; Integer Jumper (−20°C to +20°C)</p>
+          <p class="lab-desc" data-en="Tap + or − jumps and watch how we always bridge through 0°C first!" data-vn="Bấm các bước nhảy + hoặc − để xem cách luôn bắc cầu qua mốc 0°C trước tiên!">Tap + or − jumps and watch how we always bridge through 0°C first!</p>
+
+          <div class="int-wrap">
+            <div>
+              <div class="range-row">
+                <div class="range-head">
+                  <span data-en="Start Temp:" data-vn="Nhiệt độ đầu:">Start Temp:</span>
+                  <span id="ppIntStartLbl" style="color: #4338ca;">−8°C</span>
+                </div>
+                <input type="range" id="ppIntStart" min="-15" max="15" value="-8" oninput="renderPPInt()">
+              </div>
+
+              <div class="btn-row">
+                <button type="button" class="pill-btn div" onclick="nudgePPJump(-10)">−10</button>
+                <button type="button" class="pill-btn div" onclick="nudgePPJump(-5)">−5</button>
+                <button type="button" class="pill-btn div" onclick="nudgePPJump(-1)">−1</button>
+                <button type="button" class="pill-btn mul" onclick="nudgePPJump(1)">+1</button>
+                <button type="button" class="pill-btn mul" onclick="nudgePPJump(5)">+5</button>
+                <button type="button" class="pill-btn mul" onclick="nudgePPJump(10)">+10</button>
+              </div>
+
+              <div class="readout-box" style="border-color: #c4b5fd;">
+                <div id="ppIntEq" style="font-size: 18px; color: #3730a3;">−8 + 13 = +5°C</div>
+                <div id="ppIntBridge" style="font-size: 12px; color: #5b21b6; margin-top: 4px;"></div>
+              </div>
+            </div>
+
+            <div class="int-svg-box">
+              <svg id="ppIntSvg" viewBox="0 0 150 220" style="width: 138px; height: 205px;" aria-label="Thermometer integer jumper"></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODEL C: POSITION-TO-TERM SEQUENCE MACHINE -->
+        <div class="lab-panel teal" style="margin-bottom: 0;">
+          <p class="lab-title" data-en="Model C: Position-to-Term Sequence Machine (an + b)" data-vn="Mô Hình C: Cỗ Máy Quy Tắc Dãy Số (an + b)">Model C: Position-to-Term Sequence Machine (an + b)</p>
+          <p class="lab-desc" data-en="Pick a rule and slide position n (1–20) to calculate any term instantly without listing them all!" data-vn="Chọn một quy tắc rồi kéo vị trí n (1–20) để tính ngay số hạng bất kỳ mà không cần liệt kê từng số!">Pick a rule and slide position n (1–20) to calculate any term instantly without listing them all!</p>
+
+          <div class="btn-row" id="seqRuleBtns">
+            <button type="button" class="pill-btn active" onclick="setSeqRule(0)">2n + 3</button>
+            <button type="button" class="pill-btn" onclick="setSeqRule(1)">4n − 1</button>
+            <button type="button" class="pill-btn" onclick="setSeqRule(2)">5n + 2</button>
+            <button type="button" class="pill-btn" onclick="setSeqRule(3)">6n − 4</button>
+          </div>
+
+          <div class="range-row">
+            <div class="range-head">
+              <span data-en="Position (n):" data-vn="Vị trí (n):">Position (n):</span>
+              <span id="seqNLbl" style="color: #0d9488;">n = 10</span>
+            </div>
+            <input type="range" id="seqNSlider" min="1" max="20" value="10" oninput="renderSeqMachine()">
+          </div>
+
+          <div class="seq-stage">
+            <div class="seq-box seq-in" id="seqInBox">n = 10</div>
+            <span style="font-weight: 900; font-size: 18px;">➔</span>
+            <div class="seq-box seq-mach" id="seqRuleBox">2 × 10 + 3</div>
+            <span style="font-weight: 900; font-size: 18px;">➔</span>
+            <div class="seq-box seq-out" id="seqOutBox">23</div>
+          </div>
+
+          <div style="font-size: 12px; font-weight: 800; color: #115e59; text-align: center; margin-bottom: 6px;" data-en="First 5 terms of this rule:" data-vn="5 số hạng đầu tiên của quy tắc này:">First 5 terms of this rule:</div>
+          <div class="seq-strip" id="seqPreview"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- SECTION 2: VISUAL SVG BILINGUAL VOCABULARY CARDS                   -->
+    <!-- ================================================================== -->
+    <section class="card" id="vocab">
+      <div class="card-head">
+        <h3 data-en="🗣️ 2. Visual Bilingual Maths Dictionary (10 Key Terms)" data-vn="🗣️ 2. Từ Điển Toán Song Ngữ Trực Quan (10 Từ Khóa)">🗣️ 2. Visual Bilingual Maths Dictionary (10 Key Terms)</h3>
+      </div>
+      <p class="sub-note" data-en="Tap the audio buttons to practise British English pronunciation alongside clear Vietnamese explanations." data-vn="Nhấn các nút loa để luyện phát âm chuẩn tiếng Anh - Anh cùng giải thích tiếng Việt dễ hiểu.">Tap the audio buttons to practise British English pronunciation alongside clear Vietnamese explanations.</p>
+      <div class="vocab-grid" id="vocabContainer"></div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- SECTION 3: 3-TIER DINNER TABLE TALKS                               -->
+    <!-- ================================================================== -->
+    <section class="card" id="talks">
+      <div class="card-head">
+        <h3 data-en="🍽️ 3. 3-Tier Dinner Table Talks (Everyday Hanoi Maths)" data-vn="🍽️ 3. Trò Chuyện Toán Học Trên Bàn Ăn (3 Mức Độ)">🍽️ 3. 3-Tier Dinner Table Talks (Everyday Hanoi Maths)</h3>
+      </div>
+      <p class="sub-note" data-en="No worksheets needed! Ask one question at dinner or in the car — tap 'Parent Coaching Tip' for an easy guide." data-vn="Không cần giấy bút! Hỏi con một câu khi ăn cơm hoặc đi xe — bấm 'Gợi ý cho phụ huynh' để xem cách dẫn dắt.">No worksheets needed! Ask one question at dinner or in the car — tap 'Parent Coaching Tip' for an easy guide.</p>
+
+      <div class="talk-card">
+        <span class="talk-badge" style="background: #dcfce7; color: #166534;" data-en="🟢 Tier 1 (Must) • Metric Units &amp; Prices" data-vn="🟢 Mức 1 (Cơ bản) • Đơn Vị Đo &amp; Giá Tiền">🟢 Tier 1 (Must) • Metric Units &amp; Prices</span>
+        <p class="talk-q" data-en="Our rice bag weighs 2.35 kg. How many grams is that (× 1000), and what is 2.35 kg rounded to the nearest tenth?" data-vn="Túi gạo nhà mình nặng 2,35 kg. Đổi sang gam là bao nhiêu (× 1000), và làm tròn 2,35 kg đến hàng phần mười là mấy?">Our rice bag weighs 2.35 kg. How many grams is that (× 1000), and what is 2.35 kg rounded to the nearest tenth?</p>
+        <button type="button" class="hint-btn" onclick="toggleHint('hint1', this)" data-en="💡 Show Parent Coaching Tip" data-vn="💡 Xem gợi ý cho phụ huynh" data-en-open="🔼 Hide Tip" data-vn-open="🔼 Ẩn gợi ý">💡 Show Parent Coaching Tip</button>
+        <div id="hint1" class="hint-box" data-en="2.35 × 1000 = 2350 g (every digit shifts 3 columns LEFT!). Rounded to the nearest tenth: 2.4 kg because the hundredths digit 5 rounds 3 up to 4." data-vn="2,35 × 1000 = 2350 g (mỗi chữ số dịch 3 hàng sang TRÁI!). Làm tròn đến hàng phần mười: 2,4 kg vì chữ số hàng phần trăm là 5 nên làm tròn 3 lên 4.">2.35 × 1000 = 2350 g (every digit shifts 3 columns LEFT!). Rounded to the nearest tenth: 2.4 kg because the hundredths digit 5 rounds 3 up to 4.</div>
+      </div>
+
+      <div class="talk-card should">
+        <span class="talk-badge" style="background: #fef3c7; color: #92400e;" data-en="🟠 Tier 2 (Should) • Lifts &amp; Mountain Weather" data-vn="🟠 Mức 2 (Vận dụng) • Thang Máy &amp; Thời Tiết Sa Pa">🟠 Tier 2 (Should) • Lifts &amp; Mountain Weather</span>
+        <p class="talk-q" data-en="We park in basement B2 (−2) and ride the lift up 11 floors. Which floor do we reach? And if Fansipan is −3°C at night and +8°C at midday, how many degrees did it warm up?" data-vn="Nhà mình gửi xe ở hầm B2 (−2) và đi thang máy lên 11 tầng. Ta sẽ đến tầng mấy? Còn nếu đỉnh Fansipan ban đêm −3°C và trưa +8°C thì nhiệt độ tăng bao nhiêu độ?">We park in basement B2 (−2) and ride the lift up 11 floors. Which floor do we reach? And if Fansipan is −3°C at night and +8°C at midday, how many degrees did it warm up?</p>
+        <button type="button" class="hint-btn" onclick="toggleHint('hint2', this)" data-en="💡 Show Parent Coaching Tip" data-vn="💡 Xem gợi ý cho phụ huynh" data-en-open="🔼 Hide Tip" data-vn-open="🔼 Ẩn gợi ý">💡 Show Parent Coaching Tip</button>
+        <div id="hint2" class="hint-box" data-en="Always ask: 'How many steps to reach 0 first?' From −2 to 0 is +2, then +9 more reaches Floor 9! For Fansipan: −3°C to 0°C is +3°C, plus +8°C = 11°C rise." data-vn="Luôn hỏi con: 'Cần mấy bước để lên tới 0 trước?' Từ −2 lên 0 là +2, còn dư +9 nên tới tầng 9! Với Fansipan: từ −3°C lên 0°C là +3°C, cộng thêm 8°C = tăng 11°C.">Always ask: 'How many steps to reach 0 first?' From −2 to 0 is +2, then +9 more reaches Floor 9! For Fansipan: −3°C to 0°C is +3°C, plus +8°C = 11°C rise.</div>
+      </div>
+
+      <div class="talk-card could">
+        <span class="talk-badge" style="background: #ede9fe; color: #5b21b6;" data-en="🟣 Tier 3 (Could) • Pattern Spotting at Home" data-vn="🟣 Mức 3 (Nâng cao) • Tìm Quy Luật Quanh Nhà">🟣 Tier 3 (Could) • Pattern Spotting at Home</span>
+        <p class="talk-q" data-en="Each dining table seats 4 people on the sides plus 2 people at the two ends. If we push 10 tables in a long row (4n + 2), how many guests can sit down?" data-vn="Mỗi bàn ăn xếp được 4 ghế hai bên và thêm 2 ghế ở hai đầu bàn. Nếu ghép nối tiếp 10 bàn thành một hàng dài theo quy tắc 4n + 2, có bao nhiêu người ngồi được?">Each dining table seats 4 people on the sides plus 2 people at the two ends. If we push 10 tables in a long row (4n + 2), how many guests can sit down?</p>
+        <button type="button" class="hint-btn" onclick="toggleHint('hint3', this)" data-en="💡 Show Parent Coaching Tip" data-vn="💡 Xem gợi ý cho phụ huynh" data-en-open="🔼 Hide Tip" data-vn-open="🔼 Ẩn gợi ý">💡 Show Parent Coaching Tip</button>
+        <div id="hint3" class="hint-box" data-en="Substitute n = 10 into 4n + 2 ➔ 4 × 10 + 2 = 42 guests! Follow-up challenge: How many tables would we need for 30 guests? (4n + 2 = 30 ➔ 4n = 28 ➔ 7 tables)." data-vn="Thay n = 10 vào 4n + 2 ➔ 4 × 10 + 2 = 42 khách! Câu hỏi mở rộng: Cần ghép mấy bàn cho 30 khách? (4n + 2 = 30 ➔ 4n = 28 ➔ 7 bàn).">Substitute n = 10 into 4n + 2 ➔ 4 × 10 + 2 = 42 guests! Follow-up challenge: How many tables would we need for 30 guests? (4n + 2 = 30 ➔ 4n = 28 ➔ 7 tables).</div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- SECTION 4: GAMIFIED 4-QUESTION HOME CHECK QUIZ                     -->
+    <!-- ================================================================== -->
+    <section class="card" id="quiz">
+      <div class="card-head">
+        <h3 data-en="🏆 4. 3-Minute Home Check Quiz" data-vn="🏆 4. Thử Thách 3 Phút Tại Nhà">🏆 4. 3-Minute Home Check Quiz</h3>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span id="quizScore" class="score-pill">⭐ 0 / 4</span>
+          <button type="button" class="pill-btn" onclick="resetQuiz()" data-en="↺ Try Again" data-vn="↺ Làm lại">↺ Try Again</button>
+        </div>
+      </div>
+      <p class="sub-note" data-en="Score 4 / 4 to trigger the celebration confetti!" data-vn="Đạt 4 / 4 câu đúng để mở pháo giấy chúc mừng!">Score 4 / 4 to trigger the celebration confetti!</p>
+      <div id="quizContainer"></div>
+    </section>
+  </main>
+
+  <script>
+    let currentLang = 'en';
+
+    // ================================================================
+    // MODEL A: LIVE PLACE-VALUE DIGIT SHIFTER
+    // ================================================================
+    let ppBase = 3.28;
+    let ppVal = 3.28;
+
+    function fmtNum(n) {
+      return String(Math.round(n * 10000) / 10000);
+    }
+
+    function renderPPPV(prefix) {
+      [3, 2, 1, 0, -1, -2, -3].forEach(c => {
+        const el = document.getElementById('pp-pv-' + c);
+        if (el) {
+          el.textContent = '';
+          el.classList.remove('active');
+        }
+      });
+
+      const rounded = Math.round(ppVal * 1000) / 1000;
+      const [intPart, decPart] = rounded.toFixed(3).split('.');
+      intPart.split('').reverse().forEach((d, idx) => {
+        const el = document.getElementById('pp-pv-' + idx);
+        if (el) {
+          el.textContent = d;
+          el.classList.add('active');
+        }
+      });
+      const cleanDec = decPart.replace(/0+$/, '');
+      for (let i = 0; i < cleanDec.length; i++) {
+        const el = document.getElementById('pp-pv--' + (i + 1));
+        if (el) {
+          el.textContent = cleanDec[i];
+          el.classList.add('active');
+        }
+      }
+
+      const disp = fmtNum(ppVal);
+      const out = document.getElementById('ppPVOut');
+      const label = currentLang === 'en' ? 'Current Value:' : 'Giá trị hiện tại:';
+      if (ppVal >= 10000 || (ppVal > 0 && ppVal < 0.001)) {
+        const warn = currentLang === 'en' ? ' (off chart — tap Reset!)' : ' (ngoài bảng — bấm Đặt lại!)';
+        out.textContent = (prefix ? `${prefix} = ${disp}` : `${label} ${disp}`) + warn;
+      } else {
+        out.textContent = prefix ? `${prefix} = ${disp}` : `${label} ${disp}`;
+      }
+    }
+
+    function setPPStart(v) { ppBase = v; ppVal = v; renderPPPV(''); }
+    function resetPPPV() { ppVal = ppBase; renderPPPV(''); }
+    function shiftPPPV(pow) {
+      const f = Math.pow(10, Math.abs(pow));
+      const old = fmtNum(ppVal);
+      ppVal = pow > 0 ? ppVal * f : ppVal / f;
+      renderPPPV(pow > 0 ? `${old} × ${f}` : `${old} ÷ ${f}`);
+    }
+
+    // ================================================================
+    // MODEL B: VERTICAL TEMPERATURE / INTEGER JUMPER
+    // ================================================================
+    let ppJump = 13;
+
+    function fmtSigned(n) { return n > 0 ? '+' + n : n < 0 ? '−' + Math.abs(n) : '0'; }
+
+    function nudgePPJump(delta) {
+      ppJump = Math.max(-20, Math.min(20, ppJump + delta));
+      renderPPInt();
+    }
+
+    function renderPPInt() {
+      const start = parseInt(document.getElementById('ppIntStart').value, 10);
+      const end = Math.max(-20, Math.min(20, start + ppJump));
+      const actualJump = end - start;
+      document.getElementById('ppIntStartLbl').textContent = fmtSigned(start) + '°C';
+      const op = actualJump >= 0 ? `+ ${actualJump}` : `− ${Math.abs(actualJump)}`;
+      document.getElementById('ppIntEq').textContent = `${fmtSigned(start)} ${op} = ${fmtSigned(end)}°C`;
+
+      const crosses = (start < 0 && end > 0) || (start > 0 && end < 0);
+      const bridgeEl = document.getElementById('ppIntBridge');
+      if (crosses) {
+        bridgeEl.textContent = currentLang === 'en'
+          ? `Bridge to 0°C: (${fmtSigned(start)} → 0 is ${fmtSigned(-start)}), then ${fmtSigned(end)} more → ${fmtSigned(end)}°C`
+          : `Bắc cầu qua 0°C: (${fmtSigned(start)} → 0 là ${fmtSigned(-start)}), thêm ${fmtSigned(end)} nữa → ${fmtSigned(end)}°C`;
+      } else {
+        bridgeEl.textContent = currentLang === 'en'
+          ? `Moves ${Math.abs(actualJump)}°C ${actualJump >= 0 ? 'up' : 'down'} without crossing 0°C.`
+          : `Di chuyển ${Math.abs(actualJump)}°C ${actualJump >= 0 ? 'lên trên' : 'xuống dưới'} không vượt qua 0°C.`;
+      }
+
+      const mapY = v => 110 - v * 4.7;
+      const yS = mapY(start), yE = mapY(end), yZ = mapY(0);
+      let ticks = '';
+      for (let v = -20; v <= 20; v += 10) {
+        const y = mapY(v);
+        const z = v === 0;
+        ticks += `<line x1="${z?34:42}" y1="${y}" x2="${z?64:56}" y2="${y}" stroke="${z?'#d97706':'#64748b'}" stroke-width="${z?2.8:1.5}"/>`;
+        ticks += `<text x="32" y="${y+4}" text-anchor="end" font-size="11" font-weight="800" fill="${z?'#b45309':v>0?'#059669':'#e11d48'}">${fmtSigned(v)}</text>`;
+      }
+      let arc = '';
+      if (actualJump !== 0) {
+        const mid = (yS + yE) / 2;
+        arc = `<path d="M 55 ${yS} Q 106 ${mid} 55 ${yE}" fill="none" stroke="${actualJump>0?'#059669':'#e11d48'}" stroke-width="3"/>
+               <text x="92" y="${mid+4}" font-size="12" font-weight="900" fill="${actualJump>0?'#059669':'#e11d48'}">${fmtSigned(actualJump)}</text>`;
+      }
+      document.getElementById('ppIntSvg').innerHTML = `
+        <line x1="49" y1="12" x2="49" y2="208" stroke="#334155" stroke-width="3.5" stroke-linecap="round"/>
+        ${ticks}
+        ${arc}
+        <circle cx="49" cy="${yS}" r="5.5" fill="#4f46e5" stroke="#ffffff" stroke-width="1.5"/>
+        <circle cx="49" cy="${yE}" r="6.5" fill="${end>=0?'#059669':'#e11d48'}" stroke="#ffffff" stroke-width="1.5"/>
+        <text x="128" y="${yE+4}" text-anchor="middle" font-size="12" font-weight="900" fill="#0f172a">${fmtSigned(end)}°</text>
+      `;
+    }
+
+    // ================================================================
+    // MODEL C: POSITION-TO-TERM SEQUENCE MACHINE
+    // ================================================================
+    const SEQ_RULES = [
+      { a: 2, b: 3, label: '2n + 3' },
+      { a: 4, b: -1, label: '4n − 1' },
+      { a: 5, b: 2, label: '5n + 2' },
+      { a: 6, b: -4, label: '6n − 4' }
+    ];
+    let activeSeqIdx = 0;
+
+    function setSeqRule(idx) {
+      activeSeqIdx = idx;
+      document.querySelectorAll('#seqRuleBtns .pill-btn').forEach((b, i) => {
+        b.classList.toggle('active', i === idx);
+      });
+      renderSeqMachine();
+    }
+
+    function renderSeqMachine() {
+      const r = SEQ_RULES[activeSeqIdx];
+      const n = parseInt(document.getElementById('seqNSlider').value, 10);
+      const val = r.a * n + r.b;
+      const bStr = r.b >= 0 ? `+ ${r.b}` : `− ${Math.abs(r.b)}`;
+      document.getElementById('seqNLbl').textContent = `n = ${n}`;
+      document.getElementById('seqInBox').textContent = `n = ${n}`;
+      document.getElementById('seqRuleBox').textContent = `${r.a} × ${n} ${bStr}`;
+      document.getElementById('seqOutBox').textContent = val;
+
+      let chips = '';
+      for (let k = 1; k <= 5; k++) {
+        chips += `<span class="seq-chip">#${k}: ${r.a * k + r.b}</span>`;
+      }
+      document.getElementById('seqPreview').innerHTML = chips;
+    }
+
+    // ================================================================
+    // SECTION 2: 10 VISUAL SVG BILINGUAL VOCAB CARDS
+    // ================================================================
+    const VOCAB = [
+      {
+        en: 'thousandths', vn: 'hàng phần nghìn',
+        enDef: 'The third decimal place after the decimal point (0.001).',
+        vnDef: 'Chữ số thứ ba sau dấu chấm thập phân (1/1000 = 0,001).',
+        svg: `<svg viewBox="0 0 210 52" width="190" height="46"><text x="105" y="32" text-anchor="middle" font-size="22" font-weight="900" fill="#1e3a8a">0 . 0 0 <tspan fill="#d97706">5</tspan></text><text x="152" y="47" text-anchor="middle" font-size="10" font-weight="800" fill="#b45309">5/1000</text></svg>`
+      },
+      {
+        en: 'regroup', vn: 'nhớ / đổi nhóm hàng',
+        enDef: 'Exchanging 10 of one place-value column for 1 in the next column left.',
+        vnDef: 'Đổi 10 đơn vị ở một hàng thành 1 đơn vị ở hàng lớn hơn liền trước.',
+        svg: `<svg viewBox="0 0 210 52" width="190" height="46"><rect x="8" y="10" width="76" height="30" rx="6" fill="#e0f2fe" stroke="#0284c7"/><text x="46" y="30" text-anchor="middle" font-size="12" font-weight="800" fill="#0369a1">10 tenths</text><text x="105" y="31" text-anchor="middle" font-size="18" font-weight="900" fill="#d97706">➔</text><rect x="126" y="10" width="76" height="30" rx="6" fill="#fef3c7" stroke="#d97706"/><text x="164" y="30" text-anchor="middle" font-size="12" font-weight="800" fill="#92400e">1 whole</text></svg>`
+      },
+      {
+        en: 'position-to-term rule', vn: 'quy tắc vị trí - số hạng',
+        enDef: 'Formula linking position n directly to the term value (e.g. 3n + 2).',
+        vnDef: 'Công thức tính thẳng số hạng từ vị trí n (ví dụ: 3n + 2).',
+        svg: `<svg viewBox="0 0 210 52" width="190" height="46"><rect x="6" y="11" width="48" height="28" rx="6" fill="#ede9fe"/><text x="30" y="30" text-anchor="middle" font-size="12" font-weight="900" fill="#5b21b6">n=10</text><text x="66" y="30" text-anchor="middle" font-size="14" font-weight="900">➔</text><rect x="78" y="11" width="60" height="28" rx="6" fill="#7c3aed"/><text x="108" y="30" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">3n+2</text><text x="150" y="30" text-anchor="middle" font-size="14" font-weight="900">➔</text><rect x="162" y="11" width="42" height="28" rx="6" fill="#dcfce7"/><text x="183" y="30" text-anchor="middle" font-size="13" font-weight="900" fill="#166534">32</text></svg>`
+      },
+      {
+        en: 'square number', vn: 'số chính phương',
+        enDef: 'A whole number multiplied by itself (n² = n × n, e.g. 5² = 25).',
+        vnDef: 'Một số tự nhiên nhân với chính nó (n² = n × n, ví dụ: 5² = 25).',
+        svg: `<svg viewBox="0 0 210 52" width="190" height="46"><rect x="22" y="8" width="36" height="36" fill="#10b981" rx="4"/><line x1="34" y1="8" x2="34" y2="44" stroke="#fff"/><line x1="46" y1="8" x2="46" y2="44" stroke="#fff"/><line x1="22" y1="20" x2="58" y2="20" stroke="#fff"/><line x1="22" y1="32" x2="58" y2="32" stroke="#fff"/><text x="132" y="33" text-anchor="middle" font-size="17" font-weight="900" fill="#047857">3² = 3 × 3 = 9</text></svg>`
+      },
+      {
+        en: 'cube number', vn: 'số lập phương',
+        enDef: 'A whole number multiplied by itself three times (n³ = n × n × n).',
+        vnDef: 'Một số tự nhiên nhân với chính nó ba lần (n³ = n × n × n).',
+        svg: `<svg viewBox="0 0 210 52" width="190" height="46"><polygon points="36,8 56,16 56,40 36,32" fill="#f59e0b" stroke="#92400e"/><polygon points="36,8 16,16 36,24 56,16" fill="#fde68a" stroke="#92400e"/><polygon points="16,16 36,24 36,46 16,38" fill="#fbbf24" stroke="#92400e"/><text x="134" y="32" text-anchor="middle" font-size="16" font-weight="900" fill="#b45309">4³ = 4×4×4 = 64</text></svg>`
+      },
+      {
+        en: 'common factor', vn: 'ước chung',
+        enDef: 'A whole number that divides cleanly into two or more numbers.',
+        vnDef: 'Số tự nhiên mà cả hai hay nhiều số cùng chia hết không dư.',
+        svg: `<svg viewBox="0 0 210 52" width="190" height="46"><circle cx="72" cy="26" r="21" fill="rgba(37,99,235,0.2)" stroke="#2563eb" stroke-width="2"/><circle cx="106" cy="26" r="21" fill="rgba(225,29,72,0.2)" stroke="#e11d48" stroke-width="2"/><text x="89" y="30" text-anchor="middle" font-size="11" font-weight="900" fill="#0f172a">1,2,4</text><text x="166" y="30" text-anchor="middle" font-size="13" font-weight="900" fill="#be123c">HCF = 4</text></svg>`
+      },
+      {
+        en: 'common multiple', vn: 'bội chung',
+        enDef: 'A number shared in the times tables of two or more numbers.',
+        vnDef: 'Số xuất hiện chung trong bảng nhân của hai hay nhiều số.',
+        svg: `<svg viewBox="0 0 210 52" width="190" height="46"><text x="10" y="20" font-size="11.5" font-weight="800" fill="#6b21a8">×3: 3, 6, 9, 12, 15</text><text x="10" y="40" font-size="11.5" font-weight="800" fill="#0f766e">×4: 4, 8, 12, 16, 20</text><text x="174" y="31" text-anchor="middle" font-size="12" font-weight="900" fill="#e11d48">LCM=12</text></svg>`
+      },
+      {
+        en: 'integer', vn: 'số nguyên',
+        enDef: 'Any positive whole number, negative whole number, or zero.',
+        vnDef: 'Các số nguyên dương, số nguyên âm và số 0 (không có phần thập phân).',
+        svg: `<svg viewBox="0 0 210 52" width="190" height="46"><line x1="12" y1="22" x2="198" y2="22" stroke="#334155" stroke-width="2.5"/><circle cx="34" cy="22" r="4" fill="#e11d48"/><circle cx="105" cy="22" r="5" fill="#f59e0b"/><circle cx="176" cy="22" r="4" fill="#059669"/><text x="34" y="42" text-anchor="middle" font-size="12" font-weight="900" fill="#be123c">−5</text><text x="105" y="42" text-anchor="middle" font-size="12" font-weight="900" fill="#b45309">0</text><text x="176" y="42" text-anchor="middle" font-size="12" font-weight="900" fill="#047857">+5</text></svg>`
+      },
+      {
+        en: 'variable', vn: 'biến số / ẩn số',
+        enDef: 'A letter standing for an unknown number in an equation.',
+        vnDef: 'Một chữ cái đại diện cho một số chưa biết trong phép tính.',
+        svg: `<svg viewBox="0 0 210 52" width="190" height="46"><rect x="8" y="10" width="34" height="32" rx="7" fill="#ccfbf1" stroke="#0d9488" stroke-width="2"/><text x="25" y="32" text-anchor="middle" font-size="18" font-weight="900" fill="#0f766e">k</text><text x="128" y="31" text-anchor="middle" font-size="14" font-weight="900" fill="#1e293b">+ 6 = 15 ➔ k = 9</text></svg>`
+      },
+      {
+        en: 'round', vn: 'làm tròn số',
+        enDef: 'Approximating to the nearest tenth or whole number (0–4 down, 5–9 up).',
+        vnDef: 'Ước lượng đến hàng gần nhất (chữ số sau là 0–4 giữ nguyên, 5–9 tăng 1).',
+        svg: `<svg viewBox="0 0 210 52" width="190" height="46"><line x1="18" y1="32" x2="192" y2="32" stroke="#475569" stroke-width="2.5"/><circle cx="152" cy="32" r="5" fill="#e11d48"/><text x="105" y="18" text-anchor="middle" font-size="13" font-weight="900" fill="#e11d48">3.48 ➔ 3.5</text><text x="24" y="47" font-size="11" font-weight="800">3.4</text><text x="186" y="47" text-anchor="end" font-size="11" font-weight="800">3.5</text></svg>`
+      }
+    ];
+
+    function speakText(text, langCode) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = langCode;
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    function renderVocab() {
+      const box = document.getElementById('vocabContainer');
+      box.innerHTML = VOCAB.map((v, i) => `
+        <div class="vocab-card">
+          <div class="vocab-top">
+            <div>
+              <p class="v-en">${v.en}</p>
+              <p class="v-vn">${v.vn}</p>
+            </div>
+          </div>
+          <div class="v-svg">${v.svg}</div>
+          <p class="v-def">${currentLang === 'en' ? v.enDef : v.vnDef}</p>
+          <div class="audio-row">
+            <button type="button" class="audio-btn audio-en" onclick="speakText('${v.en}', 'en-GB')">🇬🇧 Listen EN</button>
+            <button type="button" class="audio-btn audio-vn" onclick="speakText('${v.vn}', 'vi-VN')">🇻🇳 Nghe VN</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ================================================================
+    // SECTION 4: GAMIFIED 4-QUESTION HOME CHECK QUIZ
+    // ================================================================
+    const QUIZ = [
+      {
+        qEn: '1. Calculate 2.45 × 100.',
+        qVn: '1. Tính 2,45 × 100.',
+        optsEn: ['24.5', '245', '2.4500', '2450'],
+        optsVn: ['24,5', '245', '2,4500', '2450'],
+        ans: 1,
+        fbEn: 'Multiplying by 100 shifts every digit 2 places LEFT: 2.45 × 100 = 245.',
+        fbVn: 'Nhân với 100 làm mỗi chữ số dịch 2 hàng sang TRÁI: 2,45 × 100 = 245.'
+      },
+      {
+        qEn: '2. What is −9 + 14?',
+        qVn: '2. Tính −9 + 14 bằng bao nhiêu?',
+        optsEn: ['−23', '−5', '+5', '+23'],
+        optsVn: ['−23', '−5', '+5', '+23'],
+        ans: 2,
+        fbEn: 'Bridge to 0: −9 + 9 = 0, then +5 more lands on +5!',
+        fbVn: 'Bắc cầu qua 0: −9 + 9 = 0, còn cộng thêm 5 nữa ra +5!'
+      },
+      {
+        qEn: '3. What is the cube number 4³?',
+        qVn: '3. Số lập phương 4³ bằng bao nhiêu?',
+        optsEn: ['12', '16', '48', '64'],
+        optsVn: ['12', '16', '48', '64'],
+        ans: 3,
+        fbEn: '4³ means 4 × 4 × 4 = 16 × 4 = 64 (not 4 × 3!).',
+        fbVn: '4³ nghĩa là 4 × 4 × 4 = 16 × 4 = 64 (không phải 4 × 3!).'
+      },
+      {
+        qEn: '4. Find the 10th term of the rule 6n − 2.',
+        qVn: '4. Tìm số hạng thứ 10 của quy tắc 6n − 2.',
+        optsEn: ['58', '62', '48', '60'],
+        optsVn: ['58', '62', '48', '60'],
+        ans: 0,
+        fbEn: 'Substitute n = 10: 6 × 10 − 2 = 60 − 2 = 58!',
+        fbVn: 'Thay n = 10 vào quy tắc: 6 × 10 − 2 = 60 − 2 = 58!'
+      }
+    ];
+
+    let quizAnswers = [null, null, null, null];
+
+    function renderQuiz() {
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = '';
+      let score = 0;
+      QUIZ.forEach((item, qi) => {
+        if (quizAnswers[qi] === item.ans) score++;
+        const card = document.createElement('div');
+        card.className = 'quiz-card';
+        const qText = currentLang === 'en' ? item.qEn : item.qVn;
+        const opts = currentLang === 'en' ? item.optsEn : item.optsVn;
+        const chosen = quizAnswers[qi];
+        let optsHtml = '<div class="quiz-opts">';
+        opts.forEach((optText, oi) => {
+          let cls = 'quiz-opt';
+          if (chosen !== null) {
+            if (oi === item.ans) cls += ' correct';
+            else if (oi === chosen) cls += ' wrong';
+          }
+          optsHtml += `<button type="button" class="${cls}" ${chosen !== null ? 'disabled' : ''} onclick="answerQuiz(${qi},${oi})">${optText}</button>`;
+        });
+        optsHtml += '</div>';
+        let fbHtml = '';
+        if (chosen !== null) {
+          const isOk = chosen === item.ans;
+          const prefix = isOk
+            ? (currentLang === 'en' ? '✅ Spot on! ' : '✅ Chính xác! ')
+            : (currentLang === 'en' ? '💡 Not quite — ' : '💡 Chưa chính xác — ');
+          fbHtml = `<div class="quiz-fb show ${isOk ? 'ok' : 'no'}">${prefix}${currentLang === 'en' ? item.fbEn : item.fbVn}</div>`;
+        }
+        card.innerHTML = `<div style="font-weight:800; font-size:14.5px;">${qText}</div>${optsHtml}${fbHtml}`;
+        container.appendChild(card);
+      });
+      const scoreEl = document.getElementById('quizScore');
+      scoreEl.textContent = score === QUIZ.length
+        ? (currentLang === 'en' ? '🎉 4 / 4 Perfect!' : '🎉 4 / 4 Xuất sắc!')
+        : `⭐ ${score} / ${QUIZ.length}`;
+    }
+
+    function answerQuiz(qi, oi) {
+      quizAnswers[qi] = oi;
+      renderQuiz();
+      if (quizAnswers.every((a, idx) => a === QUIZ[idx].ans)) launchConfetti();
+    }
+
+    function resetQuiz() {
+      quizAnswers = [null, null, null, null];
+      renderQuiz();
+    }
+
+    function launchConfetti() {
+      const colours = ['#2563eb', '#10b981', '#f59e0b', '#e11d48', '#8b5cf6'];
+      for (let i = 0; i < 30; i++) {
+        const d = document.createElement('div');
+        d.className = 'confetti-dot';
+        d.style.left = (15 + Math.random() * 70) + 'vw';
+        d.style.top = (18 + Math.random() * 25) + 'vh';
+        d.style.background = colours[i % colours.length];
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), 1400);
+      }
+    }
+
+    // ================================================================
+    // BILINGUAL TOGGLE & HINTS
+    // ================================================================
+    function updateButtonLabel(btn, isOpen) {
+      const attr = isOpen ? ('data-' + currentLang + '-open') : ('data-' + currentLang);
+      btn.textContent = btn.getAttribute(attr) || btn.getAttribute('data-' + currentLang);
+    }
+
+    function toggleLang() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      currentLang = currentLang === 'en' ? 'vn' : 'en';
+      document.documentElement.lang = currentLang === 'en' ? 'en-GB' : 'vi';
+      document.getElementById('langBtn').textContent = currentLang === 'en'
+        ? '🇻🇳 Xem tiếng Việt / 🇬🇧 EN'
+        : '🇬🇧 Switch to English / 🇻🇳 VN';
+      document.querySelectorAll('[data-en]').forEach(el => {
+        if (el.classList.contains('hint-btn')) {
+          const targetId = el.getAttribute('onclick').match(/'([^']+)'/)[1];
+          const isOpen = document.getElementById(targetId).classList.contains('open');
+          updateButtonLabel(el, isOpen);
+        } else {
+          el.textContent = el.getAttribute('data-' + currentLang);
+        }
+      });
+      renderPPPV('');
+      renderPPInt();
+      renderVocab();
+      renderQuiz();
+    }
+
+    function toggleHint(id, btn) {
+      const box = document.getElementById(id);
+      const isOpen = box.classList.toggle('open');
+      if (btn) updateButtonLabel(btn, isOpen);
+    }
+
+    // Initial render
+    renderPPPV('');
+    renderPPInt();
+    renderSeqMachine();
+    renderVocab();
+    renderQuiz();
+  </script>
+</body>
+</html>

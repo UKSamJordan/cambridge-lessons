@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grade 4 Science — Unit 2.4 Lesson 2: Changing Pitch on Wind Instruments, Patterns &amp; Anomalies</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap');
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #ecfeff 50%, #f0fdf4 100%);
+      color: #0f172a;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, .font-display { font-family: 'Fredoka', sans-serif; }
+
+    /* Auto-Hiding Fixed Top Header */
+    #top-header {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    #top-header.header-hidden {
+      transform: translateY(-100%);
+    }
+
+    /* 3D Flashback Flip Cards [SoL: Retrieval Practice] [SoL: Spaced Practice] */
+    .flip-card {
+      perspective: 1200px;
+      cursor: pointer;
+    }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.5rem;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Organic Vibrating Air Particle Model (flex-wrap + align-content: flex-end, NEVER rigid grids!) [SoL: Dual Coding] */
+    .air-particle-zone {
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-end;
+      justify-content: space-around;
+      gap: 4px;
+      padding: 6px;
+      overflow: hidden;
+    }
+    @keyframes airVibrate {
+      0%, 100% { transform: translate(0px, 0px) scale(1); }
+      25% { transform: translate(3px, -3px) scale(1.12); }
+      50% { transform: translate(-3px, 2px) scale(0.95); }
+      75% { transform: translate(2px, 3px) scale(1.08); }
+    }
+    .air-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background: #0284c7;
+      box-shadow: 0 0 6px rgba(2, 132, 199, 0.45);
+      animation-name: airVibrate;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-in-out;
+    }
+    .bottle-blowing .air-dot {
+      background: #f59e0b;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.85);
+    }
+
+    /* Full Screen I Do Mode */
+    .fullscreen-ido {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 60 !important;
+      background: #ffffff !important;
+      overflow-y: auto !important;
+      padding: 1.5rem 2rem !important;
+      border-radius: 0 !important;
+      max-width: none !important;
+      margin: 0 !important;
+    }
+
+    /* Confetti canvas */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 120;
+    }
+
+    /* Station button styling */
+    .station-tab.active {
+      background: linear-gradient(135deg, #0284c7, #0d9488);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+      transform: translateY(-1px);
+    }
+
+    /* Anomaly pulse */
+    @keyframes anomalyGlow {
+      0%, 100% { filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.5)); }
+      50% { filter: drop-shadow(0 0 14px rgba(239, 68, 68, 0.95)); }
+    }
+    .anomaly-highlight {
+      animation: anomalyGlow 1.4s infinite ease-in-out;
+    }
+
+    /* Custom slider */
+    input[type="range"] {
+      accent-color: #0284c7;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-sky-200">
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Auto-Hiding Fixed Top Header [SoL: Cognitive Load Management] -->
+  <header id="top-header" class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b-2 border-sky-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="px-2.5 py-1 rounded-lg bg-sky-600 text-white font-display font-bold text-xs tracking-wide uppercase">G4 Science • 2.4 L2</span>
+        <div class="min-w-0">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-teal-700 truncate">Enquiry: How does the length of air inside a bottle or panpipe change its pitch?</div>
+          <div class="text-sm font-bold text-slate-800 truncate">LO: Explain wind-instrument pitch and spot data patterns.</div>
+        </div>
+      </div>
+
+      <!-- Scoreboard + Utility Controls -->
+      <div class="flex items-center flex-wrap gap-2">
+        <div class="flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-xl border border-slate-200">
+          <button onclick="addScore('red', 1)" class="px-2 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-extrabold transition" title="Add point to Team Red">Red: <span id="score-red">0</span></button>
+          <span class="text-slate-400 font-bold text-xs">vs</span>
+          <button onclick="addScore('blue', 1)" class="px-2 py-0.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold transition" title="Add point to Team Blue">Blue: <span id="score-blue">0</span></button>
+          <button onclick="resetScores()" class="text-slate-500 hover:text-slate-800 text-xs font-bold px-1" title="Reset Scores">↺</button>
+        </div>
+
+        <button onclick="toggleWhiteboard()" class="px-2.5 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-extrabold border border-amber-300 transition" title="David's Board (Shortcut: W)">✏️ Board (W)</button>
+        <button onclick="toggleTeacherDrawer()" class="px-2.5 py-1.5 rounded-xl bg-indigo-100 hover:bg-indigo-200 text-indigo-900 text-xs font-extrabold border border-indigo-300 transition" title="Teacher Prompts (Shortcut: T)">🎓 Prompts (T)</button>
+        <button id="mute-btn" onclick="toggleMute()" class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-extrabold border border-slate-300 transition" title="Mute Sound Effects (Shortcut: M)">🔊 Audio (M)</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper (pt-24 clears fixed header) -->
+  <main class="max-w-7xl mx-auto px-4 pt-24 pb-16">
+    <!-- Flex-Wrap Station Navigation Bar -->
+    <nav aria-label="Lesson Stations" class="flex flex-wrap items-center justify-center gap-2 mb-6 bg-white/90 p-2.5 rounded-2xl shadow-sm border border-sky-100">
+      <button onclick="goStation(0)" data-station="0" class="station-tab active px-3.5 py-2 rounded-xl text-sm font-extrabold text-slate-700 bg-slate-100 hover:bg-sky-100 transition">0. LO &amp; SC</button>
+      <button onclick="goStation(1)" data-station="1" class="station-tab px-3.5 py-2 rounded-xl text-sm font-extrabold text-slate-700 bg-slate-100 hover:bg-sky-100 transition">1. Flashback 3</button>
+      <button onclick="goStation(2)" data-station="2" class="station-tab px-3.5 py-2 rounded-xl text-sm font-extrabold text-slate-700 bg-slate-100 hover:bg-sky-100 transition">2. Vocabulary</button>
+      <button onclick="goStation(3)" data-station="3" class="station-tab px-3.5 py-2 rounded-xl text-sm font-extrabold text-slate-700 bg-slate-100 hover:bg-sky-100 transition">3. Secret Lab (I Do)</button>
+      <button onclick="goStation(4)" data-station="4" class="station-tab px-3.5 py-2 rounded-xl text-sm font-extrabold text-slate-700 bg-slate-100 hover:bg-sky-100 transition">4. Bottle &amp; Panpipe Lab</button>
+      <button onclick="goStation(5)" data-station="5" class="station-tab px-3.5 py-2 rounded-xl text-sm font-extrabold text-slate-700 bg-slate-100 hover:bg-sky-100 transition">5. ✅ SC Check</button>
+      <button onclick="goStation(6)" data-station="6" class="station-tab px-3.5 py-2 rounded-xl text-sm font-extrabold text-slate-700 bg-slate-100 hover:bg-sky-100 transition">6. 🏆 Quickfire</button>
+    </nav>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 0: LO & SUCCESS CRITERIA [SoL: Cognitive Load Management] [SoL: Schema Building] -->
+    <!-- ===================================================================== -->
+    <section id="station-0" class="station-panel">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-r from-sky-600 via-teal-600 to-emerald-600 rounded-3xl p-8 md:p-10 text-white shadow-xl text-center">
+          <div class="inline-block px-4 py-1.5 rounded-full bg-white/20 text-sm font-extrabold tracking-wider uppercase mb-4">Cambridge Primary Science • Stage 5 • Unit 2.4 Lesson 2</div>
+          <h1 class="text-4xl md:text-5xl font-display font-bold leading-tight mb-4">Explain wind-instrument pitch and spot data patterns.</h1>
+          <p class="text-lg md:text-xl font-semibold text-sky-100 max-w-3xl mx-auto">Enquiry Question: How does the length of air inside a bottle or panpipe change its pitch?</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white rounded-3xl p-6 border-2 border-emerald-200 shadow-md">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-display font-bold text-xl">1</span>
+              <h2 class="text-2xl font-display font-bold text-emerald-800">Must</h2>
+            </div>
+            <p class="text-xl font-bold text-slate-800 leading-snug">State that shorter air columns make higher-pitched sounds.</p>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 border-2 border-sky-200 shadow-md">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-11 h-11 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center font-display font-bold text-xl">2</span>
+              <h2 class="text-2xl font-display font-bold text-sky-800">Should</h2>
+            </div>
+            <p class="text-xl font-bold text-slate-800 leading-snug">Describe a pattern in bottle-pitch results and spot an anomaly.</p>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 border-2 border-amber-200 shadow-md">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-11 h-11 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-display font-bold text-xl">3</span>
+              <h2 class="text-2xl font-display font-bold text-amber-800">Could</h2>
+            </div>
+            <p class="text-xl font-bold text-slate-800 leading-snug">Compare blowing vs tapping water bottles using vibration science.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 1: SPACED FLASHBACK 3 [SoL: Retrieval Practice] [SoL: Spaced Practice] [SoL: Interleaving] -->
+    <!-- ===================================================================== -->
+    <section id="station-1" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-white rounded-2xl p-4 border border-sky-100 shadow-sm">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-display font-bold text-slate-800">Spaced Flashback 3 — Brain Warm-Up</h2>
+            <p class="text-slate-600 font-semibold">Write your answers on mini-whiteboards first, then click each card to flip and check!</p>
+          </div>
+          <button onclick="resetFlashback()" class="px-4 py-2 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 font-extrabold text-sm transition">↺ Flip All Back</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 2.1 How Sounds Are Made (5Ps.01) -->
+          <div class="flip-card h-[350px]" onclick="flipCard(this)">
+            <div class="flip-card-inner">
+              <div class="flip-face bg-gradient-to-br from-sky-500 to-blue-700 text-white shadow-xl border-4 border-sky-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Card 1 • Unit 2.1 (5Ps.01)</span>
+                  <span class="text-3xl">🔊</span>
+                </div>
+                <div class="my-auto text-center">
+                  <div class="text-6xl font-display font-bold mb-3">WOOD vs AIR</div>
+                  <p class="text-2xl font-bold leading-snug">Why does sound travel faster through a solid wooden desk than through air?</p>
+                </div>
+                <div class="text-center text-sm font-extrabold text-sky-100 uppercase tracking-wider">Click to Reveal Answer ➔</div>
+              </div>
+              <div class="flip-face flip-back bg-white text-slate-900 shadow-xl border-4 border-emerald-500">
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase self-start">Answer • Unit 2.1</span>
+                <div class="my-auto text-center space-y-3">
+                  <div class="text-5xl font-display font-bold text-emerald-700">CLOSER PARTICLES!</div>
+                  <p class="text-xl font-bold text-slate-800">Particles in a solid wood desk are packed much closer together than in air, so vibrations pass from particle to particle faster.</p>
+                </div>
+                <div class="text-center text-xs font-bold text-slate-400 uppercase">Click to Flip Back</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 3.4 Solutions (5Cc.03) -->
+          <div class="flip-card h-[350px]" onclick="flipCard(this)">
+            <div class="flip-card-inner">
+              <div class="flip-face bg-gradient-to-br from-teal-500 to-emerald-700 text-white shadow-xl border-4 border-teal-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Card 2 • Unit 3.4 (5Cc.03)</span>
+                  <span class="text-3xl">🧪</span>
+                </div>
+                <div class="my-auto text-center">
+                  <div class="text-6xl font-display font-bold mb-3">SALT + WATER</div>
+                  <p class="text-2xl font-bold leading-snug">When salt dissolves in warm water, which is the solute and which is the solvent?</p>
+                </div>
+                <div class="text-center text-sm font-extrabold text-teal-100 uppercase tracking-wider">Click to Reveal Answer ➔</div>
+              </div>
+              <div class="flip-face flip-back bg-white text-slate-900 shadow-xl border-4 border-emerald-500">
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase self-start">Answer • Unit 3.4</span>
+                <div class="my-auto text-center space-y-3">
+                  <div class="text-5xl font-display font-bold text-teal-700">SOLUTE vs SOLVENT</div>
+                  <p class="text-2xl font-extrabold text-slate-800">Salt = <span class="text-teal-700">Solute</span> (solid that dissolves)</p>
+                  <p class="text-2xl font-extrabold text-slate-800">Warm water = <span class="text-sky-700">Solvent</span> (liquid that dissolves it)</p>
+                </div>
+                <div class="text-center text-xs font-bold text-slate-400 uppercase">Click to Flip Back</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 1.1 Parts of a Flower (5Bs.03) -->
+          <div class="flip-card h-[350px]" onclick="flipCard(this)">
+            <div class="flip-card-inner">
+              <div class="flip-face bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-xl border-4 border-amber-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Card 3 • Unit 1.1 (5Bs.03)</span>
+                  <span class="text-3xl">🌺</span>
+                </div>
+                <div class="my-auto text-center">
+                  <div class="text-6xl font-display font-bold mb-3">PETALS &amp; ANTHERS</div>
+                  <p class="text-2xl font-bold leading-snug">What are the jobs of the petals and the anthers in a flowering plant?</p>
+                </div>
+                <div class="text-center text-sm font-extrabold text-amber-100 uppercase tracking-wider">Click to Reveal Answer ➔</div>
+              </div>
+              <div class="flip-face flip-back bg-white text-slate-900 shadow-xl border-4 border-emerald-500">
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase self-start">Answer • Unit 1.1</span>
+                <div class="my-auto text-center space-y-3">
+                  <div class="text-5xl font-display font-bold text-orange-600">POLLINATION!</div>
+                  <p class="text-2xl font-extrabold text-slate-800">Petals: <span class="text-orange-600">Attract insects</span> (bright colours &amp; scent)</p>
+                  <p class="text-2xl font-extrabold text-slate-800">Anthers: <span class="text-amber-700">Produce pollen</span></p>
+                </div>
+                <div class="text-center text-xs font-bold text-slate-400 uppercase">Click to Flip Back</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 2: BILINGUAL VOCABULARY MODAL + REAL-WORLD SCIENCE STRIP [SoL: Dual Coding] [SoL: Schema Building] -->
+    <!-- ===================================================================== -->
+    <section id="station-2" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-md border border-sky-100">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-5">
+            <div>
+              <h2 class="text-3xl font-display font-bold text-slate-800">Key Scientific Vocabulary</h2>
+              <p class="text-slate-600 font-semibold">Click any word tile to open the visual model, bilingual meaning, and voice pronunciation.</p>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-extrabold uppercase">9 Essential Terms</span>
+          </div>
+
+          <div id="vocab-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Populated cleanly via JS -->
+          </div>
+        </div>
+
+        <!-- Real-World Science Strip (100% British English) -->
+        <div class="bg-gradient-to-r from-teal-700 via-sky-700 to-indigo-700 rounded-3xl p-6 text-white shadow-lg">
+          <h3 class="text-2xl font-display font-bold mb-4 flex items-center gap-2">🌍 Real-World Science: Wind Instruments Around the World</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white/15 backdrop-blur rounded-2xl p-4 border border-white/25">
+              <div class="text-3xl mb-2">🎋</div>
+              <h4 class="font-display font-bold text-xl mb-1">Vietnamese Bamboo Flute</h4>
+              <p class="text-sm font-semibold text-sky-50 leading-relaxed">Musicians blow across a hollow bamboo tube. Lifting fingers shortens the vibrating air column to play sparkling high notes!</p>
+            </div>
+            <div class="bg-white/15 backdrop-blur rounded-2xl p-4 border border-white/25">
+              <div class="text-3xl mb-2">🎵</div>
+              <h4 class="font-display font-bold text-xl mb-1">School Recorder Finger Holes</h4>
+              <p class="text-sm font-semibold text-sky-50 leading-relaxed">Covering more finger holes traps a longer air column inside the recorder. A longer air column vibrates more slowly, making a lower pitch.</p>
+            </div>
+            <div class="bg-white/15 backdrop-blur rounded-2xl p-4 border border-white/25">
+              <div class="text-3xl mb-2">🎼</div>
+              <h4 class="font-display font-bold text-xl mb-1">Pipe Organs &amp; Panpipes</h4>
+              <p class="text-sm font-semibold text-sky-50 leading-relaxed">Giant cathedral organ pipes can be over 5 metres tall for booming bass notes, whilst tiny centimetre-long pipes whistle ultra-high pitches!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 3: SECRET LAB MISSIONS (I DO / WE DO) [SoL: Worked Examples] [SoL: Misconceptions] [SoL: Elaborative Interrogation] -->
+    <!-- ===================================================================== -->
+    <section id="station-3" class="station-panel hidden">
+      <div id="station-3-container" class="space-y-5">
+        <!-- Top Mission Control Bar -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-sky-100 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="btn-mission-1" onclick="selectMission(1)" class="px-4 py-2 rounded-xl bg-sky-600 text-white font-extrabold text-sm shadow transition">Mission 1: Water Bottle Air-Column Reveal</button>
+            <button id="btn-mission-2" onclick="selectMission(2)" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-sky-100 text-slate-800 font-extrabold text-sm transition">Mission 2: Panpipe Bar Chart &amp; Anomaly</button>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="openGiantModal()" class="px-3.5 py-2 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 font-extrabold text-sm border border-purple-300 transition">🔍 Giant Projection</button>
+            <button id="fullscreen-ido-btn" onclick="toggleFullScreenIDo()" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-700 text-white font-extrabold text-sm transition">⛶ Full Screen I Do</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <!-- Permanent Steps to Success & Safety Sidebar -->
+          <aside class="lg:col-span-4 bg-gradient-to-b from-amber-50 to-white rounded-3xl p-5 border-2 border-amber-300 shadow-sm space-y-4">
+            <h3 class="text-xl font-display font-bold text-amber-900 flex items-center gap-2">🧪 Steps to Success &amp; Safety</h3>
+            <ol class="space-y-2.5 text-sm font-bold text-slate-800">
+              <li class="flex items-start gap-2.5 bg-white p-2.5 rounded-xl border border-amber-200"><span class="w-6 h-6 rounded-full bg-sky-600 text-white flex items-center justify-center shrink-0 text-xs">1</span><span>Measure the <strong>AIR COLUMN</strong> above the water — NOT the water height!</span></li>
+              <li class="flex items-start gap-2.5 bg-white p-2.5 rounded-xl border border-amber-200"><span class="w-6 h-6 rounded-full bg-sky-600 text-white flex items-center justify-center shrink-0 text-xs">2</span><span>Apply the rule: <strong>Shorter air = faster vibrations = HIGHER pitch.</strong></span></li>
+              <li class="flex items-start gap-2.5 bg-white p-2.5 rounded-xl border border-amber-200"><span class="w-6 h-6 rounded-full bg-sky-600 text-white flex items-center justify-center shrink-0 text-xs">3</span><span>Check graphs for the <strong>overall pattern</strong> first, then circle any bar that breaks the pattern (<strong>anomalous result</strong>).</span></li>
+              <li class="flex items-start gap-2.5 bg-rose-50 p-2.5 rounded-xl border border-rose-200 text-rose-900"><span class="w-6 h-6 rounded-full bg-rose-600 text-white flex items-center justify-center shrink-0 text-xs">!</span><span><strong>Lab Safety:</strong> Never share mouthpieces or bottles; hold glass bottles securely with two hands on the table.</span></li>
+            </ol>
+
+            <div class="bg-sky-900 text-white rounded-2xl p-4">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-sky-300 mb-1">Red-Flag Misconception Buster</div>
+              <p class="text-sm font-bold leading-snug">More water leaves LESS space for air! When you blow across the top, only the AIR column vibrates — so MORE water = SHORTER air column = HIGHER pitch!</p>
+            </div>
+          </aside>
+
+          <!-- Interactive Mission Stage -->
+          <div class="lg:col-span-8 bg-white rounded-3xl p-6 border-2 border-sky-200 shadow-md">
+            <!-- MISSION 1: Water Bottle Air-Column Reveal -->
+            <div id="mission-1-view" class="space-y-5">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h3 class="text-2xl font-display font-bold text-slate-900">Mission 1: What Actually Vibrates? (24 cm Bottles)</h3>
+                  <p class="text-slate-600 font-semibold text-sm">Click "Highlight Air Columns" to reveal the vibrating air space, or test Blowing vs Tapping!</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <button onclick="toggleAirHighlight()" id="btn-air-highlight" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm shadow transition">✨ Highlight Air Columns</button>
+                  <button onclick="toggleBlowTapMode()" id="btn-blow-tap" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-sm shadow transition">🥄 Stretch: Switch to Tapping</button>
+                </div>
+              </div>
+
+              <div class="bg-sky-50/70 rounded-2xl p-5 border border-sky-200">
+                <div id="m1-mode-badge" class="inline-block px-3 py-1 rounded-full bg-sky-600 text-white text-xs font-extrabold uppercase mb-4">Mode: BLOWING Across Top (Air Column Vibrates!)</div>
+
+                <div class="grid grid-cols-3 gap-4 items-end">
+                  <!-- Bottle X -->
+                  <div class="flex flex-col items-center">
+                    <button onclick="demoBottleTone('X')" class="mb-2 px-3 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs font-extrabold shadow transition">🔊 Test Bottle X</button>
+                    <svg viewBox="0 0 120 220" class="w-32 h-56">
+                      <!-- Air space highlight -->
+                      <rect class="m1-air-box transition-all duration-500" x="26" y="42" width="68" height="120" rx="6" fill="#fef3c7" opacity="0.25" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,4"/>
+                      <!-- Water (6 cm = 40px) -->
+                      <rect class="m1-water-box transition-all duration-500" x="26" y="162" width="68" height="40" rx="4" fill="#38bdf8" opacity="0.75"/>
+                      <!-- Bottle outline -->
+                      <path d="M44 10 L76 10 L76 34 L94 46 L94 202 Q94 208 88 208 L32 208 Q26 208 26 202 L26 46 L44 34 Z" fill="none" stroke="#0f172a" stroke-width="3.5"/>
+                      <!-- Bracket Air -->
+                      <line x1="103" y1="42" x2="103" y2="162" stroke="#d97706" stroke-width="2.5"/>
+                      <line x1="99" y1="42" x2="107" y2="42" stroke="#d97706" stroke-width="2.5"/>
+                      <line x1="99" y1="162" x2="107" y2="162" stroke="#d97706" stroke-width="2.5"/>
+                      <text x="60" y="108" text-anchor="middle" font-size="14" font-weight="800" fill="#92400e">18 cm AIR</text>
+                      <text x="60" y="187" text-anchor="middle" font-size="12" font-weight="800" fill="#0c4a6e">6 cm water</text>
+                    </svg>
+                    <div class="text-center mt-1">
+                      <div class="font-display font-bold text-lg text-slate-900">Bottle X</div>
+                      <div id="m1-label-X" class="text-xs font-extrabold px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-800 mt-1">Longest Air ➔ LOWEST Pitch</div>
+                    </div>
+                  </div>
+
+                  <!-- Bottle Y -->
+                  <div class="flex flex-col items-center">
+                    <button onclick="demoBottleTone('Y')" class="mb-2 px-3 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs font-extrabold shadow transition">🔊 Test Bottle Y</button>
+                    <svg viewBox="0 0 120 220" class="w-32 h-56">
+                      <rect class="m1-air-box transition-all duration-500" x="26" y="42" width="68" height="80" rx="6" fill="#fef3c7" opacity="0.25" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,4"/>
+                      <rect class="m1-water-box transition-all duration-500" x="26" y="122" width="68" height="80" rx="4" fill="#38bdf8" opacity="0.75"/>
+                      <path d="M44 10 L76 10 L76 34 L94 46 L94 202 Q94 208 88 208 L32 208 Q26 208 26 202 L26 46 L44 34 Z" fill="none" stroke="#0f172a" stroke-width="3.5"/>
+                      <line x1="103" y1="42" x2="103" y2="122" stroke="#d97706" stroke-width="2.5"/>
+                      <line x1="99" y1="42" x2="107" y2="42" stroke="#d97706" stroke-width="2.5"/>
+                      <line x1="99" y1="122" x2="107" y2="122" stroke="#d97706" stroke-width="2.5"/>
+                      <text x="60" y="88" text-anchor="middle" font-size="14" font-weight="800" fill="#92400e">12 cm AIR</text>
+                      <text x="60" y="166" text-anchor="middle" font-size="12" font-weight="800" fill="#0c4a6e">12 cm water</text>
+                    </svg>
+                    <div class="text-center mt-1">
+                      <div class="font-display font-bold text-lg text-slate-900">Bottle Y</div>
+                      <div id="m1-label-Y" class="text-xs font-extrabold px-2.5 py-1 rounded-full bg-teal-100 text-teal-800 mt-1">Medium Air ➔ MEDIUM Pitch</div>
+                    </div>
+                  </div>
+
+                  <!-- Bottle Z -->
+                  <div class="flex flex-col items-center">
+                    <button onclick="demoBottleTone('Z')" class="mb-2 px-3 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs font-extrabold shadow transition">🔊 Test Bottle Z</button>
+                    <svg viewBox="0 0 120 220" class="w-32 h-56">
+                      <rect class="m1-air-box transition-all duration-500" x="26" y="42" width="68" height="40" rx="6" fill="#fef3c7" opacity="0.25" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,4"/>
+                      <rect class="m1-water-box transition-all duration-500" x="26" y="82" width="68" height="120" rx="4" fill="#38bdf8" opacity="0.75"/>
+                      <path d="M44 10 L76 10 L76 34 L94 46 L94 202 Q94 208 88 208 L32 208 Q26 208 26 202 L26 46 L44 34 Z" fill="none" stroke="#0f172a" stroke-width="3.5"/>
+                      <line x1="103" y1="42" x2="103" y2="82" stroke="#d97706" stroke-width="2.5"/>
+                      <line x1="99" y1="42" x2="107" y2="42" stroke="#d97706" stroke-width="2.5"/>
+                      <line x1="99" y1="82" x2="107" y2="82" stroke="#d97706" stroke-width="2.5"/>
+                      <text x="60" y="66" text-anchor="middle" font-size="13" font-weight="800" fill="#92400e">6 cm AIR</text>
+                      <text x="60" y="148" text-anchor="middle" font-size="12" font-weight="800" fill="#0c4a6e">18 cm water</text>
+                    </svg>
+                    <div class="text-center mt-1">
+                      <div class="font-display font-bold text-lg text-slate-900">Bottle Z</div>
+                      <div id="m1-label-Z" class="text-xs font-extrabold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 mt-1">Shortest Air ➔ HIGHEST Pitch</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Anchored Explanation Strip (Never overlapping SVG) -->
+              <div id="m1-explanation" class="bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 text-sm font-bold text-emerald-950">
+                <strong>Blowing Science:</strong> Bottle Z has the most water (18 cm), which leaves the <strong>shortest air column (6 cm)</strong>. A shorter air column vibrates <strong>faster</strong>, producing the <strong>highest pitch</strong>!
+              </div>
+            </div>
+
+            <!-- MISSION 2: Reading a Panpipe Bar Chart & Spotting an Anomalous Result -->
+            <div id="mission-2-view" class="hidden space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h3 class="text-2xl font-display font-bold text-slate-900">Mission 2: Bamboo Panpipe Bar Chart &amp; Anomaly</h3>
+                  <p class="text-slate-600 font-semibold text-sm">How to Read: Look along the bottom X-axis for Pipe Length (cm), then follow each bar up to the Y-axis Pitch Score. Click any bar to inspect!</p>
+                </div>
+                <button onclick="revealMission2Anomaly()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow transition">🔎 Spot the Anomalous Result</button>
+              </div>
+
+              <!-- Fully Labelled Interactive SVG Bar Chart (NO NAKED GRAPHS!) -->
+              <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <svg id="m2-chart" viewBox="0 0 600 285" class="w-full h-auto">
+                  <!-- Title -->
+                  <text x="320" y="22" text-anchor="middle" font-size="16" font-weight="800" fill="#0f172a">Bamboo Panpipe Length vs Pitch Score</text>
+                  <!-- Y-axis label -->
+                  <text x="18" y="145" text-anchor="middle" font-size="12" font-weight="800" fill="#334155" transform="rotate(-90 18 145)">Pitch Score (1 = lowest, 10 = highest)</text>
+                  <!-- X-axis label -->
+                  <text x="320" y="274" text-anchor="middle" font-size="12" font-weight="800" fill="#334155">Panpipe Length (cm)</text>
+
+                  <!-- Gridlines & Y ticks (0 to 10; y=230 is 0, y=50 is 10 -> 18px per unit) -->
+                  <g stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,4">
+                    <line x1="75" y1="50" x2="565" y2="50"/>
+                    <line x1="75" y1="86" x2="565" y2="86"/>
+                    <line x1="75" y1="122" x2="565" y2="122"/>
+                    <line x1="75" y1="158" x2="565" y2="158"/>
+                    <line x1="75" y1="194" x2="565" y2="194"/>
+                  </g>
+                  <g font-size="11" font-weight="700" fill="#475569" text-anchor="end">
+                    <text x="68" y="54">10</text>
+                    <text x="68" y="90">8</text>
+                    <text x="68" y="126">6</text>
+                    <text x="68" y="162">4</text>
+                    <text x="68" y="198">2</text>
+                    <text x="68" y="234">0</text>
+                  </g>
+                  <!-- Axes -->
+                  <line x1="75" y1="44" x2="75" y2="230" stroke="#0f172a" stroke-width="2.5"/>
+                  <line x1="75" y1="230" x2="570" y2="230" stroke="#0f172a" stroke-width="2.5"/>
+
+                  <!-- Bars: 6cm->10, 10cm->8, 14cm->6, 18cm->9 (ANOMALY), 22cm->2 -->
+                  <g class="cursor-pointer" onclick="inspectM2Bar(0)">
+                    <rect x="105" y="50" width="60" height="180" rx="6" fill="#0284c7" class="hover:opacity-80 transition"/>
+                    <text x="135" y="44" text-anchor="middle" font-size="12" font-weight="800" fill="#0369a1">10</text>
+                    <text x="135" y="248" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">6 cm</text>
+                  </g>
+                  <g class="cursor-pointer" onclick="inspectM2Bar(1)">
+                    <rect x="200" y="86" width="60" height="144" rx="6" fill="#0284c7" class="hover:opacity-80 transition"/>
+                    <text x="230" y="80" text-anchor="middle" font-size="12" font-weight="800" fill="#0369a1">8</text>
+                    <text x="230" y="248" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">10 cm</text>
+                  </g>
+                  <g class="cursor-pointer" onclick="inspectM2Bar(2)">
+                    <rect x="295" y="122" width="60" height="108" rx="6" fill="#0284c7" class="hover:opacity-80 transition"/>
+                    <text x="325" y="116" text-anchor="middle" font-size="12" font-weight="800" fill="#0369a1">6</text>
+                    <text x="325" y="248" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">14 cm</text>
+                  </g>
+                  <g id="m2-anomaly-group" class="cursor-pointer" onclick="inspectM2Bar(3)">
+                    <rect id="m2-anomaly-bar" x="390" y="68" width="60" height="162" rx="6" fill="#0284c7" class="hover:opacity-80 transition"/>
+                    <text x="420" y="62" text-anchor="middle" font-size="12" font-weight="800" fill="#b91c1c">9</text>
+                    <text x="420" y="248" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">18 cm</text>
+                    <!-- Expected dotted bar (score 4 -> y=158) hidden until reveal -->
+                    <rect id="m2-expected-ghost" x="390" y="158" width="60" height="72" rx="4" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="6,4" class="hidden"/>
+                  </g>
+                  <g class="cursor-pointer" onclick="inspectM2Bar(4)">
+                    <rect x="485" y="194" width="60" height="36" rx="6" fill="#0284c7" class="hover:opacity-80 transition"/>
+                    <text x="515" y="188" text-anchor="middle" font-size="12" font-weight="800" fill="#0369a1">2</text>
+                    <text x="515" y="248" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">22 cm</text>
+                  </g>
+                </svg>
+              </div>
+
+              <!-- Anchored Coordinate Readout Dashboard (Below SVG) -->
+              <div id="m2-readout" class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
+                <div class="text-sm font-bold text-slate-800">Click any bar on the chart above to hear its pitch and inspect its exact coordinates.</div>
+                <span class="px-3 py-1 rounded-full bg-white border border-sky-300 text-xs font-extrabold text-sky-800">Pattern Check: Longer pipe ➔ Lower pitch</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 4: INTERACTIVE PANPIPE & WATER-BOTTLE BLOWING LAB [SoL: CPA Progression] [SoL: Immediate Feedback] [SoL: Dual Coding] -->
+    <!-- ===================================================================== -->
+    <section id="station-4" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-lg border-2 border-sky-200">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+            <div>
+              <h2 class="text-2xl md:text-3xl font-display font-bold text-slate-900">Interactive Water-Bottle Organ &amp; Air-Particle Lab</h2>
+              <p class="text-slate-600 font-semibold text-sm">Drag each bottle's water slider (2 cm – 16 cm inside a 20 cm bottle), then click <strong>Blow Bottle!</strong> to hear its pitch and watch air particles vibrate.</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="playAllBottles()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow transition">🎶 Play All 5 Bottles</button>
+              <button onclick="setLabPreset('staircase')" class="px-3.5 py-2 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 font-extrabold text-sm transition">📈 Staircase Scale</button>
+              <button onclick="setLabPreset('anomaly')" class="px-3.5 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-900 font-extrabold text-sm transition">⚠️ Load Anomaly Demo</button>
+            </div>
+          </div>
+
+          <!-- 5 Interactive Glass Bottles Canvas -->
+          <div id="bottle-lab-grid" class="grid grid-cols-2 sm:grid-cols-5 gap-4 bg-gradient-to-b from-sky-50 to-white p-5 rounded-2xl border border-sky-200">
+            <!-- Generated by JS -->
+          </div>
+
+          <!-- Anchored Live Telemetry Dashboard BELOW Canvas (Zero overlap!) -->
+          <div class="mt-4 bg-slate-900 text-white rounded-2xl p-4 grid grid-cols-2 md:grid-cols-6 gap-3 text-center">
+            <div class="bg-slate-800 rounded-xl p-2.5">
+              <div class="text-[11px] font-bold uppercase text-slate-400">Active Bottle</div>
+              <div id="tel-bottle" class="text-xl font-display font-bold text-amber-400">Bottle 1</div>
+            </div>
+            <div class="bg-slate-800 rounded-xl p-2.5">
+              <div class="text-[11px] font-bold uppercase text-slate-400">Water Height</div>
+              <div id="tel-water" class="text-xl font-display font-bold text-sky-400">3 cm</div>
+            </div>
+            <div class="bg-slate-800 rounded-xl p-2.5 border border-amber-400/50">
+              <div class="text-[11px] font-bold uppercase text-amber-300">Air Column</div>
+              <div id="tel-air" class="text-xl font-display font-bold text-amber-300">17 cm</div>
+            </div>
+            <div class="bg-slate-800 rounded-xl p-2.5">
+              <div class="text-[11px] font-bold uppercase text-slate-400">Air Vibrations</div>
+              <div id="tel-speed" class="text-lg font-display font-bold text-emerald-400">Slow</div>
+            </div>
+            <div class="bg-slate-800 rounded-xl p-2.5">
+              <div class="text-[11px] font-bold uppercase text-slate-400">Pitch Score</div>
+              <div id="tel-score" class="text-xl font-display font-bold text-white">2 / 10</div>
+            </div>
+            <div class="bg-slate-800 rounded-xl p-2.5">
+              <div class="text-[11px] font-bold uppercase text-slate-400">Sound Tone</div>
+              <div id="tel-hz" class="text-xl font-display font-bold text-teal-300">294 Hz</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Labelled Interactive SVG Pitch Bar Chart -->
+        <div class="bg-white rounded-3xl p-6 shadow-md border border-sky-200 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="text-2xl font-display font-bold text-slate-900">Live Lab Results: Air Column vs Pitch Bar Chart</h3>
+              <p class="text-slate-600 font-semibold text-sm">How to Read: Check each bottle's air-column length along the X-axis and read its Pitch Score on the Y-axis. Click any bar to blow that bottle and read its values!</p>
+            </div>
+            <div id="lab-chart-readout" class="px-4 py-2 rounded-xl bg-sky-50 border border-sky-300 text-sky-900 font-extrabold text-sm">Click any bar to inspect coordinates</div>
+          </div>
+
+          <svg id="lab-live-chart" viewBox="0 0 700 260" class="w-full h-auto bg-slate-50 rounded-2xl border border-slate-200"></svg>
+
+          <!-- Click-to-Reveal Particle & Mechanism Explainer -->
+          <div class="pt-2">
+            <button onclick="toggleMechanismExplainer()" class="w-full md:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm shadow transition">🔬 Click to Reveal: Why Does Air-Column Length Change Pitch?</button>
+            <div id="mechanism-explainer" class="hidden mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4">
+                <h4 class="font-display font-bold text-lg text-amber-900 mb-1">Short Air Column (Lots of Water)</h4>
+                <p class="text-sm font-bold text-slate-800 leading-relaxed">When you blow across the neck, air particles bounce back and forth in a tiny space. They complete many vibrations every second (<strong>fast vibrations</strong>) ➔ <strong>HIGH pitch</strong>.</p>
+              </div>
+              <div class="bg-sky-50 border-2 border-sky-300 rounded-2xl p-4">
+                <h4 class="font-display font-bold text-lg text-sky-900 mb-1">Long Air Column (Very Little Water)</h4>
+                <p class="text-sm font-bold text-slate-800 leading-relaxed">Air particles must travel much further down and back up the tall empty space. They vibrate fewer times per second (<strong>slow vibrations</strong>) ➔ <strong>LOW pitch</strong>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 5: SUCCESS CRITERIA WHITEBOARD CHECK [SoL: Metacognition] [SoL: Immediate Feedback] -->
+    <!-- ===================================================================== -->
+    <section id="station-5" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-emerald-200 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-3xl font-display font-bold text-slate-900">✅ Success Criteria Whiteboard Check</h2>
+            <p class="text-slate-600 font-semibold">Show your answers on mini-whiteboards! Tick each criterion once the class nails it.</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <div id="sc-counter" class="px-5 py-2.5 rounded-2xl bg-emerald-600 text-white font-display font-bold text-2xl shadow">0 / 3 Met</div>
+            <button onclick="resetScChecks()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-sm">↺ Reset</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Must Check -->
+          <div class="bg-white rounded-3xl p-6 border-2 border-emerald-300 shadow-md flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase">Check 1 • MUST</span>
+                <label class="flex items-center gap-2 cursor-pointer font-extrabold text-sm text-emerald-700">
+                  <input type="checkbox" class="sc-checkbox w-5 h-5 accent-emerald-600" onchange="updateScCounter()"> Met!
+                </label>
+              </div>
+              <h3 class="text-xl font-display font-bold text-slate-900">Two 22 cm Bottles</h3>
+              <p class="text-base font-bold text-slate-700">Bottle 1 has <strong>5 cm</strong> of water. Bottle 2 has <strong>15 cm</strong> of water. Which bottle makes the <strong>HIGHER pitch</strong> when you blow across the top, and how long is its air column?</p>
+            </div>
+            <div class="space-y-2">
+              <button onclick="toggleScAnswer('sc-ans-1')" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm transition">Reveal Answer</button>
+              <div id="sc-ans-1" class="hidden bg-emerald-50 border border-emerald-300 rounded-xl p-3 text-sm font-bold text-emerald-950">
+                <strong>Bottle 2!</strong> Its air column is only <strong>7 cm</strong> (22 − 15 = 7 cm), compared to 17 cm in Bottle 1. Shorter air column = faster vibrations = higher pitch.
+              </div>
+            </div>
+          </div>
+
+          <!-- Should Check -->
+          <div class="bg-white rounded-3xl p-6 border-2 border-sky-300 shadow-md flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-extrabold uppercase">Check 2 • SHOULD</span>
+                <label class="flex items-center gap-2 cursor-pointer font-extrabold text-sm text-sky-700">
+                  <input type="checkbox" class="sc-checkbox w-5 h-5 accent-sky-600" onchange="updateScCounter()"> Met!
+                </label>
+              </div>
+              <h3 class="text-xl font-display font-bold text-slate-900">Spot the Paper-Tube Anomaly</h3>
+              <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 text-sm font-extrabold text-slate-800 space-y-1">
+                <div>9 cm tube ➔ Pitch Score 8</div>
+                <div>13 cm tube ➔ Pitch Score 6</div>
+                <div>17 cm tube ➔ Pitch Score 8</div>
+                <div>21 cm tube ➔ Pitch Score 2</div>
+              </div>
+              <p class="text-sm font-bold text-slate-700">Which tube length is the <strong>anomalous result</strong>, and what should its score be?</p>
+            </div>
+            <div class="space-y-2">
+              <button onclick="toggleScAnswer('sc-ans-2')" class="w-full py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-sm transition">Reveal Answer</button>
+              <div id="sc-ans-2" class="hidden bg-sky-50 border border-sky-300 rounded-xl p-3 text-sm font-bold text-sky-950">
+                <strong>17 cm tube (Score 8)!</strong> As the tube gets longer, pitch decreases by 2 each step — so 17 cm should have a pitch score of about <strong>4</strong>.
+              </div>
+            </div>
+          </div>
+
+          <!-- Could Check -->
+          <div class="bg-white rounded-3xl p-6 border-2 border-amber-300 shadow-md flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-extrabold uppercase">Check 3 • COULD</span>
+                <label class="flex items-center gap-2 cursor-pointer font-extrabold text-sm text-amber-700">
+                  <input type="checkbox" class="sc-checkbox w-5 h-5 accent-amber-600" onchange="updateScCounter()"> Met!
+                </label>
+              </div>
+              <h3 class="text-xl font-display font-bold text-slate-900">Blowing vs Spoon Tapping</h3>
+              <p class="text-base font-bold text-slate-700">You have an almost-empty glass and an almost-full glass. You gently <strong>tap</strong> both with a metal spoon instead of blowing. Which makes the <strong>HIGHER pitch</strong> now, and why?</p>
+            </div>
+            <div class="space-y-2">
+              <button onclick="toggleScAnswer('sc-ans-3')" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm transition">Reveal Answer</button>
+              <div id="sc-ans-3" class="hidden bg-amber-50 border border-amber-300 rounded-xl p-3 text-sm font-bold text-amber-950">
+                <strong>The almost-empty glass!</strong> When tapping, the <strong>glass and water</strong> vibrate (not the air column). Less water is lighter and vibrates faster ➔ higher pitch!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 6: QUICKFIRE CHECKPOINT CHALLENGE [SoL: Automaticity] [SoL: Interleaving] [SoL: Immediate Feedback] -->
+    <!-- ===================================================================== -->
+    <section id="station-6" class="station-panel hidden">
+      <div class="space-y-5">
+        <div class="bg-gradient-to-r from-indigo-700 via-sky-700 to-teal-700 rounded-3xl p-6 text-white shadow-xl flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="text-xs font-extrabold uppercase tracking-wider text-sky-200">Unit 2 Synthesis • Stringed &amp; Wind Instruments</div>
+            <h2 class="text-3xl font-display font-bold">🏆 Quickfire Checkpoint Challenge</h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <div id="qf-timer-box" class="px-5 py-2 rounded-2xl bg-white/20 backdrop-blur font-display font-bold text-3xl min-w-[110px] text-center">15s</div>
+            <button onclick="startQfTimer()" class="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold text-sm shadow transition">⏱ Start Timer</button>
+          </div>
+        </div>
+
+        <div id="qf-boards-banner" class="hidden bg-rose-600 text-white text-center py-4 rounded-2xl font-display font-bold text-4xl tracking-wider shadow-lg animate-bounce">
+          📣 BOARDS UP! SHOW YOUR ANSWERS!
+        </div>
+
+        <div class="bg-white rounded-3xl p-8 shadow-xl border-2 border-sky-200 text-center space-y-6">
+          <div class="flex items-center justify-between text-sm font-extrabold text-slate-500">
+            <span id="qf-progress" class="px-3 py-1 rounded-full bg-sky-100 text-sky-800">Question 1 of 8</span>
+            <span id="qf-tag" class="px-3 py-1 rounded-full bg-teal-100 text-teal-800">Wind Instruments</span>
+          </div>
+
+          <h3 id="qf-question" class="text-3xl md:text-4xl font-display font-bold text-slate-900 leading-snug min-h-[96px] flex items-center justify-center"></h3>
+
+          <div id="qf-answer-box" class="hidden bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-5 max-w-3xl mx-auto">
+            <div class="text-xs font-extrabold uppercase text-emerald-700 mb-1">Correct Answer</div>
+            <div id="qf-answer-text" class="text-2xl font-display font-bold text-emerald-950"></div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <button onclick="prevQf()" class="px-4 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-sm transition">◀ Previous</button>
+            <button onclick="revealQfAnswer()" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-base shadow-md transition">✨ Reveal Answer</button>
+            <button onclick="nextQf()" class="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-sm transition">Next Question ▶</button>
+          </div>
+
+          <!-- Embedded Team Scoring -->
+          <div class="pt-4 border-t border-slate-200 flex flex-wrap items-center justify-center gap-4">
+            <span class="text-sm font-extrabold text-slate-500 uppercase">Award Point:</span>
+            <button onclick="awardTeam('red')" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow transition">🔴 +1 Team Red (<span id="qf-red">0</span>)</button>
+            <button onclick="awardTeam('blue')" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow transition">🔵 +1 Team Blue (<span id="qf-blue">0</span>)</button>
+            <button onclick="fireConfetti()" class="px-4 py-2.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-extrabold text-sm transition">🎉 Celebrate!</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- STATION 2 VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION IN SMARTBOARD)  -->
+  <!-- ===================================================================== -->
+  <div id="vocab-modal" class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-[80] hidden items-center justify-center p-4" onclick="closeVocabModal(event)">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border-4 border-sky-300 relative" onclick="event.stopPropagation()">
+      <button onclick="closeVocabModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-700 font-extrabold text-xl flex items-center justify-center">✕</button>
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-extrabold uppercase">Bilingual Science Vocabulary</span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div>
+          <h3 id="vm-en" class="text-3xl font-display font-bold text-slate-900 mb-1"></h3>
+          <div id="vm-vn" class="text-2xl font-display font-bold text-teal-700 mb-4"></div>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <button onclick="speakVocab('en')" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-sm shadow transition">🔊 Listen (EN)</button>
+            <button onclick="speakVocab('vn')" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-sm shadow transition">🔊 Nghe (VN)</button>
+          </div>
+          <p id="vm-def" class="text-base font-bold text-slate-700 leading-relaxed bg-slate-50 p-3.5 rounded-2xl border border-slate-200"></p>
+        </div>
+        <div id="vm-svg" class="bg-sky-50 rounded-2xl p-4 border-2 border-sky-200 flex items-center justify-center min-h-[190px]"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- GIANT PROJECTION MODAL (STATION 3)                                    -->
+  <!-- ===================================================================== -->
+  <div id="giant-modal" class="fixed inset-0 bg-slate-950/90 z-[85] hidden items-center justify-center p-6" onclick="closeGiantModal()">
+    <div class="bg-white rounded-3xl max-w-5xl w-full p-10 text-center space-y-6 shadow-2xl relative" onclick="event.stopPropagation()">
+      <button onclick="closeGiantModal()" class="absolute top-5 right-5 w-12 h-12 rounded-full bg-slate-100 hover:bg-rose-100 text-slate-800 font-extrabold text-2xl">✕</button>
+      <div class="text-sm font-extrabold uppercase tracking-widest text-sky-600">Giant Projection Key Rule</div>
+      <div id="giant-text" class="text-5xl md:text-6xl font-display font-bold text-slate-900 leading-tight"></div>
+      <div id="giant-sub" class="text-2xl font-bold text-teal-700"></div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- DAVID'S BOARD WHITEBOARD OVERLAY (Shortcut: W)                        -->
+  <!-- ===================================================================== -->
+  <div id="whiteboard-modal" class="fixed inset-0 bg-slate-900/80 z-[90] hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-5xl h-[85vh] flex flex-col overflow-hidden shadow-2xl border-4 border-amber-400">
+      <div class="bg-amber-50 px-5 py-3 border-b border-amber-200 flex flex-wrap items-center justify-between gap-2">
+        <div class="font-display font-bold text-xl text-amber-900">✏️ David's Board — Sketch Air Columns &amp; Bar Charts</div>
+        <div class="flex items-center gap-2">
+          <button onclick="setPenColor('#0f172a')" class="w-7 h-7 rounded-full bg-slate-900 border-2 border-white shadow"></button>
+          <button onclick="setPenColor('#0284c7')" class="w-7 h-7 rounded-full bg-sky-600 border-2 border-white shadow"></button>
+          <button onclick="setPenColor('#d97706')" class="w-7 h-7 rounded-full bg-amber-600 border-2 border-white shadow"></button>
+          <button onclick="setPenColor('#dc2626')" class="w-7 h-7 rounded-full bg-red-600 border-2 border-white shadow"></button>
+          <button onclick="clearWhiteboard()" class="px-3 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-xs font-extrabold">Clear</button>
+          <button onclick="toggleWhiteboard()" class="px-3 py-1 rounded-lg bg-rose-600 text-white text-xs font-extrabold">Close (W)</button>
+        </div>
+      </div>
+      <div class="flex-1 relative bg-white">
+        <canvas id="wb-canvas" class="w-full h-full cursor-crosshair touch-none"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- TEACHER PROMPT DRAWER (Shortcut: T)                                   -->
+  <!-- ===================================================================== -->
+  <aside id="teacher-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl border-l-4 border-indigo-500 z-[95] transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="p-5 bg-indigo-700 text-white flex items-center justify-between">
+      <div>
+        <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-200">Hidden Teacher Support</div>
+        <h3 class="text-xl font-display font-bold">Lesson 2 Live Prompts &amp; Backup</h3>
+      </div>
+      <button onclick="toggleTeacherDrawer()" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 font-extrabold">✕</button>
+    </div>
+    <div class="p-5 overflow-y-auto space-y-4 text-sm font-semibold text-slate-700">
+      <div class="bg-rose-50 border border-rose-200 rounded-2xl p-4">
+        <h4 class="font-display font-bold text-rose-900 text-base mb-1">🚩 Red-Flag Hinge Check</h4>
+        <p>Pupils often think MORE water means a LOWER pitch when blowing. Pause at Station 3 Mission 1 and chant: <strong>"We blow the AIR, not the water! More water = SHORTER air = HIGHER pitch!"</strong></p>
+      </div>
+      <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4">
+        <h4 class="font-display font-bold text-sky-900 text-base mb-1">🪑 Teacher Support Table (4–6 Pupils)</h4>
+        <p>During Worksheet 2, give struggling learners 3 real water bottles (low, medium, high water) + a ruler. Have them measure and bracket ONLY the empty air space at the top, linking Short Air = High Pitch straight to Short String = High Pitch.</p>
+      </div>
+      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+        <h4 class="font-display font-bold text-amber-900 text-base mb-1">🔄 Whole-Class Backup Pivot (&gt;30% Stuck)</h4>
+        <p>Open David's Board (W), draw 4 bottles, shade ONLY the air space in bright amber, and order <strong>Shortest Air ➔ Longest Air</strong> together before tackling the panpipe data table.</p>
+      </div>
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+        <h4 class="font-display font-bold text-slate-900 text-base mb-1">⌨️ Smartboard Shortcuts</h4>
+        <ul class="space-y-1 text-xs font-bold">
+          <li>• <strong>← / →</strong>: Switch stations (disabled when modals are open)</li>
+          <li>• <strong>W</strong>: Toggle David's Board whiteboard</li>
+          <li>• <strong>T</strong>: Toggle Teacher Prompt Drawer</li>
+          <li>• <strong>M</strong>: Mute / Unmute Web Audio</li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    // =========================================================================
+    // STATE & AUDIO ENGINE (Offline Web Audio API — Zero External Audio Files)
+    // =========================================================================
+    let currentStation = 0;
+    const totalStations = 7;
+    let isMuted = false;
+    let scores = { red: 0, blue: 0 };
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playChime(type = 'pop') {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      if (type === 'pop') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(760, now + 0.08);
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.start(now); osc.stop(now + 0.12);
+      } else if (type === 'ding') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(660, now);
+        osc.frequency.setValueAtTime(880, now + 0.1);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.start(now); osc.stop(now + 0.35);
+      } else if (type === 'alert') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(587, now);
+        osc.frequency.setValueAtTime(880, now + 0.12);
+        osc.frequency.setValueAtTime(1174, now + 0.24);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+        osc.start(now); osc.stop(now + 0.45);
+      }
+    }
+
+    // Realistic Flute / Blown Bottle Web Audio Synthesizer
+    function playFluteTone(freqHz, duration = 0.55) {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const gain2 = ctx.createGain();
+
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(freqHz, now);
+      osc2.type = 'triangle';
+      osc2.frequency.setValueAtTime(freqHz * 2, now);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.22, now + 0.06);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      gain2.gain.setValueAtTime(0.001, now);
+      gain2.gain.linearRampToValueAtTime(0.05, now + 0.06);
+      gain2.gain.exponentialRampToValueAtTime(0.001, now + duration * 0.8);
+
+      osc1.connect(gain);
+      osc2.connect(gain2);
+      gain.connect(ctx.destination);
+      gain2.connect(ctx.destination);
+
+      osc1.start(now); osc2.start(now);
+      osc1.stop(now + duration); osc2.stop(now + duration);
+    }
+
+    // Glass Spoon Tap Synthesizer (for Stretch comparison)
+    function playTapTone(freqHz) {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freqHz, now);
+      gain.gain.setValueAtTime(0.26, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(now); osc.stop(now + 0.45);
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('mute-btn').textContent = isMuted ? '🔇 Muted (M)' : '🔊 Audio (M)';
+    }
+
+    // =========================================================================
+    // AUTO-HIDING HEADER ON SCROLL
+    // =========================================================================
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+      const header = document.getElementById('top-header');
+      if (currentScroll > lastScroll && currentScroll > 60) {
+        header.classList.add('header-hidden');
+      } else {
+        header.classList.remove('header-hidden');
+      }
+      lastScroll = currentScroll <= 0 ? 0 : currentScroll;
+    });
+
+    // =========================================================================
+    // NAVIGATION & SCOREBOARD
+    // =========================================================================
+    function goStation(idx) {
+      if (idx < 0 || idx >= totalStations) return;
+      currentStation = idx;
+      document.querySelectorAll('.station-panel').forEach((sec, i) => {
+        sec.classList.toggle('hidden', i !== idx);
+      });
+      document.querySelectorAll('.station-tab').forEach((btn) => {
+        btn.classList.toggle('active', Number(btn.dataset.station) === idx);
+      });
+      playChime('pop');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function addScore(team, delta) {
+      scores[team] = Math.max(0, scores[team] + delta);
+      document.getElementById('score-red').textContent = scores.red;
+      document.getElementById('score-blue').textContent = scores.blue;
+      document.getElementById('qf-red').textContent = scores.red;
+      document.getElementById('qf-blue').textContent = scores.blue;
+      playChime('ding');
+    }
+
+    function awardTeam(team) {
+      addScore(team, 1);
+      fireConfetti();
+    }
+
+    function resetScores() {
+      scores = { red: 0, blue: 0 };
+      document.getElementById('score-red').textContent = 0;
+      document.getElementById('score-blue').textContent = 0;
+      document.getElementById('qf-red').textContent = 0;
+      document.getElementById('qf-blue').textContent = 0;
+    }
+
+    // =========================================================================
+    // STATION 1: FLASHBACK 3
+    // =========================================================================
+    function flipCard(card) {
+      card.classList.toggle('flipped');
+      playChime('pop');
+    }
+    function resetFlashback() {
+      document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
+      playChime('pop');
+    }
+
+    // =========================================================================
+    // STATION 2: BILINGUAL VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION)
+    // =========================================================================
+    const vocabItems = [
+      {
+        en: 'wind instrument',
+        vn: 'nhạc cụ hơi',
+        def: 'A musical instrument that makes sound when air vibrates inside a tube or pipe (such as a flute, recorder, or panpipes).',
+        svg: '<svg viewBox="0 0 180 120" class="w-44 h-28"><rect x="20" y="45" width="140" height="22" rx="11" fill="#fde68a" stroke="#92400e" stroke-width="3"/><circle cx="65" cy="56" r="4.5" fill="#92400e"/><circle cx="88" cy="56" r="4.5" fill="#92400e"/><circle cx="111" cy="56" r="4.5" fill="#92400e"/><circle cx="134" cy="56" r="4.5" fill="#92400e"/><path d="M5 48 Q12 56 5 64" stroke="#0284c7" stroke-width="3" fill="none"/><text x="90" y="96" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">Air vibrates inside!</text></svg>'
+      },
+      {
+        en: 'air column',
+        vn: 'cột không khí',
+        def: 'The space filled with air inside a bottle, tube, or pipe that vibrates to make a musical note.',
+        svg: '<svg viewBox="0 0 160 130" class="w-40 h-32"><rect x="52" y="25" width="56" height="50" fill="#fef08a" stroke="#d97706" stroke-width="2" stroke-dasharray="4,3"/><rect x="52" y="75" width="56" height="40" fill="#38bdf8"/><path d="M68 8 L92 8 L92 22 L108 30 L108 115 L52 115 L52 30 L68 22 Z" fill="none" stroke="#0f172a" stroke-width="3"/><text x="80" y="55" text-anchor="middle" font-size="11" font-weight="800" fill="#92400e">AIR</text><text x="80" y="100" text-anchor="middle" font-size="11" font-weight="800" fill="#0c4a6e">Water</text></svg>'
+      },
+      {
+        en: 'blow',
+        vn: 'thổi',
+        def: 'To push a steady stream of air across or into a tube so the air column starts vibrating.',
+        svg: '<svg viewBox="0 0 180 120" class="w-44 h-28"><path d="M20 55 Q45 45 70 55 T120 55" stroke="#0284c7" stroke-width="4" fill="none"/><path d="M25 70 Q50 60 75 70 T125 70" stroke="#0ea5e9" stroke-width="3" fill="none"/><polygon points="122,50 136,55 122,60" fill="#0284c7"/><rect x="138" y="38" width="22" height="65" rx="4" fill="#e0f2fe" stroke="#0f172a" stroke-width="3"/></svg>'
+      },
+      {
+        en: 'recorder',
+        vn: 'sáo dọc (recorder)',
+        def: 'A simple woodwind instrument with finger holes that change the length of the vibrating air column.',
+        svg: '<svg viewBox="0 0 180 120" class="w-44 h-28"><polygon points="30,15 55,15 50,108 35,108" fill="#fef9c3" stroke="#0f172a" stroke-width="2.5"/><circle cx="42.5" cy="40" r="4" fill="#0f172a"/><circle cx="42.5" cy="56" r="4" fill="#0f172a"/><circle cx="42.5" cy="72" r="4" fill="#ffffff" stroke="#0f172a" stroke-width="2"/><circle cx="42.5" cy="88" r="4" fill="#ffffff" stroke="#0f172a" stroke-width="2"/><text x="115" y="54" text-anchor="middle" font-size="11" font-weight="800" fill="#0369a1">More holes covered</text><text x="115" y="72" text-anchor="middle" font-size="11" font-weight="800" fill="#0369a1">= Longer air = Lower</text></svg>'
+      },
+      {
+        en: 'panpipes',
+        vn: 'sáo bè (panpipes)',
+        def: 'A wind instrument made of tubes of different lengths tied together. Short tubes make high notes; long tubes make low notes.',
+        svg: '<svg viewBox="0 0 180 120" class="w-44 h-28"><rect x="30" y="18" width="18" height="88" rx="4" fill="#fcd34d" stroke="#78350f" stroke-width="2.5"/><rect x="54" y="18" width="18" height="72" rx="4" fill="#fcd34d" stroke="#78350f" stroke-width="2.5"/><rect x="78" y="18" width="18" height="58" rx="4" fill="#fcd34d" stroke="#78350f" stroke-width="2.5"/><rect x="102" y="18" width="18" height="44" rx="4" fill="#fcd34d" stroke="#78350f" stroke-width="2.5"/><rect x="126" y="18" width="18" height="30" rx="4" fill="#fcd34d" stroke="#78350f" stroke-width="2.5"/><rect x="24" y="34" width="126" height="8" rx="3" fill="#b45309"/><text x="40" y="116" font-size="10" font-weight="800" fill="#0f172a">LOW</text><text x="122" y="65" font-size="10" font-weight="800" fill="#0f172a">HIGH</text></svg>'
+      },
+      {
+        en: 'pattern',
+        vn: 'quy luật / mẫu hình',
+        def: 'A clear, regular trend shown in scientific results (for example, as tube length increases, pitch decreases).',
+        svg: '<svg viewBox="0 0 180 120" class="w-44 h-28"><line x1="25" y1="100" x2="160" y2="100" stroke="#0f172a" stroke-width="2.5"/><line x1="25" y1="20" x2="25" y2="100" stroke="#0f172a" stroke-width="2.5"/><rect x="38" y="28" width="22" height="72" fill="#0284c7"/><rect x="68" y="46" width="22" height="54" fill="#0284c7"/><rect x="98" y="64" width="22" height="36" fill="#0284c7"/><rect x="128" y="82" width="22" height="18" fill="#0284c7"/><line x1="45" y1="22" x2="145" y2="76" stroke="#10b981" stroke-width="3" stroke-dasharray="5,3"/></svg>'
+      },
+      {
+        en: 'anomalous result',
+        vn: 'kết quả bất thường',
+        def: 'A single result that does not fit the rest of the pattern, often caused by a mistake during the test.',
+        svg: '<svg viewBox="0 0 180 120" class="w-44 h-28"><line x1="25" y1="100" x2="160" y2="100" stroke="#0f172a" stroke-width="2.5"/><line x1="25" y1="20" x2="25" y2="100" stroke="#0f172a" stroke-width="2.5"/><rect x="36" y="30" width="22" height="70" fill="#0284c7"/><rect x="66" y="50" width="22" height="50" fill="#0284c7"/><rect x="96" y="26" width="22" height="74" fill="#ef4444"/><rect x="126" y="84" width="22" height="16" fill="#0284c7"/><circle cx="107" cy="26" r="14" fill="none" stroke="#dc2626" stroke-width="3"/><text x="107" y="16" text-anchor="middle" font-size="11" font-weight="800" fill="#dc2626">!</text></svg>'
+      },
+      {
+        en: 'prediction',
+        vn: 'dự đoán khoa học',
+        def: 'Saying what you expect to happen in an investigation BEFORE testing, using your scientific knowledge.',
+        svg: '<svg viewBox="0 0 180 120" class="w-44 h-28"><circle cx="90" cy="54" r="34" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/><text x="90" y="65" text-anchor="middle" font-size="36" font-weight="800" fill="#b45309">?</text><text x="90" y="108" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">I think... because...</text></svg>'
+      },
+      {
+        en: 'conclusion',
+        vn: 'kết luận',
+        def: 'A final scientific statement explaining what the results proved and WHY it happened.',
+        svg: '<svg viewBox="0 0 180 120" class="w-44 h-28"><rect x="28" y="18" width="124" height="84" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/><path d="M62 60 L82 78 L120 40" stroke="#15803d" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      }
+    ];
+
+    let activeVocab = null;
+
+    function buildVocabGrid() {
+      const grid = document.getElementById('vocab-grid');
+      grid.innerHTML = vocabItems.map((item, idx) => `
+        <button onclick="openVocabModal(${idx})" class="text-left bg-gradient-to-br from-sky-50 to-white hover:from-sky-100 hover:to-teal-50 p-5 rounded-2xl border-2 border-sky-200 hover:border-sky-500 shadow-sm transition group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-extrabold uppercase text-sky-600">Word ${idx + 1}</span>
+            <span class="text-lg group-hover:scale-125 transition">🔊</span>
+          </div>
+          <div class="text-2xl font-display font-bold text-slate-900">${item.en}</div>
+          <div class="text-xs font-bold text-slate-500 mt-1">Click for model &amp; bilingual audio</div>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(idx) {
+      activeVocab = vocabItems[idx];
+      document.getElementById('vm-en').textContent = activeVocab.en;
+      document.getElementById('vm-vn').textContent = activeVocab.vn;
+      document.getElementById('vm-def').textContent = activeVocab.def;
+      document.getElementById('vm-svg').innerHTML = activeVocab.svg;
+      const modal = document.getElementById('vocab-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      playChime('pop');
+    }
+
+    function closeVocabModal() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      const modal = document.getElementById('vocab-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function speakVocab(lang) {
+      if (!activeVocab || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(lang === 'en' ? activeVocab.en : activeVocab.vn);
+      utter.lang = lang === 'en' ? 'en-GB' : 'vi-VN';
+      utter.rate = 0.9;
+      window.speechSynthesis.speak(utter);
+    }
+
+    // =========================================================================
+    // STATION 3: SECRET LAB MISSIONS (I DO / WE DO)
+    // =========================================================================
+    let activeMission = 1;
+    let airHighlighted = false;
+    let blowTapMode = 'blow';
+
+    function selectMission(num) {
+      activeMission = num;
+      document.getElementById('mission-1-view').classList.toggle('hidden', num !== 1);
+      document.getElementById('mission-2-view').classList.toggle('hidden', num !== 2);
+      document.getElementById('btn-mission-1').className = num === 1
+        ? 'px-4 py-2 rounded-xl bg-sky-600 text-white font-extrabold text-sm shadow transition'
+        : 'px-4 py-2 rounded-xl bg-slate-100 hover:bg-sky-100 text-slate-800 font-extrabold text-sm transition';
+      document.getElementById('btn-mission-2').className = num === 2
+        ? 'px-4 py-2 rounded-xl bg-sky-600 text-white font-extrabold text-sm shadow transition'
+        : 'px-4 py-2 rounded-xl bg-slate-100 hover:bg-sky-100 text-slate-800 font-extrabold text-sm transition';
+      playChime('pop');
+    }
+
+    function toggleAirHighlight() {
+      airHighlighted = !airHighlighted;
+      document.querySelectorAll('.m1-air-box').forEach(el => {
+        el.setAttribute('opacity', airHighlighted ? '0.92' : '0.25');
+        el.setAttribute('fill', airHighlighted ? '#fde047' : '#fef3c7');
+      });
+      document.getElementById('btn-air-highlight').textContent = airHighlighted ? '✨ Air Columns Glowing!' : '✨ Highlight Air Columns';
+      playChime('ding');
+    }
+
+    function toggleBlowTapMode() {
+      blowTapMode = blowTapMode === 'blow' ? 'tap' : 'blow';
+      const badge = document.getElementById('m1-mode-badge');
+      const btn = document.getElementById('btn-blow-tap');
+      const exp = document.getElementById('m1-explanation');
+
+      if (blowTapMode === 'blow') {
+        badge.textContent = 'Mode: BLOWING Across Top (Air Column Vibrates!)';
+        badge.className = 'inline-block px-3 py-1 rounded-full bg-sky-600 text-white text-xs font-extrabold uppercase mb-4';
+        btn.textContent = '🥄 Stretch: Switch to Tapping';
+        document.getElementById('m1-label-X').textContent = 'Longest Air ➔ LOWEST Pitch';
+        document.getElementById('m1-label-Y').textContent = 'Medium Air ➔ MEDIUM Pitch';
+        document.getElementById('m1-label-Z').textContent = 'Shortest Air ➔ HIGHEST Pitch';
+        exp.innerHTML = '<strong>Blowing Science:</strong> Bottle Z has the most water (18 cm), leaving the <strong>shortest air column (6 cm)</strong>. A shorter air column vibrates <strong>faster</strong>, producing the <strong>highest pitch</strong>!';
+      } else {
+        badge.textContent = 'Mode: TAPPING Side with a Spoon (Glass & Water Vibrate!)';
+        badge.className = 'inline-block px-3 py-1 rounded-full bg-teal-700 text-white text-xs font-extrabold uppercase mb-4';
+        btn.textContent = '💨 Switch Back to Blowing';
+        document.getElementById('m1-label-X').textContent = 'Least Water ➔ HIGHEST Pitch';
+        document.getElementById('m1-label-Y').textContent = 'Medium Water ➔ MEDIUM Pitch';
+        document.getElementById('m1-label-Z').textContent = 'Most Water ➔ LOWEST Pitch';
+        exp.innerHTML = '<strong>Tapping Science (Stretch!):</strong> The pattern REVERSES! Tapping makes the <strong>glass and water</strong> vibrate (not the air). Bottle X has the least water, so it is lighter and vibrates <strong>faster</strong> ➔ <strong>highest pitch</strong>!';
+      }
+      playChime('pop');
+    }
+
+    function demoBottleTone(which) {
+      if (blowTapMode === 'blow') {
+        const map = { X: 262, Y: 392, Z: 587 };
+        playFluteTone(map[which], 0.65);
+      } else {
+        const map = { X: 740, Y: 523, Z: 330 };
+        playTapTone(map[which]);
+      }
+    }
+
+    const m2Data = [
+      { len: 6, score: 10, hz: 784, note: 'Shortest pipe (6 cm) ➔ Fastest air vibrations ➔ Highest pitch (10).' },
+      { len: 10, score: 8, hz: 622, note: '10 cm pipe ➔ Fits the pattern nicely (drops by 2 to score 8).' },
+      { len: 14, score: 6, hz: 494, note: '14 cm pipe ➔ Fits the pattern nicely (drops by 2 to score 6).' },
+      { len: 18, score: 9, hz: 698, note: 'ANOMALOUS RESULT! At 18 cm, the pitch jumped UP to 9 instead of dropping to 4! Perhaps someone blew much too hard or used the wrong pipe.' },
+      { len: 22, score: 2, hz: 294, note: 'Longest pipe (22 cm) ➔ Slowest air vibrations ➔ Lowest pitch (2).' }
+    ];
+
+    function inspectM2Bar(idx) {
+      const d = m2Data[idx];
+      playFluteTone(d.hz, 0.5);
+      const box = document.getElementById('m2-readout');
+      const isAnom = idx === 3;
+      box.className = isAnom
+        ? 'bg-rose-50 border-2 border-rose-400 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3'
+        : 'bg-sky-50 border-2 border-sky-200 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3';
+      box.innerHTML = `<div class="text-sm font-bold ${isAnom ? 'text-rose-900' : 'text-slate-800'}"><strong>Coordinate (${d.len} cm, Pitch ${d.score}):</strong> ${d.note}</div>`;
+    }
+
+    function revealMission2Anomaly() {
+      const bar = document.getElementById('m2-anomaly-bar');
+      const ghost = document.getElementById('m2-expected-ghost');
+      bar.setAttribute('fill', '#ef4444');
+      bar.classList.add('anomaly-highlight');
+      ghost.classList.remove('hidden');
+      inspectM2Bar(3);
+      playChime('alert');
+    }
+
+    function toggleFullScreenIDo() {
+      const box = document.getElementById('station-3-container');
+      const isFs = box.classList.toggle('fullscreen-ido');
+      document.getElementById('fullscreen-ido-btn').textContent = isFs ? '✕ Exit Full Screen' : '⛶ Full Screen I Do';
+      playChime('pop');
+    }
+
+    function openGiantModal() {
+      const modal = document.getElementById('giant-modal');
+      if (activeMission === 1) {
+        document.getElementById('giant-text').textContent = 'MORE WATER = SHORTER AIR COLUMN = HIGHER PITCH!';
+        document.getElementById('giant-sub').textContent = 'When blowing across a bottle, ONLY the air column above the water vibrates.';
+      } else {
+        document.getElementById('giant-text').textContent = 'LONGER PIPE = SLOWER VIBRATIONS = LOWER PITCH!';
+        document.getElementById('giant-sub').textContent = 'An anomalous result is a single bar that breaks the clear pattern.';
+      }
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      playChime('pop');
+    }
+
+    function closeGiantModal() {
+      const modal = document.getElementById('giant-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // =========================================================================
+    // STATION 4: INTERACTIVE 5-BOTTLE ORGAN & LIVE BAR CHART LAB
+    // =========================================================================
+    const BOTTLE_HEIGHT = 20;
+    let bottles = [
+      { id: 1, water: 3 },
+      { id: 2, water: 6 },
+      { id: 3, water: 10 },
+      { id: 4, water: 13 },
+      { id: 5, water: 16 }
+    ];
+
+    function calcBottleStats(waterCm) {
+      const airCm = BOTTLE_HEIGHT - waterCm; // 4 cm to 18 cm
+      // Shorter air (4 cm) -> high freq (740 Hz), score 10; Longer air (18 cm) -> low freq (247 Hz), score 1
+      const ratio = (18 - airCm) / 14; // 0 to 1
+      const freq = Math.round(247 + ratio * 493);
+      const score = Math.max(1, Math.min(10, Math.round(1 + ratio * 9)));
+      const speedLabel = airCm <= 7 ? 'Very Fast' : airCm <= 11 ? 'Medium-Fast' : airCm <= 14 ? 'Medium-Slow' : 'Slow';
+      const animDur = (0.28 + (airCm / 18) * 0.95).toFixed(2); // shorter air = faster particle shake!
+      return { airCm, freq, score, speedLabel, animDur };
+    }
+
+    let bottleLabBuilt = false;
+
+    function buildBottleDotsHtml(s) {
+      const dotCount = Math.max(8, Math.round(s.airCm * 1.15));
+      let dotsHtml = '';
+      for (let d = 0; d < dotCount; d++) {
+        const delay = ((d * 0.09) % 0.8).toFixed(2);
+        const dur = (parseFloat(s.animDur) + (d % 3) * 0.08).toFixed(2);
+        dotsHtml += `<span class="air-dot" style="animation-duration:${dur}s; animation-delay:${delay}s;"></span>`;
+      }
+      return dotsHtml;
+    }
+
+    function updateSingleBottleDOM(idx) {
+      const b = bottles[idx];
+      const s = calcBottleStats(b.water);
+      const airPct = (s.airCm / BOTTLE_HEIGHT) * 100;
+      const waterPct = (b.water / BOTTLE_HEIGHT) * 100;
+      const airZone = document.getElementById('lab-air-zone-' + idx);
+      const waterZone = document.getElementById('lab-water-zone-' + idx);
+      if (airZone) {
+        airZone.style.height = airPct + '%';
+        airZone.innerHTML = buildBottleDotsHtml(s);
+      }
+      if (waterZone) {
+        waterZone.style.height = waterPct + '%';
+      }
+      const wTxt = document.getElementById('lab-water-txt-' + idx);
+      if (wTxt) wTxt.textContent = b.water + ' cm';
+      const airBadge = document.getElementById('lab-air-badge-' + idx);
+      if (airBadge) airBadge.textContent = 'Air: ' + s.airCm + ' cm';
+      const sliderLbl = document.getElementById('lab-water-lbl-' + idx);
+      if (sliderLbl) sliderLbl.textContent = 'Water: ' + b.water + ' cm';
+      const slider = document.getElementById('lab-water-slider-' + idx);
+      if (slider && Number(slider.value) !== b.water) slider.value = b.water;
+    }
+
+    function renderBottleLab() {
+      const grid = document.getElementById('bottle-lab-grid');
+      if (!bottleLabBuilt) {
+        grid.innerHTML = bottles.map((b, idx) => {
+          const s = calcBottleStats(b.water);
+          const airPct = (s.airCm / BOTTLE_HEIGHT) * 100;
+          const waterPct = (b.water / BOTTLE_HEIGHT) * 100;
+          return `
+            <div id="lab-bottle-card-${idx}" class="bg-white rounded-2xl p-3 border-2 border-sky-200 shadow-sm flex flex-col items-center">
+              <div class="text-xs font-extrabold uppercase text-slate-500 mb-1">Bottle ${b.id}</div>
+              <!-- Bottle Neck -->
+              <div class="w-10 h-4 border-x-4 border-t-4 border-slate-800 rounded-t-md bg-amber-50"></div>
+              <!-- Bottle Body (Height 180px) -->
+              <div class="w-full max-w-[112px] h-[180px] border-4 border-slate-800 rounded-b-2xl rounded-t-lg overflow-hidden flex flex-col bg-amber-50/70 relative">
+                <!-- Air Column with Organic Flex-Wrap Particles -->
+                <div id="lab-air-zone-${idx}" class="air-particle-zone w-full bg-amber-100/75 border-b-2 border-dashed border-amber-500 transition-all duration-300" style="height: ${airPct}%;">
+                  ${buildBottleDotsHtml(s)}
+                </div>
+                <!-- Water -->
+                <div id="lab-water-zone-${idx}" class="w-full bg-gradient-to-t from-sky-500 to-cyan-400 transition-all duration-300 flex items-center justify-center" style="height: ${waterPct}%;">
+                  <span id="lab-water-txt-${idx}" class="text-[11px] font-extrabold text-white drop-shadow">${b.water} cm</span>
+                </div>
+              </div>
+              <div class="mt-2 text-center">
+                <div id="lab-air-badge-${idx}" class="text-xs font-extrabold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">Air: ${s.airCm} cm</div>
+              </div>
+              <div class="w-full mt-2 px-1">
+                <label id="lab-water-lbl-${idx}" class="block text-[10px] font-extrabold text-slate-500 text-center">Water: ${b.water} cm</label>
+                <input id="lab-water-slider-${idx}" type="range" min="2" max="16" step="1" value="${b.water}" oninput="updateBottleWater(${idx}, this.value)" class="w-full">
+              </div>
+              <button onclick="blowBottle(${idx})" class="mt-2 w-full py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs shadow transition">💨 Blow Bottle!</button>
+            </div>
+          `;
+        }).join('');
+        bottleLabBuilt = true;
+      } else {
+        bottles.forEach((_, idx) => updateSingleBottleDOM(idx));
+      }
+      renderLabChart();
+    }
+
+    function updateBottleWater(idx, val) {
+      bottles[idx].water = Number(val);
+      updateSingleBottleDOM(idx);
+      renderLabChart();
+      updateTelemetry(idx);
+    }
+
+    function updateTelemetry(idx) {
+      const b = bottles[idx];
+      const s = calcBottleStats(b.water);
+      document.getElementById('tel-bottle').textContent = 'Bottle ' + b.id;
+      document.getElementById('tel-water').textContent = b.water + ' cm';
+      document.getElementById('tel-air').textContent = s.airCm + ' cm';
+      document.getElementById('tel-speed').textContent = s.speedLabel;
+      document.getElementById('tel-score').textContent = s.score + ' / 10';
+      document.getElementById('tel-hz').textContent = s.freq + ' Hz';
+    }
+
+    function blowBottle(idx) {
+      const b = bottles[idx];
+      const s = calcBottleStats(b.water);
+      playFluteTone(s.freq, 0.55);
+      updateTelemetry(idx);
+      const card = document.getElementById('lab-bottle-card-' + idx);
+      if (card) {
+        card.classList.add('bottle-blowing', 'ring-4', 'ring-amber-400');
+        setTimeout(() => card.classList.remove('bottle-blowing', 'ring-4', 'ring-amber-400'), 550);
+      }
+      document.getElementById('lab-chart-readout').textContent =
+        `Bottle ${b.id}: Water ${b.water} cm | Air Column ${s.airCm} cm ➔ Pitch Score ${s.score}/10 (${s.freq} Hz)`;
+    }
+
+    function playAllBottles() {
+      bottles.forEach((_, idx) => {
+        setTimeout(() => blowBottle(idx), idx * 420);
+      });
+    }
+
+    function setLabPreset(type) {
+      if (type === 'staircase') {
+        const vals = [3, 6, 10, 13, 16];
+        bottles.forEach((b, i) => b.water = vals[i]);
+      } else if (type === 'anomaly') {
+        const vals = [3, 6, 15, 11, 14];
+        bottles.forEach((b, i) => b.water = vals[i]);
+      }
+      renderBottleLab();
+      playAllBottles();
+    }
+
+    function renderLabChart() {
+      const svg = document.getElementById('lab-live-chart');
+      let bars = '';
+      bottles.forEach((b, idx) => {
+        const s = calcBottleStats(b.water);
+        const x = 115 + idx * 112;
+        const barH = s.score * 16; // 10 -> 160px
+        const y = 205 - barH;
+        const fill = s.score >= 8 ? '#f59e0b' : s.score >= 5 ? '#0d9488' : '#0284c7';
+        bars += `
+          <g class="cursor-pointer" onclick="blowBottle(${idx})">
+            <rect x="${x}" y="${y}" width="66" height="${barH}" rx="6" fill="${fill}" class="hover:opacity-80 transition"/>
+            <text x="${x + 33}" y="${y - 6}" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">${s.score}</text>
+            <text x="${x + 33}" y="222" text-anchor="middle" font-size="11" font-weight="800" fill="#0f172a">B${b.id} (${s.airCm} cm)</text>
+          </g>
+        `;
+      });
+
+      svg.innerHTML = `
+        <text x="370" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Water-Bottle Air Column Length vs Pitch Score</text>
+        <text x="20" y="128" text-anchor="middle" font-size="12" font-weight="800" fill="#334155" transform="rotate(-90 20 128)">Pitch Score (1–10)</text>
+        <text x="370" y="248" text-anchor="middle" font-size="12" font-weight="800" fill="#334155">Bottle Number &amp; Air Column Length (cm)</text>
+        <g stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,4">
+          <line x1="80" y1="45" x2="660" y2="45"/>
+          <line x1="80" y1="77" x2="660" y2="77"/>
+          <line x1="80" y1="109" x2="660" y2="109"/>
+          <line x1="80" y1="141" x2="660" y2="141"/>
+          <line x1="80" y1="173" x2="660" y2="173"/>
+        </g>
+        <g font-size="11" font-weight="700" fill="#475569" text-anchor="end">
+          <text x="72" y="49">10</text>
+          <text x="72" y="81">8</text>
+          <text x="72" y="113">6</text>
+          <text x="72" y="145">4</text>
+          <text x="72" y="177">2</text>
+          <text x="72" y="209">0</text>
+        </g>
+        <line x1="80" y1="40" x2="80" y2="205" stroke="#0f172a" stroke-width="2.5"/>
+        <line x1="80" y1="205" x2="665" y2="205" stroke="#0f172a" stroke-width="2.5"/>
+        ${bars}
+      `;
+    }
+
+    function toggleMechanismExplainer() {
+      document.getElementById('mechanism-explainer').classList.toggle('hidden');
+      playChime('pop');
+    }
+
+    // =========================================================================
+    // STATION 5: SUCCESS CRITERIA WHITEBOARD CHECK
+    // =========================================================================
+    function toggleScAnswer(id) {
+      document.getElementById(id).classList.toggle('hidden');
+      playChime('ding');
+    }
+
+    function updateScCounter() {
+      const checked = document.querySelectorAll('.sc-checkbox:checked').length;
+      document.getElementById('sc-counter').textContent = `${checked} / 3 Met`;
+      if (checked === 3) {
+        playChime('ding');
+        fireConfetti();
+      }
+    }
+
+    function resetScChecks() {
+      document.querySelectorAll('.sc-checkbox').forEach(cb => cb.checked = false);
+      ['sc-ans-1', 'sc-ans-2', 'sc-ans-3'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      updateScCounter();
+    }
+
+    // =========================================================================
+    // STATION 6: QUICKFIRE CHECKPOINT CHALLENGE (8 SYNTHESIS QUESTIONS)
+    // =========================================================================
+    const qfQuestions = [
+      {
+        tag: 'Wind Instruments',
+        q: 'What actually vibrates when you blow across the open top of a water bottle?',
+        a: 'The AIR COLUMN inside the bottle (above the water) vibrates!'
+      },
+      {
+        tag: 'Air Columns',
+        q: 'True or False: Pouring MORE water into a bottle makes a LOWER pitch when you blow across the top.',
+        a: 'FALSE! More water leaves a SHORTER air column, which vibrates faster and makes a HIGHER pitch.'
+      },
+      {
+        tag: 'Stringed Link (Lesson 1)',
+        q: 'How can a guitarist make a note HIGHER-pitched without changing how loudly they pluck?',
+        a: 'Make the vibrating string SHORTER (press a fret), TIGHTER (turn the peg), or use a THINNER string.'
+      },
+      {
+        tag: 'Panpipes',
+        q: 'On a set of panpipes, which tube makes the LOWEST pitch: the 7 cm tube or the 25 cm tube?',
+        a: 'The 25 cm tube! It holds the longest air column, so the air vibrates most slowly.'
+      },
+      {
+        tag: 'Recorder',
+        q: 'You cover 2 more finger holes on a recorder. Does the vibrating air column become LONGER or SHORTER?',
+        a: 'LONGER — so the pitch becomes LOWER!'
+      },
+      {
+        tag: 'Data Patterns',
+        q: 'Complete the pattern: As the length of a vibrating air column gets SHORTER, the pitch gets ______.',
+        a: 'HIGHER (because the air vibrates faster).'
+      },
+      {
+        tag: 'Anomalous Results',
+        q: 'What is the scientific name for a single result in a table or bar chart that does NOT fit the pattern?',
+        a: 'An ANOMALOUS RESULT!'
+      },
+      {
+        tag: 'Stretch: Blowing vs Tapping',
+        q: 'You gently TAP two identical bottles with a metal spoon. Bottle A is nearly empty; Bottle B is nearly full. Which makes the HIGHER pitch?',
+        a: 'Bottle A (nearly empty)! When tapping, the glass and water vibrate — less water vibrates faster = higher pitch.'
+      }
+    ];
+
+    let qfIdx = 0;
+    let qfInterval = null;
+    let qfTime = 15;
+
+    function renderQf() {
+      const item = qfQuestions[qfIdx];
+      document.getElementById('qf-progress').textContent = `Question ${qfIdx + 1} of ${qfQuestions.length}`;
+      document.getElementById('qf-tag').textContent = item.tag;
+      document.getElementById('qf-question').textContent = item.q;
+      document.getElementById('qf-answer-text').textContent = item.a;
+      document.getElementById('qf-answer-box').classList.add('hidden');
+      document.getElementById('qf-boards-banner').classList.add('hidden');
+      stopQfTimer();
+      qfTime = 15;
+      document.getElementById('qf-timer-box').textContent = '15s';
+    }
+
+    function stopQfTimer() {
+      if (qfInterval) { clearInterval(qfInterval); qfInterval = null; }
+    }
+
+    function startQfTimer() {
+      stopQfTimer();
+      qfTime = 15;
+      document.getElementById('qf-boards-banner').classList.add('hidden');
+      document.getElementById('qf-timer-box').textContent = qfTime + 's';
+      qfInterval = setInterval(() => {
+        qfTime--;
+        document.getElementById('qf-timer-box').textContent = qfTime + 's';
+        if (qfTime <= 0) {
+          stopQfTimer();
+          document.getElementById('qf-boards-banner').classList.remove('hidden');
+          playChime('alert');
+        }
+      }, 1000);
+    }
+
+    function revealQfAnswer() {
+      stopQfTimer();
+      document.getElementById('qf-answer-box').classList.remove('hidden');
+      playChime('ding');
+    }
+
+    function nextQf() {
+      qfIdx = (qfIdx + 1) % qfQuestions.length;
+      renderQf();
+      playChime('pop');
+    }
+
+    function prevQf() {
+      qfIdx = (qfIdx - 1 + qfQuestions.length) % qfQuestions.length;
+      renderQf();
+      playChime('pop');
+    }
+
+    // =========================================================================
+    // DAVID'S BOARD WHITEBOARD (W) & TEACHER DRAWER (T)
+    // =========================================================================
+    let wbDrawing = false;
+    let wbColor = '#0f172a';
+    let wbCtx = null;
+
+    function initWhiteboard() {
+      const canvas = document.getElementById('wb-canvas');
+      wbCtx = canvas.getContext('2d');
+      function resizeWb() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width || 900;
+        canvas.height = rect.height || 520;
+      }
+      window.addEventListener('resize', resizeWb);
+      resizeWb();
+
+      function getPos(e) {
+        const r = canvas.getBoundingClientRect();
+        const pt = e.touches ? e.touches[0] : e;
+        return { x: pt.clientX - r.left, y: pt.clientY - r.top };
+      }
+
+      canvas.addEventListener('pointerdown', (e) => {
+        wbDrawing = true;
+        const p = getPos(e);
+        wbCtx.beginPath();
+        wbCtx.moveTo(p.x, p.y);
+      });
+      canvas.addEventListener('pointermove', (e) => {
+        if (!wbDrawing) return;
+        const p = getPos(e);
+        wbCtx.strokeStyle = wbColor;
+        wbCtx.lineWidth = 4;
+        wbCtx.lineCap = 'round';
+        wbCtx.lineTo(p.x, p.y);
+        wbCtx.stroke();
+      });
+      window.addEventListener('pointerup', () => { wbDrawing = false; });
+    }
+
+    function setPenColor(c) { wbColor = c; }
+    function clearWhiteboard() {
+      const canvas = document.getElementById('wb-canvas');
+      if (wbCtx) wbCtx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function toggleWhiteboard() {
+      const m = document.getElementById('whiteboard-modal');
+      const opening = m.classList.contains('hidden');
+      m.classList.toggle('hidden', !opening);
+      m.classList.toggle('flex', opening);
+      if (opening) {
+        const canvas = document.getElementById('wb-canvas');
+        const rect = canvas.parentElement.getBoundingClientRect();
+        if (canvas.width !== rect.width && rect.width > 0) {
+          canvas.width = rect.width;
+          canvas.height = rect.height;
+        }
+      }
+    }
+
+    function toggleTeacherDrawer() {
+      document.getElementById('teacher-drawer').classList.toggle('translate-x-full');
+    }
+
+    // =========================================================================
+    // CONFETTI ENGINE
+    // =========================================================================
+    function fireConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const pieces = Array.from({ length: 95 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 140,
+        r: 4 + Math.random() * 6,
+        vy: 3 + Math.random() * 5,
+        vx: (Math.random() - 0.5) * 4,
+        c: ['#0284c7', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'][Math.floor(Math.random() * 5)]
+      }));
+      let frame = 0;
+      function tick() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          ctx.fillStyle = p.c;
+          ctx.fillRect(p.x, p.y, p.r, p.r * 1.4);
+        });
+        frame++;
+        if (frame < 110) requestAnimationFrame(tick);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      tick();
+    }
+
+    // =========================================================================
+    // GUARDED KEYBOARD SHORTCUTS (Disabled when modals/inputs are active)
+    // =========================================================================
+    function isAnyModalOpen() {
+      const vm = !document.getElementById('vocab-modal').classList.contains('hidden');
+      const gm = !document.getElementById('giant-modal').classList.contains('hidden');
+      const wm = !document.getElementById('whiteboard-modal').classList.contains('hidden');
+      return vm || gm || wm;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      const key = e.key.toLowerCase();
+      if (key === 'escape') {
+        closeVocabModal();
+        closeGiantModal();
+        if (!document.getElementById('whiteboard-modal').classList.contains('hidden')) toggleWhiteboard();
+        return;
+      }
+      if (key === 'w') { toggleWhiteboard(); return; }
+      if (key === 't') { toggleTeacherDrawer(); return; }
+      if (key === 'm') { toggleMute(); return; }
+      if (isAnyModalOpen()) return;
+      if (e.key === 'ArrowRight') goStation(currentStation + 1);
+      if (e.key === 'ArrowLeft') goStation(currentStation - 1);
+    });
+
+    // Boot
+    buildVocabGrid();
+    renderBottleLab();
+    updateTelemetry(0);
+    renderQf();
+    initWhiteboard();
+  </script>
+</body>
+</html>

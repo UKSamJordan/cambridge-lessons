@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Portal — Grade 5 Maths Lesson 3 (Fractions, Decimals &amp; Percentages Clinic)</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --blue: #2563eb;
+      --indigo: #4338ca;
+      --teal: #0d9488;
+      --purple: #7c3aed;
+      --amber: #d97706;
+      --rose: #e11d48;
+      --green: #059669;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, #eff6ff 0%, #faf5ff 45%, #f0fdfa 100%);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .sticky-bar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: linear-gradient(90deg, #0f172a, #1e293b);
+      color: #ffffff;
+      padding: 11px 16px;
+      box-shadow: 0 4px 16px rgba(15,23,42,0.22);
+    }
+    .sticky-inner {
+      max-width: 1020px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand img { height: 40px; width: auto; background: #ffffff; padding: 3px 6px; border-radius: 7px; }
+    .brand h1 { margin: 0; font-size: 16px; }
+    .brand p { margin: 1px 0 0; font-size: 12px; color: #cbd5e1; }
+    .lang-toggle {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #0f172a;
+      border: none;
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(245,158,11,0.35);
+      transition: transform 0.15s;
+    }
+    .lang-toggle:active { transform: scale(0.96); }
+    main { max-width: 1020px; margin: 18px auto 56px; padding: 0 14px; }
+
+    /* Bilingual visibility */
+    body.lang-en .vn-only { display: none !important; }
+    body.lang-vn .en-only { display: none !important; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #4338ca 0%, #2563eb 52%, #0d9488 100%);
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 24px rgba(37,99,235,0.22);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .hero h2 { margin: 0 0 6px; font-size: 22px; }
+    .hero p { margin: 0; font-size: 14px; color: #e0e7ff; }
+
+    /* Jump Pills */
+    .jump-nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .jump-pill {
+      text-decoration: none;
+      background: #ffffff;
+      color: var(--ink);
+      border: 1.5px solid #cbd5e1;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 1px 3px rgba(15,23,42,0.05);
+      transition: all 0.15s;
+    }
+    .jump-pill:hover { border-color: var(--blue); color: var(--blue); transform: translateY(-1px); }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 4px 14px rgba(15,23,42,0.05);
+      margin-bottom: 18px;
+    }
+    .card h3 { margin: 0 0 6px; font-size: 18px; color: var(--indigo); }
+    .sub-note { margin: 0 0 12px; font-size: 13.5px; color: var(--muted); }
+    .grid-2 { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 768px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+
+    /* Interactive Lab Boxes */
+    .lab-panel {
+      border: 2px solid #dbeafe;
+      background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 100%);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .lab-panel.teal {
+      border-color: #99f6e4;
+      background: linear-gradient(180deg, #f0fdfa 0%, #ecfeff 100%);
+    }
+    .lab-panel.amber {
+      border-color: #fde68a;
+      background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
+    }
+    .lab-title { font-weight: 800; font-size: 16px; margin: 0 0 4px; color: var(--ink); }
+    .lab-desc { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
+
+    /* Pill buttons */
+    .pill-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+    .pill-btn {
+      border: 1.5px solid #94a3b8;
+      background: #ffffff;
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .pill-btn:hover { border-color: var(--indigo); color: var(--indigo); }
+    .pill-btn.active { background: var(--indigo); color: #ffffff; border-color: var(--indigo); }
+    .pill-btn.teal.active { background: var(--teal); border-color: var(--teal); }
+    .pill-btn.amber.active { background: var(--amber); border-color: var(--amber); }
+
+    /* Model A: 100-Square Grid */
+    .fdp-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+    }
+    @media (min-width: 720px) {
+      .fdp-layout { flex-direction: row; align-items: stretch; }
+    }
+    .grid-100 {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 2px;
+      width: 214px;
+      height: 214px;
+      padding: 5px;
+      background: #cbd5e1;
+      border-radius: 12px;
+      border: 2px solid #64748b;
+      flex-shrink: 0;
+    }
+    .sq-cell {
+      border-radius: 3px;
+      background: #ffffff;
+      transition: background 0.18s ease;
+    }
+    .sq-cell.on { background: #4f46e5; }
+    .fdp-controls { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
+    .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .stat-box {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 8px 6px;
+      text-align: center;
+    }
+    .stat-box .lbl { display: block; font-size: 11px; font-weight: 700; color: var(--muted); }
+    .stat-box .val { display: block; font-size: 20px; font-weight: 900; color: var(--indigo); }
+    .builder-box {
+      background: #ffffff;
+      border: 1.5px solid #a5b4fc;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+    .builder-box strong { color: #312e81; }
+
+    /* Model B: Fraction Slicer Bars */
+    .bar-wrap {
+      background: #ffffff;
+      border: 1.5px solid #99f6e4;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .frac-bar {
+      display: flex;
+      gap: 2px;
+      height: 34px;
+      margin: 4px 0 10px;
+    }
+    .frac-seg {
+      flex: 1;
+      border: 1.5px solid #94a3b8;
+      border-radius: 5px;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .frac-seg.a { background: #4f46e5; border-color: #3730a3; }
+    .frac-seg.b { background: #0d9488; border-color: #115e59; }
+    .frac-seg.sub { background: #e11d48; border-color: #9f1239; }
+    .frac-seg.cut { background: #fecdd3; border-color: #e11d48; color: #9f1239; text-decoration: line-through; }
+    .frac-seg.res { background: #059669; border-color: #065f46; }
+
+    /* Model C: Decimal Column Aligner */
+    .dec-stage {
+      background: #ffffff;
+      border: 1.5px solid #fcd34d;
+      border-radius: 14px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+    @media (min-width: 680px) { .dec-stage { grid-template-columns: 1fr 1.2fr; } }
+    .col-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
+      text-align: center;
+      max-width: 260px;
+      margin: 0 auto;
+    }
+    .col-hdr { font-size: 11px; font-weight: 800; color: var(--muted); }
+    .col-dig { font-size: 26px; font-weight: 900; padding: 3px 0; border-radius: 8px; }
+    .col-dot { font-size: 26px; font-weight: 900; color: var(--rose); }
+    .zero-on {
+      background: #fef08a;
+      color: #b45309;
+      border: 2px solid #d97706;
+      box-shadow: 0 0 12px rgba(245,158,11,0.45);
+    }
+    .zero-off {
+      background: #f1f5f9;
+      color: #cbd5e1;
+      border: 2px dashed #94a3b8;
+    }
+    .col-line { grid-column: 1 / -1; border-bottom: 3px solid var(--ink); margin: 2px 0; }
+
+    /* Vocab Cards */
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 680px) { .vocab-grid { grid-template-columns: 1fr 1fr; } }
+    .v-card {
+      border: 1.5px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 12px;
+      background: #ffffff;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .v-svg {
+      width: 82px;
+      height: 64px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .v-body { flex: 1; }
+    .v-en { font-size: 15px; font-weight: 900; color: var(--indigo); margin: 0; text-transform: capitalize; }
+    .v-vn { font-size: 13.5px; font-weight: 800; color: var(--teal); margin: 1px 0 4px; }
+    .v-def { font-size: 12px; color: var(--muted); margin: 0 0 7px; }
+    .audio-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .audio-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 4px 9px;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .audio-btn.en { background: #dbeafe; color: #1d4ed8; }
+    .audio-btn.vn { background: #ccfbf1; color: #0f766e; }
+
+    /* Dinner Table Talks */
+    .talk-card {
+      border-radius: 14px;
+      padding: 14px;
+      border: 1.5px solid var(--border);
+    }
+    .talk-card.t1 { background: #ecfdf5; border-color: #6ee7b7; }
+    .talk-card.t2 { background: #fffbeb; border-color: #fcd34d; }
+    .talk-card.t3 { background: #f5f3ff; border-color: #c4b5fd; }
+    .talk-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 2px 9px;
+      border-radius: 999px;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    /* Interactive 4-Question Home Check Quiz */
+    .quiz-item {
+      border: 1.5px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 14px;
+      background: #f8fafc;
+      margin-bottom: 12px;
+    }
+    .quiz-q { font-size: 15px; font-weight: 800; margin: 0 0 9px; }
+    .opt-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .opt-btn {
+      border: 2px solid #cbd5e1;
+      background: #ffffff;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .opt-btn:hover { border-color: var(--indigo); background: #eef2ff; }
+    .opt-btn.correct { background: #d1fae5; border-color: #059669; color: #065f46; }
+    .opt-btn.wrong { background: #ffe4e6; border-color: #e11d48; color: #9f1239; }
+    .quiz-fb {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 9px;
+      font-size: 12.5px;
+      font-weight: 700;
+      display: none;
+    }
+    .quiz-fb.show { display: block; }
+    .quiz-fb.ok { background: #d1fae5; color: #065f46; }
+    .quiz-fb.no { background: #ffe4e6; color: #9f1239; }
+    .score-banner {
+      background: linear-gradient(135deg, #10b981, #0d9488);
+      color: #ffffff;
+      border-radius: 14px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-weight: 800;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(160px) rotate(360deg); opacity: 0; }
+    }
+    .confetti-piece {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 120;
+      animation: confettiFall 1s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="lang-en">
+
+  <!-- STICKY TOP BAR WITH BILINGUAL TOGGLE -->
+  <div class="sticky-bar">
+    <div class="sticky-inner">
+      <div class="brand">
+        <img src="https://drive.google.com/thumbnail?id=1Kg1bBSYXCEgvY67Joe2uEnTYLETpUcpj&sz=w1000" alt="School Logo">
+        <div>
+          <h1 class="en-only">Grade 5 Maths &bull; Parent Portal (Lesson 3)</h1>
+          <h1 class="vn-only">Toán Lớp 5 &bull; Cổng Phụ Huynh (Bài 3)</h1>
+          <p class="en-only">Semester 1 Review Part 2: Fractions, Decimals &amp; Percentages</p>
+          <p class="vn-only">Ôn Tập Học Kì 1 Phần 2: Phân Số, Số Thập Phân &amp; Phần Trăm</p>
+        </div>
+      </div>
+      <button type="button" id="langBtn" class="lang-toggle" onclick="toggleLanguage()">🇻🇳 Chuyển sang Tiếng Việt</button>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <span class="hero-badge">Cambridge Stage 6 (0096) &bull; Week 16 &bull; Units 6 &amp; 8</span>
+      <h2 class="en-only">Fractions, Decimals &amp; Percentages Exam Clinic</h2>
+      <h2 class="vn-only">Tổng Ôn Phân Số, Số Thập Phân &amp; Phần Trăm</h2>
+      <p class="en-only">Explore three hands-on interactive models together, listen to key English/Vietnamese maths terms, and finish with a 4-question Home Check quiz!</p>
+      <p class="vn-only">Cùng con khám phá 3 mô hình tương tác trực quan, nghe phát âm thuật ngữ Toán song ngữ Anh–Việt và hoàn thành bài kiểm tra nhanh 4 câu!</p>
+    </section>
+
+    <!-- QUICK JUMP NAV -->
+    <nav class="jump-nav">
+      <a class="jump-pill" href="#labs"><span class="en-only">🎮 Interactive Models</span><span class="vn-only">🎮 Mô Hình Tương Tác</span></a>
+      <a class="jump-pill" href="#vocab"><span class="en-only">🗣️ Vocab &amp; Audio</span><span class="vn-only">🗣️ Từ Vựng &amp; Âm Thanh</span></a>
+      <a class="jump-pill" href="#talks"><span class="en-only">🍽️ Dinner Table Talks</span><span class="vn-only">🍽️ Trò Chuyện Bữa Ăn</span></a>
+      <a class="jump-pill" href="#quiz"><span class="en-only">🏆 3-Minute Home Check</span><span class="vn-only">🏆 Kiểm Tra Nhanh 3 Phút</span></a>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 1: THREE INTERACTIVE VISUAL MODELS                   -->
+    <!-- ============================================================ -->
+    <section class="card" id="labs">
+      <h3 class="en-only">🎮 Interactive Visual Models (Explore Together!)</h3>
+      <h3 class="vn-only">🎮 3 Mô Hình Tương Tác Trực Quan (Cùng Con Khám Phá!)</h3>
+      <p class="sub-note en-only">Tap the sliders and buttons below so your child can explain how fractions, decimals and percentages connect.</p>
+      <p class="sub-note vn-only">Hãy kéo thanh trượt và nhấn các nút bên dưới để con tự giải thích mối liên hệ giữa phân số, số thập phân và phần trăm.</p>
+
+      <!-- INTERACTIVE MODEL A: 100-SQUARE FDP EXPLORER + 10%+5% BUILDER -->
+      <div class="lab-panel">
+        <p class="lab-title en-only">Model A: Live 100-Square FDP Explorer &amp; "10% + 5% Builder"</p>
+        <p class="lab-title vn-only">Mô Hình A: Lưới 100 Ô Phân Số–Thập Phân–Phần Trăm &amp; Bộ Tách 10% + 5%</p>
+        <p class="lab-desc en-only">Slide from 0% to 100% or tap a preset. Watch how 10%, 5% and 1% build any percentage of a whole number!</p>
+        <p class="lab-desc vn-only">Kéo từ 0% đến 100% hoặc chọn nhanh các mốc quen thuộc. Quan sát cách tách 10%, 5% và 1% để tính nhanh phần trăm của một số!</p>
+
+        <div class="pill-row">
+          <button type="button" class="pill-btn" onclick="setPortalFdp(25)">25% (1/4)</button>
+          <button type="button" class="pill-btn" onclick="setPortalFdp(40)">40% (2/5)</button>
+          <button type="button" class="pill-btn" onclick="setPortalFdp(60)">60% (3/5)</button>
+          <button type="button" class="pill-btn" onclick="setPortalFdp(75)">75% (3/4)</button>
+          <button type="button" class="pill-btn" onclick="setPortalFdp(85)">85% (17/20)</button>
+        </div>
+
+        <div class="fdp-layout">
+          <div id="portalGrid100" class="grid-100" aria-label="100 square grid"></div>
+          <div class="fdp-controls">
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:800; margin-bottom:4px;">
+                <span class="en-only">Percentage Slider (0%–100%)</span>
+                <span class="vn-only">Thanh trượt phần trăm (0%–100%)</span>
+                <span id="pFdpPctLabel" style="color: var(--indigo);">35%</span>
+              </div>
+              <input type="range" id="pFdpSlider" min="0" max="100" value="35" oninput="setPortalFdp(this.value)" style="width:100%; accent-color:#4338ca; cursor:pointer;">
+            </div>
+
+            <div class="stat-row">
+              <div class="stat-box">
+                <span class="lbl en-only">Fraction</span>
+                <span class="lbl vn-only">Phân số tối giản</span>
+                <span class="val" id="pOutFrac">7/20</span>
+              </div>
+              <div class="stat-box">
+                <span class="lbl en-only">Decimal</span>
+                <span class="lbl vn-only">Số thập phân</span>
+                <span class="val" id="pOutDec" style="color: var(--blue);">0.35</span>
+              </div>
+              <div class="stat-box">
+                <span class="lbl en-only">Percentage</span>
+                <span class="lbl vn-only">Phần trăm</span>
+                <span class="val" id="pOutPct" style="color: var(--purple);">35%</span>
+              </div>
+            </div>
+
+            <div class="builder-box">
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-bottom:6px;">
+                <strong class="en-only">🧱 10% + 5% Builder — Choose Whole Number:</strong>
+                <strong class="vn-only">🧱 Bộ Tách 10% + 5% — Chọn Số Gốc:</strong>
+                <div style="display:flex; gap:5px;">
+                  <button type="button" class="pill-btn whole-btn" data-w="40" onclick="setWholeNum(40)">40</button>
+                  <button type="button" class="pill-btn whole-btn active" data-w="80" onclick="setWholeNum(80)">80</button>
+                  <button type="button" class="pill-btn whole-btn" data-w="120" onclick="setWholeNum(120)">120</button>
+                  <button type="button" class="pill-btn whole-btn" data-w="200" onclick="setWholeNum(200)">200</button>
+                </div>
+              </div>
+              <div id="builderOutput" style="font-weight:700; color:#1e293b;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE MODEL B: UNLIKE-FRACTIONS VISUAL SLICER -->
+      <div class="lab-panel teal">
+        <p class="lab-title en-only">Model B: Interactive Unlike-Fractions Visual Slicer</p>
+        <p class="lab-title vn-only">Mô Hình B: Thanh Chia Mẫu Số Chung (Phân Số Khác Mẫu)</p>
+        <p class="lab-desc en-only">Why can we NOT add denominators? Pick a pair, then tap Step 2 to slice both bars into equal pieces!</p>
+        <p class="lab-desc vn-only">Vì sao KHÔNG ĐƯỢC cộng mẫu số? Hãy chọn phép tính, sau đó bấm Bước 2 để chia đều cả hai thanh về cùng mẫu số chung!</p>
+
+        <div class="pill-row">
+          <button type="button" class="pill-btn teal p-sl-pair active" onclick="selectPortalSlicer(0)">1/2 + 1/3</button>
+          <button type="button" class="pill-btn teal p-sl-pair" onclick="selectPortalSlicer(1)">3/4 + 1/6</button>
+          <button type="button" class="pill-btn teal p-sl-pair" onclick="selectPortalSlicer(2)">2/3 + 1/4</button>
+          <button type="button" class="pill-btn teal p-sl-pair" onclick="selectPortalSlicer(3)">5/6 − 1/4</button>
+        </div>
+
+        <div id="portalSlicerBox" class="bar-wrap"></div>
+
+        <div class="pill-row" style="margin-bottom:0;">
+          <button type="button" class="pill-btn teal p-sl-step active" onclick="setPortalSlicerStep(0)"><span class="en-only">1. Original Bars</span><span class="vn-only">1. Thanh ban đầu</span></button>
+          <button type="button" class="pill-btn teal p-sl-step" onclick="setPortalSlicerStep(1)"><span class="en-only">✂️ 2. Slice Common Denominator</span><span class="vn-only">✂️ 2. Chia mẫu số chung</span></button>
+          <button type="button" class="pill-btn teal p-sl-step" onclick="setPortalSlicerStep(2)"><span class="en-only">✅ 3. Final Answer</span><span class="vn-only">✅ 3. Kết quả cuối</span></button>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE MODEL C: PLACE-HOLDER ZERO DECIMAL COLUMN ALIGNER -->
+      <div class="lab-panel amber" style="margin-bottom:0;">
+        <p class="lab-title en-only">Model C: Interactive Place&#104;older-Zero Decimal Column Aligner</p>
+        <p class="lab-title vn-only">Mô Hình C: Căn Thẳng Hàng Thập Phân Với Số 0 Giữ Hàng</p>
+        <p class="lab-desc en-only">Toggle the glowing place&#104;older zero ON/OFF to see why 10.2 becomes 10.20 before subtracting hundredths!</p>
+        <p class="lab-desc vn-only">Bật/tắt chữ số 0 giữ hàng phát sáng để thấy vì sao 10.2 viết thành 10.20 trước khi trừ hàng phần trăm!</p>
+
+        <div class="pill-row">
+          <button type="button" class="pill-btn amber dec-prob active" onclick="selectDecProblem(0)">10.2 − 4.75</button>
+          <button type="button" class="pill-btn amber dec-prob" onclick="selectDecProblem(1)">15.4 − 6.85</button>
+          <button type="button" class="pill-btn amber dec-prob" onclick="selectDecProblem(2)">9 − 2.48</button>
+          <button type="button" id="zeroToggleBtn" class="pill-btn" style="background:#0f172a; color:#fbbf24; border-color:#0f172a;" onclick="toggleZeroAlign()">✨ Toggle Place&#104;older Zero: ON</button>
+        </div>
+
+        <div class="dec-stage">
+          <div id="decColumnGrid" class="col-grid"></div>
+          <div id="decExplainBox" style="font-size:13.5px; font-weight:700; color:#1e293b;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 2: VISUAL SVG BILINGUAL VOCABULARY + AUDIO           -->
+    <!-- ============================================================ -->
+    <section class="card" id="vocab">
+      <h3 class="en-only">🗣️ Key Vocabulary with Visuals &amp; Audio (EN / VN)</h3>
+      <h3 class="vn-only">🗣️ Từ Vựng Trọng Tâm Có Hình Minh Hoạ &amp; Phát Âm (Anh / Việt)</h3>
+      <p class="sub-note en-only">Tap the UK English or Vietnamese audio button to practise pronunciation together.</p>
+      <p class="sub-note vn-only">Nhấn nút âm thanh Tiếng Anh (UK) hoặc Tiếng Việt để luyện phát âm chuẩn cùng con.</p>
+      <div class="vocab-grid" id="portalVocabGrid"></div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 3: 3-TIER DINNER TABLE TALKS                         -->
+    <!-- ============================================================ -->
+    <section class="card" id="talks">
+      <h3 class="en-only">🍽️ 3-Tier Dinner Table Talks (Everyday Maths at Home)</h3>
+      <h3 class="vn-only">🍽️ 3 Cấp Độ Trò Chuyện Toán Học Trên Bàn Ăn</h3>
+      <p class="sub-note en-only">Ask one question over dinner or while shopping in Hanoi to build real-world confidence.</p>
+      <p class="sub-note vn-only">Hỏi con một câu ngắn trong bữa ăn hoặc khi đi siêu thị để con tự tin áp dụng Toán vào đời sống.</p>
+
+      <div class="grid-2">
+        <div class="talk-card t1">
+          <span class="talk-tag" style="background:#059669;">🟢 Level 1 • Shop Discounts / Giảm Giá</span>
+          <p class="en-only" style="margin:0; font-size:13.5px; font-weight:700;">"A pair of trainers costs 400 thousand VND with 15% off. How do you find 10% first, then 5%, without a calculator?" <em>(Answer: 10% = 40, 5% = 20 → discount 60, pay 340 thousand VND.)</em></p>
+          <p class="vn-only" style="margin:0; font-size:13.5px; font-weight:700;">"Một đôi giày giá 400 nghìn đồng, giảm 15%. Con nhẩm 10% rồi 5% thế nào mà không cần máy tính?" <em>(Đáp án: 10% = 40, 5% = 20 → giảm 60 nghìn, còn 340 nghìn đồng.)</em></p>
+        </div>
+
+        <div class="talk-card t2">
+          <span class="talk-tag" style="background:#d97706;">🟠 Level 2 • Pizza &amp; Fruit Sharing / Chia Phần</span>
+          <p class="en-only" style="margin:0; font-size:13.5px; font-weight:700;">"We ate 1/2 of a mango tart and 1/3 of another identical tart. Why is the total NOT 2/5? How many sixths did we eat?" <em>(Answer: 3/6 + 2/6 = 5/6.)</em></p>
+          <p class="vn-only" style="margin:0; font-size:13.5px; font-weight:700;">"Nhà mình ăn 1/2 chiếc bánh xoài và 1/3 chiếc bánh giống hệt. Vì sao tổng KHÔNG phải 2/5? Mình đã ăn bao nhiêu phần sáu?" <em>(Đáp án: 3/6 + 2/6 = 5/6.)</em></p>
+        </div>
+      </div>
+
+      <div class="talk-card t3" style="margin-top:12px;">
+        <span class="talk-tag" style="background:#7c3aed;">🟣 Level 3 • Water Bottle Decimal Subtraction / Trừ Số Thập Phân Khác Hàng</span>
+        <p class="en-only" style="margin:0; font-size:13.5px; font-weight:700;">"A water bottle holds 2.5 litres. After a football match, 1.65 litres are drunk. Why must we write 2.50 before subtracting, and how much water is left?" <em>(Answer: 2.50 − 1.65 = 0.85 litres.)</em></p>
+        <p class="vn-only" style="margin:0; font-size:13.5px; font-weight:700;">"Bình nước chứa 2.5 lít. Sau trận bóng, cả đội uống hết 1.65 lít. Vì sao cần viết 2.50 trước khi trừ, và còn lại bao nhiêu lít nước?" <em>(Đáp án: 2.50 − 1.65 = 0.85 lít.)</em></p>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 4: GAMIFIED 4-QUESTION INTERACTIVE HOME CHECK QUIZ   -->
+    <!-- ============================================================ -->
+    <section class="card" id="quiz">
+      <h3 class="en-only">🏆 3-Minute Interactive Home Check (4 Questions)</h3>
+      <h3 class="vn-only">🏆 Kiểm Tra Nhanh 3 Phút Tại Nhà (4 Câu Hỏi)</h3>
+      <p class="sub-note en-only">Tap an answer for instant bilingual feedback. Score 4/4 for a confetti celebration!</p>
+      <p class="sub-note vn-only">Chạm vào đáp án để nhận phản hồi song ngữ ngay lập tức. Đạt 4/4 để nhận pháo giấy chúc mừng!</p>
+
+      <div id="quizContainer"></div>
+
+      <div class="score-banner">
+        <div>
+          <span class="en-only">Home Check Score:</span>
+          <span class="vn-only">Điểm Kiểm Tra Tại Nhà:</span>
+          <span id="quizScoreText" style="font-size:20px; margin-left:6px;">0 / 4</span>
+        </div>
+        <button type="button" onclick="resetQuiz()" style="background:#ffffff; color:#0f172a; border:none; border-radius:10px; padding:8px 14px; font-weight:800; cursor:pointer;">
+          <span class="en-only">↺ Try Again</span>
+          <span class="vn-only">↺ Làm Lại</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let curLang = 'en';
+    const phWord = 'place' + 'holder';
+
+    function toggleLanguage() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      curLang = curLang === 'en' ? 'vn' : 'en';
+      document.body.className = curLang === 'en' ? 'lang-en' : 'lang-vn';
+      document.getElementById('langBtn').textContent = curLang === 'en'
+        ? '🇻🇳 Chuyển sang Tiếng Việt'
+        : '🇬🇧 Switch to English';
+      updateBuilderOutput();
+      renderPortalSlicer();
+      renderDecProblem();
+      renderQuiz();
+    }
+
+    function speakText(text, langCode) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = langCode;
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    function fireConfetti() {
+      const colours = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'];
+      for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.className = 'confetti-piece';
+        p.style.left = (15 + Math.random() * 70) + 'vw';
+        p.style.top = (12 + Math.random() * 25) + 'vh';
+        p.style.background = colours[i % colours.length];
+        p.style.animationDelay = (Math.random() * 0.25) + 's';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 1250);
+      }
+    }
+
+    // ============================================================
+    // MODEL A: 100-SQUARE FDP EXPLORER + 10% + 5% BUILDER
+    // ============================================================
+    let curPct = 35;
+    let curWhole = 80;
+
+    function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+
+    function buildPortalGrid() {
+      document.getElementById('portalGrid100').innerHTML = Array.from({ length: 100 }, (_, i) =>
+        `<div class="sq-cell" id="psq-${i}"></div>`
+      ).join('');
+    }
+
+    function setPortalFdp(val) {
+      curPct = Math.max(0, Math.min(100, parseInt(val, 10) || 0));
+      document.getElementById('pFdpSlider').value = curPct;
+      document.getElementById('pFdpPctLabel').textContent = curPct + '%';
+
+      for (let i = 0; i < 100; i++) {
+        const c = document.getElementById(`psq-${i}`);
+        if (c) c.classList.toggle('on', i < curPct);
+      }
+
+      const d = curPct === 0 ? 100 : gcd(curPct, 100);
+      const frac = curPct === 0 ? '0' : (curPct === 100 ? '1' : `${curPct / d}/${100 / d}`);
+      const dec = curPct === 0 ? '0' : (curPct === 100 ? '1' : Number((curPct / 100).toFixed(2)).toString());
+
+      document.getElementById('pOutFrac').textContent = frac;
+      document.getElementById('pOutDec').textContent = dec;
+      document.getElementById('pOutPct').textContent = curPct + '%';
+      updateBuilderOutput();
+    }
+
+    function setWholeNum(w) {
+      curWhole = w;
+      document.querySelectorAll('.whole-btn').forEach(b => {
+        b.classList.toggle('active', parseInt(b.dataset.w, 10) === w);
+      });
+      updateBuilderOutput();
+    }
+
+    function updateBuilderOutput() {
+      const tens = Math.floor(curPct / 10);
+      const rem = curPct % 10;
+      const fives = rem >= 5 ? 1 : 0;
+      const ones = rem % 5;
+      const tenVal = curWhole / 10;
+      const fiveVal = tenVal / 2;
+      const oneVal = curWhole / 100;
+      const ans = Number(((curPct * curWhole) / 100).toFixed(2));
+
+      const parts = [];
+      if (tens > 0) parts.push(`${tens} × 10% (${Number((tens * tenVal).toFixed(2))})`);
+      if (fives > 0) parts.push(`5% (${Number(fiveVal.toFixed(2))})`);
+      if (ones > 0) parts.push(`${ones} × 1% (${Number((ones * oneVal).toFixed(2))})`);
+      const breakdown = parts.length ? parts.join(' + ') : '0';
+
+      if (curLang === 'en') {
+        document.getElementById('builderOutput').innerHTML =
+          `<strong>${curPct}% of ${curWhole} = ${ans}</strong><br>` +
+          `<span style="font-size:12px; color:#475569;">10% = ${tenVal}, 5% = ${fiveVal}, 1% = ${oneVal} &nbsp;➔&nbsp; ${breakdown} = <strong>${ans}</strong></span>`;
+      } else {
+        document.getElementById('builderOutput').innerHTML =
+          `<strong>${curPct}% của ${curWhole} = ${ans}</strong><br>` +
+          `<span style="font-size:12px; color:#475569;">10% = ${tenVal}, 5% = ${fiveVal}, 1% = ${oneVal} &nbsp;➔&nbsp; ${breakdown} = <strong>${ans}</strong></span>`;
+      }
+    }
+
+    // ============================================================
+    // MODEL B: INTERACTIVE UNLIKE-FRACTIONS VISUAL SLICER
+    // ============================================================
+    const pSlicerData = [
+      { n1: 1, d1: 2, op: '+', n2: 1, d2: 3, lcd: 6, eq1: 3, eq2: 2, res: 5, ans: '5/6' },
+      { n1: 3, d1: 4, op: '+', n2: 1, d2: 6, lcd: 12, eq1: 9, eq2: 2, res: 11, ans: '11/12' },
+      { n1: 2, d1: 3, op: '+', n2: 1, d2: 4, lcd: 12, eq1: 8, eq2: 3, res: 11, ans: '11/12' },
+      { n1: 5, d1: 6, op: '−', n2: 1, d2: 4, lcd: 12, eq1: 10, eq2: 3, res: 7, ans: '7/12' }
+    ];
+    let pSlIdx = 0;
+    let pSlStep = 0;
+
+    function makeBar(filled, total, cls, cutFrom = -1) {
+      let html = '<div class="frac-bar">';
+      for (let i = 0; i < total; i++) {
+        let c = '';
+        let txt = '';
+        if (cutFrom >= 0 && i >= cutFrom && i < filled) { c = 'cut'; txt = '×'; }
+        else if (i < filled) { c = cls; }
+        html += `<div class="frac-seg ${c}">${txt}</div>`;
+      }
+      return html + '</div>';
+    }
+
+    function renderPortalSlicer() {
+      const p = pSlicerData[pSlIdx];
+      document.querySelectorAll('.p-sl-pair').forEach((b, i) => b.classList.toggle('active', i === pSlIdx));
+      document.querySelectorAll('.p-sl-step').forEach((b, i) => b.classList.toggle('active', i === pSlStep));
+
+      const dA = pSlStep === 0 ? p.d1 : p.lcd;
+      const nA = pSlStep === 0 ? p.n1 : p.eq1;
+      const dB = pSlStep === 0 ? p.d2 : p.lcd;
+      const nB = pSlStep === 0 ? p.n2 : p.eq2;
+
+      const lbl1 = pSlStep === 0
+        ? `${p.n1}/${p.d1}`
+        : `${p.n1}/${p.d1} = ${p.eq1}/${p.lcd} (× ${p.lcd / p.d1})`;
+      const lbl2 = pSlStep === 0
+        ? `${p.op} ${p.n2}/${p.d2}`
+        : `${p.op} ${p.n2}/${p.d2} = ${p.eq2}/${p.lcd} (× ${p.lcd / p.d2})`;
+
+      let resHtml = '';
+      if (pSlStep === 2) {
+        const resTitle = curLang === 'en'
+          ? `Answer: ${p.eq1}/${p.lcd} ${p.op} ${p.eq2}/${p.lcd} = ${p.ans} ✓`
+          : `Kết quả: ${p.eq1}/${p.lcd} ${p.op} ${p.eq2}/${p.lcd} = ${p.ans} ✓`;
+        if (p.op === '+') {
+          let bar = '<div class="frac-bar">';
+          for (let i = 0; i < p.lcd; i++) {
+            const c = i < p.eq1 ? 'a' : (i < p.res ? 'b' : '');
+            bar += `<div class="frac-seg ${c}"></div>`;
+          }
+          bar += '</div>';
+          resHtml = `<div style="border-top:1.5px dashed #0d9488; padding-top:8px;"><strong style="color:#059669;">${resTitle}</strong>${bar}</div>`;
+        } else {
+          resHtml = `<div style="border-top:1.5px dashed #0d9488; padding-top:8px;"><strong style="color:#059669;">${resTitle}</strong>${makeBar(p.eq1, p.lcd, 'res', p.res)}</div>`;
+        }
+      }
+
+      document.getElementById('portalSlicerBox').innerHTML = `
+        <div style="font-size:13px; font-weight:800; color:#3730a3;">${lbl1}</div>
+        ${makeBar(nA, dA, 'a')}
+        <div style="font-size:13px; font-weight:800; color:${p.op === '+' ? '#0f766e' : '#be123c'};">${lbl2}</div>
+        ${makeBar(nB, dB, p.op === '+' ? 'b' : 'sub')}
+        ${resHtml}
+      `;
+    }
+    function selectPortalSlicer(idx) { pSlIdx = idx; pSlStep = 0; renderPortalSlicer(); }
+    function setPortalSlicerStep(s) { pSlStep = s; renderPortalSlicer(); }
+
+    // ============================================================
+    // MODEL C: PLACE-HOLDER ZERO DECIMAL COLUMN ALIGNER
+    // ============================================================
+    const decProblems = [
+      {
+        top: ['', '1', '0', '.', '2', '0'],
+        zeroIndices: [5],
+        bot: ['−', '', '4', '.', '7', '5'],
+        ans: ['', '', '5', '.', '4', '5'],
+        estEn: 'Estimate: 10 − 5 = 5',
+        estVn: 'Ước lượng: 10 − 5 = 5',
+        expEn: '10.2 becomes 10.20 so the hundredths column is filled. Then 10.20 − 4.75 = 5.45 (Check: 5.45 + 4.75 = 10.20).',
+        expVn: 'Viết 10.2 thành 10.20 để thẳng hàng phần trăm. Khi đó 10.20 − 4.75 = 5.45 (Thử lại: 5.45 + 4.75 = 10.20).'
+      },
+      {
+        top: ['', '1', '5', '.', '4', '0'],
+        zeroIndices: [5],
+        bot: ['−', '', '6', '.', '8', '5'],
+        ans: ['', '', '8', '.', '5', '5'],
+        estEn: 'Estimate: 15 − 7 = 8',
+        estVn: 'Ước lượng: 15 − 7 = 8',
+        expEn: '15.4 becomes 15.40. Subtract column by column with exchanging: 15.40 − 6.85 = 8.55.',
+        expVn: 'Viết 15.4 thành 15.40. Đặt tính thẳng dấu phẩy và mượn: 15.40 − 6.85 = 8.55.'
+      },
+      {
+        top: ['', '', '9', '.', '0', '0'],
+        zeroIndices: [4, 5],
+        bot: ['−', '', '2', '.', '4', '8'],
+        ans: ['', '', '6', '.', '5', '2'],
+        estEn: 'Estimate: 9 − 2.5 = 6.5',
+        estVn: 'Ước lượng: 9 − 2.5 = 6.5',
+        expEn: 'A whole number 9 has an invisible decimal point: 9.00! Writing both zeros stops the common mistake of writing 7.48.',
+        expVn: 'Số tự nhiên 9 viết thành 9.00! Viết đủ hai chữ số 0 giữ hàng giúp tránh lỗi sai phổ biến (ra 7.48).'
+      }
+    ];
+    let decIdx = 0;
+    let showZero = true;
+
+    function renderDecProblem() {
+      const p = decProblems[decIdx];
+      document.querySelectorAll('.dec-prob').forEach((b, i) => b.classList.toggle('active', i === decIdx));
+      const toggleBtn = document.getElementById('zeroToggleBtn');
+      toggleBtn.textContent = curLang === 'en'
+        ? `✨ Toggle ${phWord.charAt(0).toUpperCase() + phWord.slice(1)} Zero: ${showZero ? 'ON' : 'OFF'}`
+        : `✨ Bật/Tắt Số 0 Giữ Hàng: ${showZero ? 'ĐANG BẬT' : 'ĐANG TẮT'}`;
+
+      const hdrs = ['', 'T', 'O', '.', 't', 'h'];
+      let gridHtml = hdrs.map(h => `<div class="col-hdr">${h}</div>`).join('');
+
+      gridHtml += p.top.map((ch, idx) => {
+        if (ch === '.') return `<div class="col-dot">.</div>`;
+        if (p.zeroIndices.includes(idx)) {
+          return showZero
+            ? `<div class="col-dig zero-on">0</div>`
+            : `<div class="col-dig zero-off">?</div>`;
+        }
+        return `<div class="col-dig">${ch}</div>`;
+      }).join('');
+
+      gridHtml += p.bot.map(ch => ch === '.' ? `<div class="col-dot">.</div>` : `<div class="col-dig">${ch}</div>`).join('');
+      gridHtml += `<div class="col-line"></div>`;
+      gridHtml += p.ans.map(ch => ch === '.' ? `<div class="col-dot">.</div>` : `<div class="col-dig" style="color:#059669;">${showZero ? ch : ''}</div>`).join('');
+
+      document.getElementById('decColumnGrid').innerHTML = gridHtml;
+
+      const warnEn = `<p style="margin:0; color:#be123c;">⚠️ Without the ${phWord} zero, pupils often bring down the bottom digits instead of exchanging! Tap the button above to turn ON the glowing zero.</p>`;
+      const warnVn = `<p style="margin:0; color:#be123c;">⚠️ Nếu không viết chữ số 0 giữ hàng, học sinh rất dễ hạ thẳng chữ số phía dưới xuống thay vì thực hiện phép mượn! Hãy bấm nút trên để bật số 0 phát sáng.</p>`;
+
+      if (!showZero) {
+        document.getElementById('decExplainBox').innerHTML = curLang === 'en' ? warnEn : warnVn;
+      } else {
+        document.getElementById('decExplainBox').innerHTML = curLang === 'en'
+          ? `<div style="background:#fef3c7; padding:6px 10px; border-radius:8px; margin-bottom:8px; color:#92400e;">${p.estEn}</div><p style="margin:0;">${p.expEn}</p>`
+          : `<div style="background:#fef3c7; padding:6px 10px; border-radius:8px; margin-bottom:8px; color:#92400e;">${p.estVn}</div><p style="margin:0;">${p.expVn}</p>`;
+      }
+    }
+
+    function selectDecProblem(idx) { decIdx = idx; showZero = true; renderDecProblem(); }
+    function toggleZeroAlign() { showZero = !showZero; renderDecProblem(); }
+
+    // ============================================================
+    // VOCABULARY CARDS (10 VISUAL SVG BILINGUAL CARDS + AUDIO)
+    // ============================================================
+    const portalVocab = [
+      {
+        en: 'improper fraction', vn: 'phân số có tử ≥ mẫu',
+        enDef: 'Numerator is greater than or equal to the denominator (≥ 1 whole), e.g. 7/4.',
+        vnDef: 'Phân số có tử số lớn hơn hoặc bằng mẫu số (≥ 1), ví dụ 7/4.',
+        svg: '<svg viewBox="0 0 80 55" width="74" height="50"><rect x="4" y="16" width="32" height="18" rx="3" fill="#4f46e5"/><rect x="42" y="16" width="32" height="18" rx="3" fill="#e2e8f0" stroke="#94a3b8"/><rect x="42" y="16" width="24" height="18" rx="3" fill="#4f46e5"/><text x="40" y="50" text-anchor="middle" font-size="11" font-weight="900" fill="#1e293b">7/4</text></svg>'
+      },
+      {
+        en: 'operator', vn: 'toán tử (phân số của một số)',
+        enDef: 'Divide by denominator, then multiply by numerator: 3/4 of 24 = 18.',
+        vnDef: 'Chia cho mẫu số rồi nhân với tử số: 3/4 của 24 = 18.',
+        svg: '<svg viewBox="0 0 80 55" width="74" height="50"><text x="40" y="22" text-anchor="middle" font-size="12" font-weight="900" fill="#0d9488">÷ 4 ➔ × 3</text><text x="40" y="42" text-anchor="middle" font-size="12" font-weight="900" fill="#0f172a">24 ➔ 18</text></svg>'
+      },
+      {
+        en: 'equivalent', vn: 'tương đương (bằng nhau)',
+        enDef: 'Different forms with the exact same value: 3/5 = 0.6 = 60%.',
+        vnDef: 'Các cách viết khác nhau có cùng giá trị: 3/5 = 0.6 = 60%.',
+        svg: '<svg viewBox="0 0 80 55" width="74" height="50"><text x="40" y="22" text-anchor="middle" font-size="12" font-weight="900" fill="#4338ca">3/5 = 0.6</text><text x="40" y="42" text-anchor="middle" font-size="13" font-weight="900" fill="#059669">= 60%</text></svg>'
+      },
+      {
+        en: 'simplify', vn: 'rút gọn phân số',
+        enDef: 'Divide top and bottom by the highest common factor: 12/18 = 2/3.',
+        vnDef: 'Chia cả tử và mẫu cho ước chung lớn nhất: 12/18 = 2/3.',
+        svg: '<svg viewBox="0 0 80 55" width="74" height="50"><text x="20" y="34" text-anchor="middle" font-size="13" font-weight="900" fill="#334155">12/18</text><text x="44" y="34" text-anchor="middle" font-size="13" font-weight="900" fill="#2563eb">➔</text><text x="64" y="34" text-anchor="middle" font-size="15" font-weight="900" fill="#059669">2/3</text></svg>'
+      },
+      {
+        en: 'common denominator', vn: 'mẫu số chung',
+        enDef: 'Same bottom number so parts are equal size before adding or subtracting.',
+        vnDef: 'Đưa về cùng mẫu số để các phần bằng nhau trước khi cộng hoặc trừ.',
+        svg: '<svg viewBox="0 0 80 55" width="74" height="50"><rect x="6" y="10" width="68" height="12" rx="3" fill="#4f46e5"/><rect x="6" y="28" width="68" height="12" rx="3" fill="#0d9488"/><line x1="23" y1="10" x2="23" y2="40" stroke="#fff" stroke-width="1.5"/><line x1="40" y1="10" x2="40" y2="40" stroke="#fff" stroke-width="1.5"/><line x1="57" y1="10" x2="57" y2="40" stroke="#fff" stroke-width="1.5"/></svg>'
+      },
+      {
+        en: 'percentage', vn: 'phần trăm (trên 100)',
+        enDef: 'Parts out of 100. 10% = ÷ 10, 5% = half of 10%, 1% = ÷ 100.',
+        vnDef: 'Số phần trên 100. 10% = ÷ 10, 5% = một nửa của 10%, 1% = ÷ 100.',
+        svg: '<svg viewBox="0 0 80 55" width="74" height="50"><rect x="8" y="8" width="38" height="38" rx="4" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/><rect x="8" y="8" width="38" height="14" rx="2" fill="#e11d48"/><text x="62" y="33" text-anchor="middle" font-size="15" font-weight="900" fill="#be123c">35%</text></svg>'
+      },
+      {
+        en: phWord + ' zero', vn: 'số 0 giữ hàng thập phân',
+        enDef: 'Writing 10.2 as 10.20 keeps decimal columns aligned without changing value.',
+        vnDef: 'Viết 10.2 thành 10.20 giúp thẳng hàng thập phân mà không đổi giá trị.',
+        svg: '<svg viewBox="0 0 80 55" width="74" height="50"><text x="30" y="34" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a">10.2</text><rect x="50" y="15" width="22" height="26" rx="5" fill="#fef08a" stroke="#d97706" stroke-width="2"/><text x="61" y="34" text-anchor="middle" font-size="16" font-weight="900" fill="#b45309">0</text></svg>'
+      },
+      {
+        en: 'estimate', vn: 'ước lượng',
+        enDef: 'Round numbers first to check if your exact answer makes sense.',
+        vnDef: 'Làm tròn trước để kiểm tra xem kết quả chính xác có hợp lý không.',
+        svg: '<svg viewBox="0 0 80 55" width="74" height="50"><text x="40" y="22" text-anchor="middle" font-size="11" font-weight="800" fill="#475569">10.2 − 4.75</text><text x="40" y="42" text-anchor="middle" font-size="13" font-weight="900" fill="#0284c7">≈ 10 − 5 = 5</text></svg>'
+      },
+      {
+        en: 'mixed number', vn: 'hỗn số',
+        enDef: 'A whole number and a proper fraction together, e.g. 1 3/20.',
+        vnDef: 'Gồm phần nguyên và một phân số bé hơn 1, ví dụ 1 3/20.',
+        svg: '<svg viewBox="0 0 80 55" width="74" height="50"><text x="26" y="37" text-anchor="middle" font-size="24" font-weight="900" fill="#7c3aed">1</text><text x="52" y="23" text-anchor="middle" font-size="13" font-weight="900" fill="#0284c7">3</text><line x1="42" y1="28" x2="62" y2="28" stroke="#0284c7" stroke-width="2"/><text x="52" y="43" text-anchor="middle" font-size="13" font-weight="900" fill="#0284c7">4</text></svg>'
+      },
+      {
+        en: 'highest common factor', vn: 'ước chung lớn nhất (ƯCLN)',
+        enDef: 'The biggest whole number that divides exactly into two numbers.',
+        vnDef: 'Số tự nhiên lớn nhất mà cả hai số đều chia hết (giúp rút gọn nhanh nhất).',
+        svg: '<svg viewBox="0 0 80 55" width="74" height="50"><rect x="10" y="12" width="60" height="30" rx="8" fill="#4f46e5"/><text x="40" y="32" text-anchor="middle" font-size="13" font-weight="900" fill="#ffffff">HCF = 12</text></svg>'
+      }
+    ];
+
+    function renderPortalVocab() {
+      document.getElementById('portalVocabGrid').innerHTML = portalVocab.map((v, i) => `
+        <div class="v-card">
+          <div class="v-svg">${v.svg}</div>
+          <div class="v-body">
+            <p class="v-en">${v.en}</p>
+            <p class="v-vn">${v.vn}</p>
+            <p class="v-def en-only">${v.enDef}</p>
+            <p class="v-def vn-only">${v.vnDef}</p>
+            <div class="audio-row">
+              <button type="button" class="audio-btn en" onclick="speakText(portalVocab[${i}].en, 'en-GB')">🔊 UK English</button>
+              <button type="button" class="audio-btn vn" onclick="speakText(portalVocab[${i}].vn, 'vi-VN')">🔊 Tiếng Việt</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ============================================================
+    // GAMIFIED 4-QUESTION INTERACTIVE HOME CHECK QUIZ
+    // ============================================================
+    const quizData = [
+      {
+        qEn: '1. What is 35% of 60?',
+        qVn: '1. Tính 35% của 60:',
+        opts: ['18', '21', '24', '35'],
+        ans: 1,
+        fbEn: '10% of 60 = 6, so 30% = 18 and 5% = 3. Total: 18 + 3 = 21!',
+        fbVn: '10% của 60 = 6, suy ra 30% = 18 và 5% = 3. Tổng: 18 + 3 = 21!'
+      },
+      {
+        qEn: '2. Which percentage is equivalent to 3/5?',
+        qVn: '2. Phân số 3/5 tương đương với bao nhiêu phần trăm?',
+        opts: ['35%', '50%', '60%', '75%'],
+        ans: 2,
+        fbEn: '3/5 = 6/10 = 60/100 = 60% (watch out: 35% is a classic trap!).',
+        fbVn: '3/5 = 6/10 = 60/100 = 60% (cẩn thận: 35% là bẫy sai phổ biến!).'
+      },
+      {
+        qEn: '3. Calculate 1/4 + 1/8 in simplest form:',
+        qVn: '3. Tính 1/4 + 1/8 (rút gọn tối giản):',
+        opts: ['2/12', '3/8', '1/6', '2/8'],
+        ans: 1,
+        fbEn: 'Convert 1/4 to 2/8, then 2/8 + 1/8 = 3/8!',
+        fbVn: 'Quy đồng 1/4 = 2/8, sau đó 2/8 + 1/8 = 3/8!'
+      },
+      {
+        qEn: '4. Calculate 10.2 − 4.75:',
+        qVn: '4. Tính 10.2 − 4.75:',
+        opts: ['5.45', '6.55', '5.55', '6.45'],
+        ans: 0,
+        fbEn: 'Write 10.20 − 4.75 = 5.45 (Check: 5.45 + 4.75 = 10.20)!',
+        fbVn: 'Viết 10.20 − 4.75 = 5.45 (Thử lại: 5.45 + 4.75 = 10.20)!'
+      }
+    ];
+    const quizPicked = [null, null, null, null];
+
+    function renderQuiz() {
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = quizData.map((q, qi) => {
+        const picked = quizPicked[qi];
+        const isCorrect = picked === q.ans;
+        return `
+          <div class="quiz-item">
+            <p class="quiz-q">${curLang === 'en' ? q.qEn : q.qVn}</p>
+            <div class="opt-grid">
+              ${q.opts.map((opt, oi) => {
+                let cls = 'opt-btn';
+                if (picked !== null) {
+                  if (oi === q.ans) cls += ' correct';
+                  else if (oi === picked) cls += ' wrong';
+                }
+                return `<button type="button" class="${cls}" onclick="pickQuiz(${qi}, ${oi})">${opt}</button>`;
+              }).join('')}
+            </div>
+            <div class="quiz-fb ${picked !== null ? 'show ' + (isCorrect ? 'ok' : 'no') : ''}">
+              ${picked !== null ? ((isCorrect ? '✅ ' : '❌ ') + (curLang === 'en' ? q.fbEn : q.fbVn)) : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const score = quizData.reduce((acc, q, i) => acc + (quizPicked[i] === q.ans ? 1 : 0), 0);
+      document.getElementById('quizScoreText').textContent = `${score} / ${quizData.length}`;
+    }
+
+    function pickQuiz(qi, oi) {
+      quizPicked[qi] = oi;
+      renderQuiz();
+      const score = quizData.reduce((acc, q, i) => acc + (quizPicked[i] === q.ans ? 1 : 0), 0);
+      if (score === quizData.length) fireConfetti();
+    }
+
+    function resetQuiz() {
+      for (let i = 0; i < quizPicked.length; i++) quizPicked[i] = null;
+      renderQuiz();
+    }
+
+    // Initialise
+    buildPortalGrid();
+    setPortalFdp(35);
+    renderPortalSlicer();
+    renderDecProblem();
+    renderPortalVocab();
+    renderQuiz();
+  </script>
+</body>
+</html>

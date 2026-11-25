@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grade 5 Maths — Lesson 3: Semester 1 Review Part 2 (Units 6, 8 &amp; Mixed S1 Clinic)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, #eff6ff 0%, #f5f3ff 48%, #ecfeff 100%);
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+    /* Auto-Hiding Fixed Top Bar */
+    #topHeader {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    #topHeader.header-hidden {
+      transform: translateY(-100%);
+    }
+    /* 3D Flip Cards (Station 1) */
+    .flip-scene {
+      perspective: 1200px;
+      height: 350px;
+      cursor: pointer;
+    }
+    .flip-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .flip-card.flipped {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.5rem;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+    /* Tab Switching: NEVER put flex/grid directly on toggleable <section> */
+    .station-section {
+      display: none;
+    }
+    .station-section.active-station {
+      display: block;
+    }
+    /* Full-Screen I Do Mode */
+    #iDoStage.ido-fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      border-radius: 0;
+      overflow-y: auto;
+      padding: 1.75rem 2.25rem;
+      background: linear-gradient(155deg, #0f172a 0%, #1e1b4b 55%, #0f172a 100%);
+      color: #ffffff;
+    }
+    /* David's Board 32px squared grid */
+    #whiteboardCanvas {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, #cbd5e1 1px, transparent 1px),
+        linear-gradient(to bottom, #cbd5e1 1px, transparent 1px);
+      background-size: 32px 32px;
+      touch-action: none;
+      cursor: crosshair;
+    }
+    /* Interactive 100-Square Grid */
+    .grid-100 {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 2px;
+      width: 210px;
+      height: 210px;
+      padding: 4px;
+      background: #e2e8f0;
+      border-radius: 12px;
+      border: 2px solid #94a3b8;
+    }
+    .grid-cell {
+      border-radius: 3px;
+      background: #ffffff;
+      transition: background-color 0.18s ease, transform 0.18s ease;
+    }
+    .grid-cell.filled {
+      background: #4f46e5;
+    }
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.88) translateY(8px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .pop-in {
+      animation: popIn 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes glowZero {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); transform: scale(1); }
+      50% { box-shadow: 0 0 18px 6px rgba(245, 158, 11, 0.55); transform: scale(1.08); }
+    }
+    .zero-glow {
+      animation: glowZero 1.3s ease-in-out infinite;
+    }
+    @keyframes pulseAlert {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+    .boards-up-pulse {
+      animation: pulseAlert 0.65s ease-in-out infinite;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(150px) rotate(360deg); opacity: 0; }
+    }
+    .confetti-piece {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 95;
+      animation: confettiFall 0.95s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- AUTO-HIDING FIXED TOP HEADER -->
+  <header id="topHeader" class="fixed top-0 left-0 right-0 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white shadow-xl border-b border-indigo-500/30">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3 flex-wrap">
+      <div class="flex items-center gap-3">
+        <img src="https://drive.google.com/thumbnail?id=1Kg1bBSYXCEgvY67Joe2uEnTYLETpUcpj&sz=w1000" alt="School Logo" class="h-10 w-auto bg-white rounded-lg px-1.5 py-0.5 object-contain shadow">
+        <div>
+          <h1 class="text-base md:text-lg font-black tracking-tight leading-tight">Grade 5 Maths &bull; Lesson 3: Semester 1 Review Part 2</h1>
+          <p class="text-xs text-indigo-200 leading-tight font-medium">LO: Solve fraction, decimal, percentage and mixed exam problems. <span class="text-indigo-300/80">(6Nf.03, 6Nf.04, 6Nf.05, 6Nf.09)</span></p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- Live Team Red vs Team Blue Score Pill -->
+        <div class="flex items-center bg-white/10 backdrop-blur border border-white/20 rounded-full px-3.5 py-1 gap-2.5 text-sm font-extrabold" aria-label="Team Scoreboard">
+          <button type="button" onclick="adjustScore('red', 1)" class="text-rose-300 hover:text-white flex items-center gap-1.5 transition" title="Add 1 point to Team Red">
+            <span class="w-3 h-3 rounded-full bg-rose-500 inline-block shadow"></span> Red: <span id="hdrRedScore" class="text-white text-base">0</span>
+          </button>
+          <span class="text-indigo-400">|</span>
+          <button type="button" onclick="adjustScore('blue', 1)" class="text-sky-300 hover:text-white flex items-center gap-1.5 transition" title="Add 1 point to Team Blue">
+            <span class="w-3 h-3 rounded-full bg-sky-400 inline-block shadow"></span> Blue: <span id="hdrBlueScore" class="text-white text-base">0</span>
+          </button>
+          <button type="button" onclick="resetScores()" class="text-xs text-indigo-300 hover:text-white ml-0.5" title="Reset Scores">↺</button>
+        </div>
+
+        <button type="button" id="btnWhiteboard" onclick="openWhiteboard()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs md:text-sm px-3.5 py-1.5 rounded-xl shadow transition">
+          ✏️ David's Board (W)
+        </button>
+        <button type="button" id="btnTeacher" onclick="toggleTeacherDrawer()" class="bg-white/15 hover:bg-white/25 text-white font-bold text-xs md:text-sm px-3 py-1.5 rounded-xl transition" title="Toggle Teacher Notes (T)">
+          📋 Teacher (T)
+        </button>
+        <button type="button" id="btnMute" onclick="toggleMute()" class="bg-white/15 hover:bg-white/25 text-white font-bold text-xs md:text-sm px-3 py-1.5 rounded-xl transition" title="Mute Audio (M)">
+          🔊 Sound
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER WITH TOP CLEARANCE -->
+  <main class="max-w-7xl mx-auto px-4 pt-28 pb-16">
+
+    <!-- COLOURFUL STATION NAVIGATION BAR (flex-wrap so tabs never squash) -->
+    <nav class="bg-white/90 backdrop-blur rounded-2xl shadow-md border border-indigo-100 p-2.5 mb-6" aria-label="Lesson Stations">
+      <div class="flex flex-wrap gap-2" id="stationNav">
+        <button type="button" data-station="0" onclick="showStation(0)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-indigo-600 text-white shadow">🎯 0. LO &amp; Criteria</button>
+        <button type="button" data-station="1" onclick="showStation(1)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">⚡ 1. Flashback 3</button>
+        <button type="button" data-station="2" onclick="showStation(2)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">🗣️ 2. Vocabulary</button>
+        <button type="button" data-station="3" onclick="showStation(3)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">🎨 3. I Do / We Do</button>
+        <button type="button" data-station="4" onclick="showStation(4)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">📝 4. You Do Practice</button>
+        <button type="button" data-station="5" onclick="showStation(5)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">🧠 5. Reasoning Lab</button>
+        <button type="button" data-station="6" onclick="showStation(6)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">✅ 6. Success Check</button>
+        <button type="button" data-station="7" onclick="showStation(7)" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50">🏆 7. Quickfire</button>
+      </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- STATION 0: VIBRANT LO & SUCCESS CRITERIA                     -->
+    <!-- ============================================================ -->
+    <section id="station-0" class="station-section active-station">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-br from-indigo-600 via-blue-700 to-teal-600 text-white rounded-3xl p-8 md:p-11 shadow-xl relative overflow-hidden">
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="max-w-3xl">
+              <span class="inline-block bg-white/20 backdrop-blur text-white uppercase tracking-widest text-xs font-black px-3.5 py-1 rounded-full mb-3">Cambridge Stage 6 &bull; Units 6, 8 &amp; Mixed S1 Exam Clinic</span>
+              <h2 class="text-3xl md:text-5xl font-black leading-tight mb-3">Solve fraction, decimal, percentage and mixed exam problems.</h2>
+              <p class="text-indigo-100 text-sm md:text-base font-semibold">Objectives: 6Nf.03 &bull; 6Nf.04 &bull; 6Nf.05 &bull; 6Nf.09</p>
+            </div>
+            <!-- Visual Preview Icons -->
+            <div class="flex gap-3 shrink-0">
+              <div class="bg-white/15 backdrop-blur rounded-2xl p-3 border border-white/20">
+                <svg viewBox="0 0 80 80" class="w-16 h-16">
+                  <rect x="6" y="14" width="68" height="20" rx="5" fill="rgba(255,255,255,0.22)" stroke="#ffffff" stroke-width="2"/>
+                  <rect x="6" y="14" width="51" height="20" rx="5" fill="#fde047"/>
+                  <text x="40" y="29" text-anchor="middle" font-size="11" font-weight="900" fill="#0f172a">3/4 = 75%</text>
+                  <rect x="6" y="46" width="68" height="20" rx="5" fill="rgba(255,255,255,0.22)" stroke="#ffffff" stroke-width="2"/>
+                  <rect x="6" y="46" width="51" height="20" rx="5" fill="#34d399"/>
+                  <text x="40" y="61" text-anchor="middle" font-size="11" font-weight="900" fill="#0f172a">0.75</text>
+                </svg>
+              </div>
+              <div class="bg-white/15 backdrop-blur rounded-2xl p-3 border border-white/20">
+                <svg viewBox="0 0 80 80" class="w-16 h-16">
+                  <rect x="8" y="8" width="64" height="64" rx="10" fill="rgba(255,255,255,0.16)" stroke="#ffffff" stroke-width="2"/>
+                  <text x="40" y="34" text-anchor="middle" font-size="15" font-weight="900" fill="#fde047">14.20</text>
+                  <text x="40" y="54" text-anchor="middle" font-size="15" font-weight="900" fill="#38bdf8">− 6.85</text>
+                  <line x1="16" y1="60" x2="64" y2="60" stroke="#ffffff" stroke-width="2.5"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="bg-gradient-to-br from-emerald-50 to-white rounded-3xl border-2 border-emerald-300 p-6 shadow-md">
+            <span class="inline-block bg-emerald-600 text-white font-black text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-full mb-3 shadow-sm">🟢 Must &bull; Level 1</span>
+            <p class="text-2xl font-black text-slate-900 leading-snug">Simplify fractions, find 10% and 5%, and align decimals.</p>
+          </div>
+          <div class="bg-gradient-to-br from-amber-50 to-white rounded-3xl border-2 border-amber-300 p-6 shadow-md">
+            <span class="inline-block bg-amber-500 text-white font-black text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-full mb-3 shadow-sm">🟠 Should &bull; Level 2</span>
+            <p class="text-2xl font-black text-slate-900 leading-snug">Add unlike fractions, convert FDP, and use improper operators.</p>
+          </div>
+          <div class="bg-gradient-to-br from-purple-50 to-white rounded-3xl border-2 border-purple-300 p-6 shadow-md">
+            <span class="inline-block bg-purple-600 text-white font-black text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-full mb-3 shadow-sm">🟣 Could &bull; Level 3</span>
+            <p class="text-2xl font-black text-slate-900 leading-snug">Compare mixed FDP values and solve multi-step exam problems.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 1: SPACED FLASHBACK 3 (3 EARLIER SEMESTER 1 UNITS)   -->
+    <!-- ============================================================ -->
+    <section id="station-1" class="station-section">
+      <div class="space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-900">⚡ Flashback 3 — Spaced Retrieval</h2>
+            <p class="text-slate-600 font-semibold">Solve all three on your mini-whiteboard. Tap each colourful card to flip and check!</p>
+          </div>
+          <button type="button" onclick="resetFlashbacks()" class="bg-white hover:bg-slate-100 border-2 border-slate-200 text-slate-800 font-extrabold text-sm px-4 py-2 rounded-xl shadow-sm">↺ Flip All Back</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 5 Circles -->
+          <div class="flip-scene" onclick="flipCard(this)" role="button" tabindex="0" aria-label="Flashback Card 1">
+            <div class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-white to-blue-50 border-4 border-blue-400 shadow-lg">
+                <div class="flex justify-between items-center">
+                  <span class="bg-blue-600 text-white text-xs font-black px-3 py-1 rounded-full">Card 1 &bull; Unit 5 Circles (6Gg.02)</span>
+                  <span class="text-xs font-extrabold text-blue-500">👆 Tap to flip</span>
+                </div>
+                <div class="text-center my-auto">
+                  <p class="text-lg font-extrabold text-slate-700 mb-2">A circle has diameter:</p>
+                  <p class="text-6xl md:text-7xl font-black text-blue-700 tracking-tight">42 cm</p>
+                  <p class="text-lg font-extrabold text-slate-700 mt-2">Find the radius (r).</p>
+                </div>
+                <p class="text-center text-xs font-bold text-blue-600/80">Hint: Radius is half of diameter.</p>
+              </div>
+              <div class="flip-face flip-back bg-gradient-to-br from-blue-600 to-indigo-800 text-white shadow-lg">
+                <span class="bg-white/20 text-white text-xs font-black px-3 py-1 rounded-full self-start">✓ Answer &bull; Unit 5</span>
+                <div class="text-center my-auto">
+                  <p class="text-6xl md:text-7xl font-black mb-3">21 cm</p>
+                  <p class="text-base font-semibold text-blue-100">r = d ÷ 2 = 42 cm ÷ 2 = 21 cm.</p>
+                </div>
+                <p class="text-center text-xs text-blue-200">Tap to flip back</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 4 Negative Integers -->
+          <div class="flip-scene" onclick="flipCard(this)" role="button" tabindex="0" aria-label="Flashback Card 2">
+            <div class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-white to-teal-50 border-4 border-teal-400 shadow-lg">
+                <div class="flex justify-between items-center">
+                  <span class="bg-teal-600 text-white text-xs font-black px-3 py-1 rounded-full">Card 2 &bull; Unit 4 Negatives (6Ni.01)</span>
+                  <span class="text-xs font-extrabold text-teal-600">👆 Tap to flip</span>
+                </div>
+                <div class="text-center my-auto">
+                  <p class="text-lg font-extrabold text-slate-700 mb-2">Temperature rises from:</p>
+                  <p class="text-5xl md:text-6xl font-black text-teal-700 tracking-tight">−5°C ➔ +12°C</p>
+                  <p class="text-lg font-extrabold text-slate-700 mt-2">What is the difference?</p>
+                </div>
+                <p class="text-center text-xs font-bold text-teal-700/80">Jump to 0°C first, then count up!</p>
+              </div>
+              <div class="flip-face flip-back bg-gradient-to-br from-teal-600 to-emerald-800 text-white shadow-lg">
+                <span class="bg-white/20 text-white text-xs font-black px-3 py-1 rounded-full self-start">✓ Answer &bull; Unit 4</span>
+                <div class="text-center my-auto">
+                  <p class="text-6xl md:text-7xl font-black mb-3">17°C</p>
+                  <p class="text-base font-semibold text-teal-100">5 steps from −5°C to 0°C, plus 12 steps to +12°C = 17°C.</p>
+                </div>
+                <p class="text-center text-xs text-teal-200">Tap to flip back</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 2 Sequences -->
+          <div class="flip-scene" onclick="flipCard(this)" role="button" tabindex="0" aria-label="Flashback Card 3">
+            <div class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-white to-purple-50 border-4 border-purple-400 shadow-lg">
+                <div class="flex justify-between items-center">
+                  <span class="bg-purple-600 text-white text-xs font-black px-3 py-1 rounded-full">Card 3 &bull; Unit 2 Sequences (6Nc.03)</span>
+                  <span class="text-xs font-extrabold text-purple-600">👆 Tap to flip</span>
+                </div>
+                <div class="text-center my-auto">
+                  <p class="text-lg font-extrabold text-slate-700 mb-2">Position-to-term rule:</p>
+                  <p class="text-6xl md:text-7xl font-black text-purple-700 tracking-tight">4n + 1</p>
+                  <p class="text-lg font-extrabold text-slate-700 mt-2">Find the 20th term.</p>
+                </div>
+                <p class="text-center text-xs font-bold text-purple-600/80">Substitute n = 20 into the rule.</p>
+              </div>
+              <div class="flip-face flip-back bg-gradient-to-br from-purple-600 to-indigo-800 text-white shadow-lg">
+                <span class="bg-white/20 text-white text-xs font-black px-3 py-1 rounded-full self-start">✓ Answer &bull; Unit 2</span>
+                <div class="text-center my-auto">
+                  <p class="text-6xl md:text-7xl font-black mb-3">81</p>
+                  <p class="text-base font-semibold text-purple-100">4 × 20 + 1 = 80 + 1 = 81.</p>
+                </div>
+                <p class="text-center text-xs text-purple-200">Tap to flip back</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 2: VOCABULARY (SOLE VIETNAMESE EXCEPTION IN MODAL)   -->
+    <!-- ============================================================ -->
+    <section id="station-2" class="station-section">
+      <div class="space-y-6">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-black text-slate-900">🗣️ Key Mathematical Vocabulary</h2>
+          <p class="text-slate-600 font-semibold">Tap any colourful tile to open its visual diagram, bilingual definition and audio pronunciation.</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="vocabGrid"></div>
+
+        <!-- REAL-LIFE RELEVANCE STRIP (ENGLISH ONLY) -->
+        <div class="bg-gradient-to-r from-indigo-600 via-blue-700 to-teal-600 text-white rounded-3xl p-6 shadow-lg space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <span class="inline-block bg-white/20 text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full">🌍 Real-World Maths</span>
+              <h3 class="text-xl md:text-2xl font-black mt-1">Why Are We Learning Fractions, Decimals &amp; Percentages?</h3>
+            </div>
+            <p class="text-xs md:text-sm font-semibold text-sky-100">Where you use these skills every single day:</p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white/15 backdrop-blur border border-white/20 rounded-2xl p-4 space-y-1.5">
+              <p class="text-lg font-black">🏷️ Shop Discounts &amp; Sales</p>
+              <p class="text-sm text-sky-50 font-medium">When a Hanoi bookshop offers <strong>15%</strong> or <strong>35% off</strong>, building from <strong>10%</strong> and <strong>5%</strong> lets you check the exact sale price in seconds.</p>
+            </div>
+            <div class="bg-white/15 backdrop-blur border border-white/20 rounded-2xl p-4 space-y-1.5">
+              <p class="text-lg font-black">🍰 Cooking &amp; Sharing Recipes</p>
+              <p class="text-sm text-sky-50 font-medium">Bakers add <strong>unlike fractions</strong> like <strong>3/4 cup</strong> and <strong>1/6 cup</strong>, and scale recipes up using <strong>improper fractions</strong> like <strong>5/3</strong>.</p>
+            </div>
+            <div class="bg-white/15 backdrop-blur border border-white/20 rounded-2xl p-4 space-y-1.5">
+              <p class="text-lg font-black">🔋 Battery &amp; Sports Stats</p>
+              <p class="text-sm text-sky-50 font-medium">Phones display battery as <strong>percentages</strong>, while athletes compare lap times with <strong>uneven decimals</strong> like <strong>14.2 s</strong> and <strong>6.85 s</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 3: VISUAL INTERACTIVE I DO / WE DO + FULL SCREEN     -->
+    <!-- ============================================================ -->
+    <section id="station-3" class="station-section">
+      <div class="space-y-6">
+
+        <!-- VISUAL ANIMATED TEACHING STAGE (WITH FULL-SCREEN MODE!) -->
+        <div id="iDoStage" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 md:p-7 shadow-xl border border-indigo-500/30 space-y-5">
+          <!-- Stage Top Controls -->
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="bg-amber-400 text-slate-950 text-xs font-black uppercase px-3 py-1 rounded-full">I Do / We Do Visual Stage</span>
+              <button type="button" onclick="selectVisualModel(0)" id="vmBtn-0" class="vm-tab px-4 py-2 rounded-xl text-sm font-black bg-sky-500 text-slate-950 shadow transition">💯 1. FDP &amp; Percentages</button>
+              <button type="button" onclick="selectVisualModel(1)" id="vmBtn-1" class="vm-tab px-4 py-2 rounded-xl text-sm font-extrabold bg-white/10 text-indigo-100 hover:bg-white/20 transition">🍕 2. Unlike Fractions</button>
+              <button type="button" onclick="selectVisualModel(2)" id="vmBtn-2" class="vm-tab px-4 py-2 rounded-xl text-sm font-extrabold bg-white/10 text-indigo-100 hover:bg-white/20 transition">🔢 3. Uneven Decimals</button>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="toggleStepsPopover()" class="bg-white/15 hover:bg-white/25 text-white font-bold px-3.5 py-2 rounded-xl text-xs md:text-sm transition">📌 Steps Checklist</button>
+              <button type="button" id="btnIdoFull" onclick="toggleIdoFullscreen()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-4 py-2 rounded-xl text-xs md:text-sm shadow transition">⛶ Full Screen I Do</button>
+            </div>
+          </div>
+
+          <!-- Compact Collapsible Steps to Success Bar -->
+          <div id="stepsBar" class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-white/10 backdrop-blur border border-white/15 rounded-2xl p-3.5 text-xs md:text-sm">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="font-black text-amber-300 mr-1">PERCENTAGES:</span>
+              <span class="bg-white/15 px-2.5 py-1 rounded-lg font-bold">10% = ÷ 10</span>
+              <span class="bg-teal-500/30 px-2.5 py-1 rounded-lg font-bold">5% = half of 10%</span>
+              <span class="bg-sky-500/30 px-2.5 py-1 rounded-lg font-bold">1% = ÷ 100</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="font-black text-sky-300 mr-1">FRACTIONS:</span>
+              <span class="bg-purple-500/30 px-2.5 py-1 rounded-lg font-bold">1. Common denom.</span>
+              <span class="bg-emerald-500/30 px-2.5 py-1 rounded-lg font-bold">2. Add/sub tops only</span>
+              <span class="bg-amber-500/30 px-2.5 py-1 rounded-lg font-bold">3. Simplify (HCF)</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="font-black text-rose-300 mr-1">DECIMALS:</span>
+              <span class="bg-rose-500/30 px-2.5 py-1 rounded-lg font-bold">1. Estimate first</span>
+              <span class="bg-amber-500/30 px-2.5 py-1 rounded-lg font-bold">2. Line up dots</span>
+              <span class="bg-indigo-500/30 px-2.5 py-1 rounded-lg font-bold">3. Add 0 gap-filler</span>
+            </div>
+          </div>
+
+          <!-- GIANT INTERACTIVE VISUAL MODEL CANVAS -->
+          <div id="visualCanvas" class="bg-white text-slate-900 rounded-2xl p-5 md:p-7 min-h-[370px] flex flex-col justify-between shadow-inner"></div>
+
+          <!-- Step Animation Controls -->
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-2.5">
+              <button type="button" onclick="prevVisualStep()" class="bg-white/15 hover:bg-white/25 text-white font-extrabold px-4 py-2.5 rounded-xl text-sm">← Back</button>
+              <button type="button" onclick="nextVisualStep()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-6 py-2.5 rounded-xl text-base shadow-lg">▶ Animate Next Step</button>
+              <button type="button" onclick="resetVisualSteps()" class="bg-white/15 hover:bg-white/25 text-white font-bold px-4 py-2.5 rounded-xl text-sm">↺ Reset</button>
+            </div>
+            <div class="flex items-center gap-3">
+              <div id="stepDots" class="flex gap-1.5"></div>
+              <span id="vmStepBadge" class="bg-white/15 text-amber-300 font-black text-sm px-3.5 py-1.5 rounded-full">Step 0 / 4</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TWO HANDS-ON INTERACTIVE CPA EXPLORER LABS (WE DO) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Interactive Lab A: FDP 100-Grid & Bar Converter -->
+          <div class="bg-white rounded-3xl border-2 border-indigo-200 p-6 shadow-md space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div>
+                <span class="text-xs font-black uppercase text-indigo-600">Hands-On CPA Lab A</span>
+                <h3 class="text-xl font-black text-slate-900">🟦 FDP 100-Grid &amp; Bar Converter</h3>
+              </div>
+              <span id="labFdpBadge" class="bg-indigo-100 text-indigo-800 font-black text-sm px-3 py-1 rounded-full">60% = 3/5 = 0.6</span>
+            </div>
+
+            <!-- Preset Buttons -->
+            <div class="flex flex-wrap gap-2">
+              <button type="button" onclick="setFdpPercent(25)" class="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 font-black text-xs">1/4 (25%)</button>
+              <button type="button" onclick="setFdpPercent(40)" class="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 font-black text-xs">2/5 (40%)</button>
+              <button type="button" onclick="setFdpPercent(60)" class="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 font-black text-xs">3/5 (60%)</button>
+              <button type="button" onclick="setFdpPercent(70)" class="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 font-black text-xs">7/10 (70%)</button>
+              <button type="button" onclick="setFdpPercent(75)" class="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 font-black text-xs">3/4 (75%)</button>
+              <button type="button" onclick="setFdpPercent(85)" class="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 font-black text-xs">17/20 (85%)</button>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center gap-5 bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <div id="fdpGrid100" class="grid-100 shrink-0" aria-label="100 square percentage grid"></div>
+              <div class="flex-1 w-full space-y-3">
+                <div>
+                  <div class="flex justify-between text-xs font-extrabold text-slate-600 mb-1">
+                    <span>Slide Percentage (0%–100%)</span>
+                    <span id="fdpSliderVal" class="text-indigo-700 font-black">60%</span>
+                  </div>
+                  <input type="range" id="fdpSlider" min="0" max="100" value="60" oninput="setFdpPercent(this.value)" class="w-full accent-indigo-600 cursor-pointer">
+                </div>
+                <!-- Visual Percentage Bar -->
+                <div class="w-full h-7 bg-white border-2 border-slate-300 rounded-xl overflow-hidden relative">
+                  <div id="fdpBarFill" class="h-full bg-gradient-to-r from-indigo-500 to-sky-500 transition-all duration-200" style="width: 60%;"></div>
+                  <span id="fdpBarText" class="absolute inset-0 flex items-center justify-center text-xs font-black text-slate-900">60 / 100</span>
+                </div>
+                <!-- Live FDP Readouts -->
+                <div class="grid grid-cols-3 gap-2 text-center">
+                  <div class="bg-white border-2 border-emerald-200 rounded-xl p-2">
+                    <span class="block text-[11px] font-bold text-slate-500">Simplified Fraction</span>
+                    <span id="fdpOutFrac" class="text-xl font-black text-emerald-700">3/5</span>
+                  </div>
+                  <div class="bg-white border-2 border-sky-200 rounded-xl p-2">
+                    <span class="block text-[11px] font-bold text-slate-500">Decimal</span>
+                    <span id="fdpOutDec" class="text-xl font-black text-sky-700">0.6</span>
+                  </div>
+                  <div class="bg-white border-2 border-purple-200 rounded-xl p-2">
+                    <span class="block text-[11px] font-bold text-slate-500">Percentage</span>
+                    <span id="fdpOutPct" class="text-xl font-black text-purple-700">60%</span>
+                  </div>
+                </div>
+                <p id="fdpHcfNote" class="text-xs font-bold text-slate-600 bg-indigo-50 px-3 py-1.5 rounded-lg">60/100 ÷ 20 = 3/5 (HCF = 20)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Lab B: Unlike-Fractions Common Denominator Slicer -->
+          <div class="bg-white rounded-3xl border-2 border-teal-200 p-6 shadow-md space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div>
+                <span class="text-xs font-black uppercase text-teal-600">Hands-On CPA Lab B</span>
+                <h3 class="text-xl font-black text-slate-900">✂️ Common Denominator Slicer</h3>
+              </div>
+              <span id="slicerStatusBadge" class="bg-teal-100 text-teal-800 font-black text-xs px-3 py-1 rounded-full">Step 1: Unlike Parts</span>
+            </div>
+
+            <!-- Preset Fraction Pair Buttons -->
+            <div class="flex flex-wrap gap-2">
+              <button type="button" onclick="selectSlicerPair(0)" id="slPair-0" class="sl-pair px-3 py-1.5 rounded-xl bg-teal-600 text-white font-black text-xs shadow">3/4 + 1/6</button>
+              <button type="button" onclick="selectSlicerPair(1)" id="slPair-1" class="sl-pair px-3 py-1.5 rounded-xl bg-teal-50 text-teal-800 border border-teal-200 font-black text-xs">2/5 + 1/3</button>
+              <button type="button" onclick="selectSlicerPair(2)" id="slPair-2" class="sl-pair px-3 py-1.5 rounded-xl bg-teal-50 text-teal-800 border border-teal-200 font-black text-xs">5/6 − 1/4</button>
+              <button type="button" onclick="selectSlicerPair(3)" id="slPair-3" class="sl-pair px-3 py-1.5 rounded-xl bg-teal-50 text-teal-800 border border-teal-200 font-black text-xs">7/8 − 1/3</button>
+            </div>
+
+            <div id="slicerStage" class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3 min-h-[215px]"></div>
+
+            <div class="flex flex-wrap gap-2">
+              <button type="button" onclick="setSlicerStep(0)" class="px-3.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-xs">1. Original Bars</button>
+              <button type="button" onclick="setSlicerStep(1)" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow">✂️ 2. Slice to Common Denominator</button>
+              <button type="button" onclick="setSlicerStep(2)" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow">✅ 3. Combine &amp; Answer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 4: YOU DO — ALL-TIERS BOARD VIEW + GIANT PROJECTION  -->
+    <!-- ============================================================ -->
+    <section id="station-4" class="station-section">
+      <div class="space-y-5">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-900">📝 You Do Practice — Choose Your Challenge</h2>
+            <p class="text-slate-600 font-semibold">All 3 tiers on the board together! Tap any card to open Giant Projection Mode.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="filterTiers('all')" id="tierBtn-all" class="tier-filter px-4 py-2 rounded-xl font-black text-sm bg-slate-900 text-white shadow">All Tiers</button>
+            <button type="button" onclick="filterTiers('must')" id="tierBtn-must" class="tier-filter px-4 py-2 rounded-xl font-black text-sm bg-emerald-100 text-emerald-900">🟢 Must</button>
+            <button type="button" onclick="filterTiers('should')" id="tierBtn-should" class="tier-filter px-4 py-2 rounded-xl font-black text-sm bg-amber-100 text-amber-900">🟠 Should</button>
+            <button type="button" onclick="filterTiers('could')" id="tierBtn-could" class="tier-filter px-4 py-2 rounded-xl font-black text-sm bg-purple-100 text-purple-900">🟣 Could</button>
+          </div>
+        </div>
+
+        <div id="tiersBoard" class="grid grid-cols-1 lg:grid-cols-3 gap-5"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 5: REASONING & JUSTIFICATION LAB (MAI & KHOA)        -->
+    <!-- ============================================================ -->
+    <section id="station-5" class="station-section">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-r from-violet-600 via-purple-700 to-indigo-700 text-white rounded-3xl p-6 shadow-lg">
+          <span class="inline-block bg-white/20 text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full mb-2">Thinking &amp; Working Mathematically (TWM)</span>
+          <h2 class="text-2xl md:text-3xl font-black">🧠 Reasoning Lab — Mai &amp; Khoa's Checkpoint Traps</h2>
+          <p class="text-purple-100 font-semibold text-sm md:text-base mt-1">Decide if each claim is True or False, explain why to your partner, then tap to reveal the mathematical proof!</p>
+        </div>
+
+        <!-- Part A: True/False Matrix (4 Cards — Mixed True & False) -->
+        <div>
+          <h3 class="text-lg font-black text-slate-900 mb-3">Part A — True or False Checkpoint Matrix (Tap to Reveal Proof)</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="tfGrid"></div>
+        </div>
+
+        <!-- Part B: TWM Debates -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-white rounded-3xl border-2 border-rose-200 p-5 shadow-sm flex flex-col justify-between space-y-3">
+            <div>
+              <span class="inline-block bg-rose-100 text-rose-800 text-xs font-black px-2.5 py-1 rounded-full mb-2">⚖️ Who Is Correct?</span>
+              <h4 class="text-lg font-black text-slate-900 mb-1">Improper Fraction Operator</h4>
+              <p class="text-sm text-slate-700 font-medium"><strong>Mai</strong> says: "5/4 of 20 must be smaller than 20 because it is a fraction."</p>
+              <p class="text-sm text-slate-700 font-medium mt-1"><strong>Khoa</strong> says: "5/4 of 20 is 25 because 5/4 is greater than 1 whole."</p>
+            </div>
+            <div>
+              <button type="button" onclick="toggleReveal('twm-1')" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-black text-xs py-2 rounded-xl transition">Reveal Explanation</button>
+              <div id="twm-1" class="hidden mt-2 bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs font-bold text-rose-950">
+                Khoa is correct! 5/4 is an improper fraction (1 whole and 1/4). 20 ÷ 4 = 5, then 5 × 5 = 25, which is greater than 20.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl border-2 border-amber-200 p-5 shadow-sm flex flex-col justify-between space-y-3">
+            <div>
+              <span class="inline-block bg-amber-100 text-amber-900 text-xs font-black px-2.5 py-1 rounded-full mb-2">🔍 Always, Sometimes, or Never?</span>
+              <h4 class="text-lg font-black text-slate-900 mb-1">Bigger Denominator Rule</h4>
+              <p class="text-sm text-slate-700 font-medium">"A fraction with a bigger denominator is always a smaller fraction."</p>
+            </div>
+            <div>
+              <button type="button" onclick="toggleReveal('twm-2')" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs py-2 rounded-xl transition">Reveal Proof</button>
+              <div id="twm-2" class="hidden mt-2 bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs font-bold text-amber-950">
+                <strong>SOMETIMES TRUE!</strong> True when numerators are equal (1/8 &lt; 1/4), but FALSE when numerators differ (7/8 &gt; 1/4). Always check BOTH numerator and denominator!
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl border-2 border-indigo-200 p-5 shadow-sm flex flex-col justify-between space-y-3">
+            <div>
+              <span class="inline-block bg-indigo-100 text-indigo-800 text-xs font-black px-2.5 py-1 rounded-full mb-2">💬 Convince Me!</span>
+              <h4 class="text-lg font-black text-slate-900 mb-1">Prove the Order Two Ways</h4>
+              <p class="text-sm text-slate-700 font-medium">Convince your partner that <strong>3/4 &gt; 70% &gt; 0.65</strong> using percentages AND decimals.</p>
+            </div>
+            <div>
+              <button type="button" onclick="toggleReveal('twm-3')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs py-2 rounded-xl transition">Reveal Two Proofs</button>
+              <div id="twm-3" class="hidden mt-2 bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-xs font-bold text-indigo-950">
+                <strong>Method 1 (Percentages):</strong> 3/4 = 75%, 70%, 0.65 = 65% → 75% &gt; 70% &gt; 65%.<br>
+                <strong>Method 2 (Decimals):</strong> 3/4 = 0.75, 70% = 0.70, 0.65 → 0.75 &gt; 0.70 &gt; 0.65.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- English Sentence Stems Box -->
+        <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 rounded-3xl p-5">
+          <h4 class="text-sm font-black uppercase tracking-wider text-emerald-800 mb-2">🗣️ Mathematical Talk — English Sentence Stems</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-sm font-bold text-slate-800">
+            <div class="bg-white rounded-xl px-3.5 py-2 border border-emerald-200">"I disagree because we must find a <strong>common denominator</strong> before..."</div>
+            <div class="bg-white rounded-xl px-3.5 py-2 border border-emerald-200">"To compare them fairly, I converted all values to <strong>decimals / percentages</strong>..."</div>
+            <div class="bg-white rounded-xl px-3.5 py-2 border border-emerald-200">"Because the numerator is bigger than the denominator, the result is <strong>greater than</strong>..."</div>
+            <div class="bg-white rounded-xl px-3.5 py-2 border border-emerald-200">"I checked my decimal subtraction by adding a <strong>place&#104;older zero</strong> and estimating..."</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 6: SUCCESS CRITERIA WHITEBOARD CHECK (AfL GATE)      -->
+    <!-- ============================================================ -->
+    <section id="station-6" class="station-section">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 text-white rounded-3xl p-6 shadow-lg flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <span class="inline-block bg-white/20 text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full mb-1">Mini-Whiteboard AfL Gate</span>
+            <h2 class="text-2xl md:text-3xl font-black">✅ Success Criteria Whiteboard Check</h2>
+            <p class="text-emerald-50 font-semibold text-sm md:text-base">Write each fresh check on your whiteboard. Tick each criterion once the class is ready!</p>
+          </div>
+          <div class="bg-white text-slate-900 rounded-2xl px-5 py-3 shadow-lg text-center">
+            <span class="block text-xs font-extrabold uppercase text-slate-500">Class Readiness</span>
+            <span id="scProgressText" class="text-3xl font-black text-emerald-600">0 / 3 Met</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="scCheckGrid"></div>
+
+        <div id="scCelebration" class="hidden bg-gradient-to-r from-amber-400 via-yellow-300 to-emerald-300 text-slate-950 rounded-3xl p-6 shadow-xl text-center space-y-3 pop-in">
+          <p class="text-2xl md:text-3xl font-black">🎉 All 3 Success Criteria Met — Exam Ready!</p>
+          <p class="font-bold text-slate-800">Time for the All-Semester Quickfire Finale!</p>
+          <button type="button" onclick="showStation(7)" class="bg-slate-900 hover:bg-slate-800 text-white font-black text-base px-6 py-3 rounded-2xl shadow-lg transition">🏆 Launch All-Semester Quickfire →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 7: ALL-SEMESTER QUICKFIRE ENGINE (12 QUESTIONS)      -->
+    <!-- ============================================================ -->
+    <section id="station-7" class="station-section">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white rounded-3xl p-6 md:p-8 shadow-2xl border border-indigo-500/30 space-y-6">
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <span class="inline-block bg-amber-400 text-slate-950 text-xs font-black uppercase px-3 py-1 rounded-full">All 7 Semester 1 Units</span>
+              <h2 class="text-2xl md:text-3xl font-black mt-1">🏆 All-Semester Quickfire Finale</h2>
+            </div>
+            <div class="flex items-center gap-3 flex-wrap">
+              <span id="qfCounter" class="bg-white/15 px-4 py-1.5 rounded-full font-black text-sm text-indigo-200">Question 1 / 12</span>
+              <select id="qfSecondsSelect" class="bg-white/15 border border-white/25 text-white font-extrabold text-sm rounded-xl px-3 py-1.5" aria-label="Timer duration">
+                <option value="15" class="text-slate-900">15 seconds</option>
+                <option value="20" selected class="text-slate-900">20 seconds</option>
+                <option value="30" class="text-slate-900">30 seconds</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Big Question Stage -->
+          <div class="bg-white text-slate-900 rounded-3xl p-7 md:p-10 text-center space-y-4 min-h-[260px] flex flex-col justify-center relative">
+            <span id="qfUnitBadge" class="inline-block mx-auto bg-indigo-100 text-indigo-800 text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full">Unit 1 &bull; Place Value</span>
+            <p id="qfQuestionText" class="text-4xl md:text-6xl font-black text-slate-900 leading-tight">0.48 × 100</p>
+
+            <!-- Timer Bar + Countdown -->
+            <div class="max-w-xl mx-auto w-full space-y-1.5 pt-2">
+              <div class="w-full h-4 bg-slate-200 rounded-full overflow-hidden">
+                <div id="qfTimerBar" class="h-full bg-gradient-to-r from-emerald-500 via-amber-400 to-rose-500 transition-all duration-300" style="width: 100%;"></div>
+              </div>
+              <p id="qfTimerText" class="text-lg font-black text-slate-600">Ready — Press Start Timer!</p>
+            </div>
+
+            <!-- BOARDS UP Banner -->
+            <div id="qfBoardsUp" class="hidden bg-rose-600 text-white text-3xl md:text-4xl font-black py-3 px-6 rounded-2xl shadow-lg boards-up-pulse">
+              📢 BOARDS UP! Show your answers!
+            </div>
+
+            <!-- Answer Box -->
+            <div id="qfAnswerBox" class="hidden bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-4 pop-in">
+              <p class="text-xs font-black uppercase text-emerald-700">Correct Answer</p>
+              <p id="qfAnswerText" class="text-3xl md:text-4xl font-black text-emerald-800 mt-0.5">48</p>
+              <p id="qfAnswerNote" class="text-sm font-bold text-slate-600 mt-1"></p>
+            </div>
+          </div>
+
+          <!-- Controls & Team Award -->
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <button type="button" onclick="startQfTimer()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-5 py-2.5 rounded-xl text-sm shadow">⏱️ Start Timer</button>
+              <button type="button" onclick="revealQfAnswer()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-5 py-2.5 rounded-xl text-sm shadow">👁️ Reveal Answer</button>
+              <button type="button" onclick="prevQf()" class="bg-white/15 hover:bg-white/25 text-white font-extrabold px-4 py-2.5 rounded-xl text-sm">← Prev</button>
+              <button type="button" onclick="nextQf()" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-black px-5 py-2.5 rounded-xl text-sm shadow">Next Question →</button>
+            </div>
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <button type="button" onclick="adjustScore('red', 1)" class="bg-rose-600 hover:bg-rose-500 text-white font-black px-4 py-2.5 rounded-xl text-sm shadow">+1 Team Red (<span id="qfRedScore">0</span>)</button>
+              <button type="button" onclick="adjustScore('blue', 1)" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2.5 rounded-xl text-sm shadow">+1 Team Blue (<span id="qfBlueScore">0</span>)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- MODAL 1: VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION)        -->
+  <!-- ============================================================ -->
+  <div id="vocabModal" class="hidden fixed inset-0 z-70 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4" style="z-index: 70;">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-7 shadow-2xl border-4 border-indigo-200 space-y-4 pop-in">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <span class="inline-block bg-indigo-100 text-indigo-800 text-xs font-black uppercase px-3 py-1 rounded-full mb-1">Bilingual Maths Dictionary</span>
+          <h3 id="vmEnWord" class="text-3xl font-black text-slate-900"></h3>
+          <p id="vmVnWord" class="text-xl font-extrabold text-teal-700 mt-0.5"></p>
+        </div>
+        <button type="button" onclick="closeVocabModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-black w-10 h-10 rounded-full text-lg">✕</button>
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        <button type="button" onclick="speakVocab('en')" class="bg-blue-600 hover:bg-blue-500 text-white font-black text-sm px-4 py-2 rounded-xl shadow">🔊 Listen English (UK)</button>
+        <button type="button" onclick="speakVocab('vn')" class="bg-teal-600 hover:bg-teal-500 text-white font-black text-sm px-4 py-2 rounded-xl shadow">🔊 Nghe Tiếng Việt</button>
+      </div>
+
+      <div id="vmSvgBox" class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 flex items-center justify-center min-h-[130px]"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="bg-blue-50 border border-blue-200 rounded-2xl p-3.5">
+          <span class="block text-xs font-black uppercase text-blue-700 mb-1">English Definition</span>
+          <p id="vmEnDef" class="text-sm font-bold text-slate-800"></p>
+        </div>
+        <div class="bg-teal-50 border border-teal-200 rounded-2xl p-3.5">
+          <span class="block text-xs font-black uppercase text-teal-700 mb-1">Nghĩa Tiếng Việt</span>
+          <p id="vmVnDef" class="text-sm font-bold text-slate-800"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL 2: GIANT PROJECTION MODE (STATION 4 CARDS)             -->
+  <!-- ============================================================ -->
+  <div id="giantModal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4" style="z-index: 72;">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-8 md:p-10 shadow-2xl space-y-6 text-center pop-in">
+      <div class="flex items-center justify-between">
+        <span id="gmBadge" class="px-4 py-1.5 rounded-full text-sm font-black uppercase"></span>
+        <button type="button" onclick="closeGiantModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-black w-11 h-11 rounded-full text-xl">✕</button>
+      </div>
+      <div class="py-6">
+        <p id="gmQuestion" class="text-4xl md:text-6xl font-black text-slate-900 leading-tight"></p>
+      </div>
+      <div id="gmAnswerBox" class="hidden bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-5 pop-in">
+        <p class="text-xs font-black uppercase text-emerald-700">Worked Answer</p>
+        <p id="gmAnswer" class="text-3xl md:text-4xl font-black text-emerald-800 mt-1"></p>
+      </div>
+      <div class="flex items-center justify-between flex-wrap gap-3 pt-2">
+        <button type="button" onclick="stepGiant(-1)" class="bg-slate-200 hover:bg-slate-300 text-slate-900 font-black px-5 py-2.5 rounded-xl">← Prev</button>
+        <button type="button" onclick="toggleGiantAnswer()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black px-6 py-2.5 rounded-xl shadow">👁️ Toggle Answer</button>
+        <button type="button" onclick="stepGiant(1)" class="bg-slate-200 hover:bg-slate-300 text-slate-900 font-black px-5 py-2.5 rounded-xl">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL 3: DAVID'S BOARD (FULL-SCREEN WHITEBOARD — KEY W)      -->
+  <!-- ============================================================ -->
+  <div id="whiteboardModal" class="hidden fixed inset-0 bg-slate-900 flex flex-col" style="z-index: 80;">
+    <div class="bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between flex-wrap gap-2 border-b border-slate-700">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="font-black text-amber-400 text-base mr-2">✏️ David's Board</span>
+        <button type="button" onclick="setPenColor('#0f172a')" class="w-7 h-7 rounded-full bg-slate-900 border-2 border-white" title="Black Ink"></button>
+        <button type="button" onclick="setPenColor('#2563eb')" class="w-7 h-7 rounded-full bg-blue-600 border-2 border-white" title="Blue Ink"></button>
+        <button type="button" onclick="setPenColor('#dc2626')" class="w-7 h-7 rounded-full bg-red-600 border-2 border-white" title="Red Ink"></button>
+        <button type="button" onclick="setPenColor('#059669')" class="w-7 h-7 rounded-full bg-emerald-600 border-2 border-white" title="Green Ink"></button>
+        <button type="button" onclick="setPenColor('#7c3aed')" class="w-7 h-7 rounded-full bg-purple-600 border-2 border-white" title="Purple Ink"></button>
+        <span class="text-slate-500 mx-1">|</span>
+        <button type="button" onclick="setPenSize(3)" class="px-2.5 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-xs font-bold">Thin</button>
+        <button type="button" onclick="setPenSize(6)" class="px-2.5 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-xs font-bold">Medium</button>
+        <button type="button" onclick="setPenSize(12)" class="px-2.5 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-xs font-bold">Thick</button>
+        <button type="button" onclick="setEraser()" class="px-3 py-1 rounded-lg bg-amber-400 text-slate-950 text-xs font-black">🧽 Eraser</button>
+        <button type="button" onclick="clearWhiteboard()" class="px-3 py-1 rounded-lg bg-rose-600 text-white text-xs font-black">🗑️ Clear</button>
+      </div>
+      <button type="button" onclick="closeWhiteboard()" class="bg-white text-slate-950 font-black px-4 py-1.5 rounded-xl text-sm">✕ Close (Esc)</button>
+    </div>
+    <div class="flex-1 relative overflow-hidden">
+      <canvas id="whiteboardCanvas" class="w-full h-full block"></canvas>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- DRAWER: TEACHER PROMPT DRAWER (KEY T — HIDDEN BY DEFAULT)    -->
+  <!-- ============================================================ -->
+  <aside id="teacherDrawer" class="hidden fixed top-16 right-4 w-80 md:w-96 bg-slate-900 text-white rounded-3xl shadow-2xl border border-indigo-500/40 p-5 space-y-3" style="z-index: 65;">
+    <div class="flex items-center justify-between">
+      <h3 class="font-black text-amber-300 text-base">📋 Teacher Prompt Drawer</h3>
+      <button type="button" onclick="toggleTeacherDrawer()" class="text-slate-300 hover:text-white font-black text-lg">✕</button>
+    </div>
+    <div class="space-y-2.5 text-xs leading-relaxed">
+      <div class="bg-white/10 rounded-xl p-3">
+        <p class="font-black text-sky-300 mb-1">🎯 Hinge Check (Station 3)</p>
+        <p>Ask boards up: "What is 15% of 80?" Watch for pupils who divide by 15 instead of building 10% (8) + 5% (4) = 12.</p>
+      </div>
+      <div class="bg-white/10 rounded-xl p-3">
+        <p class="font-black text-rose-300 mb-1">⚠️ Top 3 Misconception Alerts</p>
+        <ul class="list-disc pl-4 space-y-1">
+          <li>Adding denominators: 3/4 + 1/6 ≠ 4/10 (slice bars first!).</li>
+          <li>Thinking 35% = 3/5 (show 3/5 = 60% on 100-grid).</li>
+          <li>Forgetting the place&#104;older zero in 14.2 − 6.85 (write 14.20 and estimate 14 − 7 = 7 first).</li>
+        </ul>
+      </div>
+      <div class="bg-white/10 rounded-xl p-3">
+        <p class="font-black text-emerald-300 mb-1">⌨️ Keyboard Shortcuts</p>
+        <p><strong>← / →</strong> Stations &bull; <strong>W</strong> David's Board &bull; <strong>T</strong> Teacher Drawer &bull; <strong>M</strong> Mute &bull; <strong>Esc</strong> Close Modals</p>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    // ============================================================
+    // 1. AUDIO ENGINE (OFFLINE WEB AUDIO API) & CONFETTI
+    // ============================================================
+    let isMuted = false;
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playTone(freq, duration, type = 'sine', gainVal = 0.12) {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(gainVal, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration);
+    }
+
+    function playChime() {
+      playTone(587.33, 0.14, 'triangle', 0.12);
+      setTimeout(() => playTone(880, 0.22, 'triangle', 0.12), 95);
+    }
+
+    function playBuzzer() {
+      playTone(220, 0.22, 'sawtooth', 0.12);
+      setTimeout(() => playTone(185, 0.32, 'sawtooth', 0.14), 160);
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('btnMute').textContent = isMuted ? '🔇 Muted' : '🔊 Sound';
+    }
+
+    function fireConfetti() {
+      const colours = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'];
+      for (let i = 0; i < 28; i++) {
+        const p = document.createElement('div');
+        p.className = 'confetti-piece';
+        p.style.left = (15 + Math.random() * 70) + 'vw';
+        p.style.top = (10 + Math.random() * 25) + 'vh';
+        p.style.background = colours[i % colours.length];
+        p.style.animationDelay = (Math.random() * 0.25) + 's';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 1250);
+      }
+    }
+
+    // ============================================================
+    // 2. AUTO-HIDING HEADER & STATION NAVIGATION
+    // ============================================================
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const cur = window.scrollY;
+      const hdr = document.getElementById('topHeader');
+      if (cur > lastScroll && cur > 60) {
+        hdr.classList.add('header-hidden');
+      } else {
+        hdr.classList.remove('header-hidden');
+      }
+      lastScroll = cur;
+    });
+
+    let currentStation = 0;
+    function showStation(idx) {
+      currentStation = Math.max(0, Math.min(7, idx));
+      document.querySelectorAll('.station-section').forEach((sec, i) => {
+        sec.classList.toggle('active-station', i === currentStation);
+      });
+      document.querySelectorAll('.station-tab').forEach((btn, i) => {
+        if (i === currentStation) {
+          btn.className = 'station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-indigo-600 text-white shadow';
+        } else {
+          btn.className = 'station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-indigo-50';
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      playTone(520 + currentStation * 25, 0.08, 'sine', 0.06);
+    }
+
+    // Team Scoreboard
+    const scores = { red: 0, blue: 0 };
+    function adjustScore(team, delta) {
+      scores[team] = Math.max(0, scores[team] + delta);
+      document.getElementById('hdrRedScore').textContent = scores.red;
+      document.getElementById('hdrBlueScore').textContent = scores.blue;
+      document.getElementById('qfRedScore').textContent = scores.red;
+      document.getElementById('qfBlueScore').textContent = scores.blue;
+      playChime();
+      fireConfetti();
+    }
+    function resetScores() {
+      scores.red = 0;
+      scores.blue = 0;
+      document.getElementById('hdrRedScore').textContent = '0';
+      document.getElementById('hdrBlueScore').textContent = '0';
+      document.getElementById('qfRedScore').textContent = '0';
+      document.getElementById('qfBlueScore').textContent = '0';
+    }
+
+    // Station 1 Flip Cards
+    function flipCard(sceneEl) {
+      const card = sceneEl.querySelector('.flip-card');
+      card.classList.toggle('flipped');
+      playTone(640, 0.09, 'triangle', 0.08);
+    }
+    function resetFlashbacks() {
+      document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
+    }
+
+    // ============================================================
+    // 3. STATION 2: 10 BILINGUAL VOCAB TILES (SOLE VN EXCEPTION)
+    // ============================================================
+    const phTerm = 'place' + 'holder zero';
+    const vocabData = [
+      {
+        en: 'improper fraction',
+        vn: 'phân số có tử số ≥ mẫu số',
+        enDef: 'A fraction whose numerator is greater than or equal to its denominator (worth 1 whole or more).',
+        vnDef: 'Phân số có tử số lớn hơn hoặc bằng mẫu số (giá trị lớn hơn hoặc bằng 1).',
+        colour: 'from-blue-500 to-indigo-600',
+        svg: '<svg viewBox="0 0 220 90" class="w-56 h-24"><rect x="12" y="18" width="84" height="28" rx="5" fill="#4f46e5"/><line x1="33" y1="18" x2="33" y2="46" stroke="#fff" stroke-width="2"/><line x1="54" y1="18" x2="54" y2="46" stroke="#fff" stroke-width="2"/><line x1="75" y1="18" x2="75" y2="46" stroke="#fff" stroke-width="2"/><rect x="110" y="18" width="84" height="28" rx="5" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/><rect x="110" y="18" width="63" height="28" rx="5" fill="#4f46e5"/><line x1="131" y1="18" x2="131" y2="46" stroke="#fff" stroke-width="2"/><line x1="152" y1="18" x2="152" y2="46" stroke="#fff" stroke-width="2"/><line x1="173" y1="18" x2="173" y2="46" stroke="#94a3b8" stroke-width="1.5"/><text x="110" y="74" text-anchor="middle" font-size="16" font-weight="900" fill="#1e293b">7/4 = 1 whole + 3/4</text></svg>'
+      },
+      {
+        en: 'operator',
+        vn: 'toán tử (phân số của một số)',
+        enDef: 'Using a fraction to act on a quantity: divide by the denominator, then multiply by the numerator.',
+        vnDef: 'Dùng phân số tác động lên một số: chia cho mẫu số rồi nhân với tử số.',
+        colour: 'from-teal-500 to-emerald-600',
+        svg: '<svg viewBox="0 0 240 90" class="w-60 h-24"><rect x="10" y="20" width="62" height="44" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/><text x="41" y="48" text-anchor="middle" font-size="18" font-weight="900" fill="#0369a1">24</text><text x="98" y="34" text-anchor="middle" font-size="12" font-weight="900" fill="#0f766e">÷ 4</text><line x1="76" y1="42" x2="118" y2="42" stroke="#0f766e" stroke-width="3"/><rect x="122" y="24" width="38" height="36" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/><text x="141" y="48" text-anchor="middle" font-size="16" font-weight="900" fill="#b45309">6</text><text x="180" y="34" text-anchor="middle" font-size="12" font-weight="900" fill="#0f766e">× 3</text><line x1="163" y1="42" x2="195" y2="42" stroke="#0f766e" stroke-width="3"/><rect x="198" y="20" width="36" height="44" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="2"/><text x="216" y="48" text-anchor="middle" font-size="16" font-weight="900" fill="#047857">18</text><text x="120" y="82" text-anchor="middle" font-size="12" font-weight="800" fill="#334155">3/4 of 24 = 18</text></svg>'
+      },
+      {
+        en: 'equivalent',
+        vn: 'tương đương (bằng nhau)',
+        enDef: 'Having the exact same value, even when written in a different form such as a fraction, decimal or percentage.',
+        vnDef: 'Có giá trị hoàn toàn bằng nhau, dù viết dưới dạng phân số, số thập phân hay phần trăm khác nhau.',
+        colour: 'from-purple-500 to-violet-600',
+        svg: '<svg viewBox="0 0 240 85" class="w-60 h-22"><rect x="10" y="20" width="60" height="42" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><text x="40" y="47" text-anchor="middle" font-size="18" font-weight="900" fill="#5b21b6">3/5</text><text x="82" y="48" text-anchor="middle" font-size="20" font-weight="900" fill="#334155">=</text><rect x="94" y="20" width="58" height="42" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/><text x="123" y="47" text-anchor="middle" font-size="18" font-weight="900" fill="#0369a1">0.6</text><text x="164" y="48" text-anchor="middle" font-size="20" font-weight="900" fill="#334155">=</text><rect x="176" y="20" width="56" height="42" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/><text x="204" y="47" text-anchor="middle" font-size="17" font-weight="900" fill="#15803d">60%</text></svg>'
+      },
+      {
+        en: 'simplify',
+        vn: 'rút gọn phân số',
+        enDef: 'Divide both numerator and denominator by their highest common factor until no common factor above 1 remains.',
+        vnDef: 'Chia cả tử số và mẫu số cho ước chung lớn nhất để được phân số tối giản.',
+        colour: 'from-sky-500 to-blue-600',
+        svg: '<svg viewBox="0 0 230 85" class="w-56 h-22"><text x="48" y="34" text-anchor="middle" font-size="20" font-weight="900" fill="#1e293b">12</text><line x1="28" y1="42" x2="68" y2="42" stroke="#1e293b" stroke-width="3"/><text x="48" y="65" text-anchor="middle" font-size="20" font-weight="900" fill="#1e293b">18</text><text x="115" y="28" text-anchor="middle" font-size="13" font-weight="900" fill="#0284c7">÷ 6</text><line x1="82" y1="42" x2="148" y2="42" stroke="#0284c7" stroke-width="3"/><text x="115" y="62" text-anchor="middle" font-size="13" font-weight="900" fill="#0284c7">÷ 6</text><text x="182" y="34" text-anchor="middle" font-size="22" font-weight="900" fill="#059669">2</text><line x1="164" y1="42" x2="200" y2="42" stroke="#059669" stroke-width="3"/><text x="182" y="65" text-anchor="middle" font-size="22" font-weight="900" fill="#059669">3</text></svg>'
+      },
+      {
+        en: 'common denominator',
+        vn: 'mẫu số chung',
+        enDef: 'A shared multiple of two or more denominators so fractions are split into equal-sized parts before adding or subtracting.',
+        vnDef: 'Bội chung của các mẫu số giúp chia phân số thành các phần bằng nhau trước khi cộng hoặc trừ.',
+        colour: 'from-amber-500 to-orange-600',
+        svg: '<svg viewBox="0 0 240 90" class="w-60 h-24"><text x="120" y="24" text-anchor="middle" font-size="15" font-weight="900" fill="#b45309">3/4 + 1/6 ➔ Twelfths (12)</text><rect x="20" y="34" width="200" height="18" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/><rect x="20" y="34" width="150" height="18" rx="4" fill="#f59e0b"/><rect x="20" y="58" width="200" height="18" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/><rect x="20" y="58" width="33.3" height="18" rx="4" fill="#0284c7"/></svg>'
+      },
+      {
+        en: 'percentage',
+        vn: 'phần trăm (trên 100)',
+        enDef: 'A number of parts out of 100. For example, 35% means 35 out of every 100.',
+        vnDef: 'Số phần trên tổng số 100 phần bằng nhau. Ví dụ: 35% nghĩa là 35 trên 100.',
+        colour: 'from-rose-500 to-pink-600',
+        svg: '<svg viewBox="0 0 220 90" class="w-56 h-24"><rect x="18" y="14" width="60" height="60" rx="6" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/><rect x="18" y="14" width="60" height="21" rx="4" fill="#e11d48"/><text x="148" y="42" text-anchor="middle" font-size="24" font-weight="900" fill="#be123c">35%</text><text x="148" y="64" text-anchor="middle" font-size="13" font-weight="800" fill="#475569">= 35 out of 100</text></svg>'
+      },
+      {
+        en: phTerm,
+        vn: 'số 0 giữ hàng thập phân',
+        enDef: 'A zero written at the end of a decimal (such as 14.20) to keep columns aligned without changing its value.',
+        vnDef: 'Chữ số 0 viết thêm ở tận cùng bên phải số thập phân (như 14.20) để thẳng hàng mà không đổi giá trị.',
+        colour: 'from-emerald-500 to-teal-600',
+        svg: '<svg viewBox="0 0 220 90" class="w-56 h-24"><text x="86" y="48" text-anchor="end" font-size="28" font-weight="900" fill="#0f172a">14.2</text><rect x="92" y="18" width="32" height="38" rx="8" fill="#fef08a" stroke="#d97706" stroke-width="2.5"/><text x="108" y="48" text-anchor="middle" font-size="28" font-weight="900" fill="#b45309">0</text><text x="166" y="46" text-anchor="middle" font-size="13" font-weight="900" fill="#047857">Same value!</text><text x="110" y="76" text-anchor="middle" font-size="12" font-weight="800" fill="#475569">14.2 = 14.20</text></svg>'
+      },
+      {
+        en: 'estimate',
+        vn: 'ước lượng',
+        enDef: 'Round numbers to find a quick, sensible rough answer so you can check if your exact answer makes sense.',
+        vnDef: 'Làm tròn các số để nhẩm nhanh kết quả gần đúng nhằm kiểm tra tính hợp lý của đáp án.',
+        colour: 'from-cyan-500 to-sky-600',
+        svg: '<svg viewBox="0 0 240 85" class="w-60 h-22"><text x="120" y="34" text-anchor="middle" font-size="18" font-weight="900" fill="#0369a1">14.2 − 6.85</text><text x="120" y="62" text-anchor="middle" font-size="17" font-weight="900" fill="#0f766e">≈ 14 − 7 = 7</text></svg>'
+      },
+      {
+        en: 'mixed number',
+        vn: 'hỗn số',
+        enDef: 'A whole number combined with a proper fraction, such as 1 3/4.',
+        vnDef: 'Một số gồm phần nguyên kết hợp với một phân số nhỏ hơn 1, ví dụ 1 3/4.',
+        colour: 'from-fuchsia-500 to-purple-600',
+        svg: '<svg viewBox="0 0 220 85" class="w-56 h-22"><text x="64" y="54" text-anchor="middle" font-size="34" font-weight="900" fill="#7c3aed">1</text><text x="108" y="35" text-anchor="middle" font-size="20" font-weight="900" fill="#0284c7">3</text><line x1="94" y1="42" x2="122" y2="42" stroke="#0284c7" stroke-width="3"/><text x="108" y="64" text-anchor="middle" font-size="20" font-weight="900" fill="#0284c7">4</text><text x="172" y="48" text-anchor="middle" font-size="14" font-weight="900" fill="#475569">= 7/4</text></svg>'
+      },
+      {
+        en: 'highest common factor',
+        vn: 'ước chung lớn nhất (ƯCLN)',
+        enDef: 'The largest whole number that divides exactly into two or more numbers with no remainder.',
+        vnDef: 'Số tự nhiên lớn nhất mà cả hai hay nhiều số đã cho đều chia hết (dùng để rút gọn phân số nhanh nhất).',
+        colour: 'from-indigo-500 to-blue-700',
+        svg: '<svg viewBox="0 0 240 88" class="w-60 h-22"><text x="120" y="26" text-anchor="middle" font-size="13" font-weight="800" fill="#475569">Factors of 24: 1, 2, 3, 4, 6, 8, 12, 24</text><text x="120" y="46" text-anchor="middle" font-size="13" font-weight="800" fill="#475569">Factors of 36: 1, 2, 3, 4, 6, 9, 12, 18, 36</text><rect x="65" y="54" width="110" height="26" rx="8" fill="#4f46e5"/><text x="120" y="72" text-anchor="middle" font-size="14" font-weight="900" fill="#ffffff">HCF = 12</text></svg>'
+      }
+    ];
+
+    let activeVocabIndex = 0;
+    function renderVocabGrid() {
+      const grid = document.getElementById('vocabGrid');
+      grid.innerHTML = vocabData.map((v, i) => `
+        <button type="button" onclick="openVocabModal(${i})" class="bg-gradient-to-br ${v.colour} text-white rounded-2xl p-5 shadow-md hover:scale-[1.03] active:scale-[0.98] transition text-left flex flex-col justify-between min-h-[120px]">
+          <span class="text-xs font-black uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full self-start">Term ${i + 1}</span>
+          <span class="text-lg md:text-xl font-black leading-tight mt-2 capitalize">${v.en}</span>
+          <span class="text-xs text-white/85 font-bold mt-1">Tap for diagram &amp; audio →</span>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(idx) {
+      activeVocabIndex = idx;
+      const v = vocabData[idx];
+      document.getElementById('vmEnWord').textContent = v.en;
+      document.getElementById('vmVnWord').textContent = v.vn;
+      document.getElementById('vmEnDef').textContent = v.enDef;
+      document.getElementById('vmVnDef').textContent = v.vnDef;
+      document.getElementById('vmSvgBox').innerHTML = v.svg;
+      document.getElementById('vocabModal').classList.remove('hidden');
+      playTone(620, 0.08, 'triangle', 0.08);
+    }
+
+    function closeVocabModal() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('vocabModal').classList.add('hidden');
+    }
+
+    function speakVocab(lang) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const v = vocabData[activeVocabIndex];
+      const u = new SpeechSynthesisUtterance(lang === 'en' ? v.en : v.vn);
+      u.lang = lang === 'en' ? 'en-GB' : 'vi-VN';
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    // ============================================================
+    // 4. STATION 3: VISUAL ANIMATED I DO STAGE (3 MODELS)
+    // ============================================================
+    let activeModel = 0;
+    let activeStep = 0;
+
+    const visualModels = [
+      {
+        title: 'Model 1: Percentages & FDP Equivalence — Find 35% of 200',
+        maxStep: 4,
+        render(step) {
+          return `
+            <div class="space-y-5">
+              <div class="flex items-center justify-between flex-wrap gap-2 border-b pb-3">
+                <h3 class="text-xl md:text-2xl font-black text-indigo-900">💯 Find 35% of 200 (and equivalent FDP)</h3>
+                <span class="bg-indigo-100 text-indigo-800 font-black text-sm px-3.5 py-1 rounded-full">10% + 5% Building Blocks</span>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <!-- Visual Bar Model -->
+                <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 space-y-4">
+                  <div class="flex justify-between text-sm font-black text-slate-700">
+                    <span>Whole = 100% = 200</span>
+                    <span class="text-indigo-700">${step >= 4 ? '35% = 70' : 'Target: 35%'}</span>
+                  </div>
+                  <!-- 10 equal 10% blocks -->
+                  <div class="grid grid-cols-10 gap-1 h-16">
+                    ${Array.from({ length: 10 }, (_, idx) => {
+                      let cls = 'bg-white border-2 border-slate-300 text-slate-400';
+                      let lbl = '10%';
+                      if (step >= 2 && idx < 3) {
+                        cls = 'bg-sky-500 border-2 border-sky-700 text-white pop-in';
+                        lbl = '20';
+                      } else if (step >= 3 && idx === 3) {
+                        cls = 'bg-gradient-to-r from-amber-400 from-50% to-white to-50% border-2 border-amber-600 text-slate-900 pop-in';
+                        lbl = '10';
+                      }
+                      return `<div class="${cls} rounded-lg flex items-center justify-center font-black text-xs">${lbl}</div>`;
+                    }).join('')}
+                  </div>
+                  <div class="flex justify-between text-xs font-extrabold text-slate-500">
+                    <span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span><span>50%</span><span>100%</span>
+                  </div>
+
+                  ${step >= 4 ? `
+                    <div class="bg-emerald-50 border-2 border-emerald-400 rounded-xl p-3 text-center pop-in">
+                      <span class="text-xs font-black uppercase text-emerald-700">FDP Equivalence</span>
+                      <p class="text-xl font-black text-emerald-900 mt-0.5">35% = 35/100 = 7/20 = 0.35</p>
+                    </div>
+                  ` : ''}
+                </div>
+
+                <!-- Step Cards -->
+                <div class="space-y-2.5">
+                  <div class="p-3.5 rounded-2xl border-2 ${step >= 1 ? 'bg-blue-50 border-blue-400 pop-in' : 'bg-slate-50 border-slate-200 opacity-45'}">
+                    <span class="text-xs font-black text-blue-700 uppercase">Step 1 — Find 10% (÷ 10)</span>
+                    <p class="text-xl font-black text-slate-900">10% of 200 = 200 ÷ 10 = <span class="text-blue-700">20</span></p>
+                  </div>
+                  <div class="p-3.5 rounded-2xl border-2 ${step >= 2 ? 'bg-sky-50 border-sky-400 pop-in' : 'bg-slate-50 border-slate-200 opacity-45'}">
+                    <span class="text-xs font-black text-sky-700 uppercase">Step 2 — Build 30% (10% + 10% + 10%)</span>
+                    <p class="text-xl font-black text-slate-900">30% = 20 + 20 + 20 = <span class="text-sky-700">60</span></p>
+                  </div>
+                  <div class="p-3.5 rounded-2xl border-2 ${step >= 3 ? 'bg-amber-50 border-amber-400 pop-in' : 'bg-slate-50 border-slate-200 opacity-45'}">
+                    <span class="text-xs font-black text-amber-700 uppercase">Step 3 — Find 5% (half of 10%)</span>
+                    <p class="text-xl font-black text-slate-900">5% = half of 20 = <span class="text-amber-700">10</span></p>
+                  </div>
+                  <div class="p-3.5 rounded-2xl border-2 ${step >= 4 ? 'bg-emerald-100 border-emerald-500 pop-in' : 'bg-slate-50 border-slate-200 opacity-45'}">
+                    <span class="text-xs font-black text-emerald-800 uppercase">Step 4 — Add 30% + 5%</span>
+                    <p class="text-2xl font-black text-emerald-900">35% of 200 = 60 + 10 = 70 ✓</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      },
+      {
+        title: 'Model 2: Adding Unlike Fractions — 3/4 + 1/6',
+        maxStep: 4,
+        render(step) {
+          const barA = step < 2
+            ? Array.from({ length: 4 }, (_, i) => `<div class="flex-1 h-12 rounded-md border-2 ${i < 3 ? 'bg-indigo-600 border-indigo-800 text-white' : 'bg-white border-slate-300 text-slate-400'} flex items-center justify-center font-black text-sm">1/4</div>`).join('')
+            : Array.from({ length: 12 }, (_, i) => `<div class="flex-1 h-12 rounded border ${i < 9 ? 'bg-indigo-600 border-indigo-800 text-white' : 'bg-white border-slate-300 text-slate-400'} flex items-center justify-center font-black text-[11px]">${i < 9 ? '1/12' : ''}</div>`).join('');
+
+          const barB = step < 2
+            ? Array.from({ length: 6 }, (_, i) => `<div class="flex-1 h-12 rounded-md border-2 ${i < 1 ? 'bg-teal-500 border-teal-700 text-white' : 'bg-white border-slate-300 text-slate-400'} flex items-center justify-center font-black text-sm">1/6</div>`).join('')
+            : Array.from({ length: 12 }, (_, i) => `<div class="flex-1 h-12 rounded border ${i < 2 ? 'bg-teal-500 border-teal-700 text-white' : 'bg-white border-slate-300 text-slate-400'} flex items-center justify-center font-black text-[11px]">${i < 2 ? '1/12' : ''}</div>`).join('');
+
+          const barSum = Array.from({ length: 12 }, (_, i) => {
+            let cls = 'bg-white border-slate-300';
+            if (i < 9) cls = 'bg-indigo-600 border-indigo-800 text-white';
+            else if (i < 11) cls = 'bg-teal-500 border-teal-700 text-white';
+            return `<div class="flex-1 h-12 rounded border ${cls} flex items-center justify-center font-black text-[11px]">${i < 11 ? (i + 1) : ''}</div>`;
+          }).join('');
+
+          return `
+            <div class="space-y-5">
+              <div class="flex items-center justify-between flex-wrap gap-2 border-b pb-3">
+                <h3 class="text-xl md:text-2xl font-black text-teal-900">🍕 Adding Unlike Fractions: 3/4 + 1/6</h3>
+                <span class="bg-rose-100 text-rose-800 font-black text-sm px-3.5 py-1 rounded-full">⚠️ NEVER add denominators!</span>
+              </div>
+
+              <div class="space-y-3 bg-slate-50 border-2 border-slate-200 rounded-2xl p-5">
+                <div>
+                  <div class="flex justify-between text-sm font-black mb-1">
+                    <span class="text-indigo-700">${step < 2 ? '3/4 (quarters)' : '3/4 = 9/12 (multiplied × 3)'}</span>
+                    ${step >= 1 ? '<span class="text-amber-700">Common Denominator = 12</span>' : ''}
+                  </div>
+                  <div class="flex gap-1">${barA}</div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm font-black mb-1">
+                    <span class="text-teal-700">${step < 2 ? '1/6 (sixths)' : '1/6 = 2/12 (multiplied × 2)'}</span>
+                  </div>
+                  <div class="flex gap-1">${barB}</div>
+                </div>
+                ${step >= 3 ? `
+                  <div class="pt-2 border-t-2 border-dashed border-slate-300 pop-in">
+                    <div class="flex justify-between text-sm font-black mb-1">
+                      <span class="text-emerald-700">Combined: 9/12 + 2/12 = 11/12</span>
+                      <span class="text-emerald-700">${step >= 4 ? 'Already in simplest form! ✓' : ''}</span>
+                    </div>
+                    <div class="flex gap-1">${barSum}</div>
+                  </div>
+                ` : ''}
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 text-center">
+                <div class="p-3 rounded-xl border-2 ${step >= 1 ? 'bg-amber-50 border-amber-400 pop-in' : 'bg-slate-50 border-slate-200 opacity-45'}">
+                  <span class="text-xs font-black text-amber-800">1. Lowest Common Multiple</span>
+                  <p class="font-black text-slate-900 text-base mt-0.5">4, 8, <u>12</u> &amp; 6, <u>12</u></p>
+                </div>
+                <div class="p-3 rounded-xl border-2 ${step >= 2 ? 'bg-indigo-50 border-indigo-400 pop-in' : 'bg-slate-50 border-slate-200 opacity-45'}">
+                  <span class="text-xs font-black text-indigo-800">2. Slice Equal Parts</span>
+                  <p class="font-black text-slate-900 text-base mt-0.5">9/12 + 2/12</p>
+                </div>
+                <div class="p-3 rounded-xl border-2 ${step >= 3 ? 'bg-teal-50 border-teal-400 pop-in' : 'bg-slate-50 border-slate-200 opacity-45'}">
+                  <span class="text-xs font-black text-teal-800">3. Add Numerators Only</span>
+                  <p class="font-black text-slate-900 text-base mt-0.5">(9 + 2)/12 = 11/12</p>
+                </div>
+                <div class="p-3 rounded-xl border-2 ${step >= 4 ? 'bg-emerald-100 border-emerald-500 pop-in' : 'bg-slate-50 border-slate-200 opacity-45'}">
+                  <span class="text-xs font-black text-emerald-800">4. Check Simplest Form</span>
+                  <p class="font-black text-emerald-900 text-lg mt-0.5">11/12 ✓</p>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      },
+      {
+        title: 'Model 3: Uneven Decimal Subtraction — 14.2 − 6.85',
+        maxStep: 4,
+        render(step) {
+          return `
+            <div class="space-y-5">
+              <div class="flex items-center justify-between flex-wrap gap-2 border-b pb-3">
+                <h3 class="text-xl md:text-2xl font-black text-rose-900">🔢 Uneven Decimal Subtraction: 14.2 − 6.85</h3>
+                <span class="bg-amber-100 text-amber-900 font-black text-sm px-3.5 py-1 rounded-full">Glowing Place&#104;older Zero!</span>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <!-- Column Subtraction Table -->
+                <div class="bg-slate-50 border-2 border-slate-300 rounded-2xl p-6 flex flex-col items-center">
+                  <div class="grid grid-cols-6 gap-2 text-center w-full max-w-sm">
+                    <div class="text-xs font-black text-slate-400"></div>
+                    <div class="text-xs font-black text-indigo-600">T</div>
+                    <div class="text-xs font-black text-indigo-600">O</div>
+                    <div class="text-xs font-black text-rose-600">.</div>
+                    <div class="text-xs font-black text-teal-600">t</div>
+                    <div class="text-xs font-black text-amber-600">h</div>
+
+                    <!-- Exchange row -->
+                    <div></div>
+                    <div class="text-sm font-black text-rose-600">${step >= 3 ? '0' : ''}</div>
+                    <div class="text-sm font-black text-rose-600">${step >= 3 ? '13' : ''}</div>
+                    <div></div>
+                    <div class="text-sm font-black text-rose-600">${step >= 3 ? '11' : ''}</div>
+                    <div class="text-sm font-black text-rose-600">${step >= 3 ? '10' : ''}</div>
+
+                    <!-- Top number 14.20 -->
+                    <div class="text-3xl font-black text-slate-400"></div>
+                    <div class="text-4xl font-black ${step >= 3 ? 'line-through text-slate-400' : 'text-slate-900'}">1</div>
+                    <div class="text-4xl font-black ${step >= 3 ? 'line-through text-slate-400' : 'text-slate-900'}">4</div>
+                    <div class="text-4xl font-black text-rose-600">.</div>
+                    <div class="text-4xl font-black ${step >= 3 ? 'line-through text-slate-400' : 'text-slate-900'}">2</div>
+                    <div class="text-4xl font-black ${step >= 2 ? 'bg-amber-300 text-amber-950 rounded-xl zero-glow' : 'text-slate-300'}">${step >= 2 ? '0' : '?'}</div>
+
+                    <!-- Bottom number 6.85 -->
+                    <div class="text-4xl font-black text-rose-600">−</div>
+                    <div class="text-4xl font-black text-slate-900"></div>
+                    <div class="text-4xl font-black text-slate-900">6</div>
+                    <div class="text-4xl font-black text-rose-600">.</div>
+                    <div class="text-4xl font-black text-slate-900">8</div>
+                    <div class="text-4xl font-black text-slate-900">5</div>
+
+                    <!-- Divider -->
+                    <div class="col-span-6 border-b-4 border-slate-900 my-1"></div>
+
+                    <!-- Answer row 7.35 -->
+                    <div></div>
+                    <div class="text-4xl font-black text-emerald-700"></div>
+                    <div class="text-4xl font-black text-emerald-700">${step >= 4 ? '7' : ''}</div>
+                    <div class="text-4xl font-black text-rose-600">${step >= 4 ? '.' : ''}</div>
+                    <div class="text-4xl font-black text-emerald-700">${step >= 4 ? '3' : ''}</div>
+                    <div class="text-4xl font-black text-emerald-700">${step >= 3 ? '5' : ''}</div>
+                  </div>
+                </div>
+
+                <!-- Step Cards -->
+                <div class="space-y-2.5">
+                  <div class="p-3.5 rounded-2xl border-2 ${step >= 1 ? 'bg-sky-50 border-sky-400 pop-in' : 'bg-slate-50 border-slate-200 opacity-45'}">
+                    <span class="text-xs font-black text-sky-700 uppercase">Step 1 — Estimate First!</span>
+                    <p class="text-lg font-black text-slate-900">14.2 − 6.85 ≈ 14 − 7 = <span class="text-sky-700">7</span></p>
+                  </div>
+                  <div class="p-3.5 rounded-2xl border-2 ${step >= 2 ? 'bg-amber-50 border-amber-400 pop-in' : 'bg-slate-50 border-slate-200 opacity-45'}">
+                    <span class="text-xs font-black text-amber-800 uppercase">Step 2 — Add Glowing Place&#104;older Zero</span>
+                    <p class="text-lg font-black text-slate-900">14.2 becomes <span class="bg-amber-200 px-2 rounded">14.20</span> (same value!)</p>
+                  </div>
+                  <div class="p-3.5 rounded-2xl border-2 ${step >= 3 ? 'bg-rose-50 border-rose-400 pop-in' : 'bg-slate-50 border-slate-200 opacity-45'}">
+                    <span class="text-xs font-black text-rose-700 uppercase">Step 3 — Exchange &amp; Subtract Columns</span>
+                    <p class="text-base font-black text-slate-900">Hundredths: 10 − 5 = 5 &bull; Tenths: 11 − 8 = 3 &bull; Ones: 13 − 6 = 7</p>
+                  </div>
+                  <div class="p-3.5 rounded-2xl border-2 ${step >= 4 ? 'bg-emerald-100 border-emerald-500 pop-in' : 'bg-slate-50 border-slate-200 opacity-45'}">
+                    <span class="text-xs font-black text-emerald-800 uppercase">Step 4 — Check Against Estimate (≈ 7)</span>
+                    <p class="text-2xl font-black text-emerald-900">7.35 ✓ <span class="text-sm font-bold text-emerald-700">(Check: 7.35 + 6.85 = 14.20)</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+    ];
+
+    function renderVisualModel() {
+      const m = visualModels[activeModel];
+      document.getElementById('visualCanvas').innerHTML = m.render(activeStep);
+      document.getElementById('vmStepBadge').textContent = `Step ${activeStep} / ${m.maxStep}`;
+      const dots = document.getElementById('stepDots');
+      dots.innerHTML = Array.from({ length: m.maxStep + 1 }, (_, i) =>
+        `<span class="w-3 h-3 rounded-full ${i <= activeStep ? 'bg-amber-400' : 'bg-white/25'}"></span>`
+      ).join('');
+      document.querySelectorAll('.vm-tab').forEach((btn, i) => {
+        btn.className = i === activeModel
+          ? 'vm-tab px-4 py-2 rounded-xl text-sm font-black bg-sky-500 text-slate-950 shadow transition'
+          : 'vm-tab px-4 py-2 rounded-xl text-sm font-extrabold bg-white/10 text-indigo-100 hover:bg-white/20 transition';
+      });
+    }
+
+    function selectVisualModel(idx) {
+      activeModel = idx;
+      activeStep = 0;
+      renderVisualModel();
+      playTone(560, 0.08, 'sine', 0.07);
+    }
+    function nextVisualStep() {
+      const max = visualModels[activeModel].maxStep;
+      if (activeStep < max) {
+        activeStep++;
+        renderVisualModel();
+        playTone(620 + activeStep * 45, 0.1, 'triangle', 0.09);
+      }
+    }
+    function prevVisualStep() {
+      if (activeStep > 0) {
+        activeStep--;
+        renderVisualModel();
+      }
+    }
+    function resetVisualSteps() {
+      activeStep = 0;
+      renderVisualModel();
+    }
+    function toggleStepsPopover() {
+      document.getElementById('stepsBar').classList.toggle('hidden');
+    }
+    function toggleIdoFullscreen() {
+      const stage = document.getElementById('iDoStage');
+      const isFull = stage.classList.toggle('ido-fullscreen');
+      document.getElementById('btnIdoFull').textContent = isFull ? '✕ Exit Full Screen' : '⛶ Full Screen I Do';
+    }
+
+    // ============================================================
+    // 5. CPA LAB A: FDP 100-GRID & BAR CONVERTER
+    // ============================================================
+    function gcd(a, b) {
+      return b === 0 ? a : gcd(b, a % b);
+    }
+
+    function buildFdpGrid() {
+      const g = document.getElementById('fdpGrid100');
+      g.innerHTML = Array.from({ length: 100 }, (_, i) => `<div class="grid-cell" id="fc-${i}"></div>`).join('');
+    }
+
+    function setFdpPercent(val) {
+      const p = Math.max(0, Math.min(100, parseInt(val, 10) || 0));
+      document.getElementById('fdpSlider').value = p;
+      document.getElementById('fdpSliderVal').textContent = p + '%';
+      document.getElementById('fdpBarFill').style.width = p + '%';
+      document.getElementById('fdpBarText').textContent = `${p} / 100`;
+
+      for (let i = 0; i < 100; i++) {
+        const cell = document.getElementById(`fc-${i}`);
+        if (cell) cell.classList.toggle('filled', i < p);
+      }
+
+      const d = p === 0 ? 100 : gcd(p, 100);
+      const simpNum = p / d;
+      const simpDen = 100 / d;
+      const fracStr = p === 0 ? '0' : (p === 100 ? '1' : `${simpNum}/${simpDen}`);
+      const decStr = p === 100 ? '1' : (p === 0 ? '0' : Number((p / 100).toFixed(2)).toString());
+
+      document.getElementById('fdpOutFrac').textContent = fracStr;
+      document.getElementById('fdpOutDec').textContent = decStr;
+      document.getElementById('fdpOutPct').textContent = p + '%';
+      document.getElementById('labFdpBadge').textContent = `${p}% = ${fracStr} = ${decStr}`;
+      document.getElementById('fdpHcfNote').textContent = (p === 0 || p === 100)
+        ? `${p}/100 = ${fracStr}`
+        : `${p}/100 ÷ ${d} = ${fracStr} (HCF = ${d})`;
+    }
+
+    // ============================================================
+    // 6. CPA LAB B: UNLIKE-FRACTIONS COMMON DENOMINATOR SLICER
+    // ============================================================
+    const slicerPairs = [
+      { label: '3/4 + 1/6', n1: 3, d1: 4, op: '+', n2: 1, d2: 6, lcd: 12, eq1: 9, eq2: 2, ansNum: 11, ansStr: '11/12' },
+      { label: '2/5 + 1/3', n1: 2, d1: 5, op: '+', n2: 1, d2: 3, lcd: 15, eq1: 6, eq2: 5, ansNum: 11, ansStr: '11/15' },
+      { label: '5/6 − 1/4', n1: 5, d1: 6, op: '−', n2: 1, d2: 4, lcd: 12, eq1: 10, eq2: 3, ansNum: 7, ansStr: '7/12' },
+      { label: '7/8 − 1/3', n1: 7, d1: 8, op: '−', n2: 1, d2: 3, lcd: 24, eq1: 21, eq2: 8, ansNum: 13, ansStr: '13/24' }
+    ];
+    let activeSlicerIdx = 0;
+    let activeSlicerStep = 0;
+
+    function buildBarHtml(filled, total, colourClass, strikeFrom = -1) {
+      return `<div class="flex gap-0.5 w-full h-9">` + Array.from({ length: total }, (_, i) => {
+        let cls = 'bg-white border-slate-300';
+        let txt = '';
+        if (strikeFrom >= 0 && i >= strikeFrom && i < filled) {
+          cls = 'bg-rose-200 border-rose-500 text-rose-800 line-through';
+          txt = '×';
+        } else if (i < filled) {
+          cls = colourClass;
+        }
+        return `<div class="flex-1 rounded border ${cls} flex items-center justify-center text-[10px] font-black">${txt}</div>`;
+      }).join('') + `</div>`;
+    }
+
+    function renderSlicer() {
+      const p = slicerPairs[activeSlicerIdx];
+      const badge = document.getElementById('slicerStatusBadge');
+      const labels = ['Step 1: Unlike Parts', `Step 2: Sliced into ${p.lcd}ths`, `Step 3: Answer = ${p.ansStr}`];
+      badge.textContent = labels[activeSlicerStep];
+
+      document.querySelectorAll('.sl-pair').forEach((btn, i) => {
+        btn.className = i === activeSlicerIdx
+          ? 'sl-pair px-3 py-1.5 rounded-xl bg-teal-600 text-white font-black text-xs shadow'
+          : 'sl-pair px-3 py-1.5 rounded-xl bg-teal-50 text-teal-800 border border-teal-200 font-black text-xs';
+      });
+
+      const dA = activeSlicerStep === 0 ? p.d1 : p.lcd;
+      const nA = activeSlicerStep === 0 ? p.n1 : p.eq1;
+      const dB = activeSlicerStep === 0 ? p.d2 : p.lcd;
+      const nB = activeSlicerStep === 0 ? p.n2 : p.eq2;
+
+      let resultHtml = '';
+      if (activeSlicerStep === 2) {
+        if (p.op === '+') {
+          const sumBar = `<div class="flex gap-0.5 w-full h-9">` + Array.from({ length: p.lcd }, (_, i) => {
+            let cls = 'bg-white border-slate-300';
+            if (i < p.eq1) cls = 'bg-indigo-600 border-indigo-800';
+            else if (i < p.ansNum) cls = 'bg-teal-500 border-teal-700';
+            return `<div class="flex-1 rounded border ${cls}"></div>`;
+          }).join('') + `</div>`;
+          resultHtml = `
+            <div class="pt-2 border-t border-slate-300 pop-in">
+              <p class="text-sm font-black text-emerald-700 mb-1">Result: ${p.eq1}/${p.lcd} + ${p.eq2}/${p.lcd} = <span class="text-lg">${p.ansStr}</span> ✓</p>
+              ${sumBar}
+            </div>`;
+        } else {
+          resultHtml = `
+            <div class="pt-2 border-t border-slate-300 pop-in">
+              <p class="text-sm font-black text-emerald-700 mb-1">Result: ${p.eq1}/${p.lcd} − ${p.eq2}/${p.lcd} = <span class="text-lg">${p.ansStr}</span> ✓</p>
+              ${buildBarHtml(p.eq1, p.lcd, 'bg-emerald-600 border-emerald-800 text-white', p.ansNum)}
+            </div>`;
+        }
+      }
+
+      document.getElementById('slicerStage').innerHTML = `
+        <div class="space-y-2.5">
+          <div>
+            <p class="text-xs font-black text-indigo-800 mb-1">${p.n1}/${p.d1} ${activeSlicerStep > 0 ? `= ${p.eq1}/${p.lcd} (× ${p.lcd / p.d1})` : ''}</p>
+            ${buildBarHtml(nA, dA, 'bg-indigo-600 border-indigo-800 text-white')}
+          </div>
+          <div>
+            <p class="text-xs font-black text-teal-800 mb-1">${p.op === '+' ? 'Add' : 'Subtract'} ${p.n2}/${p.d2} ${activeSlicerStep > 0 ? `= ${p.eq2}/${p.lcd} (× ${p.lcd / p.d2})` : ''}</p>
+            ${buildBarHtml(nB, dB, p.op === '+' ? 'bg-teal-500 border-teal-700 text-white' : 'bg-rose-500 border-rose-700 text-white')}
+          </div>
+          ${resultHtml}
+        </div>
+      `;
+    }
+
+    function selectSlicerPair(idx) {
+      activeSlicerIdx = idx;
+      activeSlicerStep = 0;
+      renderSlicer();
+      playTone(540, 0.08, 'sine', 0.07);
+    }
+    function setSlicerStep(s) {
+      activeSlicerStep = s;
+      renderSlicer();
+      playTone(600 + s * 80, 0.09, 'triangle', 0.08);
+    }
+
+    // ============================================================
+    // 7. STATION 4: ALL-TIERS BOARD VIEW & GIANT PROJECTION
+    // ============================================================
+    const practiceCards = [
+      { tier: 'must', code: 'M1', q: 'Simplify 16/24 fully.', a: '2/3 (divide numerator and denominator by HCF = 8)' },
+      { tier: 'must', code: 'M2', q: 'Calculate 15% of 60.', a: '9 (10% = 6, 5% = 3 → 6 + 3 = 9)' },
+      { tier: 'must', code: 'M3', q: 'Calculate 8.4 + 3.27.', a: '11.67 (align decimal points: 8.40 + 3.27)' },
+      { tier: 'should', code: 'S1', q: 'Calculate 5/3 of 18.', a: '30 (18 ÷ 3 = 6; 6 × 5 = 30)' },
+      { tier: 'should', code: 'S2', q: 'Calculate 2/3 + 1/4.', a: '11/12 (8/12 + 3/12 = 11/12)' },
+      { tier: 'should', code: 'S3', q: 'Calculate 13.1 − 5.64.', a: '7.46 (13.10 − 5.64 = 7.46; estimate 13 − 6 = 7)' },
+      { tier: 'could', code: 'C1', q: 'Order smallest to largest: 4/5, 78%, 0.82, 3/4', a: '3/4 (0.75), 78% (0.78), 4/5 (0.80), 0.82' },
+      { tier: 'could', code: 'C2', q: 'A backpack costs 400 thousand VND. A sale takes 35% off. Find the sale price.', a: '260 thousand VND (35% of 400 = 140; 400 − 140 = 260)' },
+      { tier: 'could', code: 'C3', q: 'Calculate 5/6 − 2/9. Is your answer greater than 0.6?', a: '11/18. Yes! 11/18 = 55/90 and 0.6 = 3/5 = 54/90, so 11/18 > 0.6.' }
+    ];
+
+    let activeTierFilter = 'all';
+    let giantIdx = 0;
+
+    function renderTiersBoard() {
+      const board = document.getElementById('tiersBoard');
+      const cols = [
+        { key: 'must', label: '🟢 Must • Level 1', hdr: 'bg-emerald-600 text-white', border: 'border-emerald-300', bg: 'bg-emerald-50/70' },
+        { key: 'should', label: '🟠 Should • Level 2', hdr: 'bg-amber-500 text-white', border: 'border-amber-300', bg: 'bg-amber-50/70' },
+        { key: 'could', label: '🟣 Could • Level 3', hdr: 'bg-purple-600 text-white', border: 'border-purple-300', bg: 'bg-purple-50/70' }
+      ].filter(c => activeTierFilter === 'all' || c.key === activeTierFilter);
+
+      board.className = activeTierFilter === 'all' ? 'grid grid-cols-1 lg:grid-cols-3 gap-5' : 'grid grid-cols-1 max-w-3xl mx-auto gap-5';
+
+      board.innerHTML = cols.map(col => {
+        const items = practiceCards.map((c, idx) => ({ ...c, idx })).filter(c => c.tier === col.key);
+        return `
+          <div class="${col.bg} border-2 ${col.border} rounded-3xl p-4 space-y-3 shadow-sm">
+            <div class="${col.hdr} font-black text-sm uppercase tracking-wider px-4 py-2 rounded-2xl text-center shadow-sm">${col.label}</div>
+            ${items.map(c => `
+              <button type="button" onclick="openGiantModal(${c.idx})" class="w-full text-left bg-white hover:shadow-md border-2 border-slate-200 hover:border-indigo-400 rounded-2xl p-4 transition space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black text-slate-500">${c.code}</span>
+                  <span class="text-xs font-extrabold text-indigo-600">⛶ Project</span>
+                </div>
+                <p class="text-lg font-black text-slate-900 leading-snug">${c.q}</p>
+              </button>
+            `).join('')}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterTiers(tier) {
+      activeTierFilter = tier;
+      renderTiersBoard();
+      document.querySelectorAll('.tier-filter').forEach(btn => {
+        btn.classList.remove('ring-4', 'ring-indigo-300');
+      });
+      document.getElementById('tierBtn-' + tier).classList.add('ring-4', 'ring-indigo-300');
+    }
+
+    function openGiantModal(idx) {
+      giantIdx = idx;
+      renderGiantModal();
+      document.getElementById('giantModal').classList.remove('hidden');
+    }
+    function renderGiantModal() {
+      const c = practiceCards[giantIdx];
+      const badgeStyles = {
+        must: 'bg-emerald-600 text-white',
+        should: 'bg-amber-500 text-white',
+        could: 'bg-purple-600 text-white'
+      };
+      const badge = document.getElementById('gmBadge');
+      badge.className = `px-4 py-1.5 rounded-full text-sm font-black uppercase ${badgeStyles[c.tier]}`;
+      badge.textContent = `${c.tier} • ${c.code}`;
+      document.getElementById('gmQuestion').textContent = c.q;
+      document.getElementById('gmAnswer').textContent = c.a;
+      document.getElementById('gmAnswerBox').classList.add('hidden');
+    }
+    function toggleGiantAnswer() {
+      document.getElementById('gmAnswerBox').classList.toggle('hidden');
+      playChime();
+    }
+    function stepGiant(delta) {
+      giantIdx = (giantIdx + delta + practiceCards.length) % practiceCards.length;
+      renderGiantModal();
+    }
+    function closeGiantModal() {
+      document.getElementById('giantModal').classList.add('hidden');
+    }
+
+    // ============================================================
+    // 8. STATION 5: REASONING LAB (TRUE/FALSE MATRIX)
+    // ============================================================
+    const tfData = [
+      {
+        speaker: 'Khoa claims:',
+        claim: '1/3 + 1/4 = 2/7',
+        isTrue: false,
+        proof: 'FALSE! Never add denominators. Find a common denominator of 12: 4/12 + 3/12 = 7/12.'
+      },
+      {
+        speaker: 'Mai claims:',
+        claim: '35% = 3/5',
+        isTrue: false,
+        proof: 'FALSE! 3/5 = 6/10 = 60%, whereas 35% = 35/100 = 7/20.'
+      },
+      {
+        speaker: 'Khoa claims:',
+        claim: '12.4 − 3.75 = 8.65',
+        isTrue: true,
+        proof: 'TRUE! Add a ' + phTerm + ': 12.40 − 3.75 = 8.65. Check: 8.65 + 3.75 = 12.40.'
+      },
+      {
+        speaker: 'Mai claims:',
+        claim: '7/4 of 24 = 42',
+        isTrue: true,
+        proof: 'TRUE! 24 ÷ 4 = 6, then 6 × 7 = 42. Because 7/4 is greater than 1 whole, 42 > 24.'
+      }
+    ];
+
+    function renderTfGrid() {
+      document.getElementById('tfGrid').innerHTML = tfData.map((t, i) => `
+        <div class="bg-white rounded-3xl border-2 border-slate-200 p-5 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black uppercase text-indigo-700">${t.speaker}</span>
+            <span class="text-xs font-bold text-slate-400">Claim ${i + 1}</span>
+          </div>
+          <p class="text-2xl md:text-3xl font-black text-slate-900">${t.claim}</p>
+          <button type="button" onclick="toggleReveal('tf-${i}')" class="bg-slate-900 hover:bg-indigo-700 text-white font-black text-xs px-4 py-2 rounded-xl transition">Tap to Reveal Verdict &amp; Proof</button>
+          <div id="tf-${i}" class="hidden rounded-2xl p-3.5 border-2 ${t.isTrue ? 'bg-emerald-50 border-emerald-400 text-emerald-950' : 'bg-rose-50 border-rose-400 text-rose-950'} text-sm font-bold pop-in">
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-black text-white ${t.isTrue ? 'bg-emerald-600' : 'bg-rose-600'} mr-2">${t.isTrue ? '✓ TRUE' : '✗ FALSE'}</span>
+            ${t.proof}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleReveal(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('hidden');
+      if (!el.classList.contains('hidden')) playChime();
+    }
+
+    // ============================================================
+    // 9. STATION 6: SUCCESS CRITERIA WHITEBOARD CHECK
+    // ============================================================
+    const scChecks = [
+      {
+        tier: '🟢 Must Check',
+        colour: 'border-emerald-300 bg-emerald-50/50',
+        badge: 'bg-emerald-600 text-white',
+        q: 'Simplify 21/28 AND find 5% of 120.',
+        a: '21/28 = 3/4 (÷ 7)  |  10% of 120 = 12, so 5% = 6.'
+      },
+      {
+        tier: '🟠 Should Check',
+        colour: 'border-amber-300 bg-amber-50/50',
+        badge: 'bg-amber-500 text-white',
+        q: 'Calculate 1/2 + 2/5 AND 9.3 − 4.68.',
+        a: '5/10 + 4/10 = 9/10  |  9.30 − 4.68 = 4.62.'
+      },
+      {
+        tier: '🟣 Could Check',
+        colour: 'border-purple-300 bg-purple-50/50',
+        badge: 'bg-purple-600 text-white',
+        q: 'Which is greater: 4/5 of 35 or 75% of 40?',
+        a: '4/5 of 35 = 28; 75% of 40 = 30. So 75% of 40 is greater by 2!'
+      }
+    ];
+    const scMet = [false, false, false];
+
+    function renderScChecks() {
+      document.getElementById('scCheckGrid').innerHTML = scChecks.map((c, i) => `
+        <div class="rounded-3xl border-2 ${c.colour} p-5 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="space-y-2.5">
+            <span class="inline-block ${c.badge} text-xs font-black uppercase px-3 py-1 rounded-full">${c.tier}</span>
+            <p class="text-xl font-black text-slate-900 leading-snug">${c.q}</p>
+            <button type="button" onclick="toggleReveal('scAns-${i}')" class="text-xs font-black text-indigo-700 hover:underline">👁️ Reveal Solution</button>
+            <div id="scAns-${i}" class="hidden bg-white border-2 border-indigo-200 rounded-xl p-3 text-sm font-black text-indigo-900">${c.a}</div>
+          </div>
+          <button type="button" onclick="toggleScMet(${i})" id="scMetBtn-${i}" class="w-full py-2.5 rounded-2xl font-black text-sm border-2 transition ${scMet[i] ? 'bg-emerald-600 text-white border-emerald-700' : 'bg-white text-slate-800 border-slate-300 hover:border-emerald-500'}">
+            ${scMet[i] ? '✅ Criterion Met!' : '☐ Tick as Met'}
+          </button>
+        </div>
+      `).join('');
+      const count = scMet.filter(Boolean).length;
+      document.getElementById('scProgressText').textContent = `${count} / 3 Met`;
+      document.getElementById('scCelebration').classList.toggle('hidden', count < 3);
+    }
+
+    function toggleScMet(i) {
+      scMet[i] = !scMet[i];
+      renderScChecks();
+      if (scMet[i]) playChime();
+      if (scMet.every(Boolean)) fireConfetti();
+    }
+
+    // ============================================================
+    // 10. STATION 7: ALL-SEMESTER QUICKFIRE ENGINE (12 QUESTIONS)
+    // ============================================================
+    const qfQuestions = [
+      { unit: 'Unit 1 • Place Value', q: '0.48 × 100', a: '48', note: 'Digits shift 2 places left.' },
+      { unit: 'Unit 1 • Rounding', q: 'Round 7.86 to the nearest tenth.', a: '7.9', note: 'Hundredths digit is 6 (rounds up).' },
+      { unit: 'Unit 2 • Cube Numbers', q: 'Calculate 4³', a: '64', note: '4 × 4 × 4 = 16 × 4 = 64.' },
+      { unit: 'Unit 3 • Averages', q: 'Find the mean of 4, 7 and 10.', a: '7', note: '(4 + 7 + 10) ÷ 3 = 21 ÷ 3 = 7.' },
+      { unit: 'Unit 4 • Negative Numbers', q: 'Calculate −6 + 11', a: '5', note: '6 steps up to 0, then 5 more to +5.' },
+      { unit: 'Unit 4 • Order of Operations', q: 'Calculate 4 + 3 × 6', a: '22', note: 'Multiply first: 3 × 6 = 18; 4 + 18 = 22.' },
+      { unit: 'Unit 5 • Circles', q: 'Radius = 14 cm. Find the diameter.', a: '28 cm', note: 'd = 2 × r = 2 × 14 cm = 28 cm.' },
+      { unit: 'Unit 5 • Rotational Symmetry', q: 'Order of rotational symmetry of an equilateral triangle?', a: '3', note: 'An equilateral triangle matches its outline 3 times in a full 360° turn (every 120°).' },
+      { unit: 'Unit 6 • Simplifying Fractions', q: 'Simplify 14/35', a: '2/5', note: 'Divide numerator and denominator by HCF = 7.' },
+      { unit: 'Unit 6 • Percentages', q: 'Find 15% of 40', a: '6', note: '10% = 4 and 5% = 2; 4 + 2 = 6.' },
+      { unit: 'Unit 8 • Unlike Fractions', q: 'Calculate 1/2 + 1/6 (simplest form)', a: '2/3', note: '3/6 + 1/6 = 4/6 = 2/3.' },
+      { unit: 'Unit 8 • Uneven Decimals', q: 'Calculate 6.1 − 2.45', a: '3.65', note: '6.10 − 2.45 = 3.65 (check: 3.65 + 2.45 = 6.10).' }
+    ];
+
+    let qfIdx = 0;
+    let qfTimerId = null;
+
+    function renderQf() {
+      stopQfTimer();
+      const item = qfQuestions[qfIdx];
+      document.getElementById('qfCounter').textContent = `Question ${qfIdx + 1} / ${qfQuestions.length}`;
+      document.getElementById('qfUnitBadge').textContent = item.unit;
+      document.getElementById('qfQuestionText').textContent = item.q;
+      document.getElementById('qfAnswerText').textContent = item.a;
+      document.getElementById('qfAnswerNote').textContent = item.note;
+      document.getElementById('qfAnswerBox').classList.add('hidden');
+      document.getElementById('qfBoardsUp').classList.add('hidden');
+      document.getElementById('qfTimerBar').style.width = '100%';
+      document.getElementById('qfTimerText').textContent = 'Ready — Press Start Timer!';
+    }
+
+    function stopQfTimer() {
+      if (qfTimerId) {
+        clearInterval(qfTimerId);
+        qfTimerId = null;
+      }
+    }
+
+    function startQfTimer() {
+      stopQfTimer();
+      document.getElementById('qfBoardsUp').classList.add('hidden');
+      const total = parseInt(document.getElementById('qfSecondsSelect').value, 10) || 20;
+      let left = total;
+      document.getElementById('qfTimerText').textContent = `${left}s remaining`;
+      document.getElementById('qfTimerBar').style.width = '100%';
+      playTone(740, 0.08, 'sine', 0.08);
+
+      qfTimerId = setInterval(() => {
+        left--;
+        document.getElementById('qfTimerBar').style.width = ((left / total) * 100) + '%';
+        if (left > 0) {
+          document.getElementById('qfTimerText').textContent = `${left}s remaining`;
+          if (left <= 3) playTone(660, 0.07, 'square', 0.06);
+        } else {
+          stopQfTimer();
+          document.getElementById('qfTimerText').textContent = 'Time up!';
+          document.getElementById('qfBoardsUp').classList.remove('hidden');
+          playBuzzer();
+        }
+      }, 1000);
+    }
+
+    function revealQfAnswer() {
+      stopQfTimer();
+      document.getElementById('qfAnswerBox').classList.remove('hidden');
+      playChime();
+    }
+    function nextQf() {
+      qfIdx = (qfIdx + 1) % qfQuestions.length;
+      renderQf();
+    }
+    function prevQf() {
+      qfIdx = (qfIdx - 1 + qfQuestions.length) % qfQuestions.length;
+      renderQf();
+    }
+
+    // ============================================================
+    // 11. DAVID'S BOARD WHITEBOARD (W) & TEACHER DRAWER (T)
+    // ============================================================
+    let wbDrawing = false;
+    let wbColor = '#0f172a';
+    let wbSize = 4;
+    let wbErasing = false;
+    let wbCtx = null;
+
+    function openWhiteboard() {
+      const modal = document.getElementById('whiteboardModal');
+      modal.classList.remove('hidden');
+      const canvas = document.getElementById('whiteboardCanvas');
+      const rect = canvas.parentElement.getBoundingClientRect();
+      if (canvas.width !== Math.floor(rect.width) || canvas.height !== Math.floor(rect.height)) {
+        canvas.width = Math.floor(rect.width);
+        canvas.height = Math.floor(rect.height);
+      }
+      wbCtx = canvas.getContext('2d');
+      wbCtx.lineCap = 'round';
+      wbCtx.lineJoin = 'round';
+    }
+    function closeWhiteboard() {
+      document.getElementById('whiteboardModal').classList.add('hidden');
+    }
+    function setPenColor(c) { wbColor = c; wbErasing = false; }
+    function setPenSize(s) { wbSize = s; }
+    function setEraser() { wbErasing = true; }
+    function clearWhiteboard() {
+      const canvas = document.getElementById('whiteboardCanvas');
+      if (wbCtx) wbCtx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function initWhiteboardEvents() {
+      const canvas = document.getElementById('whiteboardCanvas');
+      const getPos = (e) => {
+        const r = canvas.getBoundingClientRect();
+        return { x: e.clientX - r.left, y: e.clientY - r.top };
+      };
+      canvas.addEventListener('pointerdown', (e) => {
+        wbDrawing = true;
+        canvas.setPointerCapture(e.pointerId);
+        const p = getPos(e);
+        if (!wbCtx) wbCtx = canvas.getContext('2d');
+        wbCtx.beginPath();
+        wbCtx.moveTo(p.x, p.y);
+      });
+      canvas.addEventListener('pointermove', (e) => {
+        if (!wbDrawing || !wbCtx) return;
+        const p = getPos(e);
+        wbCtx.globalCompositeOperation = wbErasing ? 'destination-out' : 'source-over';
+        wbCtx.strokeStyle = wbColor;
+        wbCtx.lineWidth = wbErasing ? 24 : wbSize;
+        wbCtx.lineTo(p.x, p.y);
+        wbCtx.stroke();
+      });
+      const stopDraw = () => { wbDrawing = false; };
+      canvas.addEventListener('pointerup', stopDraw);
+      canvas.addEventListener('pointercancel', stopDraw);
+    }
+
+    function toggleTeacherDrawer() {
+      document.getElementById('teacherDrawer').classList.toggle('hidden');
+    }
+
+    // Guarded Keyboard Shortcuts
+    function anyModalOpen() {
+      return !document.getElementById('vocabModal').classList.contains('hidden') ||
+             !document.getElementById('giantModal').classList.contains('hidden') ||
+             !document.getElementById('whiteboardModal').classList.contains('hidden') ||
+             document.getElementById('iDoStage').classList.contains('ido-fullscreen');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'Escape') {
+        closeVocabModal();
+        closeGiantModal();
+        closeWhiteboard();
+        document.getElementById('teacherDrawer').classList.add('hidden');
+        if (document.getElementById('iDoStage').classList.contains('ido-fullscreen')) toggleIdoFullscreen();
+        return;
+      }
+      if (e.key.toLowerCase() === 'w') {
+        if (document.getElementById('whiteboardModal').classList.contains('hidden')) openWhiteboard();
+        else closeWhiteboard();
+        return;
+      }
+      if (e.key.toLowerCase() === 't') { toggleTeacherDrawer(); return; }
+      if (e.key.toLowerCase() === 'm') { toggleMute(); return; }
+      if (anyModalOpen()) return;
+      if (e.key === 'ArrowRight') showStation(currentStation + 1);
+      if (e.key === 'ArrowLeft') showStation(currentStation - 1);
+    });
+
+    // Initialise Everything
+    renderVocabGrid();
+    renderVisualModel();
+    buildFdpGrid();
+    setFdpPercent(60);
+    renderSlicer();
+    renderTiersBoard();
+    renderTfGrid();
+    renderScChecks();
+    renderQf();
+    initWhiteboardEvents();
+  </script>
+</body>
+</html>

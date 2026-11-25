@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grade 5 Science — Unit 5.3 Lesson 2: Clay Cargo Challenge & Scatter Graph Lab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f8fafc 100%);
+      color: #0f172a;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    /* Auto-hiding fixed header */
+    #top-header {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    #top-header.header-hidden {
+      transform: translateY(-100%);
+    }
+
+    /* Station visibility — never put flex/grid directly on toggleable <section> */
+    .station-section {
+      display: none;
+    }
+    .station-section.active {
+      display: block;
+      animation: fadeInStation 0.25s ease-out;
+    }
+    @keyframes fadeInStation {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 3D Flip Cards for Station 1 Flashback 3 */
+    .flip-card {
+      perspective: 1200px;
+      cursor: pointer;
+    }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1.5rem;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Gentle water wave animation */
+    @keyframes waveShift {
+      0%, 100% { transform: translateX(0px); }
+      50% { transform: translateX(-14px); }
+    }
+    .water-wave {
+      animation: waveShift 3.6s ease-in-out infinite;
+    }
+    @keyframes bubbleRise {
+      0% { transform: translateY(0px); opacity: 0.9; }
+      100% { transform: translateY(-75px); opacity: 0; }
+    }
+    .sink-bubble {
+      animation: bubbleRise 1.6s ease-in infinite;
+    }
+    @keyframes pulseRing {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.16); opacity: 0.45; }
+    }
+    .anomaly-pulse {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: pulseRing 1.5s ease-in-out infinite;
+    }
+
+    /* Full Screen I Do mode */
+    .fullscreen-ido {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 60 !important;
+      background: #f8fafc !important;
+      overflow-y: auto !important;
+      padding: 1.5rem 2rem !important;
+      margin: 0 !important;
+      max-width: none !important;
+      border-radius: 0 !important;
+    }
+
+    /* Confetti canvas */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 120;
+    }
+
+    /* David's Board whiteboard */
+    #davids-board-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 95;
+      background: rgba(15, 23, 42, 0.92);
+    }
+    #wb-canvas.grid-bg {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+        linear-gradient(to bottom, #e2e8f0 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    #wb-canvas.plain-bg {
+      background-color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- ==================== AUTO-HIDING FIXED TOP HEADER ==================== -->
+  <!-- [SoL: Cognitive Load Management] Auto-hiding header keeps classroom focus clean during full-board modelling -->
+  <header id="top-header" class="fixed top-0 left-0 right-0 bg-slate-900 text-white shadow-lg border-b-4 border-sky-400">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="px-3 py-1 rounded-full bg-sky-500 text-slate-950 font-black text-xs uppercase tracking-wider shrink-0">
+          Stage 6 • Unit 5.3 • L2
+        </span>
+        <div class="min-w-0">
+          <div class="text-sm md:text-base font-black text-amber-300 truncate">
+            Enquiry: Whose clay boat can hold the most classroom cargo?
+          </div>
+          <div class="text-xs text-slate-300 truncate">
+            LO: Design a fair cargo boat test and read scatter graphs.
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Team Red vs Team Blue Live Scoreboard -->
+        <div class="flex items-center gap-1.5 bg-slate-800 px-2.5 py-1 rounded-xl border border-slate-700">
+          <button onclick="addTeamScore('red', 1)" class="px-2 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-500 font-bold text-xs transition" title="Add 1 point to Team Red">
+            🔴 Red: <span id="header-red-score">0</span>
+          </button>
+          <button onclick="addTeamScore('blue', 1)" class="px-2 py-0.5 rounded-lg bg-blue-600 hover:bg-blue-500 font-bold text-xs transition" title="Add 1 point to Team Blue">
+            🔵 Blue: <span id="header-blue-score">0</span>
+          </button>
+          <button onclick="resetScores()" class="px-1.5 py-0.5 rounded bg-slate-700 hover:bg-slate-600 text-[11px] text-slate-300" title="Reset scores">↺</button>
+        </div>
+
+        <button onclick="toggleWhiteboard()" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs shadow transition" title="David's Board (Shortcut: W)">
+          ✏️ David's Board (W)
+        </button>
+        <button onclick="toggleTeacherDrawer()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs shadow transition" title="Teacher Prompts (Shortcut: T)">
+          👩‍🏫 Prompts (T)
+        </button>
+        <button id="mute-btn" onclick="toggleMute()" class="px-3 py-1.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs transition" title="Mute / Unmute Sound (Shortcut: M)">
+          🔊 Sound (M)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+  <main class="pt-24 pb-12 px-4 max-w-7xl mx-auto">
+
+    <!-- FLEX-WRAP STATION NAVIGATION BAR -->
+    <nav aria-label="Lesson Stations" class="bg-white/95 backdrop-blur rounded-2xl shadow-md border border-slate-200 p-2 mb-6">
+      <div class="flex flex-wrap gap-2 justify-center" id="station-tabs">
+        <button data-station="0" onclick="goToStation(0)" class="station-tab px-4 py-2.5 rounded-xl font-extrabold text-sm transition bg-sky-600 text-white shadow">
+          0. 🎯 LO &amp; SC
+        </button>
+        <button data-station="1" onclick="goToStation(1)" class="station-tab px-4 py-2.5 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-sky-100">
+          1. ⚡ Flashback 3
+        </button>
+        <button data-station="2" onclick="goToStation(2)" class="station-tab px-4 py-2.5 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-sky-100">
+          2. 🗣️ Vocab &amp; Real World
+        </button>
+        <button data-station="3" onclick="goToStation(3)" class="station-tab px-4 py-2.5 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-sky-100">
+          3. 🔬 Secret Lab (I Do)
+        </button>
+        <button data-station="4" onclick="goToStation(4)" class="station-tab px-4 py-2.5 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-sky-100">
+          4. ⛵ Clay Cargo &amp; Graph Lab
+        </button>
+        <button data-station="5" onclick="goToStation(5)" class="station-tab px-4 py-2.5 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-sky-100">
+          5. ✅ SC Check
+        </button>
+        <button data-station="6" onclick="goToStation(6)" class="station-tab px-4 py-2.5 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-sky-100">
+          6. 🏆 Quickfire
+        </button>
+      </div>
+    </nav>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 0: LO & SUCCESS CRITERIA                                      -->
+    <!-- [SoL: Cognitive Load Management] [SoL: Schema Building]               -->
+    <!-- ===================================================================== -->
+    <section id="station-0" class="station-section active">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-r from-sky-700 via-blue-700 to-indigo-800 rounded-3xl p-8 md:p-10 text-white shadow-xl border-4 border-sky-300">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400 text-slate-950 font-black text-sm uppercase tracking-wider mb-4">
+            ⚓ Cambridge Stage 6 Science • Unit 5.3 Floating &amp; Sinking
+          </div>
+          <h1 class="text-3xl md:text-5xl font-black leading-tight mb-4">
+            Design a fair cargo boat test and read scatter graphs.
+          </h1>
+          <p class="text-xl md:text-2xl font-semibold text-sky-100">
+            Enquiry Question: <span class="text-amber-300 font-black">Whose clay boat can hold the most classroom cargo?</span>
+          </p>
+        </div>
+
+        <!-- Must / Should / Could Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white rounded-3xl p-6 shadow-lg border-t-8 border-emerald-500">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-700 font-black text-2xl flex items-center justify-center">M</span>
+              <h2 class="text-2xl font-black text-emerald-800">MUST</h2>
+            </div>
+            <p class="text-xl font-bold text-slate-800 leading-snug">
+              Identify the independent, dependent, and control variables.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 shadow-lg border-t-8 border-sky-500">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-11 h-11 rounded-2xl bg-sky-100 text-sky-700 font-black text-2xl flex items-center justify-center">S</span>
+              <h2 class="text-2xl font-black text-sky-800">SHOULD</h2>
+            </div>
+            <p class="text-xl font-bold text-slate-800 leading-snug">
+              Plot cargo results on a scatter graph and describe the pattern.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 shadow-lg border-t-8 border-violet-500">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-11 h-11 rounded-2xl bg-violet-100 text-violet-700 font-black text-2xl flex items-center justify-center">C</span>
+              <h2 class="text-2xl font-black text-violet-800">COULD</h2>
+            </div>
+            <p class="text-xl font-bold text-slate-800 leading-snug">
+              Circle an anomalous result, explain a cause, and predict a fair value.
+            </p>
+          </div>
+        </div>
+
+        <!-- Zero-Buy Classroom Practical Kit Banner [SoL: CPA Progression] -->
+        <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="text-4xl">🧰</div>
+            <div>
+              <h3 class="text-lg font-black text-amber-950">Zero-Buy Classroom Clay Cargo Kit</h3>
+              <p class="text-slate-700 font-semibold">
+                Every team uses the <strong>same 60 g lump of modelling clay</strong> from Lesson 1, a <strong>classroom water tub</strong>, a <strong>ruler</strong>, and everyday classroom cargo (<strong>metal paperclips or linking cubes</strong>).
+              </p>
+            </div>
+          </div>
+          <button onclick="goToStation(1)" class="px-6 py-3 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-black text-lg shadow-md transition">
+            Start Flashback 3 →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 1: SPACED FLASHBACK 3                                         -->
+    <!-- [SoL: Retrieval Practice] [SoL: Spaced Practice] [SoL: Interleaving]  -->
+    <!-- ===================================================================== -->
+    <section id="station-1" class="station-section">
+      <div class="space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 bg-white rounded-2xl p-5 shadow border border-slate-200">
+          <div>
+            <h2 class="text-3xl font-black text-slate-900">⚡ Spaced Flashback 3</h2>
+            <p class="text-slate-600 font-semibold">Retrieve knowledge from 3 earlier units. Write answers on mini-whiteboards, then tap each card to flip!</p>
+          </div>
+          <button onclick="flipAllFlashbacks(false)" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm">
+            ↺ Reset All Cards
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 5.2 Effects of Forces (6Pf.04) -->
+          <div class="flip-card h-[350px]" onclick="toggleFlip(this)">
+            <div class="flip-inner">
+              <div class="flip-face bg-gradient-to-br from-rose-600 to-orange-600 text-white shadow-xl border-4 border-rose-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 font-black text-xs uppercase tracking-wider">Unit 5.2 • 6Pf.04</span>
+                  <span class="text-4xl">🚲</span>
+                </div>
+                <div class="my-auto text-center">
+                  <div class="text-5xl font-black mb-3">FORCES</div>
+                  <p class="text-xl font-bold leading-snug">
+                    A cyclist stops pedalling on a flat road. Air resistance and friction push backwards. What happens to the cyclist's speed and why?
+                  </p>
+                </div>
+                <div class="text-center text-sm font-black uppercase tracking-widest text-amber-200">
+                  👆 Tap to Flip Answer
+                </div>
+              </div>
+              <div class="flip-face flip-back bg-white text-slate-900 shadow-xl border-4 border-rose-500">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-black text-xs uppercase">Answer • Unit 5.2</span>
+                  <span class="text-3xl">✅</span>
+                </div>
+                <div class="my-auto text-center space-y-3">
+                  <div class="text-4xl font-black text-rose-700">SLOWS DOWN</div>
+                  <p class="text-lg font-bold text-slate-800 leading-snug">
+                    The cyclist slows down and stops because an <strong>unbalanced force</strong> acts in the <strong>opposite direction</strong> to motion.
+                  </p>
+                </div>
+                <div class="text-center text-xs font-bold text-slate-500">Click to flip back</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 1.4 Diseases (6Bp.04) -->
+          <div class="flip-card h-[350px]" onclick="toggleFlip(this)">
+            <div class="flip-inner">
+              <div class="flip-face bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-xl border-4 border-emerald-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 font-black text-xs uppercase tracking-wider">Unit 1.4 • 6Bp.04</span>
+                  <span class="text-4xl">🛡️</span>
+                </div>
+                <div class="my-auto text-center">
+                  <div class="text-5xl font-black mb-3">DEFENCE</div>
+                  <p class="text-xl font-bold leading-snug">
+                    Name three natural barriers in the human body that protect us from harmful germs entering.
+                  </p>
+                </div>
+                <div class="text-center text-sm font-black uppercase tracking-widest text-amber-200">
+                  👆 Tap to Flip Answer
+                </div>
+              </div>
+              <div class="flip-face flip-back bg-white text-slate-900 shadow-xl border-4 border-emerald-500">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs uppercase">Answer • Unit 1.4</span>
+                  <span class="text-3xl">✅</span>
+                </div>
+                <div class="my-auto text-center space-y-2">
+                  <div class="text-3xl font-black text-emerald-700">SKIN • ACID • MUCUS</div>
+                  <p class="text-lg font-bold text-slate-800 leading-snug">
+                    <strong>1. Skin</strong> (blocks germs)<br />
+                    <strong>2. Stomach acid</strong> (kills swallowed germs)<br />
+                    <strong>3. Sticky mucus</strong> (traps germs in airways)
+                  </p>
+                </div>
+                <div class="text-center text-xs font-bold text-slate-500">Click to flip back</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 2.2 Thermal Conductors (6Cp.03) -->
+          <div class="flip-card h-[350px]" onclick="toggleFlip(this)">
+            <div class="flip-inner">
+              <div class="flip-face bg-gradient-to-br from-indigo-600 to-blue-700 text-white shadow-xl border-4 border-indigo-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 font-black text-xs uppercase tracking-wider">Unit 2.2 • 6Cp.03</span>
+                  <span class="text-4xl">🍳</span>
+                </div>
+                <div class="my-auto text-center">
+                  <div class="text-5xl font-black mb-3">HEAT</div>
+                  <p class="text-xl font-bold leading-snug">
+                    Why is a cooking pan made of metal, while its handle is made of plastic?
+                  </p>
+                </div>
+                <div class="text-center text-sm font-black uppercase tracking-widest text-amber-200">
+                  👆 Tap to Flip Answer
+                </div>
+              </div>
+              <div class="flip-face flip-back bg-white text-slate-900 shadow-xl border-4 border-indigo-500">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-black text-xs uppercase">Answer • Unit 2.2</span>
+                  <span class="text-3xl">✅</span>
+                </div>
+                <div class="my-auto text-center space-y-3">
+                  <div class="text-3xl font-black text-indigo-700">CONDUCTOR vs INSULATOR</div>
+                  <p class="text-lg font-bold text-slate-800 leading-snug">
+                    <strong>Metal</strong> is a thermal conductor (transfers heat quickly to food). <strong>Plastic</strong> is a thermal insulator (stops heat burning your hand).
+                  </p>
+                </div>
+                <div class="text-center text-xs font-bold text-slate-500">Click to flip back</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 2: BILINGUAL VOCAB MODAL + REAL-WORLD SCIENCE STRIP           -->
+    <!-- [SoL: Dual Coding] [SoL: Schema Building]                             -->
+    <!-- SOLE VIETNAMESE EXCEPTION IS INSIDE THE VOCAB MODAL ONLY              -->
+    <!-- ===================================================================== -->
+    <section id="station-2" class="station-section">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+            <div>
+              <h2 class="text-3xl font-black text-slate-900">🗣️ Scientific Vocabulary Bank</h2>
+              <p class="text-slate-600 font-semibold">Tap any word tile to launch the interactive bilingual visual &amp; audio card.</p>
+            </div>
+            <span class="px-4 py-1.5 rounded-full bg-sky-100 text-sky-800 font-black text-sm">
+              9 Key Investigation Terms
+            </span>
+          </div>
+
+          <!-- 9 Clickable English Vocab Tiles -->
+          <div id="vocab-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Populated cleanly by JS from VOCAB_DATA -->
+          </div>
+        </div>
+
+        <!-- REAL-WORLD SCIENCE STRIP AT BOTTOM OF VOCAB -->
+        <div class="bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl border-2 border-sky-400">
+          <h3 class="text-2xl font-black text-amber-300 mb-4">
+            🌍 Real-World Science: Ships, Plimsoll Lines &amp; Fair Testing
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white/10 rounded-2xl p-4 border border-white/15">
+              <div class="text-3xl mb-2">🚢</div>
+              <h4 class="text-lg font-black text-sky-300 mb-1">Cargo Ships &amp; Plimsoll Lines</h4>
+              <p class="text-sm text-slate-200 leading-relaxed">
+                Every giant cargo ship has a <strong>Plimsoll Line</strong> painted on its hull. If too much cargo is loaded, the ship sits too low and water can flood over the rim!
+              </p>
+            </div>
+            <div class="bg-white/10 rounded-2xl p-4 border border-white/15">
+              <div class="text-3xl mb-2">📐</div>
+              <h4 class="text-lg font-black text-emerald-300 mb-1">Marine Engineers Testing Hulls</h4>
+              <p class="text-sm text-slate-200 leading-relaxed">
+                Before building a real ship, engineers test scale models in water tanks. They change <strong>one hull shape feature at a time</strong> so it is a fair test.
+              </p>
+            </div>
+            <div class="bg-white/10 rounded-2xl p-4 border border-white/15">
+              <div class="text-3xl mb-2">🔎</div>
+              <h4 class="text-lg font-black text-amber-300 mb-1">Spotting Faulty Data</h4>
+              <p class="text-sm text-slate-200 leading-relaxed">
+                When a scatter graph shows one strange dot far off the pattern, scientists never ignore it or bend the line — they circle the <strong>anomalous result</strong> and repeat that trial!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 3: VISUAL ANIMATED FULL-SCREEN I DO / WE DO                   -->
+    <!-- [SoL: Worked Examples] [SoL: Elaborative Interrogation]               -->
+    <!-- [SoL: Misconceptions] [SoL: Dual Coding]                              -->
+    <!-- ===================================================================== -->
+    <section id="station-3" class="station-section">
+      <div id="station-3-wrapper" class="space-y-5">
+        <!-- Top Control & Safety Bar -->
+        <div class="bg-white rounded-2xl p-4 shadow border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="m1-btn" onclick="selectMission(1)" class="px-5 py-2.5 rounded-xl bg-sky-600 text-white font-black text-sm shadow transition">
+              Mission 1: Fair Test Variable Sort
+            </button>
+            <button id="m2-btn" onclick="selectMission(2)" class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-sky-100 font-black text-sm transition">
+              Mission 2: Read Scatter Graph &amp; Spot Anomaly
+            </button>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="openGiantModal()" class="px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-black text-sm shadow transition">
+              🔎 Giant Projection
+            </button>
+            <button id="fs-ido-btn" onclick="toggleFullScreenIDo()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 font-black text-sm shadow transition">
+              ⛶ Full Screen I Do
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Layout: Steps to Success Sidebar + Active Mission Canvas -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-5">
+          <!-- Permanent Steps to Success & Safety Sidebar -->
+          <aside class="lg:col-span-1 bg-slate-900 text-white rounded-3xl p-5 shadow-lg space-y-4">
+            <h3 class="text-lg font-black text-amber-300 border-b border-slate-700 pb-2">
+              📋 Steps to Success &amp; Safety
+            </h3>
+            <ol class="space-y-3 text-sm font-semibold text-slate-200 list-decimal list-inside">
+              <li>Use the <strong>exact same 60 g lump of clay</strong> for every boat width.</li>
+              <li>Measure the <strong>hull width (cm)</strong> with a ruler before floating.</li>
+              <li>Place paperclips <strong>gently in the centre</strong>, one by one.</li>
+              <li>Count only the cargo held <strong>before</strong> the boat sinks.</li>
+              <li>Plot points carefully: <strong>across to X, then up to Y</strong>.</li>
+            </ol>
+            <div class="bg-rose-950/80 border border-rose-500 rounded-2xl p-3 text-xs text-rose-100">
+              <div class="font-black text-rose-300 mb-1">⚠️ Classroom Water Safety</div>
+              Wipe up spilled water immediately with paper towels so nobody slips. Keep clay off the floor!
+            </div>
+          </aside>
+
+          <!-- Mission Content Area -->
+          <div class="lg:col-span-3 space-y-4">
+            <!-- MISSION 1: FAIR TEST VARIABLE SORTING -->
+            <div id="mission-1-panel" class="bg-white rounded-3xl p-6 shadow-lg border border-slate-200 space-y-5">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 font-black text-xs uppercase">Worked Example 1 • Fair Testing</span>
+                  <h3 class="text-2xl font-black text-slate-900 mt-1">Sort the Variables for Our Clay Cargo Challenge</h3>
+                </div>
+                <button onclick="revealNextVariableStep()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm shadow transition">
+                  ▶ Reveal Next Variable (<span id="var-step-count">0</span>/3)
+                </button>
+              </div>
+
+              <!-- Visual 3-Column Variable Boxes -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div id="var-box-1" class="rounded-2xl border-2 border-dashed border-sky-300 bg-sky-50/40 p-5 transition-all">
+                  <div class="text-xs font-black uppercase tracking-wider text-sky-700 mb-1">1. Independent Variable</div>
+                  <div class="text-lg font-black text-slate-900 mb-3">What we CHANGE (Only ONE!)</div>
+                  <div class="var-reveal hidden bg-white rounded-xl p-4 border-2 border-sky-500 shadow-sm">
+                    <div class="text-3xl mb-1">📏</div>
+                    <div class="font-black text-sky-900 text-lg">Hull Width of the Clay Boat</div>
+                    <p class="text-sm text-slate-700 mt-1">Tested at <strong>6 cm, 8 cm, 10 cm, 12 cm, and 14 cm</strong>.</p>
+                  </div>
+                  <div class="var-prompt text-sm font-bold text-slate-400 italic py-6 text-center">Click "Reveal Next Variable"</div>
+                </div>
+
+                <div id="var-box-2" class="rounded-2xl border-2 border-dashed border-amber-300 bg-amber-50/40 p-5 transition-all">
+                  <div class="text-xs font-black uppercase tracking-wider text-amber-700 mb-1">2. Dependent Variable</div>
+                  <div class="text-lg font-black text-slate-900 mb-3">What we MEASURE</div>
+                  <div class="var-reveal hidden bg-white rounded-xl p-4 border-2 border-amber-500 shadow-sm">
+                    <div class="text-3xl mb-1">📎</div>
+                    <div class="font-black text-amber-900 text-lg">Paperclips Held Before Sinking</div>
+                    <p class="text-sm text-slate-700 mt-1">Count how many identical classroom paperclips stay dry inside the boat.</p>
+                  </div>
+                  <div class="var-prompt text-sm font-bold text-slate-400 italic py-6 text-center">Waiting for step 2...</div>
+                </div>
+
+                <div id="var-box-3" class="rounded-2xl border-2 border-dashed border-emerald-300 bg-emerald-50/40 p-5 transition-all">
+                  <div class="text-xs font-black uppercase tracking-wider text-emerald-700 mb-1">3. Control Variables</div>
+                  <div class="text-lg font-black text-slate-900 mb-3">What we KEEP THE SAME</div>
+                  <div class="var-reveal hidden bg-white rounded-xl p-4 border-2 border-emerald-500 shadow-sm">
+                    <div class="text-3xl mb-1">⚖️</div>
+                    <ul class="text-sm font-bold text-emerald-950 space-y-1 list-disc list-inside">
+                      <li>Same <strong>60 g clay mass</strong></li>
+                      <li>Same size metal paperclips</li>
+                      <li>Same tub of fresh water</li>
+                      <li>Same gentle loading in centre</li>
+                    </ul>
+                  </div>
+                  <div class="var-prompt text-sm font-bold text-slate-400 italic py-6 text-center">Waiting for step 3...</div>
+                </div>
+              </div>
+
+              <!-- Misconception Check [SoL: Misconceptions] [SoL: Elaborative Interrogation] -->
+              <div class="bg-rose-50 border-2 border-rose-200 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <div class="font-black text-rose-900 text-base">🚨 Spot the Misconception: "Mia adds 30 g of extra clay to her wider boat!"</div>
+                  <p id="mia-feedback" class="text-sm text-rose-800 font-semibold mt-1">
+                    Discuss with your partner: Why does this ruin the fair test?
+                  </p>
+                </div>
+                <button onclick="revealMiaMisconception()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-sm shrink-0">
+                  Check Why
+                </button>
+              </div>
+            </div>
+
+            <!-- MISSION 2: HOW TO READ A SCATTER GRAPH & CIRCLE AN ANOMALOUS RESULT -->
+            <div id="mission-2-panel" class="hidden bg-white rounded-3xl p-6 shadow-lg border border-slate-200 space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <span class="px-3 py-1 rounded-full bg-violet-100 text-violet-800 font-black text-xs uppercase">Worked Example 2 • Scatter Graph &amp; Anomaly</span>
+                  <h3 class="text-2xl font-black text-slate-900 mt-1">Read Coordinates, Spot the Pattern &amp; Circle the Outlier</h3>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <button onclick="toggleM2Overlay()" id="m2-overlay-btn" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm shadow transition">
+                    ✨ Reveal Pattern &amp; Circle Anomaly
+                  </button>
+                </div>
+              </div>
+
+              <!-- How to Read Banner (NO NAKED GRAPHS rule) -->
+              <div class="bg-sky-50 border border-sky-300 rounded-xl px-4 py-2.5 text-sm font-bold text-sky-950">
+                📖 <strong>How to Read This Scatter Graph:</strong> Move <strong>across</strong> the bottom X-axis to find the Hull Width (cm), then move <strong>straight up</strong> to read the Steel Washers Held on the Y-axis. <strong>Click any plotted point</strong> to inspect its exact reading!
+              </div>
+
+              <!-- Labelled SVG Scatter Graph (Steel Washers I Do Dataset) -->
+              <div class="bg-slate-50 rounded-2xl p-3 border border-slate-200">
+                <svg id="m2-svg" viewBox="0 0 680 350" class="w-full h-auto max-h-[340px]">
+                  <text x="360" y="24" text-anchor="middle" font-size="16" font-weight="800" fill="#0f172a">
+                    Effect of Clay Boat Hull Width on Steel Washers Held
+                  </text>
+                  <!-- Grid lines -->
+                  <g stroke="#cbd5e1" stroke-width="1">
+                    <!-- Horizontal gridlines Y: 0,4,8,12,16,20,24,28 -->
+                    <line x1="80" y1="290" x2="620" y2="290" stroke="#0f172a" stroke-width="2" />
+                    <line x1="80" y1="255" x2="620" y2="255" />
+                    <line x1="80" y1="220" x2="620" y2="220" />
+                    <line x1="80" y1="185" x2="620" y2="185" />
+                    <line x1="80" y1="150" x2="620" y2="150" />
+                    <line x1="80" y1="115" x2="620" y2="115" />
+                    <line x1="80" y1="80" x2="620" y2="80" />
+                    <line x1="80" y1="45" x2="620" y2="45" />
+                    <!-- Vertical gridlines X: 4,6,8,10,12,14,16,18 -->
+                    <line x1="80" y1="45" x2="80" y2="290" stroke="#0f172a" stroke-width="2" />
+                    <line x1="157" y1="45" x2="157" y2="290" />
+                    <line x1="234" y1="45" x2="234" y2="290" />
+                    <line x1="311" y1="45" x2="311" y2="290" />
+                    <line x1="388" y1="45" x2="388" y2="290" />
+                    <line x1="465" y1="45" x2="465" y2="290" />
+                    <line x1="542" y1="45" x2="542" y2="290" />
+                    <line x1="620" y1="45" x2="620" y2="290" />
+                  </g>
+
+                  <!-- Y-axis ticks & label -->
+                  <g font-size="12" font-weight="700" fill="#334155" text-anchor="end">
+                    <text x="72" y="294">0</text>
+                    <text x="72" y="259">4</text>
+                    <text x="72" y="224">8</text>
+                    <text x="72" y="189">12</text>
+                    <text x="72" y="154">16</text>
+                    <text x="72" y="119">20</text>
+                    <text x="72" y="84">24</text>
+                    <text x="72" y="49">28</text>
+                  </g>
+                  <text x="22" y="168" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a" transform="rotate(-90 22 168)">
+                    Number of Steel Washers Held
+                  </text>
+
+                  <!-- X-axis ticks & label -->
+                  <g font-size="12" font-weight="700" fill="#334155" text-anchor="middle">
+                    <text x="80" y="310">4</text>
+                    <text x="157" y="310">6</text>
+                    <text x="234" y="310">8</text>
+                    <text x="311" y="310">10</text>
+                    <text x="388" y="310">12</text>
+                    <text x="465" y="310">14</text>
+                    <text x="542" y="310">16</text>
+                    <text x="620" y="310">18</text>
+                  </g>
+                  <text x="350" y="338" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">
+                    Clay Boat Hull Width (cm)
+                  </text>
+
+                  <!-- Pattern Line + Anomaly Ring (hidden until toggled) -->
+                  <g id="m2-pattern-group" style="display:none;">
+                    <line x1="157" y1="255" x2="542" y2="80" stroke="#0284c7" stroke-width="3.5" stroke-dasharray="8 5" />
+                    <!-- Predicted point on line at X=12cm -> Y=16 washers -->
+                    <circle cx="388" cy="150" r="8" fill="#10b981" stroke="#ffffff" stroke-width="2" />
+                    <text x="398" y="142" font-size="12" font-weight="800" fill="#047857">Predicted: 16 washers</text>
+                    <!-- Glowing Anomaly Circle around (12, 6) -> y = 290 - (6/4)*35 = 237.5 -->
+                    <circle cx="388" cy="237.5" r="22" fill="none" stroke="#e11d48" stroke-width="4" class="anomaly-pulse" />
+                    <text x="415" y="242" font-size="13" font-weight="900" fill="#be123c">ANOMALY! (12 cm, 6)</text>
+                  </g>
+
+                  <!-- Interactive Data Points: (6,4), (8,8), (10,12), (12,6 ANOMALY), (14,20), (16,24) -->
+                  <g id="m2-points">
+                    <circle cx="157" cy="255" r="9" fill="#0369a1" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="inspectM2Point(6, 4, false)" />
+                    <circle cx="234" cy="220" r="9" fill="#0369a1" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="inspectM2Point(8, 8, false)" />
+                    <circle cx="311" cy="185" r="9" fill="#0369a1" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="inspectM2Point(10, 12, false)" />
+                    <circle cx="388" cy="237.5" r="9" fill="#e11d48" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="inspectM2Point(12, 6, true)" />
+                    <circle cx="465" cy="115" r="9" fill="#0369a1" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="inspectM2Point(14, 20, false)" />
+                    <circle cx="542" cy="80" r="9" fill="#0369a1" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="inspectM2Point(16, 24, false)" />
+                  </g>
+                </svg>
+              </div>
+
+              <!-- Anchored Coordinate Readout Dashboard BELOW SVG -->
+              <div id="m2-readout" class="bg-slate-900 text-white rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
+                <div class="font-bold text-sky-300">
+                  📍 Selected Point: <span id="m2-coord-text" class="text-white">Tap any dot on the scatter graph above!</span>
+                </div>
+                <div id="m2-note-text" class="text-sm text-amber-300 font-semibold">
+                  Notice how the washers increase by +4 for every +2 cm of hull width.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 4: INTERACTIVE CLAY CARGO BOAT & LIVE SCATTER GRAPH LAB       -->
+    <!-- [SoL: CPA Progression] [SoL: Dual Coding] [SoL: Immediate Feedback]   -->
+    <!-- [SoL: Elaborative Interrogation] [SoL: Misconceptions]                -->
+    <!-- ===================================================================== -->
+    <section id="station-4" class="station-section">
+      <div class="space-y-5">
+        <!-- Top Lab Control Ribbon -->
+        <div class="bg-white rounded-3xl p-5 shadow-md border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-900">⛵ Clay Cargo Boat Designer &amp; Live Scatter Graph Lab</h2>
+            <p class="text-slate-600 font-semibold text-sm">Keep clay mass fixed at <strong>60 g</strong>. Change the hull width, load classroom paperclips, and watch the live scatter graph plot!</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="loadClassDemoData()" class="px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-black text-sm shadow transition">
+              📊 Load Full Class Trial Data (with 1 Leak)
+            </button>
+            <button onclick="clearGraphData()" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm transition">
+              🗑️ Clear Graph
+            </button>
+          </div>
+        </div>
+
+        <!-- Two-Column Simulator + Live Scatter Graph -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <!-- LEFT COLUMN: INTERACTIVE WATER TANK SIMULATOR -->
+          <div class="bg-white rounded-3xl p-5 shadow-lg border border-slate-200 space-y-4">
+            <!-- Controls -->
+            <div class="space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs font-black uppercase tracking-wider text-slate-500">1. Choose Hull Width (Independent Variable)</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs">Control: 60 g Clay Fixed</span>
+              </div>
+              <div class="grid grid-cols-5 gap-2" id="width-selector">
+                <button onclick="setHullWidth(6)" data-w="6" class="w-btn py-2 rounded-xl font-black text-sm bg-slate-100 hover:bg-sky-100 text-slate-800 transition">6 cm</button>
+                <button onclick="setHullWidth(8)" data-w="8" class="w-btn py-2 rounded-xl font-black text-sm bg-slate-100 hover:bg-sky-100 text-slate-800 transition">8 cm</button>
+                <button onclick="setHullWidth(10)" data-w="10" class="w-btn py-2 rounded-xl font-black text-sm bg-sky-600 text-white shadow transition">10 cm</button>
+                <button onclick="setHullWidth(12)" data-w="12" class="w-btn py-2 rounded-xl font-black text-sm bg-slate-100 hover:bg-sky-100 text-slate-800 transition">12 cm</button>
+                <button onclick="setHullWidth(14)" data-w="14" class="w-btn py-2 rounded-xl font-black text-sm bg-slate-100 hover:bg-sky-100 text-slate-800 transition">14 cm</button>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-black uppercase text-slate-500">Rim Height:</span>
+                  <button id="rim-high-btn" onclick="setRimHeight('high')" class="px-3 py-1.5 rounded-lg bg-sky-600 text-white font-bold text-xs">High Rim</button>
+                  <button id="rim-low-btn" onclick="setRimHeight('low')" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 font-bold text-xs">Low Rim</button>
+                </div>
+                <label class="flex items-center gap-2 cursor-pointer bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-200 text-xs font-extrabold text-rose-800">
+                  <input type="checkbox" id="leak-toggle" onchange="resetCurrentBoat()" class="accent-rose-600 w-4 h-4" />
+                  💧 Simulate Pinhole Leak (Anomaly)
+                </label>
+              </div>
+            </div>
+
+            <!-- SVG Water Tank Canvas (ZERO floating telemetry text inside!) -->
+            <div class="rounded-2xl overflow-hidden border-4 border-slate-800 bg-sky-50">
+              <svg id="tank-svg" viewBox="0 0 540 310" class="w-full h-auto block">
+                <!-- Sky / Air backdrop -->
+                <rect x="0" y="0" width="540" height="140" fill="#f0f9ff" />
+                <!-- Water body -->
+                <rect x="0" y="140" width="540" height="170" fill="#38bdf8" fill-opacity="0.45" />
+                <!-- Animated Wave Crest -->
+                <g class="water-wave">
+                  <path d="M-20 140 Q 20 132, 60 140 T 140 140 T 220 140 T 300 140 T 380 140 T 460 140 T 540 140 T 620 140 L 620 156 L -20 156 Z" fill="#0ea5e9" fill-opacity="0.55" />
+                </g>
+                <!-- Tank Floor -->
+                <rect x="0" y="294" width="540" height="16" fill="#475569" />
+
+                <!-- Dynamic Boat Group (translated vertically by JS) -->
+                <g id="boat-group" transform="translate(270, 140)">
+                  <!-- Clay Hull Path updated dynamically -->
+                  <path id="boat-hull-path" d="M -70 -34 L -56 14 L 56 14 L 70 -34 L 58 -34 L 46 2 L -46 2 L -58 -34 Z" fill="#b45309" stroke="#451a03" stroke-width="3" />
+                  <!-- Pinhole Leak indicator (shown only when leak active) -->
+                  <g id="leak-visual" style="display:none;">
+                    <circle cx="0" cy="10" r="4.5" fill="#0284c7" stroke="#ffffff" stroke-width="1.5" />
+                    <path d="M 0 6 Q -4 -6, 0 -16 Q 4 -6, 0 6 Z" fill="#38bdf8" />
+                  </g>
+                  <!-- Paperclip Cargo Group -->
+                  <g id="cargo-clips-group"></g>
+                  <!-- Force Arrows attached to boat centre -->
+                  <!-- Upthrust Arrow (Upward, Green) -->
+                  <g id="upthrust-arrow-g">
+                    <line id="upthrust-line" x1="-18" y1="14" x2="-18" y2="-45" stroke="#059669" stroke-width="5" stroke-linecap="round" />
+                    <polygon id="upthrust-head" points="-18,-56 -27,-40 -9,-40" fill="#059669" />
+                    <text id="upthrust-lbl" x="-30" y="-22" text-anchor="end" font-size="13" font-weight="900" fill="#065f46">Upthrust</text>
+                  </g>
+                  <!-- Weight Arrow (Downward, Red) -->
+                  <g id="weight-arrow-g">
+                    <line id="weight-line" x1="18" y1="0" x2="18" y2="59" stroke="#dc2626" stroke-width="5" stroke-linecap="round" />
+                    <polygon id="weight-head" points="18,70 9,54 27,54" fill="#dc2626" />
+                    <text id="weight-lbl" x="30" y="42" text-anchor="start" font-size="13" font-weight="900" fill="#991b1b">Weight</text>
+                  </g>
+                </g>
+
+                <!-- Sink Bubbles (shown when sunk) -->
+                <g id="sink-bubbles-group" style="display:none;">
+                  <circle cx="235" cy="245" r="6" fill="#ffffff" fill-opacity="0.8" class="sink-bubble" />
+                  <circle cx="275" cy="235" r="8" fill="#ffffff" fill-opacity="0.7" class="sink-bubble" style="animation-delay:0.4s" />
+                  <circle cx="305" cy="250" r="5" fill="#ffffff" fill-opacity="0.8" class="sink-bubble" style="animation-delay:0.8s" />
+                </g>
+              </svg>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-3 gap-2">
+              <button id="add-clip-btn" onclick="addPaperclip()" class="py-3 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-black text-sm shadow transition">
+                📎 +1 Paperclip
+              </button>
+              <button id="autoload-btn" onclick="autoLoadUntilSink()" class="py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm shadow transition">
+                ⚡ Auto-Load!
+              </button>
+              <button onclick="resetCurrentBoat()" class="py-3 rounded-2xl bg-slate-200 hover:bg-slate-300 text-slate-900 font-black text-sm transition">
+                ↺ Reset Boat
+              </button>
+            </div>
+
+            <!-- ANCHORED LIVE TELEMETRY DASHBOARD (Strictly OUTSIDE & BELOW canvas) -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-900 text-white p-3.5 rounded-2xl">
+              <div class="bg-slate-800 rounded-xl p-2.5 text-center">
+                <div class="text-[11px] uppercase text-slate-400 font-bold">Cargo Loaded</div>
+                <div id="tel-clips" class="text-2xl font-black text-amber-300">0</div>
+              </div>
+              <div class="bg-slate-800 rounded-xl p-2.5 text-center">
+                <div class="text-[11px] uppercase text-slate-400 font-bold">Weight (↓)</div>
+                <div id="tel-weight" class="text-2xl font-black text-rose-400">0.6 N</div>
+              </div>
+              <div class="bg-slate-800 rounded-xl p-2.5 text-center">
+                <div class="text-[11px] uppercase text-slate-400 font-bold">Upthrust (↑)</div>
+                <div id="tel-upthrust" class="text-2xl font-black text-emerald-400">0.6 N</div>
+              </div>
+              <div class="bg-slate-800 rounded-xl p-2.5 text-center flex flex-col justify-center">
+                <div class="text-[11px] uppercase text-slate-400 font-bold">Status</div>
+                <div id="tel-status" class="text-xs font-black text-sky-300 leading-tight mt-0.5">FLOATING<br/>Balanced</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: LIVE AUTO-PLOTTING SCATTER GRAPH -->
+          <div class="bg-white rounded-3xl p-5 shadow-lg border border-slate-200 space-y-4">
+            <div class="bg-sky-50 border border-sky-200 rounded-xl px-3.5 py-2 text-xs font-bold text-sky-950">
+              📖 <strong>How to Read:</strong> Every time a boat sinks, its maximum paperclips held plots automatically below! Read <strong>across to X (Hull Width)</strong>, then <strong>up to Y (Paperclips)</strong>. Click any plotted dot to inspect or diagnose an anomaly!
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-2 border border-slate-200">
+              <svg id="live-scatter-svg" viewBox="0 0 560 340" class="w-full h-auto block">
+                <text x="295" y="22" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">
+                  Clay Boat Hull Width vs Paperclips Held Before Sinking
+                </text>
+                <!-- Gridlines -->
+                <g stroke="#cbd5e1" stroke-width="1">
+                  <!-- Y from 0 to 40 step 5 (y=280 down to y=40, step 30px) -->
+                  <line x1="70" y1="280" x2="520" y2="280" stroke="#0f172a" stroke-width="2" />
+                  <line x1="70" y1="250" x2="520" y2="250" />
+                  <line x1="70" y1="220" x2="520" y2="220" />
+                  <line x1="70" y1="190" x2="520" y2="190" />
+                  <line x1="70" y1="160" x2="520" y2="160" />
+                  <line x1="70" y1="130" x2="520" y2="130" />
+                  <line x1="70" y1="100" x2="520" y2="100" />
+                  <line x1="70" y1="70" x2="520" y2="70" />
+                  <line x1="70" y1="40" x2="520" y2="40" />
+                  <!-- X from 4 to 16 step 2 (x=70 to x=520, step 75px) -->
+                  <line x1="70" y1="40" x2="70" y2="280" stroke="#0f172a" stroke-width="2" />
+                  <line x1="145" y1="40" x2="145" y2="280" />
+                  <line x1="220" y1="40" x2="220" y2="280" />
+                  <line x1="295" y1="40" x2="295" y2="280" />
+                  <line x1="370" y1="40" x2="370" y2="280" />
+                  <line x1="445" y1="40" x2="445" y2="280" />
+                  <line x1="520" y1="40" x2="520" y2="280" />
+                </g>
+
+                <!-- Y labels -->
+                <g font-size="11" font-weight="700" fill="#334155" text-anchor="end">
+                  <text x="62" y="284">0</text>
+                  <text x="62" y="254">5</text>
+                  <text x="62" y="224">10</text>
+                  <text x="62" y="194">15</text>
+                  <text x="62" y="164">20</text>
+                  <text x="62" y="134">25</text>
+                  <text x="62" y="104">30</text>
+                  <text x="62" y="74">35</text>
+                  <text x="62" y="44">40</text>
+                </g>
+                <text x="18" y="160" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a" transform="rotate(-90 18 160)">
+                  Paperclips Held Before Sinking
+                </text>
+
+                <!-- X labels -->
+                <g font-size="11" font-weight="700" fill="#334155" text-anchor="middle">
+                  <text x="70" y="298">4</text>
+                  <text x="145" y="298">6</text>
+                  <text x="220" y="298">8</text>
+                  <text x="295" y="298">10</text>
+                  <text x="370" y="298">12</text>
+                  <text x="445" y="298">14</text>
+                  <text x="520" y="298">16</text>
+                </g>
+                <text x="295" y="325" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">
+                  Clay Boat Hull Width (cm)
+                </text>
+
+                <!-- Trend Guide Line (optional toggle) -->
+                <line id="live-trend-line" x1="145" y1="226" x2="445" y2="82" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="7 5" style="display:none;" />
+
+                <!-- Dynamic Plotted Points Group -->
+                <g id="live-plot-points"></g>
+              </svg>
+            </div>
+
+            <!-- Interactive Point Readout + Anomaly Diagnosis Card -->
+            <div id="live-graph-readout" class="bg-slate-900 text-white rounded-2xl p-4 space-y-2">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="font-black text-sky-300 text-sm">📍 Plotted Point Inspector</span>
+                <button onclick="toggleLiveTrend()" id="trend-toggle-btn" class="px-3 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs">
+                  📈 Show Pattern Line
+                </button>
+              </div>
+              <p id="live-point-detail" class="text-sm text-slate-200 font-semibold">
+                Test a boat on the left (or click "Load Full Class Trial Data"), then tap any plotted point on the scatter graph!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CLICK-TO-REVEAL MECHANISM EXPLAINER BELOW SIMULATOR -->
+        <div class="bg-white rounded-3xl p-5 shadow-md border-2 border-indigo-200">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 class="text-xl font-black text-indigo-950">🔬 Scientific Mechanism Explainer: Why Does a Wider Hull Hold More Cargo?</h3>
+              <p class="text-sm text-slate-600 font-semibold">Ask pupils to explain first, then click to reveal the science!</p>
+            </div>
+            <button onclick="toggleMechanism()" id="mech-btn" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm shadow transition">
+              👁️ Reveal Scientific Explanation
+            </button>
+          </div>
+          <div id="mech-content" class="hidden mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-indigo-100">
+            <div class="bg-sky-50 rounded-2xl p-4 border border-sky-200">
+              <div class="font-black text-sky-900 mb-1">1. Bigger Surface Area &amp; Water Pushed Aside</div>
+              <p class="text-sm text-slate-700 font-medium">
+                Reshaping the same 60 g of clay into a <strong>wider hollow hull</strong> spreads the clay over a larger surface area, pushing more water aside.
+              </p>
+            </div>
+            <div class="bg-emerald-50 rounded-2xl p-4 border border-emerald-200">
+              <div class="font-black text-emerald-900 mb-1">2. Bigger Maximum Upthrust</div>
+              <p class="text-sm text-slate-700 font-medium">
+                As paperclips are added, <strong>Weight increases</strong> and the boat rides lower, so <strong>Upthrust increases to match Weight</strong> — up to a higher maximum for wider hulls!
+              </p>
+            </div>
+            <div class="bg-rose-50 rounded-2xl p-4 border border-rose-200">
+              <div class="font-black text-rose-900 mb-1">3. Why It Finally Sinks (or Leaks!)</div>
+              <p class="text-sm text-slate-700 font-medium">
+                When <strong>Weight becomes greater than the maximum Upthrust</strong> (or water pours over a low rim / through a pinhole leak), forces become unbalanced and the boat sinks.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 5: SUCCESS CRITERIA WHITEBOARD CHECK                          -->
+    <!-- [SoL: Metacognition] [SoL: Immediate Feedback] [SoL: Elaborative Interrogation] -->
+    <!-- ===================================================================== -->
+    <section id="station-5" class="station-section">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-3xl font-black text-slate-900">✅ Success Criteria Whiteboard Check</h2>
+            <p class="text-slate-600 font-semibold">Check all 3 fresh mini-whiteboard challenges before Quickfire. Tick each criterion as the class masters it!</p>
+          </div>
+          <div class="flex items-center gap-3 bg-slate-900 text-white px-5 py-3 rounded-2xl">
+            <span class="text-sm font-bold text-slate-300">Class Mastery:</span>
+            <span id="sc-met-counter" class="text-2xl font-black text-emerald-400">0 / 3 Met</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Check 1: MUST -->
+          <div class="bg-white rounded-3xl p-6 shadow-lg border-t-8 border-emerald-500 flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs uppercase">MUST • Variables</span>
+                <label class="flex items-center gap-1.5 cursor-pointer font-black text-sm text-emerald-700">
+                  <input type="checkbox" class="sc-check w-5 h-5 accent-emerald-600" onchange="updateScCounter()" /> Met
+                </label>
+              </div>
+              <h3 class="text-xl font-black text-slate-900">Whiteboard Check 1</h3>
+              <p class="text-base font-semibold text-slate-700">
+                Noah uses <strong>45 g of clay</strong> to make boats of different widths and counts how many <strong>linking cubes</strong> each holds. Write the <strong>Independent</strong>, <strong>Dependent</strong>, and one <strong>Control</strong> variable.
+              </p>
+              <div id="sc-ans-1" class="hidden bg-emerald-50 border border-emerald-300 rounded-xl p-3 text-sm font-bold text-emerald-950">
+                • <strong>Independent (Change):</strong> Boat width<br />
+                • <strong>Dependent (Measure):</strong> Linking cubes held<br />
+                • <strong>Control (Keep Same):</strong> 45 g clay mass, same cubes, same water tub
+              </div>
+            </div>
+            <button onclick="revealScAnswer(1)" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm transition">
+              👁️ Reveal Answer
+            </button>
+          </div>
+
+          <!-- Check 2: SHOULD -->
+          <div class="bg-white rounded-3xl p-6 shadow-lg border-t-8 border-sky-500 flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 font-black text-xs uppercase">SHOULD • Scatter Reading</span>
+                <label class="flex items-center gap-1.5 cursor-pointer font-black text-sm text-sky-700">
+                  <input type="checkbox" class="sc-check w-5 h-5 accent-sky-600" onchange="updateScCounter()" /> Met
+                </label>
+              </div>
+              <h3 class="text-xl font-black text-slate-900">Whiteboard Check 2</h3>
+              <p class="text-base font-semibold text-slate-700">
+                On Noah's scatter graph, a point sits at <strong>(18 cm, 32 cubes)</strong>. What does this point tell you, and what happens to the cubes held as hull width increases?
+              </p>
+              <div id="sc-ans-2" class="hidden bg-sky-50 border border-sky-300 rounded-xl p-3 text-sm font-bold text-sky-950">
+                • An <strong>18 cm wide</strong> boat held <strong>32 linking cubes</strong>.<br />
+                • <strong>Pattern:</strong> As hull width increases, the number of cubes held increases.
+              </div>
+            </div>
+            <button onclick="revealScAnswer(2)" class="w-full py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-black text-sm transition">
+              👁️ Reveal Answer
+            </button>
+          </div>
+
+          <!-- Check 3: COULD -->
+          <div class="bg-white rounded-3xl p-6 shadow-lg border-t-8 border-violet-500 flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-violet-100 text-violet-800 font-black text-xs uppercase">COULD • Anomaly</span>
+                <label class="flex items-center gap-1.5 cursor-pointer font-black text-sm text-violet-700">
+                  <input type="checkbox" class="sc-check w-5 h-5 accent-violet-600" onchange="updateScCounter()" /> Met
+                </label>
+              </div>
+              <h3 class="text-xl font-black text-slate-900">Whiteboard Check 3</h3>
+              <p class="text-base font-semibold text-slate-700">
+                Noah's <strong>14 cm</strong> boat should hold about <strong>24 cubes</strong>, but his trial only held <strong>5 cubes</strong>. What do we call this result, and what should Noah do next?
+              </p>
+              <div id="sc-ans-3" class="hidden bg-violet-50 border border-violet-300 rounded-xl p-3 text-sm font-bold text-violet-950">
+                • It is an <strong>anomalous result</strong> (likely caused by a hole/leak or dropping cubes roughly).<br />
+                • Noah should <strong>circle it and repeat the 14 cm trial</strong> carefully.
+              </div>
+            </div>
+            <button onclick="revealScAnswer(3)" class="w-full py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-black text-sm transition">
+              👁️ Reveal Answer
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 6: QUICKFIRE CHECKPOINT CHALLENGE                             -->
+    <!-- [SoL: Automaticity] [SoL: Retrieval Practice] [SoL: Immediate Feedback] -->
+    <!-- ===================================================================== -->
+    <section id="station-6" class="station-section">
+      <div class="space-y-5">
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 shadow-xl border-4 border-amber-400">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider">
+                🏆 Stage 6 Checkpoint Quickfire
+              </span>
+              <h2 class="text-2xl md:text-3xl font-black mt-1">
+                Question <span id="qf-num">1</span> of 8
+              </h2>
+            </div>
+
+            <!-- Timer + BOARDS UP badge -->
+            <div class="flex items-center gap-3">
+              <div id="qf-timer-box" class="px-5 py-2 rounded-2xl bg-slate-800 border-2 border-sky-400 text-center min-w-[115px]">
+                <div class="text-[11px] uppercase font-bold text-sky-300">Timer</div>
+                <div id="qf-timer" class="text-3xl font-black text-white">20s</div>
+              </div>
+              <button onclick="startQfTimer()" class="px-4 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm shadow transition">
+                ⏱️ Start 20s
+              </button>
+            </div>
+          </div>
+
+          <!-- BOARDS UP Banner -->
+          <div id="boards-up-banner" class="hidden mb-4 py-3 px-6 rounded-2xl bg-amber-400 text-slate-950 text-center text-3xl font-black tracking-widest animate-bounce">
+            🙌 BOARDS UP! SHOW YOUR ANSWERS! 🙌
+          </div>
+
+          <!-- Question Card -->
+          <div class="bg-white text-slate-900 rounded-2xl p-6 md:p-8 shadow-inner space-y-5">
+            <div id="qf-tag" class="inline-block px-3 py-1 rounded-full bg-sky-100 text-sky-800 font-black text-xs uppercase">
+              Fair Testing
+            </div>
+            <p id="qf-question" class="text-2xl md:text-3xl font-black leading-snug text-slate-900">
+              Loading question...
+            </p>
+            <div id="qf-answer-box" class="hidden bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-5">
+              <div class="text-xs font-black uppercase text-emerald-700 mb-1">✅ Checkpoint Answer</div>
+              <p id="qf-answer" class="text-xl font-black text-emerald-950"></p>
+            </div>
+          </div>
+
+          <!-- Controls & Team Score Awarding -->
+          <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap gap-2">
+              <button onclick="prevQf()" class="px-4 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 font-black text-sm">← Prev</button>
+              <button onclick="revealQfAnswer()" class="px-6 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-sm shadow">
+                👁️ Reveal Answer
+              </button>
+              <button onclick="nextQf()" class="px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-sm">Next →</button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="addTeamScore('red', 1, true)" class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 font-black text-sm shadow">
+                🔴 +1 Team Red (<span id="qf-red-score">0</span>)
+              </button>
+              <button onclick="addTeamScore('blue', 1, true)" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 font-black text-sm shadow">
+                🔵 +1 Team Blue (<span id="qf-blue-score">0</span>)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== STATION 2 VOCABULARY MODAL (SOLE VN EXCEPTION) ==================== -->
+  <div id="vocab-modal" class="hidden fixed inset-0 z-80 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4" style="z-index:80;">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border-4 border-sky-400 relative">
+      <button onclick="closeVocabModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-200 hover:bg-rose-500 hover:text-white font-black text-lg transition">✕</button>
+      <div class="space-y-4">
+        <div class="flex flex-wrap items-center gap-3 pr-10">
+          <h3 id="vm-en" class="text-3xl md:text-4xl font-black text-slate-900"></h3>
+          <span id="vm-vn" class="px-4 py-1 rounded-full bg-amber-100 text-amber-900 font-black text-xl"></span>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <button onclick="speakVocab('en')" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-black text-sm shadow transition">
+            🔊 Listen English (UK)
+          </button>
+          <button onclick="speakVocab('vn')" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm shadow transition">
+            🔊 Nghe Tiếng Việt
+          </button>
+        </div>
+
+        <div id="vm-svg" class="bg-sky-50 rounded-2xl p-4 border-2 border-sky-200 flex items-center justify-center min-h-[150px]"></div>
+
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-2">
+          <p id="vm-def-en" class="text-lg font-bold text-slate-900"></p>
+          <p id="vm-def-vn" class="text-base font-semibold text-amber-800"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== GIANT PROJECTION MODAL (STATION 3) ==================== -->
+  <div id="giant-modal" class="hidden fixed inset-0 bg-slate-950/90 flex items-center justify-center p-6" style="z-index:85;">
+    <div class="bg-white rounded-3xl max-w-5xl w-full p-8 md:p-10 shadow-2xl border-4 border-violet-400 relative space-y-6">
+      <button onclick="closeGiantModal()" class="absolute top-5 right-5 w-12 h-12 rounded-full bg-slate-200 hover:bg-rose-600 hover:text-white font-black text-xl">✕</button>
+      <div class="text-sm font-black uppercase tracking-widest text-violet-700">Giant Board Projection Mode</div>
+      <div id="giant-content" class="text-4xl md:text-6xl font-black text-slate-900 leading-tight">
+        Independent = CHANGE (Hull Width)<br />
+        Dependent = MEASURE (Paperclips)<br />
+        Control = KEEP SAME (60 g Clay)
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TEACHER PROMPT DRAWER (SHORTCUT: T) ==================== -->
+  <div id="teacher-drawer" class="hidden fixed inset-y-0 right-0 w-full max-w-md bg-slate-900 text-white shadow-2xl border-l-4 border-emerald-400 p-6 overflow-y-auto" style="z-index:90;">
+    <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
+      <h3 class="text-xl font-black text-emerald-400">👩‍🏫 Teacher Prompt Drawer</h3>
+      <button onclick="toggleTeacherDrawer()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-rose-600 font-black">✕</button>
+    </div>
+    <div class="space-y-4 text-sm">
+      <div class="bg-slate-800 rounded-2xl p-4 space-y-1.5">
+        <div class="font-black text-amber-300">⏱️ 70-Minute Pacing Guide</div>
+        <p>• <strong>0–8 min:</strong> Station 0 &amp; Station 1 Flashback 3 (mini-whiteboards)</p>
+        <p>• <strong>8–15 min:</strong> Station 2 Bilingual Vocab + Real-World Plimsoll Lines</p>
+        <p>• <strong>15–25 min:</strong> Station 3 I Do (Fair Test Sort + Scatter Graph Anomaly)</p>
+        <p>• <strong>25–48 min:</strong> Zero-Buy Classroom Clay Cargo Practical + Worksheet 2</p>
+        <p>• <strong>48–56 min:</strong> Station 4 Live Lab Simulation &amp; Mechanism Reveal</p>
+        <p>• <strong>56–62 min:</strong> Station 5 Success Criteria Check (0/3 Met)</p>
+        <p>• <strong>62–70 min:</strong> Station 6 Quickfire Checkpoint Challenge</p>
+      </div>
+      <div class="bg-rose-950/70 border border-rose-500 rounded-2xl p-4 space-y-2">
+        <div class="font-black text-rose-300">🛟 If They Aren't Getting It (Live Intervention)</div>
+        <p><strong>Red-Flag Hinge:</strong> Pupils connect the anomalous dot with a zig-zag line OR think heavier clay always sinks regardless of hull width.</p>
+        <p><strong>Support Table:</strong> Use a ruler straight-edge over the normal dots on Mission 2 so pupils physically see the outlier sitting off the ruler line.</p>
+        <p><strong>Backup Pivot:</strong> Run Station 4 "Load Full Class Trial Data (with 1 Leak)" on the board as a whole-class guided plot before independent Worksheet 2 Task 4.</p>
+      </div>
+      <div class="bg-slate-800 rounded-2xl p-4 space-y-1">
+        <div class="font-black text-sky-300">⌨️ Keyboard Shortcuts</div>
+        <p><code>←</code> / <code>→</code> Switch Stations (disabled when modal is open)</p>
+        <p><code>W</code> Open / Close David's Board Whiteboard</p>
+        <p><code>T</code> Open / Close Teacher Drawer</p>
+        <p><code>M</code> Mute / Unmute Web Audio Chimes</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DAVID'S BOARD WHITEBOARD (SHORTCUT: W) ==================== -->
+  <div id="davids-board-overlay" class="hidden p-4 flex flex-col gap-3">
+    <div class="bg-slate-900 text-white rounded-2xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 border border-slate-700">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="font-black text-amber-300 mr-2">✏️ David's Board</span>
+        <button onclick="setWbColor('#0f172a')" class="w-7 h-7 rounded-full bg-slate-900 border-2 border-white" title="Black"></button>
+        <button onclick="setWbColor('#dc2626')" class="w-7 h-7 rounded-full bg-red-600 border-2 border-white" title="Red (Weight)"></button>
+        <button onclick="setWbColor('#059669')" class="w-7 h-7 rounded-full bg-emerald-600 border-2 border-white" title="Green (Upthrust)"></button>
+        <button onclick="setWbColor('#0284c7')" class="w-7 h-7 rounded-full bg-sky-600 border-2 border-white" title="Blue (Water/Graph)"></button>
+        <button onclick="setWbEraser()" class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold">🧽 Eraser</button>
+        <button onclick="toggleWbGrid()" class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold">⊞ Toggle Grid</button>
+        <button onclick="clearWb()" class="px-3 py-1 rounded-lg bg-rose-700 hover:bg-rose-600 text-xs font-bold">🗑️ Clear</button>
+      </div>
+      <button onclick="toggleWhiteboard()" class="px-4 py-1.5 rounded-xl bg-amber-400 text-slate-950 font-black text-xs">
+        ✕ Close (W)
+      </button>
+    </div>
+    <canvas id="wb-canvas" class="grid-bg flex-1 w-full rounded-2xl shadow-2xl cursor-crosshair"></canvas>
+  </div>
+
+  <script>
+    // ==================== GLOBAL STATE & OFFLINE WEB AUDIO ====================
+    let currentStation = 0;
+    const totalStations = 7;
+    let isMuted = false;
+    let redScore = 0;
+    let blueScore = 0;
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      return audioCtx;
+    }
+
+    function playTone(freq, duration = 0.14, type = 'sine', vol = 0.14) {
+      if (isMuted) return;
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(vol, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playChime() {
+      playTone(587.3, 0.12, 'triangle', 0.14);
+      setTimeout(() => playTone(880, 0.18, 'triangle', 0.15), 110);
+    }
+
+    function playSplashSound() {
+      playTone(190, 0.18, 'sawtooth', 0.12);
+      setTimeout(() => playTone(120, 0.25, 'triangle', 0.14), 100);
+    }
+
+    function playBoardsUpAlert() {
+      playTone(660, 0.12, 'square', 0.12);
+      setTimeout(() => playTone(880, 0.12, 'square', 0.12), 140);
+      setTimeout(() => playTone(1174, 0.28, 'square', 0.14), 280);
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('mute-btn').textContent = isMuted ? '🔇 Muted (M)' : '🔊 Sound (M)';
+    }
+
+    // ==================== AUTO-HIDING HEADER ====================
+    let lastScrollY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      const hdr = document.getElementById('top-header');
+      const cur = window.scrollY;
+      if (cur > lastScrollY && cur > 60) {
+        hdr.classList.add('header-hidden');
+      } else {
+        hdr.classList.remove('header-hidden');
+      }
+      lastScrollY = cur;
+    }, { passive: true });
+
+    // ==================== NAVIGATION ====================
+    function goToStation(idx) {
+      if (idx < 0 || idx >= totalStations) return;
+      currentStation = idx;
+      for (let i = 0; i < totalStations; i++) {
+        const sec = document.getElementById('station-' + i);
+        if (sec) sec.classList.toggle('active', i === idx);
+      }
+      document.querySelectorAll('.station-tab').forEach((btn) => {
+        const active = Number(btn.dataset.station) === idx;
+        btn.className = active
+          ? 'station-tab px-4 py-2.5 rounded-xl font-extrabold text-sm transition bg-sky-600 text-white shadow'
+          : 'station-tab px-4 py-2.5 rounded-xl font-extrabold text-sm transition bg-slate-100 text-slate-700 hover:bg-sky-100';
+      });
+      playTone(520 + idx * 45, 0.08, 'sine', 0.08);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ==================== TEAM SCORES & CONFETTI ====================
+    function syncScores() {
+      document.getElementById('header-red-score').textContent = redScore;
+      document.getElementById('header-blue-score').textContent = blueScore;
+      document.getElementById('qf-red-score').textContent = redScore;
+      document.getElementById('qf-blue-score').textContent = blueScore;
+    }
+
+    function addTeamScore(team, pts, celebrate = false) {
+      if (team === 'red') redScore += pts;
+      else blueScore += pts;
+      syncScores();
+      playChime();
+      if (celebrate) launchConfetti();
+    }
+
+    function resetScores() {
+      redScore = 0;
+      blueScore = 0;
+      syncScores();
+    }
+
+    function launchConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const pieces = Array.from({ length: 75 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 140,
+        r: 5 + Math.random() * 6,
+        vx: (Math.random() - 0.5) * 5,
+        vy: 3 + Math.random() * 5,
+        rot: Math.random() * Math.PI * 2,
+        vrot: (Math.random() - 0.5) * 0.2,
+        c: ['#0ea5e9', '#f59e0b', '#10b981', '#e11d48', '#8b5cf6'][Math.floor(Math.random() * 5)]
+      }));
+      let frames = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += p.vrot;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = p.c;
+          ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 0.65);
+          ctx.restore();
+        });
+        frames++;
+        if (frames < 95) requestAnimationFrame(draw);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      draw();
+    }
+
+    // ==================== STATION 1: FLIP CARDS ====================
+    function toggleFlip(cardEl) {
+      cardEl.classList.toggle('flipped');
+      playTone(620, 0.09, 'triangle', 0.1);
+    }
+    function flipAllFlashbacks(state) {
+      document.querySelectorAll('#station-1 .flip-card').forEach(c => {
+        c.classList.toggle('flipped', state);
+      });
+    }
+
+    // ==================== STATION 2: BILINGUAL VOCABULARY ====================
+    const VOCAB_DATA = [
+      {
+        en: 'independent variable',
+        vn: 'biến độc lập',
+        icon: '🎛️',
+        defEn: 'The ONE factor that you deliberately change in a fair test (e.g. clay boat hull width).',
+        defVn: 'Yếu tố DUY NHẤT mà em chủ động thay đổi trong một thí nghiệm công bằng (ví dụ: chiều rộng thân thuyền).',
+        svg: `<svg viewBox="0 0 260 110" class="w-60 h-28"><rect x="18" y="42" width="54" height="32" rx="6" fill="#0284c7"/><text x="45" y="63" text-anchor="middle" fill="#fff" font-size="13" font-weight="800">6 cm</text><rect x="96" y="34" width="66" height="40" rx="6" fill="#0369a1"/><text x="129" y="59" text-anchor="middle" fill="#fff" font-size="13" font-weight="800">10 cm</text><rect x="182" y="26" width="66" height="48" rx="6" fill="#0c4a6e"/><text x="215" y="55" text-anchor="middle" fill="#fff" font-size="13" font-weight="800">14 cm</text><text x="130" y="98" text-anchor="middle" fill="#0369a1" font-size="12" font-weight="800">CHANGE ONLY ONE THING!</text></svg>`
+      },
+      {
+        en: 'dependent variable',
+        vn: 'biến phụ thuộc',
+        icon: '📏',
+        defEn: 'The result that you measure or count to see the effect of your change (e.g. paperclips held).',
+        defVn: 'Kết quả mà em đo hoặc đếm được sau khi thay đổi biến độc lập (ví dụ: số kẹp giấy thuyền chở được).',
+        svg: `<svg viewBox="0 0 260 110" class="w-60 h-28"><rect x="30" y="18" width="200" height="66" rx="14" fill="#fef3c7" stroke="#d97706" stroke-width="3"/><text x="130" y="48" text-anchor="middle" fill="#92400e" font-size="18" font-weight="900">📎 × 21 Paperclips</text><text x="130" y="72" text-anchor="middle" fill="#b45309" font-size="12" font-weight="800">WHAT WE MEASURE / COUNT</text></svg>`
+      },
+      {
+        en: 'control variable',
+        vn: 'biến kiểm soát',
+        icon: '⚖️',
+        defEn: 'Factors you keep exactly the same so the investigation is a fair test (e.g. same 60 g of clay).',
+        defVn: 'Những yếu tố em phải giữ nguyên giống hệt nhau để thí nghiệm công bằng (ví dụ: cùng 60 g đất nặn).',
+        svg: `<svg viewBox="0 0 260 110" class="w-60 h-28"><circle cx="70" cy="48" r="24" fill="#10b981"/><text x="70" y="53" text-anchor="middle" fill="#fff" font-size="13" font-weight="900">60 g</text><text x="130" y="55" text-anchor="middle" fill="#065f46" font-size="24" font-weight="900">=</text><circle cx="190" cy="48" r="24" fill="#10b981"/><text x="190" y="53" text-anchor="middle" fill="#fff" font-size="13" font-weight="900">60 g</text><text x="130" y="96" text-anchor="middle" fill="#047857" font-size="12" font-weight="800">KEEP THE SAME FOR EVERY TRIAL</text></svg>`
+      },
+      {
+        en: 'scatter graph',
+        vn: 'biểu đồ phân tán',
+        icon: '📈',
+        defEn: 'A graph with plotted points showing how two measured variables are related.',
+        defVn: 'Biểu đồ gồm các điểm chấm tọa độ thể hiện mối liên hệ giữa hai đại lượng đo được.',
+        svg: `<svg viewBox="0 0 260 115" class="w-60 h-28"><line x1="40" y1="90" x2="230" y2="90" stroke="#0f172a" stroke-width="2.5"/><line x1="40" y1="15" x2="40" y2="90" stroke="#0f172a" stroke-width="2.5"/><circle cx="75" cy="74" r="5" fill="#0284c7"/><circle cx="115" cy="60" r="5" fill="#0284c7"/><circle cx="155" cy="44" r="5" fill="#0284c7"/><circle cx="195" cy="28" r="5" fill="#0284c7"/><line x1="68" y1="78" x2="205" y2="24" stroke="#0284c7" stroke-width="2" stroke-dasharray="4 4"/><text x="135" y="108" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800">Hull Width (cm)</text></svg>`
+      },
+      {
+        en: 'pattern',
+        vn: 'quy luật / xu hướng',
+        icon: '🧭',
+        defEn: 'A clear trend in data, such as: "As hull width increases, the number of paperclips held increases."',
+        defVn: 'Xu hướng rõ ràng của dữ liệu, ví dụ: "Thân thuyền càng rộng thì chở được càng nhiều kẹp giấy."',
+        svg: `<svg viewBox="0 0 260 110" class="w-60 h-28"><path d="M 35 82 L 215 24" stroke="#059669" stroke-width="5" stroke-linecap="round"/><polygon points="224,21 206,18 213,34" fill="#059669"/><text x="130" y="98" text-anchor="middle" fill="#065f46" font-size="12" font-weight="800">Wider Hull ➔ More Cargo Held</text></svg>`
+      },
+      {
+        en: 'anomalous result',
+        vn: 'kết quả bất thường',
+        icon: '🎯',
+        defEn: 'A result that does not fit the overall pattern, often caused by a leak, splash, or counting mistake.',
+        defVn: 'Một kết quả lệch hẳn khỏi quy luật chung, thường do thuyền bị thủng rò nước hoặc đo nhầm.',
+        svg: `<svg viewBox="0 0 260 110" class="w-60 h-28"><line x1="35" y1="88" x2="225" y2="88" stroke="#0f172a" stroke-width="2"/><line x1="35" y1="15" x2="35" y2="88" stroke="#0f172a" stroke-width="2"/><circle cx="70" cy="72" r="5" fill="#0284c7"/><circle cx="110" cy="56" r="5" fill="#0284c7"/><circle cx="150" cy="76" r="5.5" fill="#e11d48"/><circle cx="150" cy="76" r="14" fill="none" stroke="#e11d48" stroke-width="3"/><circle cx="190" cy="28" r="5" fill="#0284c7"/><text x="150" y="104" text-anchor="middle" fill="#be123c" font-size="11" font-weight="800">Circle it &amp; Repeat Trial!</text></svg>`
+      },
+      {
+        en: 'hull',
+        vn: 'thân tàu / lòng thuyền',
+        icon: '⛵',
+        defEn: 'The main hollow body of a boat or ship that sits in the water and pushes water aside.',
+        defVn: 'Phần thân rỗng chính của con thuyền nằm trong nước giúp đẩy nước sang hai bên.',
+        svg: `<svg viewBox="0 0 260 110" class="w-60 h-28"><rect x="10" y="64" width="240" height="36" fill="#bae6fd"/><path d="M 55 32 L 75 74 L 185 74 L 205 32 L 190 32 L 174 62 L 86 62 L 70 32 Z" fill="#b45309" stroke="#451a03" stroke-width="3"/><text x="130" y="94" text-anchor="middle" fill="#0369a1" font-size="12" font-weight="800">Hollow Clay Hull</text></svg>`
+      },
+      {
+        en: 'cargo',
+        vn: 'hàng hóa / tải trọng',
+        icon: '📦',
+        defEn: 'The load carried inside a boat or ship (in class: metal paperclips, coins, or linking cubes).',
+        defVn: 'Hàng hóa hoặc vật nặng được chở bên trong thuyền (trên lớp: kẹp giấy, đồng xu hoặc khối nhựa).',
+        svg: `<svg viewBox="0 0 260 110" class="w-60 h-28"><path d="M 55 44 L 72 82 L 188 82 L 205 44 Z" fill="#b45309" stroke="#451a03" stroke-width="3"/><rect x="85" y="26" width="26" height="22" fill="#f59e0b" stroke="#78350f" stroke-width="2"/><rect x="117" y="26" width="26" height="22" fill="#0ea5e9" stroke="#0c4a6e" stroke-width="2"/><rect x="149" y="26" width="26" height="22" fill="#10b981" stroke="#064e3b" stroke-width="2"/><text x="130" y="100" text-anchor="middle" fill="#451a03" font-size="12" font-weight="800">Cargo Adds Weight (↓)</text></svg>`
+      },
+      {
+        en: 'surface area',
+        vn: 'diện tích bề mặt',
+        icon: '📐',
+        defEn: 'The total outside area of a boat hull touching the water. A wider hull has a larger surface area.',
+        defVn: 'Tổng diện tích mặt ngoài của thân thuyền tiếp xúc với nước. Thuyền rộng có diện tích bề mặt lớn hơn.',
+        svg: `<svg viewBox="0 0 260 110" class="w-60 h-28"><rect x="30" y="26" width="54" height="44" fill="#cbd5e1" stroke="#334155" stroke-width="2.5"/><text x="57" y="53" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800">Small</text><rect x="110" y="26" width="120" height="44" fill="#7dd3fc" stroke="#0369a1" stroke-width="2.5"/><text x="170" y="53" text-anchor="middle" fill="#0c4a6e" font-size="12" font-weight="800">Larger Surface Area</text><text x="130" y="96" text-anchor="middle" fill="#0369a1" font-size="12" font-weight="800">Spreads Weight Over More Water</text></svg>`
+      }
+    ];
+
+    let activeVocabIndex = 0;
+
+    function renderVocabGrid() {
+      const grid = document.getElementById('vocab-grid');
+      grid.innerHTML = VOCAB_DATA.map((item, i) => `
+        <button onclick="openVocabModal(${i})" class="text-left bg-gradient-to-br from-sky-50 to-white hover:from-sky-100 hover:to-sky-50 border-2 border-sky-200 hover:border-sky-500 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex items-center justify-between gap-3">
+          <div>
+            <div class="text-xl font-black text-slate-900 capitalize">${item.en}</div>
+            <div class="text-xs font-bold text-sky-700 mt-1">Tap for definition, visual &amp; audio →</div>
+          </div>
+          <span class="text-3xl shrink-0">${item.icon}</span>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(idx) {
+      activeVocabIndex = idx;
+      const item = VOCAB_DATA[idx];
+      document.getElementById('vm-en').textContent = item.en;
+      document.getElementById('vm-vn').textContent = item.vn;
+      document.getElementById('vm-svg').innerHTML = item.svg;
+      document.getElementById('vm-def-en').textContent = item.defEn;
+      document.getElementById('vm-def-vn').textContent = item.defVn;
+      document.getElementById('vocab-modal').classList.remove('hidden');
+      playTone(640, 0.08, 'sine', 0.1);
+    }
+
+    function closeVocabModal() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('vocab-modal').classList.add('hidden');
+    }
+
+    function speakVocab(lang) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const item = VOCAB_DATA[activeVocabIndex];
+      const utter = new SpeechSynthesisUtterance(lang === 'en' ? item.en : item.vn);
+      utter.lang = lang === 'en' ? 'en-GB' : 'vi-VN';
+      utter.rate = 0.92;
+      window.speechSynthesis.speak(utter);
+    }
+
+    // ==================== STATION 3: SECRET LAB MISSIONS ====================
+    let activeMission = 1;
+    let varStep = 0;
+    let m2OverlayShown = false;
+
+    function selectMission(m) {
+      activeMission = m;
+      document.getElementById('mission-1-panel').classList.toggle('hidden', m !== 1);
+      document.getElementById('mission-2-panel').classList.toggle('hidden', m !== 2);
+      document.getElementById('m1-btn').className = m === 1
+        ? 'px-5 py-2.5 rounded-xl bg-sky-600 text-white font-black text-sm shadow transition'
+        : 'px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-sky-100 font-black text-sm transition';
+      document.getElementById('m2-btn').className = m === 2
+        ? 'px-5 py-2.5 rounded-xl bg-sky-600 text-white font-black text-sm shadow transition'
+        : 'px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-sky-100 font-black text-sm transition';
+      playTone(540, 0.08, 'sine', 0.08);
+    }
+
+    function revealNextVariableStep() {
+      if (varStep >= 3) {
+        varStep = 0;
+        [1, 2, 3].forEach(n => {
+          const box = document.getElementById('var-box-' + n);
+          box.querySelector('.var-reveal').classList.add('hidden');
+          box.querySelector('.var-prompt').classList.remove('hidden');
+        });
+        document.getElementById('var-step-count').textContent = '0';
+        return;
+      }
+      varStep++;
+      const box = document.getElementById('var-box-' + varStep);
+      box.querySelector('.var-reveal').classList.remove('hidden');
+      box.querySelector('.var-prompt').classList.add('hidden');
+      document.getElementById('var-step-count').textContent = String(varStep);
+      playChime();
+    }
+
+    function revealMiaMisconception() {
+      document.getElementById('mia-feedback').innerHTML =
+        '❌ <strong>Unfair Test!</strong> Mia changed <strong>TWO</strong> variables (both hull width AND clay mass). Now we cannot tell if the extra cargo was caused by the wider hull or the extra clay!';
+      playTone(300, 0.16, 'triangle', 0.12);
+    }
+
+    function toggleM2Overlay() {
+      m2OverlayShown = !m2OverlayShown;
+      document.getElementById('m2-pattern-group').style.display = m2OverlayShown ? 'block' : 'none';
+      document.getElementById('m2-overlay-btn').textContent = m2OverlayShown
+        ? '🙈 Hide Pattern & Anomaly'
+        : '✨ Reveal Pattern & Circle Anomaly';
+      if (m2OverlayShown) playChime();
+    }
+
+    function inspectM2Point(width, washers, isAnomaly) {
+      document.getElementById('m2-coord-text').textContent = `(${width} cm, ${washers} steel washers)`;
+      document.getElementById('m2-note-text').textContent = isAnomaly
+        ? '🚨 ANOMALOUS RESULT! Way below the pattern (should be ~16 washers). Likely a pinhole leak or splash — circle & repeat!'
+        : `✅ Fits the pattern neatly! A ${width} cm clay hull held ${washers} steel washers before sinking.`;
+      playTone(isAnomaly ? 240 : 720, 0.12, 'triangle', 0.12);
+    }
+
+    function toggleFullScreenIDo() {
+      const wrap = document.getElementById('station-3-wrapper');
+      const isFs = wrap.classList.toggle('fullscreen-ido');
+      document.getElementById('fs-ido-btn').textContent = isFs ? '✕ Exit Full Screen' : '⛶ Full Screen I Do';
+    }
+
+    function openGiantModal() {
+      const box = document.getElementById('giant-content');
+      box.innerHTML = activeMission === 1
+        ? `<span class="text-sky-700">CHANGE:</span> Hull Width (cm)<br/><span class="text-amber-600">MEASURE:</span> Paperclips Held<br/><span class="text-emerald-700">KEEP SAME:</span> 60 g Clay Mass`
+        : `<span class="text-sky-700">PATTERN:</span> Wider Hull ➔ More Washers<br/><span class="text-rose-600">ANOMALY:</span> (12 cm, 6) — Circle &amp; Repeat!<br/><span class="text-emerald-700">FAIR PREDICTION:</span> 16 Washers`;
+      document.getElementById('giant-modal').classList.remove('hidden');
+    }
+
+    function closeGiantModal() {
+      document.getElementById('giant-modal').classList.add('hidden');
+    }
+
+    // ==================== STATION 4: CLAY CARGO SIMULATOR & LIVE SCATTER GRAPH ====================
+    const HIGH_RIM_CAPACITY = { 6: 9, 8: 15, 10: 21, 12: 27, 14: 33 };
+    const LOW_RIM_CAPACITY  = { 6: 6, 8: 10, 10: 14, 12: 18, 14: 22 };
+    const LEAK_CAPACITY     = { 6: 3, 8: 5, 10: 7, 12: 9, 14: 11 };
+
+    let simWidth = 10;
+    let simRim = 'high';
+    let simClips = 0;
+    let simSunk = false;
+    let autoLoadTimer = null;
+    let plottedTrials = []; // { width, clips, rim, leaked }
+
+    function getMaxClips() {
+      const hasLeak = document.getElementById('leak-toggle').checked;
+      if (hasLeak) return LEAK_CAPACITY[simWidth];
+      return simRim === 'high' ? HIGH_RIM_CAPACITY[simWidth] : LOW_RIM_CAPACITY[simWidth];
+    }
+
+    function setHullWidth(w) {
+      simWidth = w;
+      document.querySelectorAll('.w-btn').forEach(btn => {
+        const active = Number(btn.dataset.w) === w;
+        btn.className = active
+          ? 'w-btn py-2 rounded-xl font-black text-sm bg-sky-600 text-white shadow transition'
+          : 'w-btn py-2 rounded-xl font-black text-sm bg-slate-100 hover:bg-sky-100 text-slate-800 transition';
+      });
+      resetCurrentBoat();
+    }
+
+    function setRimHeight(mode) {
+      simRim = mode;
+      document.getElementById('rim-high-btn').className = mode === 'high'
+        ? 'px-3 py-1.5 rounded-lg bg-sky-600 text-white font-bold text-xs'
+        : 'px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 font-bold text-xs';
+      document.getElementById('rim-low-btn').className = mode === 'low'
+        ? 'px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold text-xs'
+        : 'px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 font-bold text-xs';
+      resetCurrentBoat();
+    }
+
+    function resetCurrentBoat() {
+      if (autoLoadTimer) { clearInterval(autoLoadTimer); autoLoadTimer = null; }
+      simClips = 0;
+      simSunk = false;
+      updateBoatVisual();
+    }
+
+    function addPaperclip() {
+      if (simSunk) return;
+      const maxClips = getMaxClips();
+      const hasLeak = document.getElementById('leak-toggle').checked;
+      simClips++;
+      if (simClips > maxClips) {
+        simSunk = true;
+        if (autoLoadTimer) { clearInterval(autoLoadTimer); autoLoadTimer = null; }
+        playSplashSound();
+        // Record the paperclips held BEFORE sinking (maxClips)
+        recordTrial(simWidth, maxClips, simRim, hasLeak);
+      } else {
+        playTone(460 + simClips * 12, 0.06, 'sine', 0.08);
+      }
+      updateBoatVisual();
+    }
+
+    function autoLoadUntilSink() {
+      if (simSunk) resetCurrentBoat();
+      if (autoLoadTimer) return;
+      autoLoadTimer = setInterval(() => {
+        if (simSunk) {
+          clearInterval(autoLoadTimer);
+          autoLoadTimer = null;
+          return;
+        }
+        addPaperclip();
+      }, 120);
+    }
+
+    function updateBoatVisual() {
+      const hasLeak = document.getElementById('leak-toggle').checked;
+      const maxClips = getMaxClips();
+      const halfW = 36 + (simWidth - 6) * 7.5; // scales 36..96px each side
+      const rimTop = simRim === 'high' ? -36 : -20;
+      const baseBottom = 14;
+      const innerBottom = 3;
+      const hullD = `M ${-halfW} ${rimTop} L ${-(halfW - 14)} ${baseBottom} L ${halfW - 14} ${baseBottom} L ${halfW} ${rimTop} L ${halfW - 11} ${rimTop} L ${halfW - 22} ${innerBottom} L ${-(halfW - 22)} ${innerBottom} L ${-(halfW - 11)} ${rimTop} Z`;
+      document.getElementById('boat-hull-path').setAttribute('d', hullD);
+      document.getElementById('leak-visual').style.display = hasLeak ? 'block' : 'none';
+
+      // Boat vertical position: rides deeper as clips approach maxClips, sinks into lower water (y=205) so Weight arrow stays inside tank
+      const ratio = Math.min(simClips / Math.max(1, maxClips), 1);
+      const boatY = simSunk ? 205 : (136 + ratio * (simRim === 'high' ? 30 : 18));
+      document.getElementById('boat-group').setAttribute('transform', `translate(270, ${boatY})`);
+      document.getElementById('sink-bubbles-group').style.display = simSunk ? 'block' : 'none';
+
+      // Draw paperclip cargo pips inside hull
+      const cargoG = document.getElementById('cargo-clips-group');
+      const visibleClips = Math.min(simClips, 36);
+      let clipsHtml = '';
+      const cols = Math.max(4, Math.floor((halfW * 2 - 48) / 13));
+      for (let i = 0; i < visibleClips; i++) {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        const cx = -((cols - 1) * 12) / 2 + col * 12;
+        const cy = -3 - row * 8;
+        clipsHtml += `<rect x="${cx - 4.5}" y="${cy - 3}" width="9" height="5" rx="2.5" fill="#e2e8f0" stroke="#334155" stroke-width="1.4" />`;
+      }
+      cargoG.innerHTML = clipsHtml;
+
+      // Force telemetry & SVG arrow lengths
+      const weightN = +(0.6 + simClips * 0.05).toFixed(2);
+      const maxUpthrustN = +(0.6 + maxClips * 0.05).toFixed(2);
+      const upthrustN = simSunk ? +(maxUpthrustN * 0.85).toFixed(2) : weightN;
+
+      const wLen = Math.min(74, 22 + weightN * 22);
+      const uLen = Math.min(74, 22 + upthrustN * 22);
+
+      document.getElementById('weight-line').setAttribute('y2', String(wLen));
+      document.getElementById('weight-head').setAttribute('points', `18,${wLen + 12} 9,${wLen - 4} 27,${wLen - 4}`);
+      document.getElementById('weight-lbl').setAttribute('y', String(wLen * 0.65));
+
+      document.getElementById('upthrust-line').setAttribute('y2', String(14 - uLen));
+      document.getElementById('upthrust-head').setAttribute('points', `-18,${2 - uLen} -27,${18 - uLen} -9,${18 - uLen}`);
+      document.getElementById('upthrust-lbl').setAttribute('y', String(14 - uLen * 0.65));
+
+      // Update anchored telemetry dashboard below canvas
+      document.getElementById('tel-clips').textContent = simSunk ? `${maxClips} held` : String(simClips);
+      document.getElementById('tel-weight').textContent = `${weightN.toFixed(2)} N`;
+      document.getElementById('tel-upthrust').textContent = `${upthrustN.toFixed(2)} N`;
+      const statusEl = document.getElementById('tel-status');
+      if (simSunk) {
+        statusEl.className = 'text-xs font-black text-rose-400 leading-tight mt-0.5';
+        statusEl.innerHTML = hasLeak ? 'SUNK (LEAK!)<br/>Anomaly Plotted' : 'SUNK!<br/>Weight &gt; Upthrust';
+      } else {
+        statusEl.className = 'text-xs font-black text-emerald-300 leading-tight mt-0.5';
+        statusEl.innerHTML = 'FLOATING<br/>Balanced Forces';
+      }
+    }
+
+    function recordTrial(width, clips, rim, leaked) {
+      // Replace existing trial for same width+leaked+rim to keep scatter graph tidy
+      plottedTrials = plottedTrials.filter(t => !(t.width === width && t.leaked === leaked && t.rim === rim));
+      plottedTrials.push({ width, clips, rim, leaked });
+      renderLiveScatterGraph();
+    }
+
+    function loadClassDemoData() {
+      plottedTrials = [
+        { width: 6, clips: 9, rim: 'high', leaked: false },
+        { width: 8, clips: 15, rim: 'high', leaked: false },
+        { width: 10, clips: 7, rim: 'high', leaked: true },
+        { width: 12, clips: 27, rim: 'high', leaked: false },
+        { width: 14, clips: 33, rim: 'high', leaked: false }
+      ];
+      renderLiveScatterGraph();
+      document.getElementById('live-point-detail').innerHTML =
+        '📊 Loaded 5 class trials! Look closely at the <strong>red point at 10 cm</strong> — click it to diagnose the anomalous result!';
+      playChime();
+    }
+
+    function clearGraphData() {
+      plottedTrials = [];
+      renderLiveScatterGraph();
+      document.getElementById('live-point-detail').textContent =
+        'Graph cleared. Choose a hull width on the left and load paperclips to plot fresh points!';
+    }
+
+    let liveTrendVisible = false;
+    function toggleLiveTrend() {
+      liveTrendVisible = !liveTrendVisible;
+      document.getElementById('live-trend-line').style.display = liveTrendVisible ? 'block' : 'none';
+      document.getElementById('trend-toggle-btn').textContent = liveTrendVisible ? '🙈 Hide Pattern Line' : '📈 Show Pattern Line';
+    }
+
+    function renderLiveScatterGraph() {
+      const g = document.getElementById('live-plot-points');
+      g.innerHTML = plottedTrials.map((pt, idx) => {
+        // X: 4 -> 70, 16 -> 520 => x = 70 + ((width - 4) / 12) * 450
+        const cx = 70 + ((pt.width - 4) / 12) * 450;
+        // Y: 0 -> 280, 40 -> 40 => y = 280 - (clips / 40) * 240
+        const cy = 280 - (pt.clips / 40) * 240;
+        const fill = pt.leaked ? '#e11d48' : (pt.rim === 'low' ? '#f59e0b' : '#0284c7');
+        const ring = pt.leaked
+          ? `<circle cx="${cx}" cy="${cy}" r="16" fill="none" stroke="#e11d48" stroke-width="3" class="anomaly-pulse" />`
+          : '';
+        return `${ring}<circle cx="${cx}" cy="${cy}" r="8" fill="${fill}" stroke="#ffffff" stroke-width="2.2" class="cursor-pointer" onclick="inspectLivePoint(${idx})" />`;
+      }).join('');
+    }
+
+    function inspectLivePoint(idx) {
+      const pt = plottedTrials[idx];
+      if (!pt) return;
+      const el = document.getElementById('live-point-detail');
+      if (pt.leaked) {
+        el.innerHTML = `🚨 <strong class="text-rose-400">ANOMALY DIAGNOSED at (${pt.width} cm, ${pt.clips} paperclips)!</strong> A leak-free ${pt.width} cm high-rim boat should hold about <strong>${HIGH_RIM_CAPACITY[pt.width]} paperclips</strong>. Cause: pinhole leak let water flood the hull. Action: <strong>Circle it, exclude from pattern, and repeat the trial!</strong>`;
+        playTone(230, 0.16, 'sawtooth', 0.1);
+      } else {
+        el.innerHTML = `✅ <strong class="text-emerald-300">Point (${pt.width} cm, ${pt.clips} paperclips)</strong> — ${pt.rim === 'high' ? 'High-rim' : 'Low-rim'} clay hull. As hull width increases, maximum upthrust grows so more classroom cargo is held!`;
+        playTone(700, 0.1, 'triangle', 0.1);
+      }
+    }
+
+    function toggleMechanism() {
+      const box = document.getElementById('mech-content');
+      const hidden = box.classList.toggle('hidden');
+      document.getElementById('mech-btn').textContent = hidden ? '👁️ Reveal Scientific Explanation' : '🙈 Hide Explanation';
+      if (!hidden) playChime();
+    }
+
+    // ==================== STATION 5: SC CHECK ====================
+    function revealScAnswer(num) {
+      document.getElementById('sc-ans-' + num).classList.remove('hidden');
+      playTone(680, 0.1, 'triangle', 0.1);
+    }
+
+    function updateScCounter() {
+      const checked = document.querySelectorAll('.sc-check:checked').length;
+      document.getElementById('sc-met-counter').textContent = `${checked} / 3 Met`;
+      if (checked === 3) {
+        playChime();
+        launchConfetti();
+      }
+    }
+
+    // ==================== STATION 6: QUICKFIRE CHECKPOINT CHALLENGE ====================
+    const QUICKFIRE_QUESTIONS = [
+      {
+        tag: 'Independent Variable',
+        q: 'In our Clay Cargo Challenge, we make clay boats of widths 6 cm, 8 cm, 10 cm, and 12 cm. Which variable is the hull width?',
+        a: 'The INDEPENDENT variable (the one thing we deliberately change).'
+      },
+      {
+        tag: 'Dependent Variable',
+        q: 'We count how many paperclips each clay boat holds before sinking. Which variable is this?',
+        a: 'The DEPENDENT variable (the result we measure / count).'
+      },
+      {
+        tag: 'Control Variables',
+        q: 'Name TWO control variables we must keep the same to make the clay cargo test fair.',
+        a: 'Same 60 g mass of clay, same size paperclips, same fresh water tub (accept any two valid controls).'
+      },
+      {
+        tag: 'Forces While Loading',
+        q: 'As you gently add paperclips to a floating clay boat, it sits deeper in the water. What happens to its Weight and Upthrust while it still floats?',
+        a: 'Weight increases and Upthrust increases to stay balanced (equal) with Weight.'
+      },
+      {
+        tag: 'Why It Sinks',
+        q: 'In terms of forces, explain why the clay boat finally sinks when one extra paperclip is added.',
+        a: 'The downward Weight becomes greater than the maximum upward Upthrust (forces become unbalanced).'
+      },
+      {
+        tag: 'Reading Scatter Graphs',
+        q: 'When reading a point on a scatter graph, which axis do you read FIRST and which do you read SECOND?',
+        a: 'Read ACROSS to the X-axis (horizontal) first, then UP to the Y-axis (vertical).'
+      },
+      {
+        tag: 'Anomalous Results',
+        q: 'Four boats follow a straight upward pattern, but one wide boat holds far fewer paperclips. What is this odd point called and what should you do?',
+        a: 'An ANOMALOUS result — circle it, check for a leak/error, and repeat that trial.'
+      },
+      {
+        tag: 'Real-World Ships',
+        q: 'Why must a cargo ship captain NEVER load containers until the Plimsoll Line disappears under the water?',
+        a: 'The ship would sit too low in the water, risking water flooding over the rim and sinking the ship.'
+      }
+    ];
+
+    let qfIdx = 0;
+    let qfInterval = null;
+    let qfSeconds = 20;
+
+    function renderQf() {
+      const item = QUICKFIRE_QUESTIONS[qfIdx];
+      document.getElementById('qf-num').textContent = String(qfIdx + 1);
+      document.getElementById('qf-tag').textContent = item.tag;
+      document.getElementById('qf-question').textContent = item.q;
+      document.getElementById('qf-answer').textContent = item.a;
+      document.getElementById('qf-answer-box').classList.add('hidden');
+      document.getElementById('boards-up-banner').classList.add('hidden');
+      stopQfTimer();
+      qfSeconds = 20;
+      document.getElementById('qf-timer').textContent = '20s';
+    }
+
+    function stopQfTimer() {
+      if (qfInterval) { clearInterval(qfInterval); qfInterval = null; }
+    }
+
+    function startQfTimer() {
+      stopQfTimer();
+      qfSeconds = 20;
+      document.getElementById('boards-up-banner').classList.add('hidden');
+      document.getElementById('qf-timer').textContent = '20s';
+      qfInterval = setInterval(() => {
+        qfSeconds--;
+        document.getElementById('qf-timer').textContent = qfSeconds + 's';
+        if (qfSeconds <= 5 && qfSeconds > 0) playTone(520, 0.06, 'sine', 0.09);
+        if (qfSeconds <= 0) {
+          stopQfTimer();
+          document.getElementById('boards-up-banner').classList.remove('hidden');
+          playBoardsUpAlert();
+        }
+      }, 1000);
+    }
+
+    function revealQfAnswer() {
+      stopQfTimer();
+      document.getElementById('qf-answer-box').classList.remove('hidden');
+      playChime();
+    }
+
+    function nextQf() {
+      qfIdx = (qfIdx + 1) % QUICKFIRE_QUESTIONS.length;
+      renderQf();
+    }
+
+    function prevQf() {
+      qfIdx = (qfIdx - 1 + QUICKFIRE_QUESTIONS.length) % QUICKFIRE_QUESTIONS.length;
+      renderQf();
+    }
+
+    // ==================== TEACHER DRAWER ====================
+    function toggleTeacherDrawer() {
+      document.getElementById('teacher-drawer').classList.toggle('hidden');
+    }
+
+    // ==================== DAVID'S BOARD WHITEBOARD ====================
+    let wbDrawing = false;
+    let wbColor = '#0f172a';
+    let wbSize = 4;
+    let wbErasing = false;
+
+    function toggleWhiteboard() {
+      const ov = document.getElementById('davids-board-overlay');
+      const hidden = ov.classList.toggle('hidden');
+      if (!hidden) resizeWbCanvas();
+    }
+
+    function resizeWbCanvas() {
+      const c = document.getElementById('wb-canvas');
+      const rect = c.getBoundingClientRect();
+      if (c.width !== Math.floor(rect.width) || c.height !== Math.floor(rect.height)) {
+        c.width = Math.floor(rect.width);
+        c.height = Math.floor(rect.height);
+      }
+    }
+
+    function setWbColor(col) { wbErasing = false; wbColor = col; wbSize = 4; }
+    function setWbEraser() { wbErasing = true; wbSize = 24; }
+    function toggleWbGrid() {
+      const c = document.getElementById('wb-canvas');
+      c.classList.toggle('grid-bg');
+      c.classList.toggle('plain-bg');
+    }
+    function clearWb() {
+      const c = document.getElementById('wb-canvas');
+      c.getContext('2d').clearRect(0, 0, c.width, c.height);
+    }
+
+    function initWhiteboardEvents() {
+      const c = document.getElementById('wb-canvas');
+      const ctx = c.getContext('2d');
+      function pos(e) {
+        const r = c.getBoundingClientRect();
+        const pt = e.touches ? e.touches[0] : e;
+        return { x: pt.clientX - r.left, y: pt.clientY - r.top };
+      }
+      function start(e) {
+        wbDrawing = true;
+        const p = pos(e);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+      }
+      function move(e) {
+        if (!wbDrawing) return;
+        e.preventDefault();
+        const p = pos(e);
+        ctx.lineCap = 'round';
+        ctx.lineWidth = wbSize;
+        if (wbErasing) {
+          ctx.globalCompositeOperation = 'destination-out';
+        } else {
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.strokeStyle = wbColor;
+        }
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+      }
+      function end() { wbDrawing = false; ctx.closePath(); }
+      c.addEventListener('mousedown', start);
+      c.addEventListener('mousemove', move);
+      window.addEventListener('mouseup', end);
+      c.addEventListener('touchstart', start, { passive: false });
+      c.addEventListener('touchmove', move, { passive: false });
+      window.addEventListener('touchend', end);
+    }
+
+    // ==================== GUARDED KEYBOARD SHORTCUTS ====================
+    function isAnyModalOpen() {
+      return !document.getElementById('vocab-modal').classList.contains('hidden')
+        || !document.getElementById('giant-modal').classList.contains('hidden')
+        || !document.getElementById('davids-board-overlay').classList.contains('hidden')
+        || !document.getElementById('teacher-drawer').classList.contains('hidden');
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.target && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+      const key = e.key.toLowerCase();
+      if (key === 'w') { e.preventDefault(); toggleWhiteboard(); return; }
+      if (key === 't') { e.preventDefault(); toggleTeacherDrawer(); return; }
+      if (key === 'm') { e.preventDefault(); toggleMute(); return; }
+      if (key === 'escape') {
+        closeVocabModal();
+        closeGiantModal();
+        document.getElementById('davids-board-overlay').classList.add('hidden');
+        document.getElementById('teacher-drawer').classList.add('hidden');
+        return;
+      }
+      if (!isAnyModalOpen()) {
+        if (e.key === 'ArrowRight') goToStation(currentStation + 1);
+        if (e.key === 'ArrowLeft') goToStation(currentStation - 1);
+      }
+    });
+
+    // ==================== INITIALISE ====================
+    renderVocabGrid();
+    updateBoatVisual();
+    renderQf();
+    initWhiteboardEvents();
+  </script>
+</body>
+</html>

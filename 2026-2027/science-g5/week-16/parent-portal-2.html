@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parent Portal — Grade 5 Science: Clay Cargo Challenge & Scatter Graphs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(180deg, #eff6ff 0%, #f0fdfa 55%, #fffbeb 100%);
+      color: #0f172a;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .lang-vn { display: none; }
+    body.vn-mode .lang-en { display: none; }
+    body.vn-mode .lang-vn { display: inline; }
+    body.vn-mode .lang-vn-block { display: block; }
+    body.vn-mode .lang-en-block { display: none; }
+    .lang-vn-block { display: none; }
+    .lang-en-block { display: block; }
+
+    @keyframes gentleWave {
+      0%, 100% { transform: translateX(0px); }
+      50% { transform: translateX(-10px); }
+    }
+    .wave-anim { animation: gentleWave 3.2s ease-in-out infinite; }
+    @keyframes anomalyGlow {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.18); opacity: 0.45; }
+    }
+    .pulse-ring {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: anomalyGlow 1.5s ease-in-out infinite;
+    }
+    #portal-confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 120;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="portal-confetti"></canvas>
+
+  <!-- ==================== STICKY BILINGUAL HEADER ==================== -->
+  <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur text-white shadow-lg border-b-4 border-sky-400">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="min-w-0">
+        <div class="text-xs font-black uppercase tracking-wider text-amber-300">
+          <span class="lang-en">Cambridge Stage 6 Science • Unit 5.3 • Lesson 2</span>
+          <span class="lang-vn">Khoa Học Cambridge Giai Đoạn 6 • Bài 5.3 • Tiết 2</span>
+        </div>
+        <h1 class="text-base sm:text-lg font-black truncate">
+          <span class="lang-en">Parent &amp; Family Portal: Clay Cargo &amp; Scatter Graphs</span>
+          <span class="lang-vn">Cổng Phụ Huynh: Thuyền Đất Nặn &amp; Biểu Đồ Phân Tán</span>
+        </h1>
+      </div>
+
+      <button id="lang-toggle-btn" onclick="toggleLanguage()" class="shrink-0 px-3.5 py-2 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow transition">
+        🇻🇳 Tiếng Việt
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 py-6 space-y-8">
+
+    <!-- ==================== HERO LEARNING OVERVIEW ==================== -->
+    <section class="bg-gradient-to-br from-sky-700 via-blue-700 to-indigo-800 text-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-sky-300 space-y-4">
+      <div class="inline-block px-3.5 py-1 rounded-full bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider">
+        <span class="lang-en">⚓ This Lesson's Big Question</span>
+        <span class="lang-vn">⚓ Câu Hỏi Lớn Của Bài Học</span>
+      </div>
+
+      <h2 class="text-2xl sm:text-3xl font-black leading-tight">
+        <span class="lang-en">"Whose clay boat can hold the most classroom cargo?"</span>
+        <span class="lang-vn">"Chiếc thuyền đất nặn nào có thể chở nhiều hàng nhất?"</span>
+      </h2>
+
+      <p class="lang-en-block text-sky-100 text-sm sm:text-base font-medium leading-relaxed">
+        In Lesson 2, learners used everyday classroom items (<strong>60 g modelling clay</strong>, water tubs, and paperclips) to run a <strong>fair test</strong>. They changed ONLY the <strong>hull width</strong>, counted how many paperclips each boat held before sinking, plotted a <strong>scatter graph</strong>, and learnt how scientists circle and repeat an <strong>anomalous result</strong> (like a boat with a pinhole leak!).
+      </p>
+      <p class="lang-vn-block text-sky-100 text-sm sm:text-base font-medium leading-relaxed">
+        Trong Tiết 2, các em sử dụng đồ dùng quen thuộc trên lớp (<strong>60 g đất nặn</strong>, chậu nước và kẹp giấy) để thiết kế một <strong>thí nghiệm công bằng</strong>. Các em CHỈ thay đổi <strong>chiều rộng thân thuyền</strong>, đếm số kẹp giấy thuyền chở được trước khi chìm, vẽ <strong>biểu đồ phân tán</strong>, và học cách khoanh tròn rồi làm lại khi gặp <strong>kết quả bất thường</strong> (ví dụ thuyền bị thủng rò nước).
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+        <div class="bg-white/15 rounded-2xl p-3.5">
+          <div class="font-black text-amber-300 text-xs uppercase">
+            <span class="lang-en">1. Change (Independent)</span>
+            <span class="lang-vn">1. Thay Đổi (Biến Độc Lập)</span>
+          </div>
+          <div class="text-sm font-bold mt-1">
+            <span class="lang-en">Boat hull width (cm)</span>
+            <span class="lang-vn">Chiều rộng thân thuyền (cm)</span>
+          </div>
+        </div>
+        <div class="bg-white/15 rounded-2xl p-3.5">
+          <div class="font-black text-emerald-300 text-xs uppercase">
+            <span class="lang-en">2. Measure (Dependent)</span>
+            <span class="lang-vn">2. Đo Đạc (Biến Phụ Thuộc)</span>
+          </div>
+          <div class="text-sm font-bold mt-1">
+            <span class="lang-en">Cargo held before sinking</span>
+            <span class="lang-vn">Số hàng chở trước khi chìm</span>
+          </div>
+        </div>
+        <div class="bg-white/15 rounded-2xl p-3.5">
+          <div class="font-black text-sky-200 text-xs uppercase">
+            <span class="lang-en">3. Keep Same (Control)</span>
+            <span class="lang-vn">3. Giữ Nguyên (Biến Kiểm Soát)</span>
+          </div>
+          <div class="text-sm font-bold mt-1">
+            <span class="lang-en">Same 60 g clay &amp; water</span>
+            <span class="lang-vn">Cùng 60 g đất nặn &amp; nước</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== INTERACTIVE MODEL A: CARGO BOAT LOADER TOY ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 shadow-lg border-2 border-sky-200 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 font-black text-xs uppercase">
+            <span class="lang-en">Interactive Lab 1</span>
+            <span class="lang-vn">Thí Nghiệm Tương Tác 1</span>
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1">
+            <span class="lang-en">⛵ Cargo Boat Loader Toy</span>
+            <span class="lang-vn">⛵ Thử Nghiệm Thuyền Chở Đồng Xu</span>
+          </h3>
+        </div>
+      </div>
+
+      <p class="lang-en-block text-sm text-slate-600 font-semibold">
+        Pick a Narrow, Medium, or Wide clay boat (all made from the same 60 g of clay!). Tap <strong>+ Add Coin</strong> and watch how the boat sits lower as Weight and Upthrust both grow — until Weight beats Maximum Upthrust!
+      </p>
+      <p class="lang-vn-block text-sm text-slate-600 font-semibold">
+        Chọn thuyền đất nặn Hẹp, Vừa hoặc Rộng (cùng làm từ 60 g đất nặn!). Nhấn <strong>+ Thêm đồng xu</strong> để xem thuyền chìm sâu dần khi Trọng lượng và Lực đẩy nổi cùng tăng — cho đến khi Trọng lượng lớn hơn Lực đẩy nổi tối đa!
+      </p>
+
+      <!-- Hull Size Selector -->
+      <div class="grid grid-cols-3 gap-2">
+        <button id="toy-narrow" onclick="selectToyBoat('narrow')" class="py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm bg-slate-100 text-slate-800 hover:bg-sky-100 transition">
+          <span class="lang-en">Narrow (6 cm)</span>
+          <span class="lang-vn">Hẹp (6 cm)</span>
+        </button>
+        <button id="toy-medium" onclick="selectToyBoat('medium')" class="py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm bg-sky-600 text-white shadow transition">
+          <span class="lang-en">Medium (10 cm)</span>
+          <span class="lang-vn">Vừa (10 cm)</span>
+        </button>
+        <button id="toy-wide" onclick="selectToyBoat('wide')" class="py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm bg-slate-100 text-slate-800 hover:bg-sky-100 transition">
+          <span class="lang-en">Wide (14 cm)</span>
+          <span class="lang-vn">Rộng (14 cm)</span>
+        </button>
+      </div>
+
+      <!-- Animated SVG Water Tank -->
+      <div class="rounded-2xl overflow-hidden border-4 border-slate-800 bg-sky-50">
+        <svg viewBox="0 0 460 220" class="w-full h-auto block">
+          <rect x="0" y="0" width="460" height="96" fill="#f0f9ff" />
+          <rect x="0" y="96" width="460" height="124" fill="#38bdf8" fill-opacity="0.45" />
+          <g class="wave-anim">
+            <path d="M -20 96 Q 20 89 60 96 T 140 96 T 220 96 T 300 96 T 380 96 T 460 96 T 540 96 L 540 110 L -20 110 Z" fill="#0ea5e9" fill-opacity="0.55" />
+          </g>
+          <rect x="0" y="206" width="460" height="14" fill="#475569" />
+
+          <!-- Boat Group -->
+          <g id="toy-boat-g" transform="translate(230, 96)">
+            <path id="toy-hull" d="M -62 -28 L -48 12 L 48 12 L 62 -28 L 52 -28 L 40 2 L -40 2 L -52 -28 Z" fill="#b45309" stroke="#451a03" stroke-width="2.6" />
+            <g id="toy-coins-g"></g>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Controls -->
+      <div class="grid grid-cols-2 gap-3">
+        <button onclick="addToyCoin()" class="py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-base shadow transition">
+          <span class="lang-en">🪙 + Add Coin</span>
+          <span class="lang-vn">🪙 + Thêm Đồng Xu</span>
+        </button>
+        <button onclick="resetToyBoat()" class="py-3 rounded-2xl bg-slate-200 hover:bg-slate-300 text-slate-900 font-black text-base transition">
+          <span class="lang-en">↺ Reset Boat</span>
+          <span class="lang-vn">↺ Làm Lại</span>
+        </button>
+      </div>
+
+      <!-- Live Weight & Upthrust Bars Anchored Below Canvas -->
+      <div class="bg-slate-900 text-white rounded-2xl p-4 space-y-3">
+        <div class="flex items-center justify-between text-sm font-black">
+          <span class="text-amber-300">
+            <span class="lang-en">Coins Inside Hull:</span>
+            <span class="lang-vn">Số Đồng Xu Trong Thuyền:</span>
+            <span id="toy-coin-count" class="text-white text-lg ml-1">0</span>
+          </span>
+          <span id="toy-status-badge" class="px-3 py-1 rounded-full bg-emerald-500 text-slate-950 text-xs font-black">
+            FLOATING
+          </span>
+        </div>
+
+        <div class="space-y-2">
+          <div>
+            <div class="flex justify-between text-xs font-bold mb-1">
+              <span class="text-rose-300">
+                <span class="lang-en">↓ Downward Weight</span>
+                <span class="lang-vn">↓ Trọng Lượng (Kéo Xuống)</span>
+              </span>
+              <span id="toy-w-text">0.6 N</span>
+            </div>
+            <div class="w-full h-3.5 bg-slate-700 rounded-full overflow-hidden">
+              <div id="toy-w-bar" class="h-full bg-rose-500 transition-all duration-200" style="width: 15%;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-bold mb-1">
+              <span class="text-emerald-300">
+                <span class="lang-en">↑ Upward Upthrust</span>
+                <span class="lang-vn">↑ Lực Đẩy Nổi (Đẩy Lên)</span>
+              </span>
+              <span id="toy-u-text">0.6 N</span>
+            </div>
+            <div class="w-full h-3.5 bg-slate-700 rounded-full overflow-hidden">
+              <div id="toy-u-bar" class="h-full bg-emerald-400 transition-all duration-200" style="width: 15%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <p id="toy-explain" class="text-xs sm:text-sm text-sky-200 font-semibold pt-1">
+          Tap "+ Add Coin" to load cargo and compare Narrow, Medium, and Wide hulls!
+        </p>
+      </div>
+    </section>
+
+    <!-- ==================== INTERACTIVE MODEL B: SCATTER GRAPH ANOMALY DETECTIVE ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 shadow-lg border-2 border-violet-200 space-y-4">
+      <div>
+        <span class="px-3 py-1 rounded-full bg-violet-100 text-violet-800 font-black text-xs uppercase">
+          <span class="lang-en">Interactive Lab 2</span>
+          <span class="lang-vn">Thí Nghiệm Tương Tác 2</span>
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1">
+          <span class="lang-en">🔎 Scatter Graph Anomaly Detective</span>
+          <span class="lang-vn">🔎 Thám Tử Biểu Đồ Phân Tán</span>
+        </h3>
+      </div>
+
+      <div class="bg-sky-50 border border-sky-200 rounded-xl p-3 text-xs sm:text-sm font-bold text-sky-950">
+        <span class="lang-en">📖 <strong>How to Read:</strong> Read ACROSS to the X-axis (Boat Width), then UP to the Y-axis (Beans Held). Tap every dot below — and find the <strong>anomalous result</strong> caused by a leaky paper cup!</span>
+        <span class="lang-vn">📖 <strong>Cách Đọc Biểu Đồ:</strong> Đọc NGANG theo trục X (Chiều rộng thuyền), rồi nhìn LÊN trục Y (Số hạt đậu chở được). Chạm vào từng chấm tròn và tìm ra <strong>kết quả bất thường</strong> do cốc bị thủng rò nước!</span>
+      </div>
+
+      <!-- Colourful Fully Labelled SVG Scatter Graph: Paper Cup Boats + Beans -->
+      <!-- (6,5), (8,10), (10,15), (12,6 ANOMALY!), (14,25), (16,30) -->
+      <div class="bg-slate-50 rounded-2xl p-2 border border-slate-200">
+        <svg viewBox="0 0 540 315" class="w-full h-auto block">
+          <text x="285" y="20" text-anchor="middle" font-size="13.5" font-weight="800" fill="#0f172a">
+            Paper Cup Boat Width (cm) vs Beans Held
+          </text>
+
+          <!-- Gridlines -->
+          <g stroke="#cbd5e1" stroke-width="1">
+            <!-- Y=0..35 step 5 (y=260..43, step 31px) -->
+            <line x1="66" y1="260" x2="500" y2="260" stroke="#0f172a" stroke-width="2" />
+            <line x1="66" y1="229" x2="500" y2="229" />
+            <line x1="66" y1="198" x2="500" y2="198" />
+            <line x1="66" y1="167" x2="500" y2="167" />
+            <line x1="66" y1="136" x2="500" y2="136" />
+            <line x1="66" y1="105" x2="500" y2="105" />
+            <line x1="66" y1="74" x2="500" y2="74" />
+            <line x1="66" y1="43" x2="500" y2="43" />
+            <!-- X=4..18 step 2 (x=66..500, step 62px) -->
+            <line x1="66" y1="43" x2="66" y2="260" stroke="#0f172a" stroke-width="2" />
+            <line x1="128" y1="43" x2="128" y2="260" />
+            <line x1="190" y1="43" x2="190" y2="260" />
+            <line x1="252" y1="43" x2="252" y2="260" />
+            <line x1="314" y1="43" x2="314" y2="260" />
+            <line x1="376" y1="43" x2="376" y2="260" />
+            <line x1="438" y1="43" x2="438" y2="260" />
+            <line x1="500" y1="43" x2="500" y2="260" />
+          </g>
+
+          <!-- Y Labels -->
+          <g font-size="11" font-weight="700" fill="#334155" text-anchor="end">
+            <text x="58" y="264">0</text>
+            <text x="58" y="233">5</text>
+            <text x="58" y="202">10</text>
+            <text x="58" y="171">15</text>
+            <text x="58" y="140">20</text>
+            <text x="58" y="109">25</text>
+            <text x="58" y="78">30</text>
+            <text x="58" y="47">35</text>
+          </g>
+          <text x="18" y="152" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0f172a" transform="rotate(-90 18 152)">
+            Number of Beans Held
+          </text>
+
+          <!-- X Labels -->
+          <g font-size="11" font-weight="700" fill="#334155" text-anchor="middle">
+            <text x="66" y="278">4</text>
+            <text x="128" y="278">6</text>
+            <text x="190" y="278">8</text>
+            <text x="252" y="278">10</text>
+            <text x="314" y="278">12</text>
+            <text x="376" y="278">14</text>
+            <text x="438" y="278">16</text>
+            <text x="500" y="278">18</text>
+          </g>
+          <text x="283" y="302" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0f172a">
+            Paper Cup Boat Width (cm)
+          </text>
+
+          <!-- Pattern Line + Anomaly Circle (revealed when anomaly tapped) -->
+          <g id="portal-anomaly-reveal" style="display:none;">
+            <line x1="128" y1="229" x2="438" y2="74" stroke="#059669" stroke-width="3" stroke-dasharray="7 4" />
+            <circle cx="314" cy="136" r="7" fill="#10b981" stroke="#ffffff" stroke-width="2" />
+            <text x="324" y="131" font-size="11" font-weight="800" fill="#047857">Expected: 20 beans</text>
+            <circle cx="314" cy="222.8" r="19" fill="none" stroke="#e11d48" stroke-width="3.5" class="pulse-ring" />
+          </g>
+
+          <!-- Tappable Points: (6,5) (8,10) (10,15) (12,6 ANOMALY) (14,25) (16,30) -->
+          <g>
+            <circle cx="128" cy="229" r="9.5" fill="#0284c7" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="tapPortalDot(6, 5, false)" />
+            <circle cx="190" cy="198" r="9.5" fill="#0284c7" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="tapPortalDot(8, 10, false)" />
+            <circle cx="252" cy="167" r="9.5" fill="#0284c7" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="tapPortalDot(10, 15, false)" />
+            <circle cx="314" cy="222.8" r="9.5" fill="#e11d48" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="tapPortalDot(12, 6, true)" />
+            <circle cx="376" cy="105" r="9.5" fill="#0284c7" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="tapPortalDot(14, 25, false)" />
+            <circle cx="438" cy="74" r="9.5" fill="#0284c7" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="tapPortalDot(16, 30, false)" />
+          </g>
+        </svg>
+      </div>
+
+      <!-- Readout Card -->
+      <div id="portal-dot-readout" class="bg-violet-950 text-white rounded-2xl p-4 space-y-1.5">
+        <div class="font-black text-amber-300 text-sm" id="dot-title">
+          <span class="lang-en">👆 Tap any plotted dot on the graph above!</span>
+          <span class="lang-vn">👆 Hãy chạm vào một chấm tròn trên biểu đồ phía trên!</span>
+        </div>
+        <p id="dot-desc" class="text-xs sm:text-sm text-violet-100 font-medium">
+          <span class="lang-en">Can you find the one boat that did not fit the upward pattern?</span>
+          <span class="lang-vn">Con có tìm ra chiếc thuyền duy nhất lệch khỏi quy luật tăng dần không?</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ==================== VISUAL SVG BILINGUAL VOCABULARY CARDS ==================== -->
+    <section class="space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <h3 class="text-2xl font-black text-slate-900">
+          <span class="lang-en">🗣️ Key Vocabulary Flashcards (EN / VN Audio)</span>
+          <span class="lang-vn">🗣️ Thẻ Từ Vựng Khoa Học (Có Âm Thanh Anh / Việt)</span>
+        </h3>
+      </div>
+
+      <div id="portal-vocab-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ==================== 3-TIER DINNER TABLE TALKS ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 shadow-lg border-2 border-amber-300 space-y-4">
+      <h3 class="text-2xl font-black text-slate-900">
+        <span class="lang-en">🍽️ 3-Tier Dinner Table Talks</span>
+        <span class="lang-vn">🍽️ Trò Chuyện Bữa Tối (3 Cấp Độ)</span>
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4 space-y-2">
+          <div class="font-black text-emerald-800 text-xs uppercase">
+            <span class="lang-en">Tier 1 • Warm-Up at Home</span>
+            <span class="lang-vn">Cấp 1 • Thử Nhanh Ở Nhà</span>
+          </div>
+          <p class="lang-en-block text-sm font-semibold text-slate-800">
+            Float a small bowl and a wide bowl in a washing-up basin and add spoons or coins one by one. Ask: <em>"What did we keep the same so our kitchen test is fair?"</em>
+          </p>
+          <p class="lang-vn-block text-sm font-semibold text-slate-800">
+            Thả một chiếc bát nhỏ và một chiếc bát rộng vào chậu nước, rồi bỏ từng thìa hoặc đồng xu vào. Hỏi con: <em>"Bố mẹ và con cần giữ nguyên điều gì để thí nghiệm này công bằng?"</em>
+          </p>
+        </div>
+
+        <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4 space-y-2">
+          <div class="font-black text-sky-800 text-xs uppercase">
+            <span class="lang-en">Tier 2 • Graph Explorer</span>
+            <span class="lang-vn">Cấp 2 • Đọc Biểu Đồ Thực Tế</span>
+          </div>
+          <p class="lang-en-block text-sm font-semibold text-slate-800">
+            Look at a Hanoi weather temperature chart together. Ask your child to read the X-axis first, then the Y-axis, and spot if any single day looks like an unusual dip or jump!
+          </p>
+          <p class="lang-vn-block text-sm font-semibold text-slate-800">
+            Cùng con xem biểu đồ nhiệt độ thời tiết Hà Nội. Nhờ con đọc trục ngang (X) trước rồi nhìn lên trục dọc (Y), và tìm xem có ngày nào nhiệt độ thay đổi bất thường không!
+          </p>
+        </div>
+
+        <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 space-y-2">
+          <div class="font-black text-amber-900 text-xs uppercase">
+            <span class="lang-en">Tier 3 • Red River Connection</span>
+            <span class="lang-vn">Cấp 3 • Liên Hệ Sông Hồng</span>
+          </div>
+          <p class="lang-en-block text-sm font-semibold text-slate-800">
+            Next time you cross a bridge over the Red River (Sông Hồng), look at the sand barges! Ask: <em>"Why is an empty barge floating high, while a loaded sand barge sits very deep in the water?"</em>
+          </p>
+          <p class="lang-vn-block text-sm font-semibold text-slate-800">
+            Lần tới đi qua cầu bắc qua Sông Hồng, hãy cùng con quan sát các sà lan chở cát! Hỏi con: <em>"Vì sao sà lan không chở hàng nổi rất cao, còn sà lan chở đầy cát lại chìm rất sâu dưới mặt nước?"</em>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== GAMIFIED 4-QUESTION HOME CHECK QUIZ ==================== -->
+    <section class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-3xl p-5 sm:p-6 shadow-xl border-4 border-emerald-400 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-emerald-400 text-slate-950 font-black text-xs uppercase">
+            <span class="lang-en">🏆 3-Minute Home Check</span>
+            <span class="lang-vn">🏆 Kiểm Tra Nhanh 3 Phút</span>
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black mt-1">
+            <span class="lang-en">Can You Score 4 / 4?</span>
+            <span class="lang-vn">Con Có Đạt 4 / 4 Điểm Không?</span>
+          </h3>
+        </div>
+        <div class="px-4 py-2 rounded-2xl bg-slate-800 border border-emerald-400 font-black text-lg text-emerald-300">
+          <span id="quiz-score">0</span> / 4
+        </div>
+      </div>
+
+      <div id="portal-quiz-container" class="space-y-4">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="flex justify-end">
+        <button onclick="resetQuiz()" class="px-4 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs">
+          <span class="lang-en">↺ Try Quiz Again</span>
+          <span class="lang-vn">↺ Làm Lại Bài Trắc Nghiệm</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ==================== LANGUAGE TOGGLE (cancels speechSynthesis) ====================
+    let currentLang = 'en';
+    function toggleLanguage() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      currentLang = currentLang === 'en' ? 'vn' : 'en';
+      document.body.classList.toggle('vn-mode', currentLang === 'vn');
+      document.getElementById('lang-toggle-btn').textContent = currentLang === 'en' ? '🇻🇳 Tiếng Việt' : '🇬🇧 English';
+      updateToyUI();
+    }
+
+    // ==================== CONFETTI ====================
+    function fireConfetti() {
+      const c = document.getElementById('portal-confetti');
+      const ctx = c.getContext('2d');
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      const parts = Array.from({ length: 70 }, () => ({
+        x: Math.random() * c.width,
+        y: -20 - Math.random() * 120,
+        s: 6 + Math.random() * 6,
+        vx: (Math.random() - 0.5) * 4.5,
+        vy: 3 + Math.random() * 4.5,
+        col: ['#38bdf8', '#fbbf24', '#34d399', '#fb7185', '#a78bfa'][Math.floor(Math.random() * 5)]
+      }));
+      let t = 0;
+      function frame() {
+        ctx.clearRect(0, 0, c.width, c.height);
+        parts.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          ctx.fillStyle = p.col;
+          ctx.fillRect(p.x, p.y, p.s, p.s * 0.7);
+        });
+        t++;
+        if (t < 85) requestAnimationFrame(frame);
+        else ctx.clearRect(0, 0, c.width, c.height);
+      }
+      frame();
+    }
+
+    // ==================== MODEL A: CARGO BOAT LOADER TOY ====================
+    const TOY_CONFIG = {
+      narrow: { maxCoins: 5, halfW: 38, en: 'Narrow (6 cm)', vn: 'Hẹp (6 cm)' },
+      medium: { maxCoins: 11, halfW: 62, en: 'Medium (10 cm)', vn: 'Vừa (10 cm)' },
+      wide:   { maxCoins: 17, halfW: 92, en: 'Wide (14 cm)', vn: 'Rộng (14 cm)' }
+    };
+    let toyType = 'medium';
+    let toyCoins = 0;
+    let toySunk = false;
+
+    function selectToyBoat(type) {
+      toyType = type;
+      ['narrow', 'medium', 'wide'].forEach(k => {
+        document.getElementById('toy-' + k).className = k === type
+          ? 'py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm bg-sky-600 text-white shadow transition'
+          : 'py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm bg-slate-100 text-slate-800 hover:bg-sky-100 transition';
+      });
+      resetToyBoat();
+    }
+
+    function resetToyBoat() {
+      toyCoins = 0;
+      toySunk = false;
+      updateToyUI();
+    }
+
+    function addToyCoin() {
+      if (toySunk) return;
+      const cfg = TOY_CONFIG[toyType];
+      toyCoins++;
+      if (toyCoins > cfg.maxCoins) {
+        toySunk = true;
+      }
+      updateToyUI();
+    }
+
+    function updateToyUI() {
+      const cfg = TOY_CONFIG[toyType];
+      const hw = cfg.halfW;
+      const d = `M ${-hw} -28 L ${-(hw - 12)} 12 L ${hw - 12} 12 L ${hw} -28 L ${hw - 10} -28 L ${hw - 20} 2 L ${-(hw - 20)} 2 L ${-(hw - 10)} -28 Z`;
+      document.getElementById('toy-hull').setAttribute('d', d);
+
+      const ratio = Math.min(toyCoins / cfg.maxCoins, 1);
+      const y = toySunk ? 186 : (92 + ratio * 22);
+      document.getElementById('toy-boat-g').setAttribute('transform', `translate(230, ${y})`);
+
+      // Render gold coins
+      const cg = document.getElementById('toy-coins-g');
+      const cols = Math.max(3, Math.floor((hw * 2 - 36) / 14));
+      let html = '';
+      for (let i = 0; i < Math.min(toyCoins, 18); i++) {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        const cx = -((cols - 1) * 13) / 2 + col * 13;
+        const cy = -3 - row * 7;
+        html += `<ellipse cx="${cx}" cy="${cy}" rx="5.5" ry="3.2" fill="#fbbf24" stroke="#92400e" stroke-width="1.3" />`;
+      }
+      cg.innerHTML = html;
+
+      const weightN = +(0.6 + toyCoins * 0.1).toFixed(1);
+      const maxUpN = +(0.6 + cfg.maxCoins * 0.1).toFixed(1);
+      const upthrustN = toySunk ? +(maxUpN * 0.85).toFixed(1) : weightN;
+
+      document.getElementById('toy-coin-count').textContent = toySunk ? `${cfg.maxCoins} max` : String(toyCoins);
+      document.getElementById('toy-w-text').textContent = `${weightN.toFixed(1)} N`;
+      document.getElementById('toy-u-text').textContent = `${upthrustN.toFixed(1)} N`;
+      document.getElementById('toy-w-bar').style.width = `${Math.min(100, (weightN / 2.5) * 100)}%`;
+      document.getElementById('toy-u-bar').style.width = `${Math.min(100, (upthrustN / 2.5) * 100)}%`;
+
+      const badge = document.getElementById('toy-status-badge');
+      const exp = document.getElementById('toy-explain');
+      if (toySunk) {
+        badge.className = 'px-3 py-1 rounded-full bg-rose-500 text-white text-xs font-black';
+        badge.textContent = currentLang === 'en' ? 'SUNK!' : 'ĐÃ CHÌM!';
+        exp.textContent = currentLang === 'en'
+          ? `SPLASH! The ${cfg.en} hull held ${cfg.maxCoins} coins before sinking. Coin #${cfg.maxCoins + 1} made Weight greater than Maximum Upthrust!`
+          : `ÙM! Thuyền ${cfg.vn} chở được tối đa ${cfg.maxCoins} đồng xu. Đến đồng xu thứ ${cfg.maxCoins + 1}, Trọng lượng lớn hơn Lực đẩy nổi tối đa nên thuyền chìm!`;
+      } else {
+        badge.className = 'px-3 py-1 rounded-full bg-emerald-400 text-slate-950 text-xs font-black';
+        badge.textContent = currentLang === 'en' ? 'FLOATING (Balanced)' : 'ĐANG NỔI (Cân bằng)';
+        exp.textContent = currentLang === 'en'
+          ? `${cfg.en} boat floating with ${toyCoins} coin(s). Weight = Upthrust (${weightN.toFixed(1)} N). Notice how a wider hull can support higher maximum upthrust!`
+          : `Thuyền ${cfg.vn} đang nổi với ${toyCoins} đồng xu. Trọng lượng = Lực đẩy nổi (${weightN.toFixed(1)} N). Thuyền càng rộng thì lực đẩy nổi tối đa càng lớn!`;
+      }
+    }
+
+    // ==================== MODEL B: ANOMALY DETECTIVE ====================
+    function tapPortalDot(width, beans, isAnomaly) {
+      const t = document.getElementById('dot-title');
+      const d = document.getElementById('dot-desc');
+      if (isAnomaly) {
+        document.getElementById('portal-anomaly-reveal').style.display = 'block';
+        t.innerHTML = `<span class="lang-en">🏅 DETECTIVE BADGE UNLOCKED! Anomaly Found at (${width} cm, ${beans} beans)!</span><span class="lang-vn">🏅 MỞ KHÓA HUY HIỆU THÁM TỬ! Đã tìm thấy kết quả bất thường (${width} cm, ${beans} hạt đậu)!</span>`;
+        d.innerHTML = `<span class="lang-en">The pattern shows a 12 cm cup boat should hold about 20 beans, not 6! A tiny leak or splash let water in early. Scientists circle the anomaly and repeat that trial.</span><span class="lang-vn">Theo quy luật, thuyền rộng 12 cm phải chở được khoảng 20 hạt đậu, không phải 6! Chắc chắn cốc bị thủng rò nước hoặc nước bắn vào. Các nhà khoa học khoanh tròn điểm này và làm lại thử nghiệm.</span>`;
+        fireConfetti();
+      } else {
+        t.innerHTML = `<span class="lang-en">✅ Point (${width} cm, ${beans} beans) — Fits the Pattern!</span><span class="lang-vn">✅ Điểm (${width} cm, ${beans} hạt đậu) — Đúng quy luật!</span>`;
+        d.innerHTML = `<span class="lang-en">Every +2 cm of width adds +5 beans held. Keep tapping to spot the leaky boat!</span><span class="lang-vn">Mỗi khi chiều rộng tăng thêm 2 cm, thuyền chở thêm 5 hạt đậu. Hãy tiếp tục chạm để tìm chiếc thuyền bị rò nước nhé!</span>`;
+      }
+    }
+
+    // ==================== VOCABULARY FLASHCARDS + AUDIO ====================
+    const PORTAL_VOCAB = [
+      { en: 'independent variable', vn: 'biến độc lập', svg: '🎛️', defEn: 'The one thing we change (hull width).', defVn: 'Yếu tố duy nhất ta thay đổi (chiều rộng thuyền).' },
+      { en: 'dependent variable', vn: 'biến phụ thuộc', svg: '📎', defEn: 'What we measure (cargo held).', defVn: 'Kết quả ta đo/đếm (số hàng chở được).' },
+      { en: 'control variable', vn: 'biến kiểm soát', svg: '⚖️', defEn: 'Things kept the same (60 g clay).', defVn: 'Những yếu tố giữ nguyên (60 g đất nặn).' },
+      { en: 'scatter graph', vn: 'biểu đồ phân tán', svg: '📈', defEn: 'Plotted points showing a relationship.', defVn: 'Biểu đồ chấm điểm thể hiện mối liên hệ.' },
+      { en: 'pattern', vn: 'quy luật / xu hướng', svg: '🧭', defEn: 'Wider hull ➔ more cargo held.', defVn: 'Thuyền rộng hơn ➔ chở nhiều hàng hơn.' },
+      { en: 'anomalous result', vn: 'kết quả bất thường', svg: '🎯', defEn: 'An odd point off the pattern (e.g. leak).', defVn: 'Điểm lệch khỏi quy luật (ví dụ do rò nước).' },
+      { en: 'hull', vn: 'thân tàu / lòng thuyền', svg: '⛵', defEn: 'Hollow body of a boat in water.', defVn: 'Phần thân rỗng của thuyền nằm dưới nước.' },
+      { en: 'cargo', vn: 'hàng hóa / tải trọng', svg: '📦', defEn: 'The load carried inside a boat.', defVn: 'Hàng hóa hoặc vật nặng đặt trong thuyền.' },
+      { en: 'surface area', vn: 'diện tích bề mặt', svg: '📐', defEn: 'Size of the hull area touching water.', defVn: 'Diện tích phần thân thuyền tiếp xúc với nước.' }
+    ];
+
+    function speakPortal(text, langCode) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = langCode;
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    function renderPortalVocab() {
+      const grid = document.getElementById('portal-vocab-grid');
+      grid.innerHTML = PORTAL_VOCAB.map((v, i) => `
+        <div class="bg-white rounded-2xl p-4 shadow border border-slate-200 flex flex-col justify-between space-y-3">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <span class="text-2xl">${v.svg}</span>
+              <div class="flex gap-1.5">
+                <button onclick="speakPortal('${v.en}', 'en-GB')" class="px-2.5 py-1 rounded-lg bg-sky-100 hover:bg-sky-200 text-sky-900 font-black text-xs">🔊 EN</button>
+                <button onclick="speakPortal('${v.vn}', 'vi-VN')" class="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-black text-xs">🔊 VN</button>
+              </div>
+            </div>
+            <div class="font-black text-lg text-slate-900 capitalize">${v.en}</div>
+            <div class="font-extrabold text-sm text-amber-700">${v.vn}</div>
+            <p class="text-xs text-slate-600 mt-1.5 font-medium">${v.defEn}</p>
+            <p class="text-xs text-slate-500 mt-0.5 italic">${v.defVn}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ==================== 4-QUESTION INTERACTIVE HOME QUIZ ====================
+    const QUIZ_DATA = [
+      {
+        qEn: '1. Mai tests how boat width changes how many bottle caps a boat holds. Which variable is the number of bottle caps?',
+        qVn: '1. Mai thử xem chiều rộng thuyền ảnh hưởng thế nào đến số nắp chai thuyền chở được. Số nắp chai là biến gì?',
+        opts: [
+          { en: 'Independent variable', vn: 'Biến độc lập', ok: false },
+          { en: 'Dependent variable', vn: 'Biến phụ thuộc', ok: true },
+          { en: 'Anomalous result', vn: 'Kết quả bất thường', ok: false }
+        ],
+        fbEn: 'Correct! We count/measure the bottle caps, so it is the Dependent variable.',
+        fbVn: 'Chính xác! Ta đếm/đo số nắp chai nên đó là Biến phụ thuộc.'
+      },
+      {
+        qEn: '2. Ben tests a narrow plastic boat against a wide wooden boat. Why is this NOT a fair test?',
+        qVn: '2. Ben so sánh một thuyền nhựa hẹp với một thuyền gỗ rộng. Vì sao đây KHÔNG phải thí nghiệm công bằng?',
+        opts: [
+          { en: 'He changed TWO variables (material AND width)', vn: 'Bạn ấy thay đổi HAI biến (chất liệu VÀ chiều rộng)', ok: true },
+          { en: 'He used fresh water in a tub', vn: 'Bạn ấy dùng nước ngọt trong chậu', ok: false },
+          { en: 'He counted bottle caps gently', vn: 'Bạn ấy đếm nắp chai nhẹ nhàng', ok: false }
+        ],
+        fbEn: 'Spot on! A fair test only changes ONE variable at a time.',
+        fbVn: 'Chuẩn luôn! Thí nghiệm công bằng chỉ được thay đổi MỘT biến duy nhất mỗi lần.'
+      },
+      {
+        qEn: '3. On a scatter graph, a plotted point sits at (10 cm, 18 caps). What does this tell us?',
+        qVn: '3. Trên biểu đồ phân tán, một điểm nằm ở tọa độ (10 cm, 18 nắp chai). Điểm này cho biết điều gì?',
+        opts: [
+          { en: 'An 18 cm boat held 10 caps', vn: 'Thuyền rộng 18 cm chở được 10 nắp chai', ok: false },
+          { en: 'A 10 cm wide boat held 18 bottle caps', vn: 'Thuyền rộng 10 cm chở được 18 nắp chai', ok: true },
+          { en: 'The boat had 10 leaks', vn: 'Thuyền bị thủng 10 lỗ', ok: false }
+        ],
+        fbEn: 'Yes! Always read across to X (10 cm) first, then up to Y (18 caps).',
+        fbVn: 'Đúng rồi! Luôn đọc ngang trục X (10 cm) trước, rồi nhìn lên trục Y (18 nắp chai).'
+      },
+      {
+        qEn: '4. One wide boat suddenly sinks after only 4 caps while similar boats hold 20 caps. What should the young scientist do?',
+        qVn: '4. Một chiếc thuyền rộng đột ngột chìm chỉ sau 4 nắp chai trong khi các thuyền tương tự chở tới 20 nắp. Em nên làm gì?',
+        opts: [
+          { en: 'Draw a zig-zag line down to 4', vn: 'Vẽ đường gấp khúc zíc-zắc xuống điểm 4', ok: false },
+          { en: 'Throw away the whole experiment', vn: 'Bỏ toàn bộ thí nghiệm', ok: false },
+          { en: 'Circle the anomalous result and repeat that trial', vn: 'Khoanh tròn kết quả bất thường và thử nghiệm lại', ok: true }
+        ],
+        fbEn: 'Brilliant science! Circle the anomaly, check for a leak, and repeat the measurement.',
+        fbVn: 'Tuyệt vời! Khoanh tròn kết quả bất thường, kiểm tra chỗ rò nước và đo lại.'
+      }
+    ];
+
+    let quizAnswered = [false, false, false, false];
+    let quizScore = 0;
+
+    function renderQuiz() {
+      const wrap = document.getElementById('portal-quiz-container');
+      wrap.innerHTML = QUIZ_DATA.map((item, qi) => `
+        <div class="bg-white/10 rounded-2xl p-4 border border-white/15 space-y-2.5" id="q-card-${qi}">
+          <p class="font-black text-sm sm:text-base text-white">
+            <span class="lang-en">${item.qEn}</span>
+            <span class="lang-vn">${item.qVn}</span>
+          </p>
+          <div class="grid grid-cols-1 gap-2">
+            ${item.opts.map((o, oi) => `
+              <button onclick="answerQuiz(${qi}, ${oi})" id="q-${qi}-opt-${oi}" class="text-left px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-sky-500/30 border border-white/20 text-xs sm:text-sm font-bold text-white transition">
+                <span class="lang-en">${o.en}</span>
+                <span class="lang-vn">${o.vn}</span>
+              </button>
+            `).join('')}
+          </div>
+          <div id="q-fb-${qi}" class="hidden text-xs sm:text-sm font-bold rounded-xl p-2.5"></div>
+        </div>
+      `).join('');
+    }
+
+    function answerQuiz(qi, oi) {
+      if (quizAnswered[qi]) return;
+      quizAnswered[qi] = true;
+      const item = QUIZ_DATA[qi];
+      const chosen = item.opts[oi];
+      const fb = document.getElementById('q-fb-' + qi);
+      fb.classList.remove('hidden');
+
+      item.opts.forEach((o, idx) => {
+        const b = document.getElementById(`q-${qi}-opt-${idx}`);
+        b.disabled = true;
+        if (o.ok) b.className = 'text-left px-3.5 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-black text-xs sm:text-sm';
+        else if (idx === oi && !o.ok) b.className = 'text-left px-3.5 py-2.5 rounded-xl bg-rose-500 text-white font-black text-xs sm:text-sm';
+      });
+
+      if (chosen.ok) {
+        quizScore++;
+        document.getElementById('quiz-score').textContent = String(quizScore);
+        fb.className = 'text-xs sm:text-sm font-bold rounded-xl p-2.5 bg-emerald-500/25 text-emerald-200 border border-emerald-400';
+        fb.innerHTML = `<span class="lang-en">✅ ${item.fbEn}</span><span class="lang-vn">✅ ${item.fbVn}</span>`;
+        if (quizScore === 4) fireConfetti();
+      } else {
+        fb.className = 'text-xs sm:text-sm font-bold rounded-xl p-2.5 bg-rose-500/25 text-rose-200 border border-rose-400';
+        fb.innerHTML = `<span class="lang-en">💡 Not quite — ${item.fbEn}</span><span class="lang-vn">💡 Chưa đúng lắm — ${item.fbVn}</span>`;
+      }
+    }
+
+    function resetQuiz() {
+      quizAnswered = [false, false, false, false];
+      quizScore = 0;
+      document.getElementById('quiz-score').textContent = '0';
+      renderQuiz();
+    }
+
+    // ==================== INITIALISE ====================
+    updateToyUI();
+    renderPortalVocab();
+    renderQuiz();
+  </script>
+</body>
+</html>

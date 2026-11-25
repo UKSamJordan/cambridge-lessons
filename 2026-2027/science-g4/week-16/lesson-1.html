@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grade 4 Science — Unit 2.4 Lesson 1: Changing Pitch on Stringed Instruments</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --accent: #f59e0b;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 50%, #fffbeb 100%);
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+    /* Auto-hiding fixed header [SoL: Cognitive Load Management] */
+    #topHeader {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    #topHeader.header-hidden {
+      transform: translateY(-105%);
+    }
+
+    /* 3D Flip Cards for Station 1 [SoL: Retrieval Practice] [SoL: Spaced Practice] [SoL: Interleaving] */
+    .flip-perspective {
+      perspective: 1200px;
+    }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1.5rem;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Full-Screen I Do mode [SoL: Worked Examples] */
+    .fullscreen-ido {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 70 !important;
+      background: #f8fafc !important;
+      overflow-y: auto !important;
+      padding: 1.25rem 2rem !important;
+      border-radius: 0 !important;
+      max-width: none !important;
+      margin: 0 !important;
+    }
+
+    /* Wave & pulse animations [SoL: Dual Coding] */
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); opacity: 0.9; }
+      70% { transform: scale(1.12); opacity: 0; }
+      100% { transform: scale(1.12); opacity: 0; }
+    }
+    .boards-up-flash {
+      animation: boardsPulse 0.45s ease-in-out infinite alternate;
+    }
+    @keyframes boardsPulse {
+      from { transform: scale(1); box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
+      to { transform: scale(1.04); box-shadow: 0 0 32px 10px rgba(239,68,68,0.45); }
+    }
+
+    /* Confetti canvas */
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 120;
+    }
+
+    /* Tab active indicator */
+    .station-tab.active-tab {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: #ffffff;
+      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+      transform: translateY(-1px);
+    }
+
+    /* Range slider polish */
+    input[type="range"] {
+      accent-color: #4f46e5;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-14">
+
+  <!-- Confetti Overlay -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- AUTO-HIDING TOP HEADER [SoL: Cognitive Load Management] -->
+  <header id="topHeader" class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b-2 border-indigo-200 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <!-- Left: Enquiry & LO -->
+      <div class="flex items-center gap-3 min-w-[260px] flex-1">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 text-white flex items-center justify-center text-2xl shadow-md shrink-0" aria-hidden="true">🎸</div>
+        <div class="leading-tight">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">Grade 4 Science • Stage 5 • Unit 2.4</span>
+            <span class="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">Enquiry: "How can we make a guitar note higher without making it louder?"</span>
+          </div>
+          <p class="text-sm sm:text-base font-extrabold text-slate-900 mt-0.5">LO: Change pitch on stringed instruments accurately.</p>
+        </div>
+      </div>
+
+      <!-- Right: Scoreboard & Controls -->
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Team Red vs Blue Live Scoreboard -->
+        <div class="flex items-center bg-slate-100 rounded-2xl p-1 border border-slate-200 shadow-inner">
+          <button onclick="addTeamScore('red', 1)" title="Add 1 point to Team Red" class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm transition active:scale-95">
+            <span>🔴 Red</span>
+            <span id="headerRedScore" class="bg-white text-rose-700 px-1.5 py-0.5 rounded-lg text-xs min-w-[22px] text-center">0</span>
+          </button>
+          <span class="px-1.5 text-xs font-black text-slate-400">VS</span>
+          <button onclick="addTeamScore('blue', 1)" title="Add 1 point to Team Blue" class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-sm transition active:scale-95">
+            <span>🔵 Blue</span>
+            <span id="headerBlueScore" class="bg-white text-sky-700 px-1.5 py-0.5 rounded-lg text-xs min-w-[22px] text-center">0</span>
+          </button>
+        </div>
+
+        <!-- David's Board (W) -->
+        <button onclick="toggleWhiteboard()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow transition flex items-center gap-1.5" title="Open David's Board (Shortcut: W)">
+          <span>✏️ David's Board</span>
+          <kbd class="hidden sm:inline text-[11px] bg-emerald-800/70 px-1.5 rounded">W</kbd>
+        </button>
+
+        <!-- Teacher Prompt Drawer (T) -->
+        <button onclick="toggleTeacherDrawer()" class="px-3 py-1.5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-sm shadow transition flex items-center gap-1.5" title="Teacher Prompt Drawer (Shortcut: T)">
+          <span>📋 Prompts</span>
+          <kbd class="hidden sm:inline text-[11px] bg-violet-800/70 px-1.5 rounded">T</kbd>
+        </button>
+
+        <!-- Audio Mute (M) -->
+        <button id="muteBtn" onclick="toggleMute()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-sm shadow transition flex items-center gap-1" title="Mute / Unmute Sound (Shortcut: M)">
+          <span id="muteIcon">🔊</span>
+          <kbd class="hidden sm:inline text-[11px] bg-slate-700 px-1.5 rounded">M</kbd>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 pt-24">
+
+    <!-- STATION NAVIGATION BAR (flex-wrap so tabs never squash) -->
+    <nav aria-label="Lesson Stations" class="bg-white/90 backdrop-blur border-2 border-indigo-100 rounded-2xl p-2 mb-6 shadow-sm flex flex-wrap items-center justify-center gap-2">
+      <button onclick="switchStation(0)" data-tab="0" class="station-tab active-tab px-3.5 py-2 rounded-xl font-bold text-sm text-slate-700 hover:bg-indigo-50 transition">0. 🎯 LO &amp; SC</button>
+      <button onclick="switchStation(1)" data-tab="1" class="station-tab px-3.5 py-2 rounded-xl font-bold text-sm text-slate-700 hover:bg-indigo-50 transition">1. ⚡ Flashback 3</button>
+      <button onclick="switchStation(2)" data-tab="2" class="station-tab px-3.5 py-2 rounded-xl font-bold text-sm text-slate-700 hover:bg-indigo-50 transition">2. 📖 Vocabulary</button>
+      <button onclick="switchStation(3)" data-tab="3" class="station-tab px-3.5 py-2 rounded-xl font-bold text-sm text-slate-700 hover:bg-indigo-50 transition">3. 🔬 Secret Lab (I Do)</button>
+      <button onclick="switchStation(4)" data-tab="4" class="station-tab px-3.5 py-2 rounded-xl font-bold text-sm text-slate-700 hover:bg-indigo-50 transition">4. 🎸 Virtual Guitar Lab</button>
+      <button onclick="switchStation(5)" data-tab="5" class="station-tab px-3.5 py-2 rounded-xl font-bold text-sm text-slate-700 hover:bg-indigo-50 transition">5. ✅ SC Check</button>
+      <button onclick="switchStation(6)" data-tab="6" class="station-tab px-3.5 py-2 rounded-xl font-bold text-sm text-slate-700 hover:bg-indigo-50 transition">6. 🏆 Quickfire</button>
+    </nav>
+
+    <!-- =================================================================== -->
+    <!-- STATION 0: LO & SUCCESS CRITERIA [SoL: Cognitive Load Management] [SoL: Metacognition] -->
+    <!-- =================================================================== -->
+    <section id="station-0" class="station-section">
+      <div class="space-y-6">
+        <!-- Hero LO Banner -->
+        <div class="rounded-3xl bg-gradient-to-r from-indigo-700 via-violet-700 to-fuchsia-600 text-white p-8 sm:p-10 shadow-xl relative overflow-hidden">
+          <div class="relative z-10 max-w-4xl">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-white/20 backdrop-blur text-sm font-extrabold tracking-wide uppercase mb-4">
+              Cambridge Primary Science Stage 5 (0097) • Unit 2.4 Lesson 1
+            </span>
+            <h1 class="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
+              Change pitch on stringed instruments accurately.
+            </h1>
+            <p class="mt-4 text-xl sm:text-2xl font-bold text-amber-200 flex items-center gap-2">
+              <span>🔍 Big Enquiry Question:</span>
+              <span class="italic text-white">"How can we make a guitar note higher without making it louder?"</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Must / Should / Could Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white rounded-3xl p-7 border-4 border-emerald-400 shadow-lg flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="px-4 py-1.5 rounded-full bg-emerald-100 text-emerald-800 font-black text-sm uppercase tracking-wide">Level 1 • Must</span>
+                <span class="text-3xl">🌱</span>
+              </div>
+              <h2 class="text-2xl font-black text-slate-900 leading-snug">State whether a sound is high-pitched or low-pitched.</h2>
+            </div>
+            <p class="mt-5 pt-4 border-t border-emerald-100 text-sm font-semibold text-emerald-800">Listen carefully: pitch is how high or low a sound is — not how loud!</p>
+          </div>
+
+          <div class="bg-white rounded-3xl p-7 border-4 border-sky-400 shadow-lg flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="px-4 py-1.5 rounded-full bg-sky-100 text-sky-800 font-black text-sm uppercase tracking-wide">Level 2 • Should</span>
+                <span class="text-3xl">🎸</span>
+              </div>
+              <h2 class="text-2xl font-black text-slate-900 leading-snug">Explain how tighter, shorter or thinner strings make higher pitch.</h2>
+            </div>
+            <p class="mt-5 pt-4 border-t border-sky-100 text-sm font-semibold text-sky-800">Link every string change to faster or slower vibrations.</p>
+          </div>
+
+          <div class="bg-white rounded-3xl p-7 border-4 border-violet-400 shadow-lg flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="px-4 py-1.5 rounded-full bg-violet-100 text-violet-800 font-black text-sm uppercase tracking-wide">Level 3 • Could</span>
+                <span class="text-3xl">🚀</span>
+              </div>
+              <h2 class="text-2xl font-black text-slate-900 leading-snug">Predict pitch changes on an unfamiliar stringed instrument and explain why.</h2>
+            </div>
+            <p class="mt-5 pt-4 border-t border-violet-100 text-sm font-semibold text-violet-800">Apply your science rule to harps, ukuleles, banjos or zithers!</p>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button onclick="switchStation(1)" class="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-lg shadow-lg transition">
+            Start Station 1: Spaced Flashback 3 ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- STATION 1: SPACED FLASHBACK 3 [SoL: Retrieval Practice] [SoL: Spaced Practice] [SoL: Interleaving] -->
+    <!-- =================================================================== -->
+    <section id="station-1" class="station-section hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 border-2 border-indigo-100 shadow-sm flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-3xl font-black text-slate-900">⚡ Spaced Flashback 3 — Mini-Whiteboard Retrieval</h2>
+            <p class="text-slate-600 font-semibold mt-1">Write your answers on your mini-whiteboard, then click each card to flip and check!</p>
+          </div>
+          <button onclick="resetFlashback()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm transition">
+            🔄 Flip All Back
+          </button>
+        </div>
+
+        <!-- 3 Huge Flip Cards (h-[350px]) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 2.3 Sound Volume (5Ps.03) -->
+          <div class="flip-perspective h-[350px] cursor-pointer flip-card" onclick="toggleFlip(this)">
+            <div class="flip-inner">
+              <div class="flip-face bg-gradient-to-br from-rose-500 to-orange-500 text-white p-7 shadow-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/25 font-black text-xs uppercase tracking-wider">Unit 2.3 • Sound Volume (5Ps.03)</span>
+                  <span class="text-4xl">🥁</span>
+                </div>
+                <div class="text-center my-auto">
+                  <p class="text-4xl font-black leading-tight">Hit a drum harder ➔</p>
+                  <p class="text-2xl font-bold text-amber-100 mt-3">What happens to the vibrations, volume, and what unit measures sound volume?</p>
+                </div>
+                <p class="text-center text-sm font-extrabold uppercase tracking-wider bg-black/20 rounded-xl py-2">👆 Tap card to reveal answer</p>
+              </div>
+              <div class="flip-face flip-back bg-white border-4 border-rose-500 p-7 shadow-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-black text-xs uppercase">Answer • Unit 2.3</span>
+                  <span class="text-3xl">✅</span>
+                </div>
+                <div class="text-center my-auto space-y-3">
+                  <p class="text-5xl font-black text-rose-600">BIGGER = LOUDER</p>
+                  <p class="text-xl font-bold text-slate-800">Hitting harder makes <span class="text-rose-600 underline">bigger vibrations</span> ➔ a <span class="text-rose-600 underline">louder</span> sound.</p>
+                  <p class="inline-block px-4 py-1.5 rounded-xl bg-amber-100 text-amber-900 font-black text-xl">Unit: decibels (dB)</p>
+                </div>
+                <p class="text-center text-xs font-bold text-slate-400">Notice: Today we change PITCH, not loudness!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 3.3 Evaporation & Condensation (5Cc.01) -->
+          <div class="flip-perspective h-[350px] cursor-pointer flip-card" onclick="toggleFlip(this)">
+            <div class="flip-inner">
+              <div class="flip-face bg-gradient-to-br from-sky-600 to-cyan-500 text-white p-7 shadow-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/25 font-black text-xs uppercase tracking-wider">Unit 3.3 • States of Matter (5Cc.01)</span>
+                  <span class="text-4xl">💧</span>
+                </div>
+                <div class="text-center my-auto">
+                  <p class="text-4xl font-black leading-tight">Water vapour + cold glass ➔</p>
+                  <p class="text-2xl font-bold text-sky-100 mt-3">Name the change of state when invisible water vapour cools into liquid droplets.</p>
+                </div>
+                <p class="text-center text-sm font-extrabold uppercase tracking-wider bg-black/20 rounded-xl py-2">👆 Tap card to reveal answer</p>
+              </div>
+              <div class="flip-face flip-back bg-white border-4 border-sky-500 p-7 shadow-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 font-black text-xs uppercase">Answer • Unit 3.3</span>
+                  <span class="text-3xl">✅</span>
+                </div>
+                <div class="text-center my-auto space-y-3">
+                  <p class="text-5xl font-black text-sky-700">Condensation</p>
+                  <p class="text-xl font-bold text-slate-800">Water vapour (gas) <span class="text-sky-600">cools down</span> and turns back into <span class="text-sky-600">liquid water</span> droplets.</p>
+                  <p class="inline-block px-4 py-1.5 rounded-xl bg-sky-100 text-sky-900 font-black text-lg">Gas ➔ Liquid (cooling)</p>
+                </div>
+                <p class="text-center text-xs font-bold text-slate-400">Reverse of evaporation!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 1.3 Seed Dispersal (5Be.02) -->
+          <div class="flip-perspective h-[350px] cursor-pointer flip-card" onclick="toggleFlip(this)">
+            <div class="flip-inner">
+              <div class="flip-face bg-gradient-to-br from-emerald-600 to-teal-500 text-white p-7 shadow-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/25 font-black text-xs uppercase tracking-wider">Unit 1.3 • Seed Dispersal (5Be.02)</span>
+                  <span class="text-4xl">🌼</span>
+                </div>
+                <div class="text-center my-auto">
+                  <p class="text-4xl font-black leading-tight">Dandelion seeds ➔</p>
+                  <p class="text-2xl font-bold text-emerald-100 mt-3">How are dandelion seeds adapted to spread far away from the parent plant?</p>
+                </div>
+                <p class="text-center text-sm font-extrabold uppercase tracking-wider bg-black/20 rounded-xl py-2">👆 Tap card to reveal answer</p>
+              </div>
+              <div class="flip-face flip-back bg-white border-4 border-emerald-500 p-7 shadow-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs uppercase">Answer • Unit 1.3</span>
+                  <span class="text-3xl">✅</span>
+                </div>
+                <div class="text-center my-auto space-y-3">
+                  <p class="text-4xl font-black text-emerald-700">Wind Dispersal</p>
+                  <p class="text-xl font-bold text-slate-800">Light, fluffy <span class="text-emerald-700 underline">parachute hairs</span> catch the wind and float seeds away.</p>
+                  <p class="inline-block px-4 py-1.5 rounded-xl bg-emerald-100 text-emerald-900 font-black text-base">Less crowding for light &amp; water!</p>
+                </div>
+                <p class="text-center text-xs font-bold text-slate-400">Great spaced retrieval from Term 1!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- STATION 2: BILINGUAL VOCAB MODAL + REAL-WORLD STRIP [SoL: Dual Coding] [SoL: Schema Building] -->
+    <!-- =================================================================== -->
+    <section id="station-2" class="station-section hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 border-2 border-indigo-100 shadow-sm flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-3xl font-black text-slate-900">📖 Key Scientific Vocabulary (Unit 2.4)</h2>
+            <p class="text-slate-600 font-semibold mt-1">Click any word tile to launch the full-screen visual card with pronunciation audio.</p>
+          </div>
+          <div class="px-4 py-2 rounded-2xl bg-amber-100 text-amber-900 font-extrabold text-sm">
+            🗣️ Action Cue: Hum LOW (hands by knees) ➔ Hum HIGH (hands above head)!
+          </div>
+        </div>
+
+        <!-- 10 Clickable Vocab Tiles (100% British English outside modal) -->
+        <div id="vocabGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          <!-- Populated cleanly via JS -->
+        </div>
+
+        <!-- Real-World Science Strip at bottom of Station 2 (100% British English) -->
+        <div class="bg-gradient-to-r from-indigo-900 via-violet-900 to-slate-900 text-white rounded-3xl p-6 shadow-xl">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-2xl">🌍</span>
+            <h3 class="text-xl sm:text-2xl font-black tracking-tight">Real-World Science: Pitch in Music &amp; Nature</h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/15">
+              <div class="text-2xl mb-1">🎸 Tuning Pegs</div>
+              <h4 class="font-extrabold text-amber-300 text-base">Guitar &amp; Vietnamese Zither (Dan Tranh)</h4>
+              <p class="text-sm text-indigo-100 mt-1">Musicians turn tuning pegs to tighten strings for a higher pitch, or loosen strings for a lower pitch, before every concert.</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/15">
+              <div class="text-2xl mb-1">🎻 Instrument Size</div>
+              <h4 class="font-extrabold text-sky-300 text-base">Violin vs Double Bass</h4>
+              <p class="text-sm text-indigo-100 mt-1">A small violin has short, thin strings that vibrate very fast (high-pitched). A giant double bass has long, thick strings that vibrate slowly (low-pitched).</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/15">
+              <div class="text-2xl mb-1">🐦 Nature's Orchestra</div>
+              <h4 class="font-extrabold text-emerald-300 text-base">Birdsong vs Lion Roars</h4>
+              <p class="text-sm text-indigo-100 mt-1">Tiny songbirds have short vocal cords that vibrate fast to make high chirps. Lions have large, thick vocal folds that vibrate slowly to make deep, low roars.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- STATION 3: VISUAL ANIMATED FULL-SCREEN I DO / WE DO [SoL: Worked Examples] [SoL: Misconceptions] [SoL: Elaborative Interrogation] -->
+    <!-- =================================================================== -->
+    <section id="station-3" class="station-section hidden">
+      <div id="station3Wrapper" class="space-y-5">
+        <!-- Control Bar -->
+        <div class="bg-white rounded-3xl p-5 border-2 border-indigo-100 shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900">🔬 Secret Lab Missions (I Do / We Do)</h2>
+            <p class="text-slate-600 font-semibold text-sm">Toggle each worked mission, listen closely, and watch how vibrations behave.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="selectMission(1)" id="missionBtn1" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-extrabold text-sm shadow transition">Mission 1: Pitch vs Volume Trap</button>
+            <button onclick="selectMission(2)" id="missionBtn2" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-extrabold text-sm transition">Mission 2: 3 Ways to Raise Pitch</button>
+            <button onclick="openGiantProjection()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm shadow transition">🔎 Giant Projection</button>
+            <button onclick="toggleFullScreenIDo()" id="fullScreenBtn" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-sm shadow transition">⛶ Full Screen I Do</button>
+          </div>
+        </div>
+
+        <!-- Permanent Steps to Success & Safety Bar -->
+        <div class="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-2xl p-4 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <span class="font-black text-amber-900 text-sm uppercase tracking-wider">🧭 Steps to Success &amp; Safety:</span>
+            <div class="flex flex-wrap gap-2 text-xs sm:text-sm font-bold text-slate-800">
+              <span class="bg-white px-3 py-1 rounded-xl border border-amber-200">1️⃣ Check: Is it PITCH (high/low) or VOLUME (loud/quiet)?</span>
+              <span class="bg-white px-3 py-1 rounded-xl border border-amber-200">2️⃣ Remember: Shorter, Tighter, Thinner ➔ Faster vibrations ➔ Higher pitch</span>
+              <span class="bg-white px-3 py-1 rounded-xl border border-amber-200">3️⃣ Fair Test: Pluck with the SAME strength every time</span>
+              <span class="bg-rose-100 text-rose-900 px-3 py-1 rounded-xl border border-rose-300">⚠️ Safety: Never snap elastic bands near eyes or over-tighten strings!</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mission 1 Panel: Pitch vs Volume Trap [SoL: Misconceptions] -->
+        <div id="missionPanel1" class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-indigo-200 shadow-lg space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-black text-xs uppercase">Mission 1 • Busting the #1 Misconception</span>
+              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">The Pitch vs Volume Trap: High Does NOT Mean Loud!</h3>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="playTrapDemo('quietHigh')" class="px-5 py-3 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-black text-base shadow-lg transition active:scale-95">
+                🐦 Play: QUIET &amp; HIGH
+              </button>
+              <button onclick="playTrapDemo('loudLow')" class="px-5 py-3 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-black text-base shadow-lg transition active:scale-95">
+                🦁 Play: LOUD &amp; LOW
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Quiet & High Visual -->
+            <div id="trapCardQuietHigh" class="rounded-2xl border-4 border-sky-200 bg-sky-50/50 p-5 transition">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-xl font-black text-sky-900">Case A: Quiet &amp; High-Pitched</h4>
+                <span class="px-3 py-1 rounded-full bg-sky-200 text-sky-900 text-xs font-black">587 Hz • Small Wave</span>
+              </div>
+              <svg viewBox="0 0 420 120" class="w-full h-32 bg-white rounded-xl border border-sky-200">
+                <line x1="10" y1="60" x2="410" y2="60" stroke="#cbd5e1" stroke-dasharray="4 4" stroke-width="1.5" />
+                <path id="svgQuietHighWave" d="M 10 60 Q 20 45 30 60 T 50 60 T 70 60 T 90 60 T 110 60 T 130 60 T 150 60 T 170 60 T 190 60 T 210 60 T 230 60 T 250 60 T 270 60 T 290 60 T 310 60 T 330 60 T 350 60 T 370 60 T 390 60 T 410 60" fill="none" stroke="#0284c7" stroke-width="3.5" />
+              </svg>
+              <div class="mt-3 grid grid-cols-2 gap-2 text-sm font-bold">
+                <div class="bg-white rounded-xl p-2.5 border border-sky-200">⚡ Speed: <span class="text-sky-700">VERY FAST ➔ HIGH pitch</span></div>
+                <div class="bg-white rounded-xl p-2.5 border border-sky-200">📏 Size: <span class="text-slate-700">SMALL ➔ QUIET volume</span></div>
+              </div>
+            </div>
+
+            <!-- Loud & Low Visual -->
+            <div id="trapCardLoudLow" class="rounded-2xl border-4 border-rose-200 bg-rose-50/50 p-5 transition">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-xl font-black text-rose-900">Case B: Loud &amp; Low-Pitched</h4>
+                <span class="px-3 py-1 rounded-full bg-rose-200 text-rose-900 text-xs font-black">147 Hz • Tall Wave</span>
+              </div>
+              <svg viewBox="0 0 420 120" class="w-full h-32 bg-white rounded-xl border border-rose-200">
+                <line x1="10" y1="60" x2="410" y2="60" stroke="#cbd5e1" stroke-dasharray="4 4" stroke-width="1.5" />
+                <path id="svgLoudLowWave" d="M 10 60 Q 60 8 110 60 T 210 60 T 310 60 T 410 60" fill="none" stroke="#e11d48" stroke-width="4" />
+              </svg>
+              <div class="mt-3 grid grid-cols-2 gap-2 text-sm font-bold">
+                <div class="bg-white rounded-xl p-2.5 border border-rose-200">🐢 Speed: <span class="text-rose-700">SLOW ➔ LOW pitch</span></div>
+                <div class="bg-white rounded-xl p-2.5 border border-rose-200">📏 Size: <span class="text-rose-700">BIG ➔ LOUD volume</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl bg-indigo-950 text-white p-4 text-center text-lg font-extrabold">
+            💡 Golden Rule: Vibration <span class="text-amber-300 underline">SPEED</span> controls <span class="text-amber-300">PITCH</span> (high/low). Vibration <span class="text-emerald-300 underline">SIZE</span> controls <span class="text-emerald-300">VOLUME</span> (loud/quiet)!
+          </div>
+        </div>
+
+        <!-- Mission 2 Panel: 3 Ways to Raise Pitch on a String -->
+        <div id="missionPanel2" class="hidden bg-white rounded-3xl p-6 sm:p-8 border-2 border-indigo-200 shadow-lg space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-black text-xs uppercase">Mission 2 • Worked Examples</span>
+              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">3 Ways to Raise Pitch on a Stringed Instrument</h3>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="playMission2Comparison('length')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow">▶ Hear Short vs Long</button>
+              <button onclick="playMission2Comparison('tension')" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow">▶ Hear Tight vs Loose</button>
+              <button onclick="playMission2Comparison('thickness')" class="px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-sm shadow">▶ Hear Thin vs Thick</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <!-- Way 1: Length -->
+            <div class="rounded-2xl border-2 border-emerald-300 bg-emerald-50/50 p-5 flex flex-col justify-between">
+              <div>
+                <span class="inline-block px-3 py-1 rounded-full bg-emerald-200 text-emerald-900 font-black text-xs uppercase mb-2">Way 1: Length</span>
+                <h4 class="text-xl font-black text-slate-900">Make the String SHORTER</h4>
+                <svg viewBox="0 0 260 110" class="w-full h-28 bg-white rounded-xl border border-emerald-200 my-3">
+                  <!-- Long string -->
+                  <text x="12" y="24" font-size="11" font-weight="bold" fill="#475569">Long (slow ➔ LOW)</text>
+                  <rect x="12" y="32" width="6" height="14" fill="#334155" />
+                  <rect x="242" y="32" width="6" height="14" fill="#334155" />
+                  <path d="M 18 39 Q 130 27 242 39" fill="none" stroke="#64748b" stroke-width="2.5" />
+                  <!-- Short string with finger -->
+                  <text x="12" y="72" font-size="11" font-weight="bold" fill="#047857">Short (fast ➔ HIGH)</text>
+                  <rect x="12" y="80" width="6" height="14" fill="#334155" />
+                  <circle cx="135" cy="87" r="7" fill="#f59e0b" stroke="#78350f" stroke-width="1.5" />
+                  <rect x="242" y="80" width="6" height="14" fill="#334155" />
+                  <line x1="18" y1="87" x2="128" y2="87" stroke="#cbd5e1" stroke-width="2" />
+                  <path d="M 142 87 Q 167 78 192 87 T 242 87" fill="none" stroke="#059669" stroke-width="3" />
+                </svg>
+                <p class="text-sm font-bold text-slate-700">Pressing a finger on a guitar fret shortens the vibrating part ➔ it vibrates <span class="text-emerald-700 underline">faster</span> ➔ <span class="text-emerald-700 underline">higher pitch</span>.</p>
+              </div>
+            </div>
+
+            <!-- Way 2: Tension -->
+            <div class="rounded-2xl border-2 border-sky-300 bg-sky-50/50 p-5 flex flex-col justify-between">
+              <div>
+                <span class="inline-block px-3 py-1 rounded-full bg-sky-200 text-sky-900 font-black text-xs uppercase mb-2">Way 2: Tightness (Tension)</span>
+                <h4 class="text-xl font-black text-slate-900">Make the String TIGHTER</h4>
+                <svg viewBox="0 0 260 110" class="w-full h-28 bg-white rounded-xl border border-sky-200 my-3">
+                  <text x="12" y="24" font-size="11" font-weight="bold" fill="#475569">Loose peg (slow ➔ LOW)</text>
+                  <circle cx="26" cy="39" r="9" fill="#94a3b8" stroke="#334155" stroke-width="2" />
+                  <path d="M 35 39 Q 140 54 244 39" fill="none" stroke="#64748b" stroke-width="2.5" />
+                  <text x="12" y="72" font-size="11" font-weight="bold" fill="#0369a1">Tight peg (fast ➔ HIGH)</text>
+                  <circle cx="26" cy="87" r="9" fill="#0284c7" stroke="#0c4a6e" stroke-width="2" />
+                  <path d="M 35 87 L 244 87" stroke="#0284c7" stroke-width="3" />
+                  <path d="M 110 76 L 130 76 M 124 72 L 130 76 L 124 80" stroke="#0284c7" stroke-width="2" fill="none" />
+                  <path d="M 150 98 L 130 98 M 136 94 L 130 98 L 136 102" stroke="#0284c7" stroke-width="2" fill="none" />
+                </svg>
+                <p class="text-sm font-bold text-slate-700">Turning the tuning peg to <span class="text-sky-700 underline">tighten</span> the string makes it snap back faster ➔ <span class="text-sky-700 underline">faster</span> vibrations ➔ <span class="text-sky-700 underline">higher pitch</span>.</p>
+              </div>
+            </div>
+
+            <!-- Way 3: Thickness -->
+            <div class="rounded-2xl border-2 border-violet-300 bg-violet-50/50 p-5 flex flex-col justify-between">
+              <div>
+                <span class="inline-block px-3 py-1 rounded-full bg-violet-200 text-violet-900 font-black text-xs uppercase mb-2">Way 3: Thickness</span>
+                <h4 class="text-xl font-black text-slate-900">Use a THINNER String</h4>
+                <svg viewBox="0 0 260 110" class="w-full h-28 bg-white rounded-xl border border-violet-200 my-3">
+                  <text x="12" y="24" font-size="11" font-weight="bold" fill="#475569">Thick heavy string (slow ➔ LOW)</text>
+                  <line x1="16" y1="39" x2="244" y2="39" stroke="#475569" stroke-width="7" stroke-linecap="round" />
+                  <text x="12" y="72" font-size="11" font-weight="bold" fill="#6d28d9">Thin light string (fast ➔ HIGH)</text>
+                  <line x1="16" y1="87" x2="244" y2="87" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+                <p class="text-sm font-bold text-slate-700">A <span class="text-violet-700 underline">thinner</span> string is lighter, so it vibrates <span class="text-violet-700 underline">faster</span> ➔ <span class="text-violet-700 underline">higher pitch</span>. Thick strings vibrate slowly ➔ low pitch.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl bg-indigo-50 border-2 border-indigo-200 p-4 flex flex-wrap items-center justify-between gap-3">
+            <p class="text-lg font-black text-indigo-950">🧠 Memory Chant: <span class="text-indigo-700">"SHORTER, TIGHTER, THINNER = FASTER = HIGHER!"</span></p>
+            <p class="text-sm font-bold text-slate-600">Opposite: "LONGER, LOOSER, THICKER = SLOWER = LOWER!"</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- STATION 4: INTERACTIVE VIRTUAL GUITAR & VIBRATION SPEED LAB [SoL: CPA Progression] [SoL: Dual Coding] [SoL: Immediate Feedback] -->
+    <!-- =================================================================== -->
+    <section id="station-4" class="station-section hidden">
+      <div class="space-y-5">
+        <div class="bg-white rounded-3xl p-5 border-2 border-indigo-100 shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900">🎸 Virtual Guitar &amp; Vibration Speed Lab</h2>
+            <p class="text-slate-600 font-semibold text-sm">Predict whether the note will be higher or lower BEFORE you adjust the sliders and click Pluck String!</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="setGuitarPreset('lowest')" class="px-3.5 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-900 font-extrabold text-xs sm:text-sm">🐢 Lowest Note</button>
+            <button onclick="setGuitarPreset('medium')" class="px-3.5 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-extrabold text-xs sm:text-sm">⚖️ Medium</button>
+            <button onclick="setGuitarPreset('highest')" class="px-3.5 py-2 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 font-extrabold text-xs sm:text-sm">🐦 Highest Note</button>
+          </div>
+        </div>
+
+        <!-- Controls + Interactive Guitar Canvas (Zero overlapping text inside animation canvas) -->
+        <div class="bg-white rounded-3xl p-6 border-2 border-indigo-200 shadow-lg space-y-5">
+          <!-- Sliders Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <!-- Length Slider -->
+            <div class="bg-emerald-50 rounded-2xl p-4 border-2 border-emerald-200">
+              <div class="flex items-center justify-between mb-1">
+                <label for="sliderLength" class="font-black text-emerald-950 text-sm">📏 String Length</label>
+                <span id="labelLength" class="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-black text-xs">Medium (45 cm)</span>
+              </div>
+              <input id="sliderLength" type="range" min="0" max="2" step="1" value="1" oninput="updateGuitarVisuals()" class="w-full mt-2 cursor-pointer" />
+              <div class="flex justify-between text-xs font-bold text-emerald-800 mt-1">
+                <span>Short (25 cm)</span>
+                <span>Medium</span>
+                <span>Long (65 cm)</span>
+              </div>
+            </div>
+
+            <!-- Tension Slider -->
+            <div class="bg-sky-50 rounded-2xl p-4 border-2 border-sky-200">
+              <div class="flex items-center justify-between mb-1">
+                <label for="sliderTension" class="font-black text-sky-950 text-sm">🔧 String Tension (Peg)</label>
+                <span id="labelTension" class="px-2.5 py-0.5 rounded-full bg-sky-600 text-white font-black text-xs">Medium</span>
+              </div>
+              <input id="sliderTension" type="range" min="0" max="2" step="1" value="1" oninput="updateGuitarVisuals()" class="w-full mt-2 cursor-pointer" />
+              <div class="flex justify-between text-xs font-bold text-sky-800 mt-1">
+                <span>Loose</span>
+                <span>Medium</span>
+                <span>Tight</span>
+              </div>
+            </div>
+
+            <!-- Thickness Slider -->
+            <div class="bg-violet-50 rounded-2xl p-4 border-2 border-violet-200">
+              <div class="flex items-center justify-between mb-1">
+                <label for="sliderThickness" class="font-black text-violet-950 text-sm">🧵 String Thickness</label>
+                <span id="labelThickness" class="px-2.5 py-0.5 rounded-full bg-violet-600 text-white font-black text-xs">Medium</span>
+              </div>
+              <input id="sliderThickness" type="range" min="0" max="2" step="1" value="1" oninput="updateGuitarVisuals()" class="w-full mt-2 cursor-pointer" />
+              <div class="flex justify-between text-xs font-bold text-violet-800 mt-1">
+                <span>Thin</span>
+                <span>Medium</span>
+                <span>Thick</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Clean Interactive Guitar SVG Canvas (NO dynamic text overlays inside canvas) -->
+          <div class="rounded-2xl bg-slate-900 p-4 border-4 border-amber-500/40 shadow-inner">
+            <svg id="guitarSvg" viewBox="0 0 840 210" class="w-full h-48 sm:h-56 block">
+              <!-- Guitar Headstock & Peg -->
+              <rect x="20" y="65" width="75" height="80" rx="14" fill="#92400e" stroke="#f59e0b" stroke-width="2" />
+              <g id="tuningPegGroup" transform="translate(55, 105)">
+                <circle cx="0" cy="0" r="18" fill="#e2e8f0" stroke="#475569" stroke-width="3" />
+                <rect x="-26" y="-5" width="52" height="10" rx="4" fill="#fbbf24" stroke="#78350f" stroke-width="2" />
+              </g>
+              <!-- Fretboard Neck -->
+              <rect x="95" y="75" width="435" height="60" fill="#78350f" stroke="#d97706" stroke-width="2" />
+              <!-- Metal Frets -->
+              <line x1="170" y1="75" x2="170" y2="135" stroke="#cbd5e1" stroke-width="3" />
+              <line x1="255" y1="75" x2="255" y2="135" stroke="#cbd5e1" stroke-width="3" />
+              <line x1="340" y1="75" x2="340" y2="135" stroke="#cbd5e1" stroke-width="3" />
+              <line x1="425" y1="75" x2="425" y2="135" stroke="#cbd5e1" stroke-width="3" />
+              <!-- Guitar Wooden Body & Sound Hole -->
+              <path d="M 520 35 C 610 10, 770 10, 810 105 C 770 200, 610 200, 520 175 Z" fill="#d97706" stroke="#fbbf24" stroke-width="3" />
+              <circle cx="645" cy="105" r="46" fill="#1e1b4b" stroke="#fde68a" stroke-width="4" />
+              <!-- Bridge -->
+              <rect x="735" y="72" width="16" height="66" rx="4" fill="#451a03" stroke="#f59e0b" stroke-width="2" />
+              <!-- Nut -->
+              <rect x="95" y="74" width="9" height="62" fill="#f8fafc" />
+
+              <!-- Inactive (muted) left part of string when shortened -->
+              <line id="mutedStringLine" x1="65" y1="105" x2="104" y2="105" stroke="#94a3b8" stroke-width="3.5" stroke-dasharray="5 3" />
+
+              <!-- Vibrating Active String Path -->
+              <path id="activeStringPath" d="M 104 105 Q 420 105 735 105" fill="none" stroke="#fef08a" stroke-width="4" stroke-linecap="round" />
+
+              <!-- Finger / Capo marker that slides for Short / Medium / Long -->
+              <g id="fingerMarker" transform="translate(290, 105)">
+                <circle cx="0" cy="0" r="14" fill="#10b981" stroke="#ffffff" stroke-width="3" />
+                <circle cx="0" cy="0" r="5" fill="#ffffff" />
+              </g>
+            </svg>
+          </div>
+
+          <!-- Pluck Action Button -->
+          <div class="flex flex-wrap items-center justify-center gap-4">
+            <button onclick="pluckVirtualGuitar()" class="px-9 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 hover:from-indigo-700 hover:to-fuchsia-700 text-white font-black text-2xl shadow-xl transition transform active:scale-95 flex items-center gap-3">
+              <span>🎸 Pluck String!</span>
+            </button>
+          </div>
+
+          <!-- ANCHORED LIVE READOUT DASHBOARD BELOW CANVAS (Never overlapping!) -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t-2 border-slate-100">
+            <div class="rounded-2xl bg-slate-50 border-2 border-slate-200 p-4 text-center">
+              <p class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Vibration Speed</p>
+              <p id="readoutSpeed" class="text-3xl font-black text-indigo-700 mt-1">Medium</p>
+            </div>
+            <div class="rounded-2xl bg-slate-50 border-2 border-slate-200 p-4 text-center">
+              <p class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Pitch Rating</p>
+              <p id="readoutPitch" class="text-3xl font-black text-violet-700 mt-1">Medium</p>
+            </div>
+            <div class="rounded-2xl bg-slate-50 border-2 border-slate-200 p-4 text-center">
+              <p class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Vibrations Per Second</p>
+              <p id="readoutHz" class="text-3xl font-black text-emerald-700 mt-1">330 Hz</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Click-to-Reveal Vibration Explainer Cleanly Anchored Below -->
+        <div class="bg-white rounded-3xl p-5 border-2 border-violet-200 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <h3 class="text-xl font-black text-violet-950">🔍 Scientific Mechanism: Why Did the Pitch Change?</h3>
+            <button onclick="toggleExplainer()" id="explainerToggleBtn" class="px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-sm shadow transition">
+              👁️ Reveal Vibration Explainer
+            </button>
+          </div>
+          <div id="explainerBox" class="hidden mt-4 rounded-2xl bg-violet-50 border-2 border-violet-200 p-5 space-y-3">
+            <p id="explainerDynamicText" class="text-lg font-extrabold text-slate-900"></p>
+            <p class="text-sm font-semibold text-slate-700">
+              Because we pluck with the <strong>same force</strong> every time, the <strong>volume stays the same</strong> — ONLY the <strong>speed of vibrations</strong> (pitch) changes! This makes our classroom test a <strong>fair test</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- STATION 5: SUCCESS CRITERIA WHITEBOARD CHECK [SoL: Metacognition] [SoL: Immediate Feedback] -->
+    <!-- =================================================================== -->
+    <section id="station-5" class="station-section hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 border-2 border-emerald-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-3xl font-black text-slate-900">✅ Success Criteria Whiteboard Check</h2>
+            <p class="text-slate-600 font-semibold mt-1">Pupils answer each check on mini-whiteboards. Tick off each criterion once the class nails it!</p>
+          </div>
+          <div class="px-5 py-2.5 rounded-2xl bg-emerald-100 border-2 border-emerald-400 text-emerald-950 font-black text-xl">
+            Class Progress: <span id="scMetCount">0</span> / 3 Met
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Check 1: Must -->
+          <div id="scCard0" class="bg-white rounded-3xl p-6 border-4 border-emerald-300 shadow-lg flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs uppercase">Check 1 • Must</span>
+                <button onclick="toggleScMet(0)" id="scMetBtn0" class="px-3 py-1 rounded-xl bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 font-extrabold text-xs transition">⬜ Mark Met</button>
+              </div>
+              <p class="text-xs font-bold text-slate-500">SC: State whether a sound is high-pitched or low-pitched.</p>
+              <div class="rounded-2xl bg-emerald-50 p-4 border border-emerald-200">
+                <p class="text-lg font-black text-slate-900">Classify these two sounds as HIGH-PITCHED or LOW-PITCHED:</p>
+                <p class="text-base font-bold text-slate-800 mt-2">A) A tiny referee whistle squeaking softly.<br>B) A huge foghorn booming from a ship.</p>
+              </div>
+              <div id="scAns0" class="hidden rounded-2xl bg-emerald-600 text-white p-4 font-bold text-sm">
+                ✅ A) High-pitched (even though it is soft/quiet!).<br>✅ B) Low-pitched (deep, slow vibrations).
+              </div>
+            </div>
+            <button onclick="revealScAns(0)" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">👁️ Reveal Answer</button>
+          </div>
+
+          <!-- Check 2: Should -->
+          <div id="scCard1" class="bg-white rounded-3xl p-6 border-4 border-sky-300 shadow-lg flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 font-black text-xs uppercase">Check 2 • Should</span>
+                <button onclick="toggleScMet(1)" id="scMetBtn1" class="px-3 py-1 rounded-xl bg-slate-100 hover:bg-sky-600 hover:text-white text-slate-700 font-extrabold text-xs transition">⬜ Mark Met</button>
+              </div>
+              <p class="text-xs font-bold text-slate-500">SC: Explain how tighter, shorter or thinner strings make higher pitch.</p>
+              <div class="rounded-2xl bg-sky-50 p-4 border border-sky-200">
+                <p class="text-lg font-black text-slate-900">A banjo string sounds too low!</p>
+                <p class="text-base font-bold text-slate-800 mt-2">Write TWO ways the musician can raise its pitch WITHOUT plucking it harder.</p>
+              </div>
+              <div id="scAns1" class="hidden rounded-2xl bg-sky-600 text-white p-4 font-bold text-sm">
+                ✅ 1. Tighten the tuning peg.<br>✅ 2. Press a finger on the neck to make the vibrating string shorter (or swap to a thinner string). Both cause FASTER vibrations!
+              </div>
+            </div>
+            <button onclick="revealScAns(1)" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">👁️ Reveal Answer</button>
+          </div>
+
+          <!-- Check 3: Could -->
+          <div id="scCard2" class="bg-white rounded-3xl p-6 border-4 border-violet-300 shadow-lg flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-violet-100 text-violet-800 font-black text-xs uppercase">Check 3 • Could</span>
+                <button onclick="toggleScMet(2)" id="scMetBtn2" class="px-3 py-1 rounded-xl bg-slate-100 hover:bg-violet-600 hover:text-white text-slate-700 font-extrabold text-xs transition">⬜ Mark Met</button>
+              </div>
+              <p class="text-xs font-bold text-slate-500">SC: Predict pitch changes on an unfamiliar stringed instrument and explain why.</p>
+              <div class="rounded-2xl bg-violet-50 p-4 border border-violet-200">
+                <p class="text-lg font-black text-slate-900">An ancient Greek lyre has 4 strings of equal tension:</p>
+                <p class="text-base font-bold text-slate-800 mt-2">String W (long, thick) vs String Z (short, thin). Which makes the highest pitch, and WHY?</p>
+              </div>
+              <div id="scAns2" class="hidden rounded-2xl bg-violet-600 text-white p-4 font-bold text-sm">
+                ✅ String Z makes the highest pitch because it is shorter and thinner, so it vibrates much faster when plucked!
+              </div>
+            </div>
+            <button onclick="revealScAns(2)" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">👁️ Reveal Answer</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- STATION 6: QUICKFIRE CHECKPOINT CHALLENGE [SoL: Automaticity] [SoL: Retrieval Practice] [SoL: Immediate Feedback] -->
+    <!-- =================================================================== -->
+    <section id="station-6" class="station-section hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 border-2 border-indigo-100 shadow-sm flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-3xl font-black text-slate-900">🏆 Quickfire Checkpoint Challenge (8 Rapid Questions)</h2>
+            <p class="text-slate-600 font-semibold mt-1">Start the countdown, wait for BOARDS UP, reveal the answer, and award Team Red or Team Blue!</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <span id="qfProgressBadge" class="px-4 py-2 rounded-2xl bg-indigo-100 text-indigo-900 font-black text-base">Question 1 / 8</span>
+            <button onclick="prevQuickfire()" class="px-3.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm">⬅ Prev</button>
+            <button onclick="nextQuickfire()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm">Next ➔</button>
+          </div>
+        </div>
+
+        <!-- Question Arena -->
+        <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-violet-950 text-white rounded-3xl p-8 sm:p-10 shadow-2xl space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <span id="qfTag" class="px-4 py-1.5 rounded-full bg-amber-400 text-slate-950 font-black text-sm uppercase tracking-wide">Pitch vs Volume</span>
+            <div class="flex items-center gap-3">
+              <div id="qfTimerDisplay" class="px-5 py-2 rounded-2xl bg-white/15 border border-white/25 font-mono text-3xl font-black text-amber-300 min-w-[110px] text-center">15s</div>
+              <button onclick="startQfTimer(15)" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-black text-base shadow-lg">⏱️ Start 15s</button>
+              <button onclick="triggerBoardsUp()" class="px-5 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-black text-base shadow-lg">📢 BOARDS UP!</button>
+            </div>
+          </div>
+
+          <!-- Boards Up Alert Banner -->
+          <div id="boardsUpBanner" class="hidden rounded-2xl bg-rose-600 text-white text-center py-4 text-4xl font-black tracking-wider boards-up-flash">
+            🚨 BOARDS UP! SHOW YOUR ANSWERS! 🚨
+          </div>
+
+          <!-- Question Text -->
+          <div class="min-h-[150px] flex items-center justify-center text-center px-4">
+            <p id="qfQuestionText" class="text-3xl sm:text-4xl font-black leading-snug"></p>
+          </div>
+
+          <!-- Answer Reveal Box -->
+          <div id="qfAnswerBox" class="hidden rounded-2xl bg-emerald-500/20 border-2 border-emerald-400 p-6 text-center">
+            <p class="text-xs font-black uppercase tracking-widest text-emerald-300 mb-1">Correct Scientific Answer</p>
+            <p id="qfAnswerText" class="text-2xl sm:text-3xl font-black text-white"></p>
+          </div>
+
+          <!-- Controls & Team Award -->
+          <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/15">
+            <button onclick="revealQfAnswer()" class="px-7 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-lg shadow-xl transition">
+              👁️ Reveal Answer
+            </button>
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="text-sm font-bold text-indigo-200">Award Point + Confetti:</span>
+              <button onclick="addTeamScore('red', 1, true)" class="px-5 py-3 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-black text-base shadow-lg active:scale-95 transition">
+                🔴 +1 Team Red (<span id="qfRedScore">0</span>)
+              </button>
+              <button onclick="addTeamScore('blue', 1, true)" class="px-5 py-3 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-black text-base shadow-lg active:scale-95 transition">
+                🔵 +1 Team Blue (<span id="qfBlueScore">0</span>)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================================================================== -->
+  <!-- STATION 2 BILINGUAL VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION) -->
+  <!-- =================================================================== -->
+  <div id="vocabModal" class="hidden fixed inset-0 z-[90] bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border-4 border-indigo-500 relative space-y-5">
+      <button onclick="closeVocabModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-rose-100 hover:text-rose-700 font-black text-xl flex items-center justify-center transition" aria-label="Close modal">✕</button>
+
+      <div class="flex flex-wrap items-center gap-3 pr-10">
+        <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-black text-xs uppercase">Unit 2.4 Vocabulary</span>
+        <span id="vmCategory" class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 font-bold text-xs">Sound &amp; Pitch</span>
+      </div>
+
+      <div class="flex flex-wrap items-baseline justify-between gap-2 border-b-2 border-slate-100 pb-4">
+        <h3 id="vmEn" class="text-4xl sm:text-5xl font-black text-indigo-950"></h3>
+        <p id="vmVn" class="text-2xl sm:text-3xl font-extrabold text-violet-700"></p>
+      </div>
+
+      <!-- Bespoke SVG Visual Model Container -->
+      <div id="vmSvg" class="w-full h-44 bg-indigo-50/70 rounded-2xl border-2 border-indigo-100 flex items-center justify-center p-3"></div>
+
+      <!-- Primary English Definition + Vietnamese Meaning -->
+      <div class="space-y-2 bg-slate-50 rounded-2xl p-4 border border-slate-200">
+        <p class="text-lg font-bold text-slate-900"><span class="text-indigo-700 font-black">🇬🇧 Definition:</span> <span id="vmDefEn"></span></p>
+        <p class="text-base font-semibold text-violet-800"><span class="font-black">🇻🇳 Nghĩa tiếng Việt:</span> <span id="vmDefVn"></span></p>
+      </div>
+
+      <!-- Audio Controls (en-GB & vi-VN) -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+        <div class="flex flex-wrap gap-3">
+          <button onclick="speakVocab('en')" class="px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-base shadow transition flex items-center gap-2">
+            🔊 Listen (British English)
+          </button>
+          <button onclick="speakVocab('vi')" class="px-5 py-3 rounded-2xl bg-violet-600 hover:bg-violet-700 text-white font-extrabold text-base shadow transition flex items-center gap-2">
+            🔊 Nghe (Tiếng Việt)
+          </button>
+        </div>
+        <button onclick="closeVocabModal()" class="px-5 py-3 rounded-2xl bg-slate-200 hover:bg-slate-300 text-slate-900 font-extrabold text-sm">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- GIANT PROJECTION MODAL (Station 3) -->
+  <!-- =================================================================== -->
+  <div id="giantModal" class="hidden fixed inset-0 z-[95] bg-slate-950 text-white flex flex-col items-center justify-center p-8 text-center">
+    <button onclick="closeGiantProjection()" class="absolute top-6 right-6 px-5 py-2.5 rounded-2xl bg-white/15 hover:bg-white/25 text-white font-black text-lg">✕ Exit Projection (Esc)</button>
+    <span class="px-4 py-1.5 rounded-full bg-amber-400 text-slate-950 font-black text-base uppercase tracking-wider mb-6">Unit 2.4 Golden Science Rule</span>
+    <p id="giantText" class="text-5xl sm:text-6xl font-black leading-tight max-w-5xl">
+      SHORTER, TIGHTER, THINNER string ➔ FASTER vibrations ➔ HIGHER pitch!
+    </p>
+    <p class="mt-8 text-2xl sm:text-3xl font-bold text-amber-300 max-w-4xl">
+      Remember: Pitch is HIGH or LOW (vibration speed). Volume is LOUD or QUIET (vibration size).
+    </p>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- DAVID'S BOARD WHITEBOARD OVERLAY (Shortcut: W) -->
+  <!-- =================================================================== -->
+  <div id="whiteboardModal" class="hidden fixed inset-0 z-[100] bg-slate-900/90 flex flex-col p-4">
+    <div class="bg-white rounded-t-3xl px-5 py-3 flex flex-wrap items-center justify-between gap-3 border-b-2 border-slate-200">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">✏️</span>
+        <h3 class="text-xl font-black text-slate-900">David's Board — Live Sketchpad</h3>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="setPenColor('#0f172a')" class="w-8 h-8 rounded-full bg-slate-900 border-2 border-slate-300" title="Black pen"></button>
+        <button onclick="setPenColor('#dc2626')" class="w-8 h-8 rounded-full bg-red-600 border-2 border-slate-300" title="Red pen"></button>
+        <button onclick="setPenColor('#2563eb')" class="w-8 h-8 rounded-full bg-blue-600 border-2 border-slate-300" title="Blue pen"></button>
+        <button onclick="setPenColor('#059669')" class="w-8 h-8 rounded-full bg-emerald-600 border-2 border-slate-300" title="Green pen"></button>
+        <button onclick="setPenColor('#ffffff', 24)" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-sm">🧽 Eraser</button>
+        <button onclick="clearWhiteboard()" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-sm">🗑️ Clear</button>
+        <button onclick="toggleWhiteboard()" class="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm">✕ Close (W)</button>
+      </div>
+    </div>
+    <div class="flex-1 bg-white rounded-b-3xl overflow-hidden relative">
+      <canvas id="wbCanvas" class="w-full h-full cursor-crosshair touch-none"></canvas>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- TEACHER PROMPT DRAWER (Shortcut: T) [SoL: 13 Principles Mapped] -->
+  <!-- =================================================================== -->
+  <aside id="teacherDrawer" class="hidden fixed top-0 right-0 bottom-0 w-full max-w-md bg-white z-[95] shadow-2xl border-l-4 border-violet-600 flex flex-col">
+    <div class="bg-violet-700 text-white px-5 py-4 flex items-center justify-between">
+      <div>
+        <h3 class="text-xl font-black">📋 Teacher Prompt Drawer</h3>
+        <p class="text-xs text-violet-200 font-semibold">Shortcuts: ← / → Stations • W Board • M Mute • T Drawer</p>
+      </div>
+      <button onclick="toggleTeacherDrawer()" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 font-black">✕</button>
+    </div>
+    <div class="p-5 overflow-y-auto space-y-4 text-sm">
+      <div class="rounded-2xl bg-indigo-50 border border-indigo-200 p-4">
+        <h4 class="font-black text-indigo-900 uppercase text-xs mb-1">🎯 Cambridge Stage 5 (0097) Codes</h4>
+        <ul class="space-y-1 text-slate-800 font-semibold">
+          <li>• <strong>5Ps.03:</strong> Investigate how to change volume and pitch of sounds.</li>
+          <li>• <strong>5TWSp.03:</strong> Make predictions in familiar &amp; unfamiliar contexts.</li>
+          <li>• <strong>5TWSa.01:</strong> Describe accuracy of predictions based on results.</li>
+          <li>• <strong>5TWSa.03:</strong> Make a conclusion informed by scientific understanding.</li>
+        </ul>
+      </div>
+      <div class="rounded-2xl bg-rose-50 border border-rose-200 p-4">
+        <h4 class="font-black text-rose-900 uppercase text-xs mb-1">🚩 Red-Flag Misconceptions &amp; Live Pivot</h4>
+        <p class="text-slate-800 font-semibold"><strong>Trap 1:</strong> Pupils say "tightening makes it louder". <em>Fix:</em> Play Mission 1's Quiet-High vs Loud-Low buttons back-to-back.<br><br>
+        <strong>Trap 2:</strong> Pupils think "longer string = higher". <em>Fix:</em> Hold a 30 cm plastic ruler over a desk edge at 20 cm vs 10 cm so they physically SEE the short end blur faster and HEAR the pitch jump!</p>
+      </div>
+      <div class="rounded-2xl bg-emerald-50 border border-emerald-200 p-4">
+        <h4 class="font-black text-emerald-900 uppercase text-xs mb-1">🧠 13 Science of Learning Principles Embedded</h4>
+        <p class="text-xs text-slate-700 font-semibold leading-relaxed">
+          [SoL: Retrieval Practice] [SoL: Spaced Practice] [SoL: Interleaving] [SoL: Dual Coding] [SoL: Cognitive Load Management] [SoL: Worked Examples] [SoL: Metacognition] [SoL: Elaborative Interrogation] [SoL: CPA Progression] [SoL: Immediate Feedback] [SoL: Schema Building] [SoL: Misconceptions] [SoL: Automaticity]
+        </p>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    /* =====================================================================
+       STATE & OFFLINE WEB AUDIO ENGINE [SoL: Immediate Feedback]
+       ===================================================================== */
+    let currentStation = 0;
+    const totalStations = 7;
+    let isMuted = false;
+    let teamScores = { red: 0, blue: 0 };
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) audioCtx = new Ctx();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playChime(type = 'pop') {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === 'pop') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(760, now + 0.08);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.start(now); osc.stop(now + 0.13);
+      } else if (type === 'win') {
+        [523.25, 659.25, 783.99].forEach((f, idx) => {
+          const o = ctx.createOscillator();
+          const g = ctx.createGain();
+          o.type = 'triangle';
+          o.frequency.setValueAtTime(f, now + idx * 0.09);
+          g.gain.setValueAtTime(0.16, now + idx * 0.09);
+          g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.35);
+          o.connect(g); g.connect(ctx.destination);
+          o.start(now + idx * 0.09); o.stop(now + idx * 0.09 + 0.36);
+        });
+      } else if (type === 'alert') {
+        [880, 660, 880].forEach((f, idx) => {
+          const o = ctx.createOscillator();
+          const g = ctx.createGain();
+          o.type = 'square';
+          o.frequency.setValueAtTime(f, now + idx * 0.11);
+          g.gain.setValueAtTime(0.12, now + idx * 0.11);
+          g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.11 + 0.1);
+          o.connect(g); g.connect(ctx.destination);
+          o.start(now + idx * 0.11); o.stop(now + idx * 0.11 + 0.11);
+        });
+      }
+    }
+
+    // Authentic plucked guitar string synthesis
+    function playPluckedNote(freq, volumeGain = 0.28, duration = 1.2) {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      const gain = ctx.createGain();
+
+      osc1.type = 'sawtooth';
+      osc2.type = 'triangle';
+      osc1.frequency.setValueAtTime(freq, now);
+      osc2.frequency.setValueAtTime(freq * 2, now);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(Math.min(freq * 6, 4200), now);
+      filter.frequency.exponentialRampToValueAtTime(Math.max(freq * 1.4, 240), now + duration * 0.7);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(volumeGain, now + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      const g2 = ctx.createGain();
+      g2.gain.setValueAtTime(0.25, now);
+
+      osc1.connect(filter);
+      osc2.connect(g2);
+      g2.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc1.start(now); osc2.start(now);
+      osc1.stop(now + duration + 0.05); osc2.stop(now + duration + 0.05);
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('muteIcon').textContent = isMuted ? '🔇' : '🔊';
+      if (isMuted && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+    }
+
+    /* =====================================================================
+       AUTO-HIDING TOP HEADER
+       ===================================================================== */
+    let lastScrollY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('topHeader');
+      const currentScroll = window.scrollY;
+      if (currentScroll > lastScrollY && currentScroll > 60) {
+        header.classList.add('header-hidden');
+      } else {
+        header.classList.remove('header-hidden');
+      }
+      lastScrollY = currentScroll;
+    }, { passive: true });
+
+    /* =====================================================================
+       STATION NAVIGATION
+       ===================================================================== */
+    function switchStation(idx) {
+      if (idx < 0 || idx >= totalStations) return;
+      currentStation = idx;
+      document.querySelectorAll('.station-section').forEach((sec, i) => {
+        sec.classList.toggle('hidden', i !== idx);
+      });
+      document.querySelectorAll('.station-tab').forEach((btn, i) => {
+        btn.classList.toggle('active-tab', i === idx);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      playChime('pop');
+    }
+
+    /* =====================================================================
+       TEAM SCOREBOARD + CONFETTI
+       ===================================================================== */
+    function addTeamScore(team, delta, celebrate = false) {
+      teamScores[team] = Math.max(0, teamScores[team] + delta);
+      document.getElementById('headerRedScore').textContent = teamScores.red;
+      document.getElementById('headerBlueScore').textContent = teamScores.blue;
+      const qfR = document.getElementById('qfRedScore');
+      const qfB = document.getElementById('qfBlueScore');
+      if (qfR) qfR.textContent = teamScores.red;
+      if (qfB) qfB.textContent = teamScores.blue;
+      playChime('win');
+      if (celebrate) launchConfetti();
+    }
+
+    function launchConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const colours = ['#4f46e5', '#f59e0b', '#10b981', '#e11d48', '#0ea5e9', '#a855f7'];
+      const pieces = Array.from({ length: 90 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 140,
+        r: 5 + Math.random() * 6,
+        dx: (Math.random() - 0.5) * 5,
+        dy: 3 + Math.random() * 5,
+        rot: Math.random() * 360,
+        drot: (Math.random() - 0.5) * 12,
+        c: colours[Math.floor(Math.random() * colours.length)]
+      }));
+      let frame = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.x += p.dx; p.y += p.dy; p.rot += p.drot;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rot * Math.PI) / 180);
+          ctx.fillStyle = p.c;
+          ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 0.65);
+          ctx.restore();
+        });
+        frame++;
+        if (frame < 110) requestAnimationFrame(draw);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      draw();
+    }
+
+    /* =====================================================================
+       STATION 1: FLASHBACK FLIP CARDS
+       ===================================================================== */
+    function toggleFlip(cardEl) {
+      cardEl.classList.toggle('flipped');
+      playChime('pop');
+    }
+    function resetFlashback() {
+      document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
+      playChime('pop');
+    }
+
+    /* =====================================================================
+       STATION 2: BILINGUAL VOCAB MODAL (10 WORDS) [SoL: Dual Coding]
+       ===================================================================== */
+    const vocabList = [
+      {
+        en: 'pitch',
+        vn: 'cao độ (của âm thanh)',
+        icon: '🎵',
+        cat: 'Core Concept',
+        defEn: 'How high or low a sound is. Fast vibrations make high pitch; slow vibrations make low pitch.',
+        defVn: 'Mức độ cao hay trầm (thấp) của âm thanh. Dao động nhanh tạo âm cao; dao động chậm tạo âm trầm.',
+        svg: `<svg viewBox="0 0 360 120" class="w-full h-full"><line x1="20" y1="95" x2="340" y2="95" stroke="#94a3b8" stroke-width="2"/><rect x="45" y="65" width="40" height="30" rx="6" fill="#0ea5e9"/><rect x="115" y="48" width="40" height="47" rx="6" fill="#6366f1"/><rect x="185" y="32" width="40" height="63" rx="6" fill="#8b5cf6"/><rect x="255" y="15" width="40" height="80" rx="6" fill="#ec4899"/><text x="65" y="112" text-anchor="middle" font-size="12" font-weight="bold" fill="#0f172a">LOW</text><text x="275" y="112" text-anchor="middle" font-size="12" font-weight="bold" fill="#0f172a">HIGH</text></svg>`
+      },
+      {
+        en: 'high-pitched',
+        vn: 'âm cao / thanh',
+        icon: '🐦',
+        cat: 'Describing Pitch',
+        defEn: 'A high, squeaky or bright sound made by very fast vibrations (like a bird chirp or thin string).',
+        defVn: 'Âm thanh cao, thanh, được tạo ra bởi các dao động rất nhanh (như tiếng chim hót hoặc dây đàn mảnh).',
+        svg: `<svg viewBox="0 0 360 120" class="w-full h-full"><path d="M 20 60 Q 30 22 40 60 T 60 60 T 80 60 T 100 60 T 120 60 T 140 60 T 160 60 T 180 60 T 200 60 T 220 60 T 240 60 T 260 60 T 280 60 T 300 60 T 320 60 T 340 60" fill="none" stroke="#0284c7" stroke-width="4"/><text x="180" y="108" text-anchor="middle" font-size="14" font-weight="bold" fill="#0369a1">Fast vibrations = High-pitched</text></svg>`
+      },
+      {
+        en: 'low-pitched',
+        vn: 'âm trầm / thấp',
+        icon: '🦁',
+        cat: 'Describing Pitch',
+        defEn: 'A deep, low sound made by slow vibrations (like a lion roar or thick double bass string).',
+        defVn: 'Âm thanh trầm, sâu, được tạo ra bởi các dao động chậm (như tiếng sư tử gầm hoặc dây đàn dày).',
+        svg: `<svg viewBox="0 0 360 120" class="w-full h-full"><path d="M 20 60 Q 100 12 180 60 T 340 60" fill="none" stroke="#e11d48" stroke-width="5"/><text x="180" y="108" text-anchor="middle" font-size="14" font-weight="bold" fill="#be123c">Slow vibrations = Low-pitched</text></svg>`
+      },
+      {
+        en: 'vibrate',
+        vn: 'rung / dao động',
+        icon: '〰️',
+        cat: 'Action Verb',
+        defEn: 'To shake very quickly backwards and forwards to make a sound.',
+        defVn: 'Rung động qua lại rất nhanh để tạo ra âm thanh.',
+        svg: `<svg viewBox="0 0 360 120" class="w-full h-full"><rect x="30" y="45" width="12" height="30" fill="#334155"/><rect x="318" y="45" width="12" height="30" fill="#334155"/><path d="M 42 60 Q 180 20 318 60" fill="none" stroke="#6366f1" stroke-width="3" stroke-dasharray="6 4"/><line x1="42" y1="60" x2="318" y2="60" stroke="#4f46e5" stroke-width="4"/><path d="M 42 60 Q 180 100 318 60" fill="none" stroke="#6366f1" stroke-width="3" stroke-dasharray="6 4"/><text x="180" y="112" text-anchor="middle" font-size="13" font-weight="bold" fill="#312e81">Moving back and forth quickly</text></svg>`
+      },
+      {
+        en: 'vibration',
+        vn: 'sự dao động / độ rung',
+        icon: '⚡',
+        cat: 'Sound Source',
+        defEn: 'A quick back-and-forth movement that travels through air as a sound wave.',
+        defVn: 'Chuyển động rung qua lại nhanh chóng tạo thành sóng âm truyền trong không khí.',
+        svg: `<svg viewBox="0 0 360 120" class="w-full h-full"><circle cx="180" cy="60" r="14" fill="#f59e0b"/><circle cx="180" cy="60" r="30" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="6 4"/><circle cx="180" cy="60" r="48" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="6 4"/><text x="180" y="114" text-anchor="middle" font-size="13" font-weight="bold" fill="#92400e">Every sound starts with a vibration</text></svg>`
+      },
+      {
+        en: 'stringed instrument',
+        vn: 'nhạc cụ dây',
+        icon: '🎸',
+        cat: 'Instruments',
+        defEn: 'A musical instrument that makes sound when its stretched strings vibrate (guitar, violin, harp, dan tranh).',
+        defVn: 'Nhạc cụ tạo ra âm thanh khi các dây căng rung động (đàn ghi-ta, vi-ô-lông, đàn hạc, đàn tranh).',
+        svg: `<svg viewBox="0 0 360 120" class="w-full h-full"><rect x="30" y="45" width="160" height="30" fill="#78350f"/><ellipse cx="245" cy="60" rx="65" ry="44" fill="#d97706" stroke="#92400e" stroke-width="3"/><circle cx="235" cy="60" r="18" fill="#1e1b4b"/><line x1="35" y1="52" x2="290" y2="52" stroke="#fef08a" stroke-width="1.5"/><line x1="35" y1="60" x2="290" y2="60" stroke="#fef08a" stroke-width="2.5"/><line x1="35" y1="68" x2="290" y2="68" stroke="#fef08a" stroke-width="3.5"/></svg>`
+      },
+      {
+        en: 'tighten',
+        vn: 'căng chặt hơn / vặn căng',
+        icon: '🔧',
+        cat: 'Changing Pitch',
+        defEn: 'To pull or twist a string tighter. Tighter strings vibrate faster and make a higher pitch.',
+        defVn: 'Vặn hoặc kéo dây đàn căng hơn. Dây càng căng rung càng nhanh và tạo âm càng cao.',
+        svg: `<svg viewBox="0 0 360 120" class="w-full h-full"><line x1="60" y1="55" x2="300" y2="55" stroke="#0284c7" stroke-width="4"/><path d="M 45 55 L 20 55 M 28 47 L 20 55 L 28 63" stroke="#0284c7" stroke-width="4" fill="none"/><path d="M 315 55 L 340 55 M 332 47 L 340 55 L 332 63" stroke="#0284c7" stroke-width="4" fill="none"/><text x="180" y="98" text-anchor="middle" font-size="14" font-weight="bold" fill="#0369a1">Tighter string ➔ Faster ➔ HIGHER pitch</text></svg>`
+      },
+      {
+        en: 'loosen',
+        vn: 'nới lỏng / vặn chùng',
+        icon: '🌀',
+        cat: 'Changing Pitch',
+        defEn: 'To make a stretched string less tight. Looser strings vibrate slower and make a lower pitch.',
+        defVn: 'Vặn cho dây đàn bớt căng (chùng hơn). Dây chùng rung chậm hơn và tạo âm trầm hơn.',
+        svg: `<svg viewBox="0 0 360 120" class="w-full h-full"><path d="M 40 48 Q 180 86 320 48" fill="none" stroke="#e11d48" stroke-width="4"/><text x="180" y="104" text-anchor="middle" font-size="14" font-weight="bold" fill="#be123c">Looser string ➔ Slower ➔ LOWER pitch</text></svg>`
+      },
+      {
+        en: 'tune',
+        vn: 'lên dây / chỉnh âm',
+        icon: '🎚️',
+        cat: 'Action Verb',
+        defEn: 'To adjust the pegs on an instrument until every string plays at the exact right pitch.',
+        defVn: 'Điều chỉnh khóa đàn (vặn căng hoặc nới lỏng) để mỗi dây đàn phát ra đúng cao độ chuẩn.',
+        svg: `<svg viewBox="0 0 360 120" class="w-full h-full"><circle cx="110" cy="58" r="24" fill="#fbbf24" stroke="#78350f" stroke-width="3"/><rect x="78" y="52" width="64" height="12" rx="4" fill="#92400e"/><path d="M 160 58 L 230 58" stroke="#4f46e5" stroke-width="4" marker-end=""/><text x="255" y="66" font-size="28">🎶</text><text x="180" y="108" text-anchor="middle" font-size="13" font-weight="bold" fill="#312e81">Turn tuning pegs to set the exact pitch</text></svg>`
+      },
+      {
+        en: 'pluck',
+        vn: 'gảy dây',
+        icon: '👆',
+        cat: 'Action Verb',
+        defEn: 'To pull a string gently with a finger or pick and let go so it vibrates and makes sound.',
+        defVn: 'Dùng ngón tay hoặc miếng gảy kéo nhẹ dây đàn rồi thả ra để dây rung lên và phát ra âm thanh.',
+        svg: `<svg viewBox="0 0 360 120" class="w-full h-full"><path d="M 35 60 L 180 35 L 325 60" fill="none" stroke="#7c3aed" stroke-width="4"/><circle cx="180" cy="24" r="10" fill="#f59e0b" stroke="#78350f" stroke-width="2"/><text x="180" y="102" text-anchor="middle" font-size="14" font-weight="bold" fill="#5b21b6">Pull and release to start vibrations!</text></svg>`
+      }
+    ];
+
+    let activeVocabIndex = 0;
+
+    function renderVocabGrid() {
+      const grid = document.getElementById('vocabGrid');
+      grid.innerHTML = vocabList.map((item, idx) => `
+        <button onclick="openVocabModal(${idx})" class="bg-white hover:bg-indigo-50 border-2 border-indigo-200 hover:border-indigo-500 rounded-2xl p-5 shadow-sm hover:shadow-md transition text-left flex flex-col justify-between h-36 group">
+          <div class="flex items-center justify-between">
+            <span class="text-3xl">${item.icon}</span>
+            <span class="text-xs font-extrabold px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-800 group-hover:bg-indigo-600 group-hover:text-white transition">Open Card</span>
+          </div>
+          <div>
+            <p class="text-xl font-black text-slate-900 capitalize">${item.en}</p>
+            <p class="text-xs font-bold text-slate-500">${item.cat}</p>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(idx) {
+      activeVocabIndex = idx;
+      const item = vocabList[idx];
+      document.getElementById('vmEn').textContent = item.en;
+      document.getElementById('vmVn').textContent = item.vn;
+      document.getElementById('vmCategory').textContent = item.cat;
+      document.getElementById('vmSvg').innerHTML = item.svg;
+      document.getElementById('vmDefEn').textContent = item.defEn;
+      document.getElementById('vmDefVn').textContent = item.defVn;
+      document.getElementById('vocabModal').classList.remove('hidden');
+      playChime('pop');
+    }
+
+    function closeVocabModal() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('vocabModal').classList.add('hidden');
+    }
+
+    function speakVocab(lang) {
+      if (isMuted || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const item = vocabList[activeVocabIndex];
+      const u = new SpeechSynthesisUtterance(lang === 'en' ? `${item.en}. ${item.defEn}` : `${item.vn}. ${item.defVn}`);
+      u.lang = lang === 'en' ? 'en-GB' : 'vi-VN';
+      u.rate = 0.94;
+      window.speechSynthesis.speak(u);
+    }
+
+    /* =====================================================================
+       STATION 3: SECRET LAB MISSIONS (I DO / WE DO)
+       ===================================================================== */
+    function selectMission(num) {
+      document.getElementById('missionPanel1').classList.toggle('hidden', num !== 1);
+      document.getElementById('missionPanel2').classList.toggle('hidden', num !== 2);
+      const b1 = document.getElementById('missionBtn1');
+      const b2 = document.getElementById('missionBtn2');
+      if (num === 1) {
+        b1.className = 'px-4 py-2 rounded-xl bg-indigo-600 text-white font-extrabold text-sm shadow transition';
+        b2.className = 'px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-extrabold text-sm transition';
+      } else {
+        b2.className = 'px-4 py-2 rounded-xl bg-indigo-600 text-white font-extrabold text-sm shadow transition';
+        b1.className = 'px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-extrabold text-sm transition';
+      }
+      playChime('pop');
+    }
+
+    function playTrapDemo(mode) {
+      const cardA = document.getElementById('trapCardQuietHigh');
+      const cardB = document.getElementById('trapCardLoudLow');
+      cardA.classList.remove('ring-4', 'ring-sky-500');
+      cardB.classList.remove('ring-4', 'ring-rose-500');
+      if (mode === 'quietHigh') {
+        cardA.classList.add('ring-4', 'ring-sky-500');
+        playPluckedNote(587.33, 0.09, 1.1); // High D5, quiet gain
+      } else {
+        cardB.classList.add('ring-4', 'ring-rose-500');
+        playPluckedNote(146.83, 0.48, 1.3); // Low D3, loud gain
+      }
+    }
+
+    function playMission2Comparison(kind) {
+      if (kind === 'length') {
+        playPluckedNote(220, 0.28, 0.7); // Long -> Low
+        setTimeout(() => playPluckedNote(440, 0.28, 0.9), 750); // Short -> High
+      } else if (kind === 'tension') {
+        playPluckedNote(196, 0.28, 0.7); // Loose -> Low
+        setTimeout(() => playPluckedNote(392, 0.28, 0.9), 750); // Tight -> High
+      } else {
+        playPluckedNote(164.8, 0.28, 0.7); // Thick -> Low
+        setTimeout(() => playPluckedNote(493.8, 0.28, 0.9), 750); // Thin -> High
+      }
+    }
+
+    let isFullScreenIDo = false;
+    function toggleFullScreenIDo() {
+      isFullScreenIDo = !isFullScreenIDo;
+      const wrap = document.getElementById('station3Wrapper');
+      const btn = document.getElementById('fullScreenBtn');
+      wrap.classList.toggle('fullscreen-ido', isFullScreenIDo);
+      btn.textContent = isFullScreenIDo ? '✕ Exit Full Screen' : '⛶ Full Screen I Do';
+      playChime('pop');
+    }
+
+    function openGiantProjection() {
+      document.getElementById('giantModal').classList.remove('hidden');
+      playChime('pop');
+    }
+    function closeGiantProjection() {
+      document.getElementById('giantModal').classList.add('hidden');
+    }
+
+    /* =====================================================================
+       STATION 4: INTERACTIVE VIRTUAL GUITAR & VIBRATION SPEED LAB
+       ===================================================================== */
+    let animReq = null;
+    let stringVibAmplitude = 0;
+    let stringVibPhase = 0;
+
+    function getGuitarParams() {
+      const lengthIdx = parseInt(document.getElementById('sliderLength').value, 10); // 0=Short, 1=Medium, 2=Long
+      const tensionIdx = parseInt(document.getElementById('sliderTension').value, 10); // 0=Loose, 1=Medium, 2=Tight
+      const thickIdx = parseInt(document.getElementById('sliderThickness').value, 10); // 0=Thin, 1=Medium, 2=Thick
+
+      // Score from 0 (lowest: Long+Loose+Thick) to 6 (highest: Short+Tight+Thin)
+      const pitchScore = (2 - lengthIdx) + tensionIdx + (2 - thickIdx);
+      // Map score 0..6 smoothly across 160 Hz to 660 Hz
+      const freqTable = [160, 215, 275, 340, 430, 540, 660];
+      const freq = freqTable[pitchScore];
+
+      const lengthNames = ['Short (25 cm)', 'Medium (45 cm)', 'Long (65 cm)'];
+      const tensionNames = ['Loose', 'Medium', 'Tight'];
+      const thickNames = ['Thin', 'Medium', 'Thick'];
+
+      let speedLabel = 'Medium', pitchLabel = 'Medium';
+      if (pitchScore <= 1) { speedLabel = 'Slow'; pitchLabel = 'Low-pitched'; }
+      else if (pitchScore >= 5) { speedLabel = 'Fast'; pitchLabel = 'High-pitched'; }
+      else if (pitchScore === 2) { speedLabel = 'Slow–Medium'; pitchLabel = 'Low–Medium'; }
+      else if (pitchScore === 4) { speedLabel = 'Medium–Fast'; pitchLabel = 'Medium–High'; }
+
+      return { lengthIdx, tensionIdx, thickIdx, pitchScore, freq, lengthName: lengthNames[lengthIdx], tensionName: tensionNames[tensionIdx], thickName: thickNames[thickIdx], speedLabel, pitchLabel };
+    }
+
+    function updateGuitarVisuals() {
+      const p = getGuitarParams();
+      document.getElementById('labelLength').textContent = p.lengthName;
+      document.getElementById('labelTension').textContent = p.tensionName;
+      document.getElementById('labelThickness').textContent = p.thickName;
+
+      document.getElementById('readoutSpeed').textContent = p.speedLabel;
+      document.getElementById('readoutPitch').textContent = p.pitchLabel;
+      document.getElementById('readoutHz').textContent = `${p.freq} Hz`;
+
+      // Update SVG finger position & active string start
+      const fingerXMap = [435, 285, 112]; // Short=rightmost fret, Medium=mid, Long=near nut
+      const startX = fingerXMap[p.lengthIdx];
+      document.getElementById('fingerMarker').setAttribute('transform', `translate(${startX}, 105)`);
+      document.getElementById('mutedStringLine').setAttribute('x2', startX);
+
+      // Update tuning peg rotation
+      const pegAngle = [-35, 0, 42][p.tensionIdx];
+      document.getElementById('tuningPegGroup').setAttribute('transform', `translate(55, 105) rotate(${pegAngle})`);
+
+      // Update string stroke width for thickness
+      const widths = [2.2, 4.5, 8.0];
+      const sw = widths[p.thickIdx];
+      document.getElementById('activeStringPath').setAttribute('stroke-width', sw);
+      document.getElementById('mutedStringLine').setAttribute('stroke-width', Math.max(1.8, sw * 0.75));
+
+      // Rest line
+      drawStringPath(startX, 0);
+
+      // Update explainer text
+      document.getElementById('explainerDynamicText').textContent =
+        `Current setup: ${p.lengthName} string, ${p.tensionName} tension, ${p.thickName} thickness ➔ ${p.speedLabel} vibrations (${p.freq} Hz) ➔ ${p.pitchLabel} sound!`;
+    }
+
+    function drawStringPath(startX, offsetY) {
+      const endX = 735;
+      const midX = (startX + endX) / 2;
+      const path = document.getElementById('activeStringPath');
+      path.setAttribute('d', `M ${startX} 105 Q ${midX} ${105 + offsetY} ${endX} 105`);
+    }
+
+    function pluckVirtualGuitar() {
+      const p = getGuitarParams();
+      playPluckedNote(p.freq, 0.30, 1.35);
+
+      const fingerXMap = [435, 285, 112];
+      const startX = fingerXMap[p.lengthIdx];
+      stringVibAmplitude = 26;
+      stringVibPhase = 0;
+
+      if (animReq) cancelAnimationFrame(animReq);
+      // Visual oscillation speed scales directly with pitchScore!
+      const speedStep = 0.25 + p.pitchScore * 0.22;
+
+      function animateString() {
+        stringVibPhase += speedStep;
+        stringVibAmplitude *= 0.945;
+        const dy = Math.sin(stringVibPhase) * stringVibAmplitude;
+        drawStringPath(startX, dy);
+        if (stringVibAmplitude > 0.4) {
+          animReq = requestAnimationFrame(animateString);
+        } else {
+          drawStringPath(startX, 0);
+        }
+      }
+      animateString();
+    }
+
+    function setGuitarPreset(preset) {
+      const l = document.getElementById('sliderLength');
+      const t = document.getElementById('sliderTension');
+      const th = document.getElementById('sliderThickness');
+      if (preset === 'lowest') { l.value = 2; t.value = 0; th.value = 2; }
+      else if (preset === 'highest') { l.value = 0; t.value = 2; th.value = 0; }
+      else { l.value = 1; t.value = 1; th.value = 1; }
+      updateGuitarVisuals();
+      pluckVirtualGuitar();
+    }
+
+    function toggleExplainer() {
+      const box = document.getElementById('explainerBox');
+      const btn = document.getElementById('explainerToggleBtn');
+      const hidden = box.classList.toggle('hidden');
+      btn.textContent = hidden ? '👁️ Reveal Vibration Explainer' : '🙈 Hide Vibration Explainer';
+      playChime('pop');
+    }
+
+    /* =====================================================================
+       STATION 5: SUCCESS CRITERIA CHECK
+       ===================================================================== */
+    const scMetState = [false, false, false];
+    function revealScAns(i) {
+      document.getElementById(`scAns${i}`).classList.toggle('hidden');
+      playChime('pop');
+    }
+    function toggleScMet(i) {
+      scMetState[i] = !scMetState[i];
+      const btn = document.getElementById(`scMetBtn${i}`);
+      btn.textContent = scMetState[i] ? '✅ Met!' : '⬜ Mark Met';
+      btn.className = scMetState[i]
+        ? 'px-3 py-1 rounded-xl bg-emerald-600 text-white font-extrabold text-xs transition'
+        : 'px-3 py-1 rounded-xl bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 font-extrabold text-xs transition';
+      const count = scMetState.filter(Boolean).length;
+      document.getElementById('scMetCount').textContent = count;
+      playChime(scMetState[i] ? 'win' : 'pop');
+      if (count === 3) launchConfetti();
+    }
+
+    /* =====================================================================
+       STATION 6: QUICKFIRE CHECKPOINT CHALLENGE (8 QUESTIONS)
+       ===================================================================== */
+    const quickfireQuestions = [
+      {
+        tag: 'Pitch vs Volume',
+        q: 'True or False: Tightening a guitar string makes the sound LOUDER.',
+        a: 'FALSE! Tightening a string makes the pitch HIGHER (faster vibrations). To make it louder, pluck harder!'
+      },
+      {
+        tag: 'String Length',
+        q: 'A guitarist presses a finger near the middle of a string, making the vibrating part shorter. Does the pitch go HIGHER or LOWER?',
+        a: 'HIGHER! A shorter string vibrates faster, producing a higher-pitched sound.'
+      },
+      {
+        tag: 'String Thickness',
+        q: 'A guitar has a very thick bottom string and a very thin top string. Which one vibrates SLOWER?',
+        a: 'The THICK string vibrates slower — so it makes a LOW-pitched sound.'
+      },
+      {
+        tag: 'Pitch vs Volume',
+        q: 'Can you whisper a HIGH-pitched squeak? Explain in one sentence.',
+        a: 'YES! Whispering uses small vibrations (quiet volume), while a high pitch uses fast vibrations.'
+      },
+      {
+        tag: 'Tuning Pegs',
+        q: 'Mia turns a violin tuning peg to LOOSEN the string. What happens to the vibration speed and pitch?',
+        a: 'The string vibrates SLOWER, so the pitch becomes LOWER.'
+      },
+      {
+        tag: 'Fair Test Control',
+        q: 'You test 3 overhanging ruler lengths (10 cm, 15 cm, 20 cm) for pitch. What MUST you keep the same every time?',
+        a: 'Pluck/twang with the SAME strength (and use the same ruler) so volume stays the same!'
+      },
+      {
+        tag: 'Comparing Instruments',
+        q: 'Why does a tiny violin make much higher-pitched notes than a huge double bass?',
+        a: 'A violin has much SHORTER and THINNER strings, so they vibrate much faster!'
+      },
+      {
+        tag: 'Golden Rule',
+        q: 'Name ALL THREE changes to a string that make it vibrate FASTER and raise its pitch!',
+        a: 'Make it SHORTER, TIGHTER, or THINNER!'
+      }
+    ];
+
+    let qfIndex = 0;
+    let qfInterval = null;
+    let qfSeconds = 15;
+
+    function renderQuickfire() {
+      const item = quickfireQuestions[qfIndex];
+      document.getElementById('qfProgressBadge').textContent = `Question ${qfIndex + 1} / ${quickfireQuestions.length}`;
+      document.getElementById('qfTag').textContent = item.tag;
+      document.getElementById('qfQuestionText').textContent = item.q;
+      document.getElementById('qfAnswerText').textContent = item.a;
+      document.getElementById('qfAnswerBox').classList.add('hidden');
+      document.getElementById('boardsUpBanner').classList.add('hidden');
+      stopQfTimer();
+      qfSeconds = 15;
+      document.getElementById('qfTimerDisplay').textContent = '15s';
+    }
+
+    function nextQuickfire() {
+      qfIndex = (qfIndex + 1) % quickfireQuestions.length;
+      renderQuickfire();
+      playChime('pop');
+    }
+    function prevQuickfire() {
+      qfIndex = (qfIndex - 1 + quickfireQuestions.length) % quickfireQuestions.length;
+      renderQuickfire();
+      playChime('pop');
+    }
+    function stopQfTimer() {
+      if (qfInterval) { clearInterval(qfInterval); qfInterval = null; }
+    }
+    function startQfTimer(sec) {
+      stopQfTimer();
+      document.getElementById('boardsUpBanner').classList.add('hidden');
+      qfSeconds = sec;
+      document.getElementById('qfTimerDisplay').textContent = `${qfSeconds}s`;
+      playChime('pop');
+      qfInterval = setInterval(() => {
+        qfSeconds--;
+        document.getElementById('qfTimerDisplay').textContent = `${Math.max(0, qfSeconds)}s`;
+        if (qfSeconds <= 0) {
+          stopQfTimer();
+          triggerBoardsUp();
+        }
+      }, 1000);
+    }
+    function triggerBoardsUp() {
+      stopQfTimer();
+      document.getElementById('boardsUpBanner').classList.remove('hidden');
+      playChime('alert');
+    }
+    function revealQfAnswer() {
+      document.getElementById('qfAnswerBox').classList.remove('hidden');
+      playChime('win');
+    }
+
+    /* =====================================================================
+       DAVID'S BOARD WHITEBOARD (W) & TEACHER DRAWER (T)
+       ===================================================================== */
+    let wbDrawing = false, wbColor = '#0f172a', wbSize = 4;
+    const wbCanvas = document.getElementById('wbCanvas');
+    const wbCtx = wbCanvas.getContext('2d');
+
+    function resizeWhiteboard() {
+      const rect = wbCanvas.parentElement.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        wbCanvas.width = rect.width;
+        wbCanvas.height = rect.height;
+      }
+    }
+    function toggleWhiteboard() {
+      const modal = document.getElementById('whiteboardModal');
+      const hidden = modal.classList.toggle('hidden');
+      if (!hidden) setTimeout(resizeWhiteboard, 30);
+    }
+    function setPenColor(col, size = 4) { wbColor = col; wbSize = size; }
+    function clearWhiteboard() { wbCtx.clearRect(0, 0, wbCanvas.width, wbCanvas.height); }
+
+    function getWbPos(e) {
+      const rect = wbCanvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+    function startWb(e) {
+      wbDrawing = true;
+      const p = getWbPos(e);
+      wbCtx.beginPath();
+      wbCtx.moveTo(p.x, p.y);
+    }
+    function moveWb(e) {
+      if (!wbDrawing) return;
+      e.preventDefault();
+      const p = getWbPos(e);
+      wbCtx.strokeStyle = wbColor;
+      wbCtx.lineWidth = wbSize;
+      wbCtx.lineCap = 'round';
+      wbCtx.lineTo(p.x, p.y);
+      wbCtx.stroke();
+    }
+    function endWb() { wbDrawing = false; }
+
+    wbCanvas.addEventListener('mousedown', startWb);
+    wbCanvas.addEventListener('mousemove', moveWb);
+    window.addEventListener('mouseup', endWb);
+    wbCanvas.addEventListener('touchstart', startWb, { passive: false });
+    wbCanvas.addEventListener('touchmove', moveWb, { passive: false });
+    window.addEventListener('touchend', endWb);
+
+    function toggleTeacherDrawer() {
+      document.getElementById('teacherDrawer').classList.toggle('hidden');
+    }
+
+    /* =====================================================================
+       GUARDED KEYBOARD SHORTCUTS (←/→, W, T, M, Esc)
+       ===================================================================== */
+    function anyModalOpen() {
+      return !document.getElementById('vocabModal').classList.contains('hidden') ||
+             !document.getElementById('whiteboardModal').classList.contains('hidden') ||
+             !document.getElementById('giantModal').classList.contains('hidden');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+      if (e.key === 'Escape') {
+        closeVocabModal();
+        closeGiantProjection();
+        document.getElementById('whiteboardModal').classList.add('hidden');
+        document.getElementById('teacherDrawer').classList.add('hidden');
+        if (isFullScreenIDo) toggleFullScreenIDo();
+        return;
+      }
+      if (e.key.toLowerCase() === 'w') { toggleWhiteboard(); return; }
+      if (e.key.toLowerCase() === 't') { toggleTeacherDrawer(); return; }
+      if (e.key.toLowerCase() === 'm') { toggleMute(); return; }
+
+      if (anyModalOpen()) return;
+      if (e.key === 'ArrowRight') switchStation(currentStation + 1);
+      if (e.key === 'ArrowLeft') switchStation(currentStation - 1);
+    });
+
+    // Initialise
+    renderVocabGrid();
+    updateGuitarVisuals();
+    renderQuickfire();
+  </script>
+</body>
+</html>
