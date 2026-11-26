@@ -52,12 +52,22 @@
       z-index: 50;
     }
 
+    /* Main Tabs: NEVER put flex/grid directly on toggleable <section> */
     .phase-section {
       display: none;
     }
     .phase-section.active {
       display: block;
-      animation: fadeSlideIn 0.28s ease-out;
+      animation: fadeSlideIn 0.26s ease-out;
+    }
+
+    /* Cycle Sub-Panels */
+    .cycle-panel {
+      display: none;
+    }
+    .cycle-panel.active {
+      display: block;
+      animation: fadeSlideIn 0.22s ease-out;
     }
 
     @keyframes fadeSlideIn {
@@ -83,15 +93,16 @@
     }
     .flip-back { transform: rotateY(180deg); }
 
-    /* Fullscreen Sandbox */
-    .sandbox-fullscreen {
+    /* Full-Screen Mini-Teach Stage (z-65, below Teacher Drawer z-75 and Board/Modal z-80) */
+    .fullscreen-stage {
       position: fixed !important;
       inset: 0 !important;
       z-index: 65 !important;
       background: #faf7f0 !important;
-      padding: 16px 24px !important;
+      padding: 18px 26px !important;
       overflow-y: auto !important;
       border-radius: 0 !important;
+      border: none !important;
     }
 
     /* David's Board Squared Grid */
@@ -103,11 +114,36 @@
       background-size: 32px 32px;
     }
 
-    /* Studio Gold Double Frame */
+    /* Studio Drafting Paper Card */
     .studio-card {
       background: var(--studio-paper);
       border: 2px solid #d6cbb5;
       box-shadow: 0 6px 20px rgba(6, 78, 59, 0.06);
+    }
+
+    /* WAGOLL Spotlight Highlights */
+    .wagoll-span {
+      transition: all 0.25s ease;
+      border-radius: 6px;
+      padding: 1px 4px;
+    }
+    .wagoll-hl-formula {
+      background-color: #fde68a;
+      color: #78350f;
+      box-shadow: 0 0 0 2px #f59e0b;
+      font-weight: 800;
+    }
+    .wagoll-hl-perp {
+      background-color: #a7f3d0;
+      color: #064e3b;
+      box-shadow: 0 0 0 2px #10b981;
+      font-weight: 800;
+    }
+    .wagoll-hl-budget {
+      background-color: #bae6fd;
+      color: #0c4a6e;
+      box-shadow: 0 0 0 2px #0284c7;
+      font-weight: 800;
     }
 
     /* Confetti Canvas */
@@ -128,7 +164,7 @@
 <body class="min-h-screen pb-16">
   <canvas id="confetti-canvas"></canvas>
 
-  <!-- AUTO-HIDING STUDIO TOP HEADER -->
+  <!-- AUTO-HIDING STUDIO TOP HEADER (z-50) -->
   <header id="top-header" class="fixed top-0 left-0 right-0 bg-[#052e2b]/95 backdrop-blur-md text-amber-50 border-b-2 border-amber-500/70 shadow-lg">
     <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-3">
@@ -137,10 +173,10 @@
         </div>
         <div>
           <div class="flex items-center gap-2 flex-wrap">
-            <span class="px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wider rounded bg-amber-400 text-emerald-950">Design Studio Project</span>
+            <span class="px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wider rounded bg-amber-400 text-emerald-950">3-Cycle Studio Project</span>
             <span class="text-xs font-mono-tech text-emerald-200">Stage 6 • 6Gg.03 • Week 17 Lesson 3</span>
           </div>
-          <h1 class="text-sm sm:text-base font-bold text-white leading-tight">Hanoi Eco-Park Blueprint — <span class="text-amber-300">Design a 120 m² Eco-Park on budget.</span></h1>
+          <h1 class="text-sm sm:text-base font-bold text-white leading-tight">Hanoi Eco-Park Blueprint — <span class="text-amber-300">120 m² • ≤ 600 Eco-Credits</span></h1>
         </div>
       </div>
 
@@ -174,93 +210,123 @@
   <!-- MAIN STUDIO WORKSPACE -->
   <main class="max-w-7xl mx-auto px-4 pt-24">
 
-    <!-- STUDIO PHASE NAVIGATION BAR (flex-wrap) -->
-    <nav aria-label="Design Studio Phases" class="mb-6 bg-[#fffdf8] border-2 border-emerald-900/20 rounded-2xl p-2 shadow-sm">
+    <!-- 7-TAB STRUCTURED 3-CYCLE PROJECT NAVIGATION BAR (flex-wrap) -->
+    <nav aria-label="7-Tab Studio Project Navigation" class="mb-6 bg-[#fffdf8] border-2 border-emerald-900/20 rounded-2xl p-2 shadow-sm">
       <div class="flex flex-wrap gap-1.5 justify-center">
-        <button onclick="goPhase(0)" data-phase="0" class="phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
-          📐 0. Brief &amp; 4 Roles
+        <button onclick="goPhase(0)" data-phase="0" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          🎯 0. LO, SC &amp; Roles
         </button>
-        <button onclick="goPhase(1)" data-phase="1" class="phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
-          ⚡ 1. Flashback 3
+        <button onclick="goPhase(1)" data-phase="1" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          ⚡ 1. Starter &amp; Glossary
         </button>
-        <button onclick="goPhase(2)" data-phase="2" class="phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
-          📖 2. Studio Glossary
+        <button onclick="goPhase(2)" data-phase="2" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          📐 2. Cycle 1: Blueprint
         </button>
-        <button onclick="goPhase(3)" data-phase="3" class="phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
-          🗺️ 3. 120 m² Blueprint Sandbox
+        <button onclick="goPhase(3)" data-phase="3" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          💰 3. Cycle 2: Budget
         </button>
-        <button onclick="goPhase(4)" data-phase="4" class="phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
-          ⏱️ 4. 3-Sprint Studio Timer
+        <button onclick="goPhase(4)" data-phase="4" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          🎨 4. Cycle 3: Poster &amp; Pitch
         </button>
-        <button onclick="goPhase(5)" data-phase="5" class="phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
-          🏆 5. Peer Audit, Pitch &amp; Finale
+        <button onclick="goPhase(5)" data-phase="5" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          ✅ 5. SC Review
+        </button>
+        <button onclick="goPhase(6)" data-phase="6" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          ⚡ 6. Finale Quickfire
         </button>
       </div>
     </nav>
 
     <!-- ============================================================ -->
-    <!-- STUDIO PHASE 0: PROJECT BRIEF & 4-ROLE TEAM STUDIO BOARD     -->
+    <!-- TAB 0: LO, SUCCESS CRITERIA & STUDIO ROLES                   -->
     <!-- ============================================================ -->
     <section id="phase-0" class="phase-section active">
       <div class="space-y-6">
 
-        <!-- Hero Architectural Blueprint Banner -->
+        <!-- Prominent WALT + 3 Numbered "I can..." Success Criteria Banner -->
         <div class="studio-blueprint-banner rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-500/80 shadow-xl relative overflow-hidden">
           <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-            <div class="space-y-3 max-w-3xl">
+            <div class="space-y-2.5 max-w-3xl">
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-300/60 text-amber-200 text-xs font-extrabold uppercase tracking-widest">
-                <span>🌿 Special Lesson 3 • Collaborative Poster Studio</span>
+                <span>🎯 WALT • Stage 6 • 6Gg.03 • 70-Min Studio Project</span>
               </div>
               <h2 class="font-studio-serif text-3xl sm:text-5xl tracking-tight text-white leading-tight">
-                HANOI ECO-PARK ARCHITECTURE CHALLENGE
+                Apply rectangle and triangle areas to design an eco-park.
               </h2>
-              <p class="text-emerald-100 text-base sm:text-lg font-medium">
-                120 m² Team Poster Project • Design a zero-gap park using rectangles and right-angled triangles within a <span class="text-amber-300 font-extrabold">600 Eco-Credit</span> budget!
+              <p class="text-emerald-100 text-sm sm:text-base font-medium">
+                Hanoi Eco-Park Architecture Challenge — 3 structured studio cycles building one zero-gap A3 poster within <span class="text-amber-300 font-extrabold">600 Eco-Credits</span>!
               </p>
             </div>
-            <div class="bg-emerald-950/80 border-2 border-amber-400/60 rounded-2xl p-4 min-w-[240px] shrink-0">
-              <div class="text-xs uppercase tracking-wider text-amber-300 font-extrabold mb-2">Studio Specifications</div>
+            <div class="bg-emerald-950/85 border-2 border-amber-400/70 rounded-2xl p-4 min-w-[240px] shrink-0">
+              <div class="text-xs uppercase tracking-wider text-amber-300 font-extrabold mb-2 text-center">Studio Specifications</div>
               <div class="grid grid-cols-2 gap-2 text-center">
-                <div class="bg-emerald-900/70 rounded-xl p-2">
-                  <div class="text-xl font-mono-tech font-bold text-white">12 × 10</div>
-                  <div class="text-[11px] text-emerald-200">120 m² Grid</div>
+                <div class="bg-emerald-900/70 rounded-xl p-2.5">
+                  <div class="text-lg font-mono-tech font-bold text-white">12 × 10</div>
+                  <div class="text-[11px] text-emerald-200 font-bold">= 120 m² Grid</div>
                 </div>
-                <div class="bg-emerald-900/70 rounded-xl p-2">
-                  <div class="text-xl font-mono-tech font-bold text-amber-300">≤ 600</div>
-                  <div class="text-[11px] text-emerald-200">Eco-Credits</div>
+                <div class="bg-emerald-900/70 rounded-xl p-2.5">
+                  <div class="text-lg font-mono-tech font-bold text-amber-300">≤ 600</div>
+                  <div class="text-[11px] text-emerald-200 font-bold">Eco-Credits</div>
                 </div>
               </div>
               <div class="mt-2.5 text-[11px] text-emerald-200 text-center font-semibold">
-                Every team builds 1 A3 Poster + 60s Pitch!
+                3 Cycles • A3 Team Poster • 60s Pitch
               </div>
             </div>
           </div>
 
-          <!-- Compact Must / Should / Could Success Criteria Strip -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-6 pt-5 border-t border-emerald-700/70">
-            <div class="bg-emerald-950/60 border border-emerald-500/60 rounded-xl p-3">
-              <div class="text-xs font-extrabold text-emerald-300 uppercase">🟢 Must</div>
-              <p class="text-sm font-semibold text-white mt-0.5">Calculate every rectangle and triangle area accurately.</p>
+          <!-- 3 Numbered "I can..." Success Criteria Cards (Exact Lesson Plan wording) -->
+          <div class="mt-6 pt-5 border-t border-emerald-700/80">
+            <div class="text-xs font-extrabold uppercase tracking-wider text-amber-300 mb-3">
+              ✅ Success Criteria — By the end of this studio project:
             </div>
-            <div class="bg-amber-950/50 border border-amber-400/60 rounded-xl p-3">
-              <div class="text-xs font-extrabold text-amber-300 uppercase">🟠 Should</div>
-              <p class="text-sm font-semibold text-white mt-0.5">Cover 120 m² cleanly under 600 credits.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+              <div class="bg-white/10 backdrop-blur-sm border-2 border-emerald-400/70 rounded-2xl p-4 flex items-start gap-3">
+                <span class="w-8 h-8 rounded-xl bg-amber-400 text-emerald-950 font-mono-tech font-extrabold flex items-center justify-center shrink-0 text-base">1</span>
+                <p class="text-sm font-bold text-white leading-snug">
+                  I can design scaled rectangular and right-angled triangular zones on a grid to meet exact area requirements.
+                </p>
+              </div>
+              <div class="bg-white/10 backdrop-blur-sm border-2 border-amber-400/70 rounded-2xl p-4 flex items-start gap-3">
+                <span class="w-8 h-8 rounded-xl bg-amber-400 text-emerald-950 font-mono-tech font-extrabold flex items-center justify-center shrink-0 text-base">2</span>
+                <p class="text-sm font-bold text-white leading-snug">
+                  I can calculate total compound areas and verify another team's triangle calculations by checking perpendicular sides.
+                </p>
+              </div>
+              <div class="bg-white/10 backdrop-blur-sm border-2 border-teal-300/70 rounded-2xl p-4 flex items-start gap-3">
+                <span class="w-8 h-8 rounded-xl bg-amber-400 text-emerald-950 font-mono-tech font-extrabold flex items-center justify-center shrink-0 text-base">3</span>
+                <p class="text-sm font-bold text-white leading-snug">
+                  I can justify design trade-offs clearly using accurate area calculations in square metres (m²).
+                </p>
+              </div>
             </div>
-            <div class="bg-teal-950/60 border border-teal-400/60 rounded-xl p-3">
-              <div class="text-xs font-extrabold text-teal-200 uppercase">🟣 Could</div>
-              <p class="text-sm font-semibold text-white mt-0.5">Justify swaps and audit another team's poster.</p>
+          </div>
+
+          <!-- Compact Must / Should / Could Tier Strip -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 mt-4">
+            <div class="bg-emerald-950/75 border border-emerald-500/60 rounded-xl px-3.5 py-2 flex items-center gap-2">
+              <span class="text-xs font-extrabold text-emerald-300 uppercase shrink-0">🟢 Must:</span>
+              <span class="text-xs font-semibold text-white">Calculate every rectangle and triangle area accurately.</span>
+            </div>
+            <div class="bg-amber-950/65 border border-amber-400/60 rounded-xl px-3.5 py-2 flex items-center gap-2">
+              <span class="text-xs font-extrabold text-amber-300 uppercase shrink-0">🟠 Should:</span>
+              <span class="text-xs font-semibold text-white">Cover 120 m² cleanly under 600 Eco-Credits.</span>
+            </div>
+            <div class="bg-teal-950/75 border border-teal-400/60 rounded-xl px-3.5 py-2 flex items-center gap-2">
+              <span class="text-xs font-extrabold text-teal-200 uppercase shrink-0">🟣 Could:</span>
+              <span class="text-xs font-semibold text-white">Justify swaps and audit another team's poster.</span>
             </div>
           </div>
         </div>
 
-        <!-- Dynamic Group Size Switcher -->
+        <!-- Dynamic Group Size Switcher & 4 Colour-Coded Role Cards -->
         <div class="studio-card rounded-2xl p-5">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
             <div>
               <h3 class="text-xl font-extrabold text-emerald-950 flex items-center gap-2">
                 <span>👷‍♂️ Your Architecture Studio Team</span>
               </h3>
-              <p class="text-sm text-slate-600 mt-0.5">Choose your table size — every pupil has an active role and personal checklist!</p>
+              <p class="text-sm text-slate-600 mt-0.5">Select your table size — every pupil holds a clear job in Cycle 1, Cycle 2, and Cycle 3!</p>
             </div>
             <div class="flex flex-wrap gap-2" role="group" aria-label="Group Size Selector">
               <button onclick="setGroupSize(4)" id="grp-btn-4" class="grp-btn px-4 py-2 rounded-xl text-sm font-extrabold border-2 transition">
@@ -277,20 +343,19 @@
 
           <div id="group-adaptation-banner" class="hidden mb-4 px-4 py-2.5 rounded-xl bg-amber-50 border-2 border-amber-400 text-amber-950 text-sm font-bold"></div>
 
-          <!-- 4 Role Cards Grid -->
           <div id="roles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Dynamically rendered by setGroupSize() -->
+            <!-- Populated by setGroupSize() -->
           </div>
         </div>
 
-        <!-- Compact Park Price Menu & Mandatory Zones Overview -->
+        <!-- Compact Park Price Menu & 4 Mandatory Client Rules -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div class="studio-card rounded-2xl p-5">
             <h3 class="text-lg font-extrabold text-emerald-950 mb-3">💰 Eco-Park Surface Price Menu</h3>
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center">
               <div class="rounded-xl p-2.5 bg-emerald-100 border-2 border-emerald-400">
                 <div class="text-lg">🌱</div>
-                <div class="text-xs font-extrabold text-emerald-950">Grass Lawn</div>
+                <div class="text-xs font-extrabold text-emerald-950">Grass</div>
                 <div class="font-mono-tech text-sm font-bold text-emerald-800 mt-0.5">3 cr/m²</div>
               </div>
               <div class="rounded-xl p-2.5 bg-amber-100 border-2 border-amber-400">
@@ -338,105 +403,153 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- STUDIO PHASE 1: BRISK WARM-UP FLASHBACK 3                    -->
+    <!-- TAB 1: STARTER (FLASHBACK 3) & BILINGUAL GLOSSARY            -->
     <!-- ============================================================ -->
     <section id="phase-1" class="phase-section">
-      <div class="space-y-5">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 studio-card rounded-2xl p-5">
-          <div>
-            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Spaced Retrieval Warm-Up • 3 Earlier Units</span>
-            <h2 class="font-studio-serif text-3xl text-emerald-950">Flashback 3 — Architect's Brain Tune-Up</h2>
+      <div class="space-y-7">
+
+        <!-- PART A: BRISK 3-MIN FLASHBACK 3 -->
+        <div class="space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 studio-card rounded-2xl p-5">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Part A • Brisk 3-Min Spaced Retrieval (3 Earlier Units)</span>
+              <h2 class="font-studio-serif text-3xl text-emerald-950">Flashback 3 — Architect's Brain Tune-Up</h2>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="flipAllFlashbacks(true)" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-sm font-bold transition">Reveal All 3</button>
+              <button onclick="flipAllFlashbacks(false)" class="px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-sm font-bold transition">Reset Cards</button>
+            </div>
           </div>
-          <div class="flex gap-2">
-            <button onclick="flipAllFlashbacks(true)" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-sm font-bold transition">Reveal All 3</button>
-            <button onclick="flipAllFlashbacks(false)" class="px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-sm font-bold transition">Reset Cards</button>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <!-- Card 1: Unit 5 Rhombus -->
+            <div class="flip-perspective h-[310px]">
+              <div onclick="toggleFlip(this)" class="flip-card w-full h-full cursor-pointer">
+                <div class="flip-inner">
+                  <div class="flip-face rounded-3xl bg-gradient-to-br from-emerald-900 to-emerald-800 text-white p-6 border-4 border-amber-400/80 shadow-xl flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                      <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase">Unit 5 • Geometry</span>
+                      <span class="text-xs text-emerald-200 font-bold">Tap to Flip ↻</span>
+                    </div>
+                    <div class="text-center my-auto space-y-2.5">
+                      <svg viewBox="0 0 140 80" class="w-32 h-[72px] mx-auto">
+                        <polygon points="70,8 128,40 70,72 12,40" fill="rgba(251,191,36,0.22)" stroke="#fbbf24" stroke-width="3"/>
+                        <line x1="70" y1="8" x2="70" y2="72" stroke="#ffffff" stroke-width="2" stroke-dasharray="4 3"/>
+                        <line x1="12" y1="40" x2="128" y2="40" stroke="#ffffff" stroke-width="2" stroke-dasharray="4 3"/>
+                      </svg>
+                      <p class="text-lg font-extrabold leading-snug">Non-square Rhombus:</p>
+                      <p class="text-sm text-emerald-100 font-semibold">1. At what angle do its diagonals cross?<br/>2. What is its order of rotational symmetry?</p>
+                    </div>
+                    <div class="text-center text-xs text-amber-200 font-bold">Write both on your whiteboard!</div>
+                  </div>
+                  <div class="flip-face flip-back rounded-3xl bg-[#fffdf8] text-emerald-950 p-6 border-4 border-emerald-700 shadow-xl flex flex-col justify-between">
+                    <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold uppercase self-start">✓ Unit 5 Answer</span>
+                    <div class="text-center my-auto space-y-2.5">
+                      <div class="text-3xl font-mono-tech font-extrabold text-emerald-800">90° &amp; Order 2</div>
+                      <p class="text-sm font-semibold text-slate-700">Its diagonals meet at a <strong>right angle (90°)</strong>, and a non-square rhombus fits onto itself <strong>2 times</strong> in a full 360° turn.</p>
+                    </div>
+                    <div class="text-center text-xs text-slate-500 font-bold">Tap to flip back</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Unit 8 Uneven Decimals -->
+            <div class="flip-perspective h-[310px]">
+              <div onclick="toggleFlip(this)" class="flip-card w-full h-full cursor-pointer">
+                <div class="flip-inner">
+                  <div class="flip-face rounded-3xl bg-gradient-to-br from-amber-700 to-amber-600 text-white p-6 border-4 border-emerald-900/70 shadow-xl flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                      <span class="px-3 py-1 rounded-full bg-emerald-950 text-amber-300 text-xs font-extrabold uppercase">Unit 8 • Decimals</span>
+                      <span class="text-xs text-amber-100 font-bold">Tap to Flip ↻</span>
+                    </div>
+                    <div class="text-center my-auto space-y-2.5">
+                      <div class="text-4xl sm:text-5xl font-mono-tech font-extrabold tracking-tight">15.2 − 7.65</div>
+                      <p class="text-sm text-amber-100 font-semibold">Subtract carefully using a trailing zero (15.20)!</p>
+                    </div>
+                    <div class="text-center text-xs text-amber-100 font-bold">Check by adding back!</div>
+                  </div>
+                  <div class="flip-face flip-back rounded-3xl bg-[#fffdf8] text-emerald-950 p-6 border-4 border-amber-600 shadow-xl flex flex-col justify-between">
+                    <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-950 text-xs font-extrabold uppercase self-start">✓ Unit 8 Answer</span>
+                    <div class="text-center my-auto space-y-2.5">
+                      <div class="text-5xl font-mono-tech font-extrabold text-amber-700">7.55</div>
+                      <p class="text-sm font-semibold text-slate-700">Write <strong>15.20 − 7.65 = 7.55</strong>.<br/>Inverse check: 7.55 + 7.65 = 15.20.</p>
+                    </div>
+                    <div class="text-center text-xs text-slate-500 font-bold">Tap to flip back</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Unit 2 Sequences -->
+            <div class="flip-perspective h-[310px]">
+              <div onclick="toggleFlip(this)" class="flip-card w-full h-full cursor-pointer">
+                <div class="flip-inner">
+                  <div class="flip-face rounded-3xl bg-gradient-to-br from-teal-900 to-emerald-900 text-white p-6 border-4 border-amber-400/80 shadow-xl flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                      <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase">Unit 2 • Sequences</span>
+                      <span class="text-xs text-teal-200 font-bold">Tap to Flip ↻</span>
+                    </div>
+                    <div class="text-center my-auto space-y-2.5">
+                      <div class="text-xs uppercase tracking-wider text-amber-300 font-extrabold">Position-to-Term Rule</div>
+                      <div class="text-5xl font-mono-tech font-extrabold">5n + 3</div>
+                      <p class="text-base font-bold text-teal-100">Find the <strong>15th term</strong>!</p>
+                    </div>
+                    <div class="text-center text-xs text-amber-200 font-bold">Substitute n = 15</div>
+                  </div>
+                  <div class="flip-face flip-back rounded-3xl bg-[#fffdf8] text-emerald-950 p-6 border-4 border-teal-700 shadow-xl flex flex-col justify-between">
+                    <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-950 text-xs font-extrabold uppercase self-start">✓ Unit 2 Answer</span>
+                    <div class="text-center my-auto space-y-2.5">
+                      <div class="text-5xl font-mono-tech font-extrabold text-teal-800">78</div>
+                      <p class="text-sm font-semibold text-slate-700"><strong>5 × 15 + 3</strong> = 75 + 3 = <strong>78</strong>.</p>
+                    </div>
+                    <div class="text-center text-xs text-slate-500 font-bold">Tap to flip back</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Card 1: Unit 5 Quadrilaterals & Symmetry -->
-          <div class="flip-perspective h-[340px]">
-            <div onclick="toggleFlip(this)" class="flip-card w-full h-full cursor-pointer">
-              <div class="flip-inner">
-                <div class="flip-face rounded-3xl bg-gradient-to-br from-emerald-900 to-emerald-800 text-white p-6 border-4 border-amber-400/80 shadow-xl flex flex-col justify-between">
-                  <div class="flex items-center justify-between">
-                    <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase">Unit 5 • Geometry</span>
-                    <span class="text-xs text-emerald-200 font-bold">Tap to Flip ↻</span>
-                  </div>
-                  <div class="text-center my-auto space-y-3">
-                    <svg viewBox="0 0 140 80" class="w-36 h-20 mx-auto">
-                      <polygon points="70,8 128,40 70,72 12,40" fill="rgba(251,191,36,0.22)" stroke="#fbbf24" stroke-width="3"/>
-                      <line x1="70" y1="8" x2="70" y2="72" stroke="#ffffff" stroke-width="2" stroke-dasharray="4 3"/>
-                      <line x1="12" y1="40" x2="128" y2="40" stroke="#ffffff" stroke-width="2" stroke-dasharray="4 3"/>
-                    </svg>
-                    <p class="text-xl font-extrabold leading-snug">Non-square Rhombus:</p>
-                    <p class="text-sm text-emerald-100 font-semibold">1. At what angle do its diagonals cross?<br/>2. What is its order of rotational symmetry?</p>
-                  </div>
-                  <div class="text-center text-xs text-amber-200 font-bold">Write both on your whiteboard!</div>
-                </div>
-                <div class="flip-face flip-back rounded-3xl bg-[#fffdf8] text-emerald-950 p-6 border-4 border-emerald-700 shadow-xl flex flex-col justify-between">
-                  <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold uppercase self-start">✓ Unit 5 Answer</span>
-                  <div class="text-center my-auto space-y-3">
-                    <div class="text-4xl font-mono-tech font-extrabold text-emerald-800">90° &amp; Order 2</div>
-                    <p class="text-sm font-semibold text-slate-700">Its diagonals meet at a <strong>right angle (90°)</strong>, and a non-square rhombus fits onto itself <strong>2 times</strong> in a full 360° turn.</p>
-                  </div>
-                  <div class="text-center text-xs text-slate-500 font-bold">Tap to flip back</div>
-                </div>
-              </div>
+        <!-- PART B: STUDIO BILINGUAL GLOSSARY & REAL-WORLD ARCHITECTS STRIP -->
+        <div class="space-y-4 pt-2 border-t-2 border-emerald-900/15">
+          <div class="studio-card rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Part B • Architecture &amp; Maths Language (3 mins)</span>
+              <h2 class="font-studio-serif text-3xl text-emerald-950">Architect's Studio Glossary</h2>
+              <p class="text-sm text-slate-600 mt-0.5">Tap any tile to open the bilingual studio glossary modal with SVG visual and UK / Vietnamese audio.</p>
+            </div>
+            <div class="px-4 py-2 rounded-xl bg-emerald-900 text-amber-300 text-xs font-extrabold">
+              🔊 Tap a word for EN &amp; VN audio
             </div>
           </div>
 
-          <!-- Card 2: Unit 8 Uneven Decimals -->
-          <div class="flip-perspective h-[340px]">
-            <div onclick="toggleFlip(this)" class="flip-card w-full h-full cursor-pointer">
-              <div class="flip-inner">
-                <div class="flip-face rounded-3xl bg-gradient-to-br from-amber-700 to-amber-600 text-white p-6 border-4 border-emerald-900/70 shadow-xl flex flex-col justify-between">
-                  <div class="flex items-center justify-between">
-                    <span class="px-3 py-1 rounded-full bg-emerald-950 text-amber-300 text-xs font-extrabold uppercase">Unit 8 • Decimals</span>
-                    <span class="text-xs text-amber-100 font-bold">Tap to Flip ↻</span>
-                  </div>
-                  <div class="text-center my-auto space-y-3">
-                    <div class="text-5xl font-mono-tech font-extrabold tracking-tight">15.2 − 7.65</div>
-                    <p class="text-sm text-amber-100 font-semibold">Subtract carefully using a trailing zero (15.20)!</p>
-                  </div>
-                  <div class="text-center text-xs text-amber-100 font-bold">Check by adding back!</div>
-                </div>
-                <div class="flip-face flip-back rounded-3xl bg-[#fffdf8] text-emerald-950 p-6 border-4 border-amber-600 shadow-xl flex flex-col justify-between">
-                  <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-950 text-xs font-extrabold uppercase self-start">✓ Unit 8 Answer</span>
-                  <div class="text-center my-auto space-y-3">
-                    <div class="text-6xl font-mono-tech font-extrabold text-amber-700">7.55</div>
-                    <p class="text-sm font-semibold text-slate-700">Write <strong>15.20 − 7.65 = 7.55</strong>.<br/>Inverse check: 7.55 + 7.65 = 15.20.</p>
-                  </div>
-                  <div class="text-center text-xs text-slate-500 font-bold">Tap to flip back</div>
-                </div>
-              </div>
-            </div>
+          <!-- 8 Glossy Vocab Tiles (English ONLY on face; Bilingual inside Modal!) -->
+          <div id="vocab-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+            <!-- Populated by buildVocabGrid() -->
           </div>
 
-          <!-- Card 3: Unit 2 Sequences -->
-          <div class="flip-perspective h-[340px]">
-            <div onclick="toggleFlip(this)" class="flip-card w-full h-full cursor-pointer">
-              <div class="flip-inner">
-                <div class="flip-face rounded-3xl bg-gradient-to-br from-teal-900 to-emerald-900 text-white p-6 border-4 border-amber-400/80 shadow-xl flex flex-col justify-between">
-                  <div class="flex items-center justify-between">
-                    <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase">Unit 2 • Sequences</span>
-                    <span class="text-xs text-teal-200 font-bold">Tap to Flip ↻</span>
-                  </div>
-                  <div class="text-center my-auto space-y-3">
-                    <div class="text-sm uppercase tracking-wider text-amber-300 font-extrabold">Position-to-Term Rule</div>
-                    <div class="text-6xl font-mono-tech font-extrabold">5n + 3</div>
-                    <p class="text-base font-bold text-teal-100">Find the <strong>15th term</strong>!</p>
-                  </div>
-                  <div class="text-center text-xs text-amber-200 font-bold">Substitute n = 15</div>
-                </div>
-                <div class="flip-face flip-back rounded-3xl bg-[#fffdf8] text-emerald-950 p-6 border-4 border-teal-700 shadow-xl flex flex-col justify-between">
-                  <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-950 text-xs font-extrabold uppercase self-start">✓ Unit 2 Answer</span>
-                  <div class="text-center my-auto space-y-3">
-                    <div class="text-6xl font-mono-tech font-extrabold text-teal-800">78</div>
-                    <p class="text-sm font-semibold text-slate-700"><strong>5 × 15 + 3</strong> = 75 + 3 = <strong>78</strong>.</p>
-                  </div>
-                  <div class="text-center text-xs text-slate-500 font-bold">Tap to flip back</div>
-                </div>
+          <!-- Real-World Architects Strip (100% British English!) -->
+          <div class="studio-blueprint-banner rounded-3xl p-5 sm:p-6 text-white border-2 border-amber-400/70 shadow-lg">
+            <div class="flex items-center gap-2 mb-3.5">
+              <span class="text-2xl">🌍</span>
+              <h3 class="font-studio-serif text-2xl text-amber-300">Real-World Park Architects in Hanoi</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-emerald-950/75 border border-emerald-600/60 rounded-2xl p-4">
+                <div class="text-2xl mb-1">🌳</div>
+                <h4 class="font-extrabold text-amber-200 text-base">Thong Nhat Park</h4>
+                <p class="text-xs sm:text-sm text-emerald-100 mt-1">Landscape architects measure walkways, lakes, and lawns in square metres so families have shaded paths and open sports zones.</p>
+              </div>
+              <div class="bg-emerald-950/75 border border-emerald-600/60 rounded-2xl p-4">
+                <div class="text-2xl mb-1">🏀</div>
+                <h4 class="font-extrabold text-amber-200 text-base">School Playgrounds</h4>
+                <p class="text-xs sm:text-sm text-emerald-100 mt-1">Sports courts use costly safety surfacing per m², so school planners balance rectangle courts with budget-friendly grass edges.</p>
+              </div>
+              <div class="bg-emerald-950/75 border border-emerald-600/60 rounded-2xl p-4">
+                <div class="text-2xl mb-1">💧</div>
+                <h4 class="font-extrabold text-amber-200 text-base">Eco-Drainage Ponds</h4>
+                <p class="text-xs sm:text-sm text-emerald-100 mt-1">Triangular koi ponds and rain gardens absorb Hanoi monsoon rainwater, fitting neatly into angled corners with zero wasted space.</p>
               </div>
             </div>
           </div>
@@ -445,458 +558,1114 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- STUDIO PHASE 2: BILINGUAL GLOSSARY & HANOI PARK ARCHITECTS   -->
+    <!-- TAB 2: CYCLE 1 — BLUEPRINT (3 SUB-STEPS)                     -->
     <!-- ============================================================ -->
     <section id="phase-2" class="phase-section">
-      <div class="space-y-6">
-        <div class="studio-card rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Architecture &amp; Maths Language</span>
-            <h2 class="font-studio-serif text-3xl text-emerald-950">Architect's Studio Glossary</h2>
-            <p class="text-sm text-slate-600 mt-0.5">Tap any card to open the bilingual studio glossary, diagram, and voice pronunciation.</p>
-          </div>
-          <div class="px-4 py-2 rounded-xl bg-emerald-900 text-amber-300 text-xs font-extrabold">
-            🔊 Tap a word for EN &amp; VN audio
-          </div>
-        </div>
+      <div class="space-y-5">
 
-        <!-- 8 Glossy Vocab Tiles (English ONLY on face; Bilingual inside Modal!) -->
-        <div id="vocab-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <!-- Populated by JS -->
-        </div>
-
-        <!-- Real-World Park Architects in Hanoi Strip (100% English!) -->
-        <div class="studio-blueprint-banner rounded-3xl p-6 text-white border-2 border-amber-400/70 shadow-lg">
-          <div class="flex items-center gap-2 mb-4">
-            <span class="text-2xl">🌍</span>
-            <h3 class="font-studio-serif text-2xl text-amber-300">Real-World Park Architects in Hanoi</h3>
+        <!-- Cycle 1 Sub-Step Switcher Bar -->
+        <div class="studio-card rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2 px-2">
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-900 text-amber-300 text-xs font-extrabold uppercase">Cycle 1 • 15 mins</span>
+            <span class="font-extrabold text-emerald-950 text-sm sm:text-base">📐 Blueprint &amp; Mandatory Zones</span>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-emerald-950/75 border border-emerald-600/60 rounded-2xl p-4">
-              <div class="text-2xl mb-1">🌳</div>
-              <h4 class="font-extrabold text-amber-200 text-base">Thong Nhat Park</h4>
-              <p class="text-xs sm:text-sm text-emerald-100 mt-1">Landscape architects measure walkways, lakes, and lawns in square metres so families have shaded paths and open sports zones.</p>
-            </div>
-            <div class="bg-emerald-950/75 border border-emerald-600/60 rounded-2xl p-4">
-              <div class="text-2xl mb-1">🏀</div>
-              <h4 class="font-extrabold text-amber-200 text-base">School Playgrounds</h4>
-              <p class="text-xs sm:text-sm text-emerald-100 mt-1">Sports courts use costly safety surfacing per m², so school planners balance rectangle courts with budget-friendly grass edges.</p>
-            </div>
-            <div class="bg-emerald-950/75 border border-emerald-600/60 rounded-2xl p-4">
-              <div class="text-2xl mb-1">💧</div>
-              <h4 class="font-extrabold text-amber-200 text-base">Eco-Drainage Ponds</h4>
-              <p class="text-xs sm:text-sm text-emerald-100 mt-1">Triangular koi ponds and rain gardens absorb Hanoi monsoon rainwater, fitting neatly into angled corners with zero wasted space.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================================ -->
-    <!-- STUDIO PHASE 3: INTERACTIVE 12 x 10 ECO-PARK SANDBOX         -->
-    <!-- ============================================================ -->
-    <section id="phase-3" class="phase-section">
-      <div id="sandbox-wrapper" class="studio-card rounded-3xl p-4 sm:p-6 space-y-4">
-
-        <!-- Sandbox Header & Fullscreen Toggle -->
-        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b-2 border-emerald-900/15">
-          <div>
-            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Interactive Drafting Table • 1 Square = 1 m²</span>
-            <h2 class="font-studio-serif text-2xl sm:text-3xl text-emerald-950">12 m × 10 m (120 m²) Eco-Park Blueprint Sandbox</h2>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <button onclick="loadSamplePark()" class="px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs sm:text-sm font-extrabold shadow transition">
-              ✨ Load Sample Valid 120 m² Park
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setCycleStep(1, 0)" id="c1-btn-0" class="c1-step-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold border-2 transition">
+              1. Mini-Teach (3m)
             </button>
-            <button onclick="clearSandbox()" class="px-3.5 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-900 border border-rose-300 text-xs sm:text-sm font-bold transition">
-              🗑️ Clear Blueprint
+            <button onclick="setCycleStep(1, 1)" id="c1-btn-1" class="c1-step-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold border-2 transition">
+              2. Timed Task 1 (10m)
             </button>
-            <button id="btn-fullscreen-sandbox" onclick="toggleSandboxFullscreen()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-emerald-950 text-xs sm:text-sm font-extrabold shadow transition">
-              ⛶ Full Screen Sandbox
+            <button onclick="setCycleStep(1, 2)" id="c1-btn-2" class="c1-step-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold border-2 transition">
+              3. Pit-Stop Check 1 (2m)
             </button>
           </div>
         </div>
 
-        <!-- LIVE TELEMETRY BAR -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 bg-emerald-950 text-white rounded-2xl p-3.5 border-2 border-amber-400/70">
-          <!-- Used Area & Budget Meters -->
-          <div class="lg:col-span-4 grid grid-cols-2 gap-2.5">
-            <div class="bg-emerald-900/90 rounded-xl p-2.5 border border-emerald-700">
-              <div class="text-[11px] uppercase tracking-wider text-emerald-200 font-bold">Used Area</div>
-              <div class="flex items-baseline gap-1 mt-0.5">
-                <span id="tele-area" class="font-mono-tech text-2xl font-extrabold text-white">0</span>
-                <span class="text-xs text-emerald-300 font-bold">/ 120 m²</span>
-              </div>
-              <div class="w-full h-2 bg-emerald-950 rounded-full mt-1.5 overflow-hidden">
-                <div id="tele-area-bar" class="h-full bg-emerald-400 transition-all duration-300" style="width: 0%;"></div>
-              </div>
-            </div>
-            <div class="bg-emerald-900/90 rounded-xl p-2.5 border border-emerald-700">
-              <div class="text-[11px] uppercase tracking-wider text-amber-200 font-bold">Total Budget</div>
-              <div class="flex items-baseline gap-1 mt-0.5">
-                <span id="tele-cost" class="font-mono-tech text-2xl font-extrabold text-amber-300">0</span>
-                <span class="text-xs text-amber-200 font-bold">/ 600 cr</span>
-              </div>
-              <div class="w-full h-2 bg-emerald-950 rounded-full mt-1.5 overflow-hidden">
-                <div id="tele-cost-bar" class="h-full bg-amber-400 transition-all duration-300" style="width: 0%;"></div>
-              </div>
-            </div>
-          </div>
+        <!-- SUB-STEP 2A: MINI-TEACH 1 (120 m² BLUEPRINT SANDBOX + ZERO-GAP TRAP CALLOUT) -->
+        <div id="c1-panel-0" class="cycle-panel active">
+          <div id="c1-sandbox-wrap" class="studio-card rounded-3xl p-4 sm:p-6 space-y-4">
 
-          <!-- 4 Live Constraint Checklights -->
-          <div class="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <div id="chk-sports" class="rounded-xl p-2 border bg-rose-950/70 border-rose-500/70 flex flex-col justify-between">
-              <div class="flex items-center justify-between text-[11px] font-extrabold">
-                <span>1. Sports Court</span>
-                <span class="chk-icon">🔴</span>
+            <!-- Sandbox Header & Full Screen Toggle -->
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b-2 border-emerald-900/15">
+              <div>
+                <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Cycle 1 Mini-Teach • Interactive Drafting Table • 1 Square = 1 m²</span>
+                <h2 class="font-studio-serif text-2xl sm:text-3xl text-emerald-950">12 m × 10 m (120 m²) Eco-Park Blueprint Sandbox</h2>
               </div>
-              <div class="text-xs font-mono-tech text-rose-200 mt-1">Rect ≥ 24 m² (<span class="chk-val">0</span>)</div>
-            </div>
-            <div id="chk-pond" class="rounded-xl p-2 border bg-rose-950/70 border-rose-500/70 flex flex-col justify-between">
-              <div class="flex items-center justify-between text-[11px] font-extrabold">
-                <span>2. Koi Pond △</span>
-                <span class="chk-icon">🔴</span>
+              <div class="flex flex-wrap gap-2">
+                <button onclick="loadSamplePark()" class="px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs sm:text-sm font-extrabold shadow transition">
+                  ✨ Load Sample Valid 120 m² Park
+                </button>
+                <button onclick="clearSandbox()" class="px-3.5 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-900 border border-rose-300 text-xs sm:text-sm font-bold transition">
+                  🗑️ Clear Grid
+                </button>
+                <button id="btn-fs-c1" onclick="toggleFullScreenStage('c1-sandbox-wrap', 'btn-fs-c1', '⛶ Full Screen')" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-emerald-950 text-xs sm:text-sm font-extrabold shadow transition">
+                  ⛶ Full Screen
+                </button>
               </div>
-              <div class="text-xs font-mono-tech text-rose-200 mt-1">△ ≥ 15 m² (<span class="chk-val">0</span>)</div>
-            </div>
-            <div id="chk-flower" class="rounded-xl p-2 border bg-rose-950/70 border-rose-500/70 flex flex-col justify-between">
-              <div class="flex items-center justify-between text-[11px] font-extrabold">
-                <span>3. Flowerbed △</span>
-                <span class="chk-icon">🔴</span>
-              </div>
-              <div class="text-xs font-mono-tech text-rose-200 mt-1">△ ≥ 12 m² (<span class="chk-val">0</span>)</div>
-            </div>
-            <div id="chk-compound" class="rounded-xl p-2 border bg-rose-950/70 border-rose-500/70 flex flex-col justify-between">
-              <div class="flex items-center justify-between text-[11px] font-extrabold">
-                <span>4. Compound &amp; ≤600</span>
-                <span class="chk-icon">🔴</span>
-              </div>
-              <div class="text-xs font-mono-tech text-rose-200 mt-1">≥25 m² (<span class="chk-val">0</span>)</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- MAIN SANDBOX BODY: LEFT CONTROLS + RIGHT SVG BLUEPRINT -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-
-          <!-- Zone Builder Controls -->
-          <div class="lg:col-span-4 space-y-3 bg-[#f5efe2] border-2 border-amber-900/15 rounded-2xl p-4">
-            <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-950">1. Choose Zone Tool</h3>
-            <div class="grid grid-cols-1 gap-1.5" id="zone-tool-buttons">
-              <button onclick="selectTool('sports')" data-tool="sports" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
-                <span>🏀 Sports Court (Rectangle)</span>
-                <span class="font-mono-tech">8 cr/m²</span>
-              </button>
-              <button onclick="selectTool('pond')" data-tool="pond" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
-                <span>🐟 Koi Pond (Right-Angled △)</span>
-                <span class="font-mono-tech">6 cr/m²</span>
-              </button>
-              <button onclick="selectTool('flower')" data-tool="flower" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
-                <span>🌼 Flowerbed (Right-Angled △)</span>
-                <span class="font-mono-tech">4 cr/m²</span>
-              </button>
-              <button onclick="selectTool('path')" data-tool="path" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
-                <span>🪨 Stone Path (Rectangle)</span>
-                <span class="font-mono-tech">5 cr/m²</span>
-              </button>
-              <button onclick="selectTool('grass-rect')" data-tool="grass-rect" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
-                <span>🌱 Grass Lawn (Rectangle)</span>
-                <span class="font-mono-tech">3 cr/m²</span>
-              </button>
-              <button onclick="selectTool('grass-tri')" data-tool="grass-tri" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
-                <span>🌿 Grass Lawn (Right-Angled △)</span>
-                <span class="font-mono-tech">3 cr/m²</span>
-              </button>
             </div>
 
-            <div class="pt-2 border-t border-amber-900/15 space-y-2.5">
-              <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-950">2. Set Position &amp; Dimensions</h3>
-              <div class="grid grid-cols-2 gap-2 text-xs font-bold">
-                <label class="bg-white rounded-xl p-2 border border-stone-300">
-                  Start X (0–11): <span id="lbl-x" class="font-mono-tech text-emerald-800">0</span> m
-                  <input id="inp-x" type="range" min="0" max="11" value="0" oninput="updatePreviewInputs()" class="w-full accent-emerald-700 mt-1" />
-                </label>
-                <label class="bg-white rounded-xl p-2 border border-stone-300">
-                  Start Y (0–9): <span id="lbl-y" class="font-mono-tech text-emerald-800">0</span> m
-                  <input id="inp-y" type="range" min="0" max="9" value="0" oninput="updatePreviewInputs()" class="w-full accent-emerald-700 mt-1" />
-                </label>
-                <label class="bg-white rounded-xl p-2 border border-stone-300">
-                  Base b (1–12): <span id="lbl-b" class="font-mono-tech text-emerald-800">6</span> m
-                  <input id="inp-b" type="range" min="1" max="12" value="6" oninput="updatePreviewInputs()" class="w-full accent-amber-600 mt-1" />
-                </label>
-                <label class="bg-white rounded-xl p-2 border border-stone-300">
-                  Height h (1–10): <span id="lbl-h" class="font-mono-tech text-emerald-800">4</span> m
-                  <input id="inp-h" type="range" min="1" max="10" value="4" oninput="updatePreviewInputs()" class="w-full accent-amber-600 mt-1" />
-                </label>
+            <!-- ZERO-GAP DIAGONAL TRAP CALLOUT -->
+            <div class="bg-amber-50 border-2 border-amber-500 rounded-2xl p-3.5 flex flex-col md:flex-row items-center gap-4">
+              <svg viewBox="0 0 198 78" class="w-48 h-auto shrink-0 bg-white rounded-xl border border-amber-300 p-1">
+                <rect x="14" y="10" width="90" height="54" fill="rgba(16,185,129,0.16)" stroke="#064e3b" stroke-width="1.5" stroke-dasharray="3 2"/>
+                <polygon points="14,10 14,64 104,64" fill="rgba(6,182,212,0.45)" stroke="#0e7490" stroke-width="2"/>
+                <polygon points="14,10 104,10 104,64" fill="rgba(245,158,11,0.4)" stroke="#b45309" stroke-width="2"/>
+                <rect x="14" y="54" width="10" height="10" fill="none" stroke="#064e3b" stroke-width="2"/>
+                <line x1="14" y1="10" x2="104" y2="64" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5 3"/>
+                <text x="58" y="74" text-anchor="middle" font-size="9" font-weight="800" fill="#064e3b">base b (grid)</text>
+                <text x="112" y="34" font-size="9" font-weight="800" fill="#dc2626">NEVER ×</text>
+                <text x="112" y="46" font-size="9" font-weight="800" fill="#dc2626">sloping side!</text>
+              </svg>
+              <div class="text-xs sm:text-sm text-amber-950 space-y-1">
+                <div class="font-extrabold text-rose-700 uppercase tracking-wide">⚠️ Zero-Gap &amp; Diagonal Trap Alert!</div>
+                <p class="font-semibold leading-snug">
+                  1. Every right-angled triangle <strong>MUST sit on two 90° grid lines</strong> (base <strong>b</strong> and perpendicular height <strong>h</strong>) — <strong>NEVER multiply by the sloping side!</strong><br/>
+                  2. Pair two right-angled triangles back-to-back along one shared diagonal inside a rectangle to leave <strong>ZERO awkward gaps</strong>!
+                </p>
               </div>
+            </div>
 
-              <!-- Triangle Corner Selector (shown when a triangle tool is active) -->
-              <div id="tri-corner-wrap" class="hidden bg-white rounded-xl p-2.5 border border-stone-300">
-                <div class="text-xs font-bold text-slate-700 mb-1.5">Right Angle (90°) Corner:</div>
-                <div class="grid grid-cols-4 gap-1.5">
-                  <button onclick="setTriCorner('TL')" data-corner="TL" class="corner-btn py-1 rounded-lg border text-xs font-extrabold">⌜ TL</button>
-                  <button onclick="setTriCorner('TR')" data-corner="TR" class="corner-btn py-1 rounded-lg border text-xs font-extrabold">⌝ TR</button>
-                  <button onclick="setTriCorner('BL')" data-corner="BL" class="corner-btn py-1 rounded-lg border text-xs font-extrabold">⌞ BL</button>
-                  <button onclick="setTriCorner('BR')" data-corner="BR" class="corner-btn py-1 rounded-lg border text-xs font-extrabold">⌟ BR</button>
+            <!-- LIVE TELEMETRY BAR -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 bg-emerald-950 text-white rounded-2xl p-3.5 border-2 border-amber-400/70">
+              <div class="lg:col-span-4 grid grid-cols-2 gap-2.5">
+                <div class="bg-emerald-900/90 rounded-xl p-2.5 border border-emerald-700">
+                  <div class="text-[11px] uppercase tracking-wider text-emerald-200 font-bold">Used Area</div>
+                  <div class="flex items-baseline gap-1 mt-0.5">
+                    <span id="tele-area" class="font-mono-tech text-2xl font-extrabold text-white">0</span>
+                    <span class="text-xs text-emerald-300 font-bold">/ 120 m²</span>
+                  </div>
+                  <div class="w-full h-2 bg-emerald-950 rounded-full mt-1.5 overflow-hidden">
+                    <div id="tele-area-bar" class="h-full bg-emerald-400 transition-all duration-300" style="width: 0%;"></div>
+                  </div>
+                </div>
+                <div class="bg-emerald-900/90 rounded-xl p-2.5 border border-emerald-700">
+                  <div class="text-[11px] uppercase tracking-wider text-amber-200 font-bold">Total Budget</div>
+                  <div class="flex items-baseline gap-1 mt-0.5">
+                    <span id="tele-cost" class="font-mono-tech text-2xl font-extrabold text-amber-300">0</span>
+                    <span class="text-xs text-amber-200 font-bold">/ 600 cr</span>
+                  </div>
+                  <div class="w-full h-2 bg-emerald-950 rounded-full mt-1.5 overflow-hidden">
+                    <div id="tele-cost-bar" class="h-full bg-amber-400 transition-all duration-300" style="width: 0%;"></div>
+                  </div>
                 </div>
               </div>
 
-              <!-- Compound Zone Checkbox -->
-              <label class="flex items-center gap-2 bg-emerald-50 border border-emerald-300 rounded-xl px-3 py-2 text-xs font-bold text-emerald-950 cursor-pointer">
-                <input id="inp-compound" type="checkbox" class="w-4 h-4 accent-emerald-700" />
-                <span>Tag as part of Compound Picnic &amp; Play Zone</span>
-              </label>
-
-              <!-- Live Formula Preview -->
-              <div id="formula-preview" class="bg-emerald-950 text-amber-200 rounded-xl px-3 py-2 text-xs font-mono-tech font-bold text-center">
-                6 × 4 = 24 m² • 24 × 8 = 192 credits
+              <!-- 4 Live Constraint Checklights -->
+              <div class="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div id="chk-sports" class="rounded-xl p-2 border bg-rose-950/70 border-rose-500/70 flex flex-col justify-between">
+                  <div class="flex items-center justify-between text-[11px] font-extrabold">
+                    <span>1. Sports Court</span>
+                    <span class="chk-icon">🔴</span>
+                  </div>
+                  <div class="text-xs font-mono-tech text-rose-200 mt-1">Rect ≥ 24 m² (<span class="chk-val">0</span>)</div>
+                </div>
+                <div id="chk-pond" class="rounded-xl p-2 border bg-rose-950/70 border-rose-500/70 flex flex-col justify-between">
+                  <div class="flex items-center justify-between text-[11px] font-extrabold">
+                    <span>2. Koi Pond △</span>
+                    <span class="chk-icon">🔴</span>
+                  </div>
+                  <div class="text-xs font-mono-tech text-rose-200 mt-1">△ ≥ 15 m² (<span class="chk-val">0</span>)</div>
+                </div>
+                <div id="chk-flower" class="rounded-xl p-2 border bg-rose-950/70 border-rose-500/70 flex flex-col justify-between">
+                  <div class="flex items-center justify-between text-[11px] font-extrabold">
+                    <span>3. Flowerbed △</span>
+                    <span class="chk-icon">🔴</span>
+                  </div>
+                  <div class="text-xs font-mono-tech text-rose-200 mt-1">△ ≥ 12 m² (<span class="chk-val">0</span>)</div>
+                </div>
+                <div id="chk-compound" class="rounded-xl p-2 border bg-rose-950/70 border-rose-500/70 flex flex-col justify-between">
+                  <div class="flex items-center justify-between text-[11px] font-extrabold">
+                    <span>4. Compound &amp; ≤600</span>
+                    <span class="chk-icon">🔴</span>
+                  </div>
+                  <div class="text-xs font-mono-tech text-rose-200 mt-1">≥25 m² (<span class="chk-val">0</span>)</div>
+                </div>
               </div>
-
-              <button onclick="addZoneToSandbox()" class="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-extrabold text-sm shadow transition">
-                ➕ Place Zone on Blueprint
-              </button>
-              <p class="text-[11px] text-slate-600 text-center">Tip: Click any grid square to set Start (X, Y), or click a placed zone in the list to remove it.</p>
             </div>
-          </div>
 
-          <!-- Interactive 12 x 10 Blueprint SVG Canvas + Zone Ledger -->
-          <div class="lg:col-span-8 space-y-3">
-            <div class="bg-[#062e26] p-3 sm:p-4 rounded-2xl border-4 border-amber-500/70 shadow-inner">
-              <div class="flex items-center justify-between text-xs text-amber-200 font-mono-tech mb-2 px-1">
-                <span>BLUEPRINT GRID: 12 m × 10 m = 120 m²</span>
-                <span>SCALE: 1 SQUARE = 1 m² • N ↑</span>
-              </div>
-              <svg id="park-svg" viewBox="0 0 660 560" class="w-full h-auto bg-[#0b3d33] rounded-xl cursor-crosshair select-none" aria-label="12 by 10 Eco-Park Blueprint Grid"></svg>
-            </div>
+            <!-- MAIN SANDBOX BODY: LEFT CONTROLS + RIGHT SVG BLUEPRINT -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+              <div class="lg:col-span-4 space-y-3 bg-[#f5efe2] border-2 border-amber-900/15 rounded-2xl p-4">
+                <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-950">1. Choose Zone Stamp Tool</h3>
+                <div class="grid grid-cols-1 gap-1.5" id="zone-tool-buttons">
+                  <button onclick="selectTool('sports')" data-tool="sports" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
+                    <span>🏀 Sports Court (Rectangle)</span>
+                    <span class="font-mono-tech">8 cr/m²</span>
+                  </button>
+                  <button onclick="selectTool('pond')" data-tool="pond" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
+                    <span>🐟 Koi Pond (Right-Angled △)</span>
+                    <span class="font-mono-tech">6 cr/m²</span>
+                  </button>
+                  <button onclick="selectTool('flower')" data-tool="flower" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
+                    <span>🌼 Flowerbed (Right-Angled △)</span>
+                    <span class="font-mono-tech">4 cr/m²</span>
+                  </button>
+                  <button onclick="selectTool('path')" data-tool="path" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
+                    <span>🪨 Stone Path (Rectangle)</span>
+                    <span class="font-mono-tech">5 cr/m²</span>
+                  </button>
+                  <button onclick="selectTool('grass-rect')" data-tool="grass-rect" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
+                    <span>🌱 Grass Lawn (Rectangle)</span>
+                    <span class="font-mono-tech">3 cr/m²</span>
+                  </button>
+                  <button onclick="selectTool('grass-tri')" data-tool="grass-tri" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
+                    <span>🌿 Grass Lawn (Right-Angled △)</span>
+                    <span class="font-mono-tech">3 cr/m²</span>
+                  </button>
+                </div>
 
-            <!-- Live Placed Zones Table -->
-            <div class="bg-white rounded-2xl border-2 border-stone-200 p-3">
-              <div class="flex items-center justify-between mb-2">
-                <h4 class="text-xs font-extrabold uppercase tracking-wider text-emerald-950">Placed Zones Calculation Ledger</h4>
-                <span id="zone-count-pill" class="text-xs font-mono-tech font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900">0 zones</span>
+                <div class="pt-2 border-t border-amber-900/15 space-y-2.5">
+                  <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-950">2. Set Position &amp; Dimensions</h3>
+                  <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+                    <label class="bg-white rounded-xl p-2 border border-stone-300">
+                      Start X (0–11): <span id="lbl-x" class="font-mono-tech text-emerald-800">0</span> m
+                      <input id="inp-x" type="range" min="0" max="11" value="0" oninput="updatePreviewInputs()" class="w-full accent-emerald-700 mt-1" />
+                    </label>
+                    <label class="bg-white rounded-xl p-2 border border-stone-300">
+                      Start Y (0–9): <span id="lbl-y" class="font-mono-tech text-emerald-800">0</span> m
+                      <input id="inp-y" type="range" min="0" max="9" value="0" oninput="updatePreviewInputs()" class="w-full accent-emerald-700 mt-1" />
+                    </label>
+                    <label class="bg-white rounded-xl p-2 border border-stone-300">
+                      Base b (1–12): <span id="lbl-b" class="font-mono-tech text-emerald-800">6</span> m
+                      <input id="inp-b" type="range" min="1" max="12" value="6" oninput="updatePreviewInputs()" class="w-full accent-amber-600 mt-1" />
+                    </label>
+                    <label class="bg-white rounded-xl p-2 border border-stone-300">
+                      Height h (1–10): <span id="lbl-h" class="font-mono-tech text-emerald-800">4</span> m
+                      <input id="inp-h" type="range" min="1" max="10" value="4" oninput="updatePreviewInputs()" class="w-full accent-amber-600 mt-1" />
+                    </label>
+                  </div>
+
+                  <div id="tri-corner-wrap" class="hidden bg-white rounded-xl p-2.5 border border-stone-300">
+                    <div class="text-xs font-bold text-slate-700 mb-1.5">Right Angle (90°) Corner:</div>
+                    <div class="grid grid-cols-4 gap-1.5">
+                      <button onclick="setTriCorner('TL')" data-corner="TL" class="corner-btn py-1 rounded-lg border text-xs font-extrabold">⌜ TL</button>
+                      <button onclick="setTriCorner('TR')" data-corner="TR" class="corner-btn py-1 rounded-lg border text-xs font-extrabold">⌝ TR</button>
+                      <button onclick="setTriCorner('BL')" data-corner="BL" class="corner-btn py-1 rounded-lg border text-xs font-extrabold">⌞ BL</button>
+                      <button onclick="setTriCorner('BR')" data-corner="BR" class="corner-btn py-1 rounded-lg border text-xs font-extrabold">⌟ BR</button>
+                    </div>
+                  </div>
+
+                  <label class="flex items-center gap-2 bg-emerald-50 border border-emerald-300 rounded-xl px-3 py-2 text-xs font-bold text-emerald-950 cursor-pointer">
+                    <input id="inp-compound" type="checkbox" class="w-4 h-4 accent-emerald-700" />
+                    <span>Tag as part of Compound Picnic &amp; Play Zone</span>
+                  </label>
+
+                  <div id="formula-preview" class="bg-emerald-950 text-amber-200 rounded-xl px-3 py-2 text-xs font-mono-tech font-bold text-center">
+                    6 × 4 = 24 m² • 24 × 8 = 192 credits
+                  </div>
+
+                  <button onclick="addZoneToSandbox()" class="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-extrabold text-sm shadow transition">
+                    ➕ Place Zone on Blueprint
+                  </button>
+                  <p class="text-[11px] text-slate-600 text-center">Tip: Click any grid square to set Start (X, Y), or click ✕ in the list to remove a zone.</p>
+                </div>
               </div>
-              <div id="placed-zones-list" class="space-y-1.5 max-h-48 overflow-y-auto text-xs">
-                <p class="text-slate-500 italic py-2 text-center">No zones placed yet. Build your own or tap "Load Sample Valid 120 m² Park"!</p>
+
+              <div class="lg:col-span-8 space-y-3">
+                <div class="bg-[#062e26] p-3 sm:p-4 rounded-2xl border-4 border-amber-500/70 shadow-inner">
+                  <div class="flex items-center justify-between text-xs text-amber-200 font-mono-tech mb-2 px-1">
+                    <span>BLUEPRINT GRID: 12 m × 10 m = 120 m²</span>
+                    <span>SCALE: 1 SQUARE = 1 m² • N ↑</span>
+                  </div>
+                  <svg id="park-svg" viewBox="0 0 660 560" class="w-full h-auto bg-[#0b3d33] rounded-xl cursor-crosshair select-none" aria-label="12 by 10 Eco-Park Blueprint Grid"></svg>
+                </div>
+
+                <div class="bg-white rounded-2xl border-2 border-stone-200 p-3">
+                  <div class="flex items-center justify-between mb-2">
+                    <h4 class="text-xs font-extrabold uppercase tracking-wider text-emerald-950">Placed Zones Calculation Ledger</h4>
+                    <span id="zone-count-pill" class="text-xs font-mono-tech font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900">0 zones</span>
+                  </div>
+                  <div id="placed-zones-list" class="space-y-1.5 max-h-44 overflow-y-auto text-xs">
+                    <p class="text-slate-500 italic py-2 text-center">No zones placed yet. Build your own or tap "Load Sample Valid 120 m² Park"!</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- SUB-STEP 2B: TIMED TASK 1 (10:00 COUNTDOWN + 4 LIVE SPRINT-1 ROLE JOB CARDS) -->
+        <div id="c1-panel-1" class="cycle-panel">
+          <div class="space-y-5">
+            <!-- Giant Sprint 1 Countdown Timer -->
+            <div class="studio-blueprint-banner rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-400/80 shadow-xl">
+              <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+                <div class="space-y-2 text-center lg:text-left max-w-2xl">
+                  <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase tracking-wider">Cycle 1 • Timed Studio Task</span>
+                  <h2 class="font-studio-serif text-3xl sm:text-4xl text-white">Task 1: Draft Your 120 m² Blueprint</h2>
+                  <p class="text-emerald-100 text-sm sm:text-base font-medium">
+                    Every team member works simultaneously on Page 2 (<strong>12 × 10</strong> grid). Cover all 120 m² with zero gaps and mark every 90° corner!
+                  </p>
+                </div>
+                <div class="flex flex-col items-center gap-3 shrink-0">
+                  <div id="c1-clock" class="font-mono-tech text-6xl sm:text-7xl font-extrabold text-amber-300 bg-emerald-950/90 px-8 py-3 rounded-2xl border-2 border-amber-400/70 shadow-inner">
+                    10:00
+                  </div>
+                  <div class="flex gap-2">
+                    <button id="c1-timer-btn" onclick="toggleCycleTimer(1)" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-sm shadow transition">▶ Start 10m</button>
+                    <button onclick="resetCycleTimer(1)" class="px-4 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-sm transition">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 Live Sprint-1 Role Job Cards -->
+            <div class="studio-card rounded-3xl p-5">
+              <h3 class="text-lg font-extrabold text-emerald-950 mb-3.5">👷‍♂️ Your Exact Job During Task 1 (Blueprint)</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="rounded-2xl bg-emerald-50 border-2 border-emerald-400 p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-800 text-amber-300 text-[11px] font-extrabold uppercase">Role 1</span>
+                    <span class="text-2xl">📐</span>
+                  </div>
+                  <div class="font-extrabold text-emerald-950 text-base">Chief Architect</div>
+                  <p class="text-xs sm:text-sm font-semibold text-emerald-900 leading-snug">
+                    Rule all 4 mandatory zones onto Page 2 (12 × 10 grid) and mark every 90° right-angle box.
+                  </p>
+                </div>
+                <div class="rounded-2xl bg-amber-50 border-2 border-amber-400 p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-amber-600 text-white text-[11px] font-extrabold uppercase">Role 2</span>
+                    <span class="text-2xl">🧮</span>
+                  </div>
+                  <div class="font-extrabold text-amber-950 text-base">Area Accountant</div>
+                  <p class="text-xs sm:text-sm font-semibold text-amber-900 leading-snug">
+                    Count &amp; check each zone's <strong>b × h</strong> and <strong>(b × h) ÷ 2</strong> so total area = exactly <strong>120 m²</strong>.
+                  </p>
+                </div>
+                <div class="rounded-2xl bg-teal-50 border-2 border-teal-400 p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-teal-800 text-amber-200 text-[11px] font-extrabold uppercase">Role 3</span>
+                    <span class="text-2xl">💰</span>
+                  </div>
+                  <div class="font-extrabold text-teal-950 text-base">Budget Director</div>
+                  <p class="text-xs sm:text-sm font-semibold text-teal-900 leading-snug">
+                    Track high-cost zones (Sports Court <strong>8 cr/m²</strong>, Koi Pond <strong>6 cr/m²</strong>) so the layout stays realistic.
+                  </p>
+                </div>
+                <div class="rounded-2xl bg-rose-50 border-2 border-rose-300 p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-rose-700 text-white text-[11px] font-extrabold uppercase">Role 4</span>
+                    <span class="text-2xl">✍️</span>
+                  </div>
+                  <div class="font-extrabold text-rose-950 text-base">Lead Reasoning Writer</div>
+                  <p class="text-xs sm:text-sm font-semibold text-rose-900 leading-snug">
+                    Label every zone's name, base, perpendicular height, and area in <strong>m²</strong> cleanly on the blueprint.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Collapsible Bonus Client Twist -->
+              <div class="mt-4 pt-3 border-t border-stone-200">
+                <button onclick="toggleTwist('c1-twist')" class="px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 border-2 border-amber-400 text-amber-950 text-xs sm:text-sm font-extrabold transition">
+                  ⚡ Finished Early? Bonus Client Twist ▾
+                </button>
+                <div id="c1-twist" class="hidden mt-3 p-4 rounded-2xl bg-emerald-950 text-amber-100 border-2 border-amber-400 text-sm font-semibold">
+                  🌟 <strong>Bonus Client Twist:</strong> Can your team combine two different right-angled triangles side-by-side to form a compound garden zone of exactly <strong>27 m²</strong>?
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-STEP 2C: PIT-STOP REVIEW 1 (INDIVIDUAL WHITEBOARD CHECK) -->
+        <div id="c1-panel-2" class="cycle-panel">
+          <div class="space-y-5">
+            <!-- FREEZE & MINI-WHITEBOARDS UP BANNER -->
+            <div class="rounded-3xl bg-gradient-to-r from-rose-700 via-rose-600 to-amber-600 text-white p-5 border-4 border-amber-300 shadow-xl flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <span class="text-4xl">🛑</span>
+                <div>
+                  <div class="text-xs font-extrabold uppercase tracking-widest text-amber-200">Cycle 1 Pit-Stop • Individual Accountability</div>
+                  <h2 class="font-studio-serif text-2xl sm:text-4xl">FREEZE &amp; MINI-WHITEBOARDS UP!</h2>
+                </div>
+              </div>
+              <span class="px-4 py-1.5 rounded-full bg-white text-rose-800 font-extrabold text-xs sm:text-sm shadow">Every pupil answers SOLO!</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              <!-- Question & Model Proof -->
+              <div class="lg:col-span-7 studio-card rounded-3xl p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-cyan-100 text-cyan-950 text-xs font-extrabold uppercase">Right-Angled Triangle Check</span>
+                  <span class="text-xs font-bold text-slate-500">Fresh Numbers</span>
+                </div>
+                <p class="text-lg sm:text-xl font-extrabold text-emerald-950 leading-snug">
+                  A team draws a right-angled Koi Pond with base <span class="text-cyan-700">8 m</span>, perpendicular height <span class="text-cyan-700">5 m</span>, and slanted edge <span class="text-rose-600">9.4 m</span>. Write its <strong>EXACT area</strong> on YOUR OWN whiteboard!
+                </p>
+
+                <!-- Clear SVG Diagram -->
+                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-3 flex justify-center">
+                  <svg viewBox="0 0 320 140" class="w-72 h-32">
+                    <polygon points="55,112 245,112 55,24" fill="rgba(6,182,212,0.35)" stroke="#0e7490" stroke-width="3"/>
+                    <rect x="55" y="96" width="16" height="16" fill="none" stroke="#064e3b" stroke-width="2.5"/>
+                    <text x="150" y="132" text-anchor="middle" font-size="15" font-weight="800" fill="#064e3b">Base = 8 m</text>
+                    <text x="42" y="72" text-anchor="end" font-size="14" font-weight="800" fill="#064e3b">5 m</text>
+                    <text x="172" y="58" font-size="14" font-weight="800" fill="#be123c" transform="rotate(25 172 58)">Slanted = 9.4 m</text>
+                  </svg>
+                </div>
+
+                <button onclick="revealPitStop('ps1-proof')" class="w-full py-3 rounded-2xl bg-emerald-800 hover:bg-emerald-700 text-white font-extrabold text-base shadow transition">
+                  👁️ Reveal Model Proof
+                </button>
+
+                <div id="ps1-proof" class="hidden rounded-2xl bg-emerald-100 border-2 border-emerald-600 p-4 space-y-1">
+                  <div class="font-mono-tech text-3xl font-extrabold text-emerald-900">20 m²</div>
+                  <p class="text-sm font-bold text-emerald-950">
+                    Proof: <strong>(8 × 5) ÷ 2 = 40 ÷ 2 = 20 m²</strong>. Never multiply by the 9.4 m sloping side!
+                  </p>
+                </div>
+              </div>
+
+              <!-- Table Gatekeeper Checklist -->
+              <div class="lg:col-span-5 studio-card rounded-3xl p-6 flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                  <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Table Gatekeeper Check</span>
+                  <h3 class="font-studio-serif text-2xl text-emerald-950">Ready for Cycle 2?</h3>
+                  <p class="text-xs text-slate-600 font-semibold">Tick both gatekeeper checks before moving to Budget Optimisation:</p>
+                  <label class="flex items-start gap-3 p-3.5 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
+                    <input type="checkbox" onchange="playTone(620,0.08,'triangle',0.08)" class="mt-0.5 w-5 h-5 accent-emerald-700" />
+                    <span class="text-sm font-bold text-emerald-950">Every triangle has a 90° corner on grid lines</span>
+                  </label>
+                  <label class="flex items-start gap-3 p-3.5 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
+                    <input type="checkbox" onchange="playTone(620,0.08,'triangle',0.08)" class="mt-0.5 w-5 h-5 accent-emerald-700" />
+                    <span class="text-sm font-bold text-emerald-950">All zones add up to exactly 120 m² (zero gaps!)</span>
+                  </label>
+                </div>
+                <button onclick="goPhase(3)" class="w-full py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-emerald-950 font-extrabold text-base shadow-lg transition">
+                  Proceed to Cycle 2: Budget →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
     <!-- ============================================================ -->
-    <!-- STUDIO PHASE 4: LIVE 3-SPRINT TEAM CHALLENGE MISSION BOARD   -->
+    <!-- TAB 3: CYCLE 2 — BUDGET (3 SUB-STEPS)                        -->
     <!-- ============================================================ -->
-    <section id="phase-4" class="phase-section">
-      <div class="space-y-6">
-        <!-- Giant Built-In Sprint Countdown Timer -->
-        <div class="studio-blueprint-banner rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-400/80 shadow-xl">
-          <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
-            <div class="space-y-2 text-center lg:text-left">
-              <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase tracking-wider">Live Studio Sprint Timer</span>
-              <h2 id="sprint-title" class="font-studio-serif text-3xl sm:text-4xl text-white">Sprint 1: Blueprint &amp; Mandatory Zones</h2>
-              <p id="sprint-goal" class="text-emerald-100 text-sm sm:text-base font-medium">Draw all 4 mandatory zones cleanly with a ruler on Page 2 (12 × 10 grid) and mark every 90° right angle!</p>
-            </div>
-            <div class="flex flex-col items-center gap-3">
-              <div id="sprint-clock" class="font-mono-tech text-6xl sm:text-7xl font-extrabold text-amber-300 bg-emerald-950/90 px-7 py-3 rounded-2xl border-2 border-amber-400/70 shadow-inner">
-                10:00
+    <section id="phase-3" class="phase-section">
+      <div class="space-y-5">
+
+        <!-- Cycle 2 Sub-Step Switcher Bar -->
+        <div class="studio-card rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2 px-2">
+            <span class="px-2.5 py-1 rounded-lg bg-amber-600 text-white text-xs font-extrabold uppercase">Cycle 2 • 14 mins</span>
+            <span class="font-extrabold text-emerald-950 text-sm sm:text-base">💰 Budget Costing &amp; Optimisation</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setCycleStep(2, 0)" id="c2-btn-0" class="c2-step-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold border-2 transition">
+              1. Mini-Teach (3m)
+            </button>
+            <button onclick="setCycleStep(2, 1)" id="c2-btn-1" class="c2-step-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold border-2 transition">
+              2. Timed Task 2 (9m)
+            </button>
+            <button onclick="setCycleStep(2, 2)" id="c2-btn-2" class="c2-step-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold border-2 transition">
+              3. Pit-Stop Check 2 (2m)
+            </button>
+          </div>
+        </div>
+
+        <!-- SUB-STEP 3A: MINI-TEACH 2 (LIVE SWAP-TO-SAVE COSTING SIMULATOR) -->
+        <div id="c2-panel-0" class="cycle-panel active">
+          <div id="c2-swap-wrap" class="studio-card rounded-3xl p-5 sm:p-7 space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b-2 border-emerald-900/15">
+              <div>
+                <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Cycle 2 Mini-Teach • Live Budget Trade-Off Lab</span>
+                <h2 class="font-studio-serif text-2xl sm:text-3xl text-emerald-950">Swap-to-Save Costing Simulator</h2>
               </div>
               <div class="flex gap-2">
-                <button id="btn-sprint-start" onclick="toggleSprintTimer()" class="px-5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-sm shadow transition">▶ Start Sprint</button>
-                <button onclick="resetSprintTimer()" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-sm transition">↺ Reset</button>
+                <button onclick="resetSwapSim()" class="px-3.5 py-2 rounded-xl bg-stone-200 hover:bg-stone-300 text-stone-900 text-xs sm:text-sm font-bold transition">
+                  ↺ Reset to 0 m²
+                </button>
+                <button id="btn-fs-c2" onclick="toggleFullScreenStage('c2-swap-wrap', 'btn-fs-c2', '⛶ Full Screen')" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-emerald-950 text-xs sm:text-sm font-extrabold shadow transition">
+                  ⛶ Full Screen
+                </button>
               </div>
             </div>
-          </div>
 
-          <!-- 3 Sprint Selector Pills -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-6 pt-5 border-t border-emerald-700/80">
-            <button onclick="selectSprint(1)" id="sprint-btn-1" class="sprint-btn text-left p-3.5 rounded-2xl border-2 transition">
-              <div class="flex items-center justify-between text-xs font-extrabold uppercase">
-                <span>Sprint 1 • 10 mins</span>
-                <span>📐 Draft</span>
+            <!-- Starting Over-Budget Scenario Strip -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <!-- Left: Interactive Slider Control (NEVER rebuilt by .innerHTML!) -->
+              <div class="lg:col-span-6 space-y-4 bg-[#f5efe2] border-2 border-amber-900/15 rounded-2xl p-5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-extrabold uppercase tracking-wider text-rose-700">Starting 120 m² Park Cost:</span>
+                  <span class="font-mono-tech text-lg font-extrabold text-rose-700">628 Eco-Credits (+28 Over!)</span>
+                </div>
+                <p class="text-xs sm:text-sm font-semibold text-slate-700">
+                  This team built a huge <strong>36 m²</strong> Sports Court (8 cr/m²), pushing their park <strong>28 credits over</strong> the 600 limit! Drag the slider to swap Sports Court squares into Grass Lawn (3 cr/m²):
+                </p>
+
+                <div class="bg-white rounded-2xl p-4 border-2 border-emerald-800/20 space-y-3">
+                  <div class="flex items-center justify-between text-sm font-extrabold text-emerald-950">
+                    <span>Swap Sports Court ➔ Grass Lawn:</span>
+                    <span class="font-mono-tech text-xl text-amber-700"><span id="swap-m2-val">0</span> m²</span>
+                  </div>
+                  <input id="swap-slider" type="range" min="0" max="12" value="0" step="1" oninput="updateSwapSim()" class="w-full h-3 accent-emerald-700 cursor-pointer" aria-label="Square metres swapped from Sports Court to Grass Lawn" />
+                  <div class="flex justify-between text-[11px] font-mono-tech font-bold text-slate-500">
+                    <span>0 m² (Court 36 m²)</span>
+                    <span>6 m² (Under 600!)</span>
+                    <span>12 m² (Court 24 m² min)</span>
+                  </div>
+                </div>
+
+                <!-- Visual Proportional Surface Bar (targeted width updates) -->
+                <div class="space-y-1.5">
+                  <div class="flex justify-between text-xs font-extrabold">
+                    <span class="text-rose-700">🏀 Sports Court: <span id="swap-court-m2" class="font-mono-tech">36</span> m² (min 24 m²)</span>
+                    <span class="text-emerald-800">🌱 Grass Lawn: <span id="swap-grass-m2" class="font-mono-tech">43</span> m²</span>
+                  </div>
+                  <div class="w-full h-7 rounded-xl overflow-hidden flex border-2 border-emerald-950/20 bg-stone-200">
+                    <div id="swap-bar-court" class="bg-rose-500 text-white text-[11px] font-extrabold flex items-center justify-center transition-all duration-200" style="width: 45.6%;">Court</div>
+                    <div id="swap-bar-grass" class="bg-emerald-500 text-white text-[11px] font-extrabold flex items-center justify-center transition-all duration-200" style="width: 54.4%;">Grass</div>
+                  </div>
+                  <div class="text-[11px] text-slate-600 font-semibold text-center">
+                    Other fixed zones: Koi Pond 18 m² (108 cr) + Flowerbed 12 m² (48 cr) + Stone Path 11 m² (55 cr) = 41 m² • Total stays 120 m²!
+                  </div>
+                </div>
               </div>
-              <div class="font-bold text-sm mt-1">Blueprint &amp; Mandatory Zones</div>
-            </button>
-            <button onclick="selectSprint(2)" id="sprint-btn-2" class="sprint-btn text-left p-3.5 rounded-2xl border-2 transition">
-              <div class="flex items-center justify-between text-xs font-extrabold uppercase">
-                <span>Sprint 2 • 8 mins</span>
-                <span>💰 Verify</span>
+
+              <!-- Right: Live Targeted Maths Readout Dashboard -->
+              <div class="lg:col-span-6 space-y-4">
+                <div id="swap-status-card" class="rounded-3xl p-6 border-4 bg-rose-950 text-white border-rose-500 shadow-xl transition-all duration-300 space-y-4">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-xs font-extrabold uppercase tracking-widest opacity-80">Live Park Budget Status</span>
+                    <span id="swap-status-pill" class="px-3.5 py-1 rounded-full bg-rose-500 text-white text-xs font-extrabold uppercase">🔴 OVER BUDGET (+28 cr)</span>
+                  </div>
+
+                  <div class="flex items-baseline justify-center gap-2 py-2">
+                    <span id="swap-new-cost" class="font-mono-tech text-6xl sm:text-7xl font-extrabold">628</span>
+                    <span class="text-lg font-bold opacity-85">/ 600 cr</span>
+                  </div>
+
+                  <!-- Budget Progress Meter -->
+                  <div class="w-full h-4 bg-black/30 rounded-full overflow-hidden border border-white/20">
+                    <div id="swap-cost-bar" class="h-full bg-rose-400 transition-all duration-200" style="width: 100%;"></div>
+                  </div>
+
+                  <!-- 3 Live Formula Tiles -->
+                  <div class="grid grid-cols-3 gap-2.5 text-center pt-1">
+                    <div class="bg-black/25 rounded-xl p-2.5 border border-white/15">
+                      <div class="text-[11px] uppercase font-bold opacity-80">Saving per m²</div>
+                      <div class="font-mono-tech text-lg font-extrabold text-amber-300 mt-0.5">8 − 3 = 5 cr</div>
+                    </div>
+                    <div class="bg-black/25 rounded-xl p-2.5 border border-white/15">
+                      <div class="text-[11px] uppercase font-bold opacity-80">Total Saved</div>
+                      <div class="font-mono-tech text-lg font-extrabold text-emerald-300 mt-0.5"><span id="swap-total-saved">0</span> cr</div>
+                    </div>
+                    <div class="bg-black/25 rounded-xl p-2.5 border border-white/15">
+                      <div class="text-[11px] uppercase font-bold opacity-80">Calculation</div>
+                      <div class="font-mono-tech text-sm font-extrabold text-white mt-1"><span id="swap-calc-text">628 − 0 = 628</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-3.5 text-xs sm:text-sm font-bold text-emerald-950">
+                  💡 <strong>Smart Swap Shortcut:</strong> Instead of re-calculating the whole park from scratch, find the <em>difference per square metre</em> (<strong>8 − 3 = 5 credits</strong>) and multiply by the swapped area!
+                </div>
               </div>
-              <div class="font-bold text-sm mt-1">Budget Optimisation &amp; Verification</div>
-            </button>
-            <button onclick="selectSprint(3)" id="sprint-btn-3" class="sprint-btn text-left p-3.5 rounded-2xl border-2 transition">
-              <div class="flex items-center justify-between text-xs font-extrabold uppercase">
-                <span>Sprint 3 • 8 mins</span>
-                <span>🎨 Poster</span>
-              </div>
-              <div class="font-bold text-sm mt-1">Team Poster Assembly &amp; Written Reasoning</div>
-            </button>
+            </div>
           </div>
         </div>
 
-        <!-- Clickable Role Accountability Checklists -->
-        <div class="studio-card rounded-3xl p-6">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-            <div>
-              <h3 class="text-xl font-extrabold text-emerald-950">✅ Live Role Accountability Checklists</h3>
-              <p class="text-sm text-slate-600">Tick off studio milestones together as teams complete each Sprint!</p>
+        <!-- SUB-STEP 3B: TIMED TASK 2 (09:00 COUNTDOWN + 4 LIVE SPRINT-2 ROLE JOB CARDS) -->
+        <div id="c2-panel-1" class="cycle-panel">
+          <div class="space-y-5">
+            <div class="studio-blueprint-banner rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-400/80 shadow-xl">
+              <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+                <div class="space-y-2 text-center lg:text-left max-w-2xl">
+                  <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase tracking-wider">Cycle 2 • Timed Studio Task</span>
+                  <h2 class="font-studio-serif text-3xl sm:text-4xl text-white">Task 2: Complete Budget Ledger &amp; Optimise</h2>
+                  <p class="text-emerald-100 text-sm sm:text-base font-medium">
+                    Multiply every zone's area by its unit price on Page 3, verify your total is <strong>≤ 600 Eco-Credits</strong>, and record one clever surface swap!
+                  </p>
+                </div>
+                <div class="flex flex-col items-center gap-3 shrink-0">
+                  <div id="c2-clock" class="font-mono-tech text-6xl sm:text-7xl font-extrabold text-amber-300 bg-emerald-950/90 px-8 py-3 rounded-2xl border-2 border-amber-400/70 shadow-inner">
+                    09:00
+                  </div>
+                  <div class="flex gap-2">
+                    <button id="c2-timer-btn" onclick="toggleCycleTimer(2)" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-sm shadow transition">▶ Start 9m</button>
+                    <button onclick="resetCycleTimer(2)" class="px-4 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-sm transition">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="px-3.5 py-1.5 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-950 font-mono-tech text-sm font-extrabold">
-              Studio Progress: <span id="studio-check-count">0 / 12</span>
-            </div>
-          </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="sprint-checklists">
-            <!-- Rendered by JS -->
+            <!-- 4 Live Sprint-2 Role Job Cards -->
+            <div class="studio-card rounded-3xl p-5">
+              <h3 class="text-lg font-extrabold text-emerald-950 mb-3.5">👷‍♂️ Your Exact Job During Task 2 (Budget)</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="rounded-2xl bg-emerald-50 border-2 border-emerald-400 p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-800 text-amber-300 text-[11px] font-extrabold uppercase">Role 1</span>
+                    <span class="text-2xl">📐</span>
+                  </div>
+                  <div class="font-extrabold text-emerald-950 text-base">Chief Architect</div>
+                  <p class="text-xs sm:text-sm font-semibold text-emerald-900 leading-snug">
+                    Adjust blueprint boundaries cleanly on Page 2 if your team trims or swaps a zone to save credits.
+                  </p>
+                </div>
+                <div class="rounded-2xl bg-amber-50 border-2 border-amber-400 p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-amber-600 text-white text-[11px] font-extrabold uppercase">Role 2</span>
+                    <span class="text-2xl">🧮</span>
+                  </div>
+                  <div class="font-extrabold text-amber-950 text-base">Area Accountant</div>
+                  <p class="text-xs sm:text-sm font-semibold text-amber-900 leading-snug">
+                    Recalculate any changed rectangle or triangle area to prove the updated park still equals <strong>120 m²</strong>.
+                  </p>
+                </div>
+                <div class="rounded-2xl bg-teal-50 border-2 border-teal-400 p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-teal-800 text-amber-200 text-[11px] font-extrabold uppercase">Role 3</span>
+                    <span class="text-2xl">💰</span>
+                  </div>
+                  <div class="font-extrabold text-teal-950 text-base">Budget Director</div>
+                  <p class="text-xs sm:text-sm font-semibold text-teal-900 leading-snug">
+                    Complete the Page 3 Budget Ledger multiplying <strong>area × credits/m²</strong> and check total <strong>≤ 600</strong>.
+                  </p>
+                </div>
+                <div class="rounded-2xl bg-rose-50 border-2 border-rose-300 p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-rose-700 text-white text-[11px] font-extrabold uppercase">Role 4</span>
+                    <span class="text-2xl">✍️</span>
+                  </div>
+                  <div class="font-extrabold text-rose-950 text-base">Lead Reasoning Writer</div>
+                  <p class="text-xs sm:text-sm font-semibold text-rose-900 leading-snug">
+                    Record the exact credit saving from one smart surface swap ready for your Page 4 poster!
+                  </p>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-stone-200">
+                <button onclick="toggleTwist('c2-twist')" class="px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 border-2 border-amber-400 text-amber-950 text-xs sm:text-sm font-extrabold transition">
+                  ⚡ Finished Early? Bonus Client Twist ▾
+                </button>
+                <div id="c2-twist" class="hidden mt-3 p-4 rounded-2xl bg-emerald-950 text-amber-100 border-2 border-amber-400 text-sm font-semibold">
+                  🌟 <strong>Bonus Client Twist:</strong> Optimise your park to land between <strong>570 and 600 Eco-Credits</strong> so you pack in maximum features without going over!
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
+        <!-- SUB-STEP 3C: PIT-STOP REVIEW 2 (INDIVIDUAL WHITEBOARD CHECK) -->
+        <div id="c2-panel-2" class="cycle-panel">
+          <div class="space-y-5">
+            <div class="rounded-3xl bg-gradient-to-r from-rose-700 via-rose-600 to-amber-600 text-white p-5 border-4 border-amber-300 shadow-xl flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <span class="text-4xl">🛑</span>
+                <div>
+                  <div class="text-xs font-extrabold uppercase tracking-widest text-amber-200">Cycle 2 Pit-Stop • Individual Accountability</div>
+                  <h2 class="font-studio-serif text-2xl sm:text-4xl">FREEZE &amp; MINI-WHITEBOARDS UP!</h2>
+                </div>
+              </div>
+              <span class="px-4 py-1.5 rounded-full bg-white text-rose-800 font-extrabold text-xs sm:text-sm shadow">Every pupil answers SOLO!</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              <div class="lg:col-span-7 studio-card rounded-3xl p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-950 text-xs font-extrabold uppercase">Budget Swap Calculation Check</span>
+                  <span class="text-xs font-bold text-slate-500">Fresh Numbers</span>
+                </div>
+                <p class="text-lg sm:text-xl font-extrabold text-emerald-950 leading-snug">
+                  A team's park costs <span class="text-rose-700">625 Eco-Credits</span> (25 over budget). They swap <span class="text-amber-700">6 m²</span> of Sports Court (<strong>8 cr/m²</strong>) for Grass Lawn (<strong>3 cr/m²</strong>). Write their <strong>NEW total cost</strong> on YOUR whiteboard!
+                </p>
+
+                <div class="grid grid-cols-3 gap-2.5 text-center bg-stone-100 border border-stone-300 rounded-2xl p-3 font-mono-tech text-xs sm:text-sm font-extrabold">
+                  <div class="bg-white rounded-xl p-2 border border-rose-200 text-rose-700">Start: 625 cr</div>
+                  <div class="bg-white rounded-xl p-2 border border-amber-300 text-amber-800">Swap: 6 m²</div>
+                  <div class="bg-white rounded-xl p-2 border border-emerald-300 text-emerald-800">8 cr ➔ 3 cr</div>
+                </div>
+
+                <button onclick="revealPitStop('ps2-proof')" class="w-full py-3 rounded-2xl bg-emerald-800 hover:bg-emerald-700 text-white font-extrabold text-base shadow transition">
+                  👁️ Reveal Model Proof
+                </button>
+
+                <div id="ps2-proof" class="hidden rounded-2xl bg-emerald-100 border-2 border-emerald-600 p-4 space-y-1">
+                  <div class="font-mono-tech text-3xl font-extrabold text-emerald-900">595 Eco-Credits</div>
+                  <p class="text-sm font-bold text-emerald-950">
+                    Proof: Each 1 m² saves <strong>8 − 3 = 5 credits</strong>, so <strong>6 × 5 = 30 credits</strong> saved; <strong>625 − 30 = 595 credits ≤ 600 ✓</strong>!
+                  </p>
+                </div>
+              </div>
+
+              <div class="lg:col-span-5 studio-card rounded-3xl p-6 flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                  <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Table Gatekeeper Check</span>
+                  <h3 class="font-studio-serif text-2xl text-emerald-950">Ready for Cycle 3?</h3>
+                  <p class="text-xs text-slate-600 font-semibold">Tick both gatekeeper checks before assembling your A3 Poster:</p>
+                  <label class="flex items-start gap-3 p-3.5 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
+                    <input type="checkbox" onchange="playTone(620,0.08,'triangle',0.08)" class="mt-0.5 w-5 h-5 accent-emerald-700" />
+                    <span class="text-sm font-bold text-emerald-950">Every multiplication on Page 3 checked by 2 pupils</span>
+                  </label>
+                  <label class="flex items-start gap-3 p-3.5 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
+                    <input type="checkbox" onchange="playTone(620,0.08,'triangle',0.08)" class="mt-0.5 w-5 h-5 accent-emerald-700" />
+                    <span class="text-sm font-bold text-emerald-950">Total cost ≤ 600 Eco-Credits</span>
+                  </label>
+                </div>
+                <button onclick="goPhase(4)" class="w-full py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-emerald-950 font-extrabold text-base shadow-lg transition">
+                  Proceed to Cycle 3: Poster &amp; Pitch →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
     <!-- ============================================================ -->
-    <!-- STUDIO PHASE 5: PEER AUDIT, 60-SECOND PITCH & UNIT FINALE    -->
+    <!-- TAB 4: CYCLE 3 — POSTER & PITCH (3 SUB-STEPS)                -->
+    <!-- ============================================================ -->
+    <section id="phase-4" class="phase-section">
+      <div class="space-y-5">
+
+        <!-- Cycle 3 Sub-Step Switcher Bar -->
+        <div class="studio-card rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2 px-2">
+            <span class="px-2.5 py-1 rounded-lg bg-teal-800 text-amber-200 text-xs font-extrabold uppercase">Cycle 3 • 18 mins</span>
+            <span class="font-extrabold text-emerald-950 text-sm sm:text-base">🎨 Poster Reasoning, Audit &amp; Pitch</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setCycleStep(3, 0)" id="c3-btn-0" class="c3-step-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold border-2 transition">
+              1. Mini-Teach WAGOLL (3m)
+            </button>
+            <button onclick="setCycleStep(3, 1)" id="c3-btn-1" class="c3-step-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold border-2 transition">
+              2. Timed Task 3 (10m)
+            </button>
+            <button onclick="setCycleStep(3, 2)" id="c3-btn-2" class="c3-step-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold border-2 transition">
+              3. Audit &amp; Pitch (5m)
+            </button>
+          </div>
+        </div>
+
+        <!-- SUB-STEP 4A: MINI-TEACH 3 (WAGOLL REASONING SPOTLIGHT) -->
+        <div id="c3-panel-0" class="cycle-panel active">
+          <div id="c3-wagoll-wrap" class="studio-card rounded-3xl p-5 sm:p-7 space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b-2 border-emerald-900/15">
+              <div>
+                <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Cycle 3 Mini-Teach • What A Good One Looks Like (WAGOLL)</span>
+                <h2 class="font-studio-serif text-2xl sm:text-3xl text-emerald-950">How Mathematicians Justify a Design Trade-Off</h2>
+              </div>
+              <button id="btn-fs-c3" onclick="toggleFullScreenStage('c3-wagoll-wrap', 'btn-fs-c3', '⛶ Full Screen')" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-emerald-950 text-xs sm:text-sm font-extrabold shadow transition">
+                ⛶ Full Screen
+              </button>
+            </div>
+
+            <!-- Interactive Side-by-Side Comparison -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              <!-- Weak 1-Star Example -->
+              <div class="lg:col-span-5 rounded-3xl bg-rose-50 border-2 border-rose-300 p-5 flex flex-col justify-between space-y-4">
+                <div>
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="px-3 py-1 rounded-full bg-rose-600 text-white text-xs font-extrabold uppercase">★ Weak 1-Star Explanation</span>
+                    <span class="text-xl">❌</span>
+                  </div>
+                  <blockquote class="bg-white rounded-2xl p-4 border border-rose-200 text-base sm:text-lg font-bold text-slate-700 italic leading-relaxed">
+                    "We made the pond smaller so it was cheaper and our park fits."
+                  </blockquote>
+                </div>
+                <div class="space-y-1.5 text-xs font-bold text-rose-900">
+                  <div class="flex items-center gap-2"><span>🔴</span> Missing base, height, and (b × h) ÷ 2 formula</div>
+                  <div class="flex items-center gap-2"><span>🔴</span> Zero units in square metres (m²)</div>
+                  <div class="flex items-center gap-2"><span>🔴</span> No proof of how many Eco-Credits were saved</div>
+                </div>
+              </div>
+
+              <!-- 3-Star Mathematician's Justification -->
+              <div class="lg:col-span-7 rounded-3xl bg-emerald-50 border-4 border-emerald-600 p-5 space-y-4 shadow-md">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <span class="px-3 py-1 rounded-full bg-emerald-800 text-amber-300 text-xs font-extrabold uppercase">★★★ 3-Star Mathematician's Justification</span>
+                  <span class="text-xs font-extrabold text-emerald-800">Tap spotlights below to inspect!</span>
+                </div>
+
+                <blockquote class="bg-white rounded-2xl p-5 border-2 border-emerald-200 text-base sm:text-lg font-semibold text-emerald-950 leading-relaxed shadow-inner">
+                  "Our <span id="wg-perp-1" class="wagoll-span">right-angled Koi Pond has base 6 m and perpendicular height 5 m</span>, giving <span id="wg-form-1" class="wagoll-span">(6 × 5) ÷ 2 = 15 m²</span>. We shrank our Sports Court by <span id="wg-form-2" class="wagoll-span">4 m²</span> <span id="wg-budg-1" class="wagoll-span">(replacing 8 cr/m² with 3 cr/m² grass), saving 4 × 5 = 20 credits to bring our total to 580 credits — 20 credits under the 600 limit!</span>"
+                </blockquote>
+
+                <!-- 3 Interactive Spotlight Buttons -->
+                <div class="flex flex-wrap gap-2">
+                  <button onclick="setWagollSpotlight('formula')" id="wg-btn-formula" class="wg-btn px-3.5 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 border-2 border-amber-400 text-amber-950 text-xs sm:text-sm font-extrabold transition">
+                    1️⃣ Exact Formula &amp; Units (m²)
+                  </button>
+                  <button onclick="setWagollSpotlight('perp')" id="wg-btn-perp" class="wg-btn px-3.5 py-2 rounded-xl bg-emerald-100 hover:bg-emerald-200 border-2 border-emerald-500 text-emerald-950 text-xs sm:text-sm font-extrabold transition">
+                    2️⃣ Perpendicular 90° Check
+                  </button>
+                  <button onclick="setWagollSpotlight('budget')" id="wg-btn-budget" class="wg-btn px-3.5 py-2 rounded-xl bg-sky-100 hover:bg-sky-200 border-2 border-sky-400 text-sky-950 text-xs sm:text-sm font-extrabold transition">
+                    3️⃣ Exact Credit Trade-Off Maths
+                  </button>
+                  <button onclick="setWagollSpotlight('all')" class="px-3 py-2 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-amber-300 text-xs sm:text-sm font-extrabold transition">
+                    ✨ Show All 3
+                  </button>
+                  <button onclick="setWagollSpotlight('none')" class="px-3 py-2 rounded-xl bg-stone-200 hover:bg-stone-300 text-stone-800 text-xs font-bold transition">
+                    ↺ Clear
+                  </button>
+                </div>
+
+                <div id="wg-note" class="rounded-xl bg-emerald-950 text-amber-200 px-4 py-2.5 text-xs sm:text-sm font-bold">
+                  👆 Click any spotlight button above to inspect what earns a 3-Star Poster Justification!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-STEP 4B: TIMED TASK 3 (10:00 COUNTDOWN + 4 LIVE SPRINT-3 ROLE JOB CARDS) -->
+        <div id="c3-panel-1" class="cycle-panel">
+          <div class="space-y-5">
+            <div class="studio-blueprint-banner rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-400/80 shadow-xl">
+              <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+                <div class="space-y-2 text-center lg:text-left max-w-2xl">
+                  <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase tracking-wider">Cycle 3 • Timed Studio Task</span>
+                  <h2 class="font-studio-serif text-3xl sm:text-4xl text-white">Task 3: Assemble A3 Poster &amp; Rehearse Pitch</h2>
+                  <p class="text-emerald-100 text-sm sm:text-base font-medium">
+                    Mount Pages 2, 3, and 4 cleanly onto your A3 poster, finish your 3-Star mathematical justification, and practise your 60-second pitch!
+                  </p>
+                </div>
+                <div class="flex flex-col items-center gap-3 shrink-0">
+                  <div id="c3-clock" class="font-mono-tech text-6xl sm:text-7xl font-extrabold text-amber-300 bg-emerald-950/90 px-8 py-3 rounded-2xl border-2 border-amber-400/70 shadow-inner">
+                    10:00
+                  </div>
+                  <div class="flex gap-2">
+                    <button id="c3-timer-btn" onclick="toggleCycleTimer(3)" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-sm shadow transition">▶ Start 10m</button>
+                    <button onclick="resetCycleTimer(3)" class="px-4 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-sm transition">↺ Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 Live Sprint-3 Role Job Cards -->
+            <div class="studio-card rounded-3xl p-5">
+              <h3 class="text-lg font-extrabold text-emerald-950 mb-3.5">👷‍♂️ Your Exact Job During Task 3 (Poster &amp; Pitch)</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="rounded-2xl bg-emerald-50 border-2 border-emerald-400 p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-800 text-amber-300 text-[11px] font-extrabold uppercase">Role 1</span>
+                    <span class="text-2xl">📐</span>
+                  </div>
+                  <div class="font-extrabold text-emerald-950 text-base">Chief Architect</div>
+                  <p class="text-xs sm:text-sm font-semibold text-emerald-900 leading-snug">
+                    Mount and neaten your Page 2 Blueprint on A3 paper with crisp labels, 90° symbols, and colour key.
+                  </p>
+                </div>
+                <div class="rounded-2xl bg-amber-50 border-2 border-amber-400 p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-amber-600 text-white text-[11px] font-extrabold uppercase">Role 2</span>
+                    <span class="text-2xl">🧮</span>
+                  </div>
+                  <div class="font-extrabold text-amber-950 text-base">Area Accountant</div>
+                  <p class="text-xs sm:text-sm font-semibold text-amber-900 leading-snug">
+                    Write and verify <strong>1 full proof sentence</strong> on Page 4 confirming triangle halving and exact 120 m² total.
+                  </p>
+                </div>
+                <div class="rounded-2xl bg-teal-50 border-2 border-teal-400 p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-teal-800 text-amber-200 text-[11px] font-extrabold uppercase">Role 3</span>
+                    <span class="text-2xl">💰</span>
+                  </div>
+                  <div class="font-extrabold text-teal-950 text-base">Budget Director</div>
+                  <p class="text-xs sm:text-sm font-semibold text-teal-900 leading-snug">
+                    Check and sign the Page 3 Budget Ledger (<strong>≤ 600 cr</strong>) and mount it neatly onto the A3 poster.
+                  </p>
+                </div>
+                <div class="rounded-2xl bg-rose-50 border-2 border-rose-300 p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-rose-700 text-white text-[11px] font-extrabold uppercase">Role 4</span>
+                    <span class="text-2xl">✍️</span>
+                  </div>
+                  <div class="font-extrabold text-rose-950 text-base">Lead Reasoning Writer</div>
+                  <p class="text-xs sm:text-sm font-semibold text-rose-900 leading-snug">
+                    Write the full 3-star Justification on Page 4 and rehearse the <strong>60-second pitch</strong> with your team!
+                  </p>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-stone-200">
+                <button onclick="toggleTwist('c3-twist')" class="px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 border-2 border-amber-400 text-amber-950 text-xs sm:text-sm font-extrabold transition">
+                  ⚡ Finished Early? Bonus Client Twist ▾
+                </button>
+                <div id="c3-twist" class="hidden mt-3 p-4 rounded-2xl bg-emerald-950 text-amber-100 border-2 border-amber-400 text-sm font-semibold">
+                  🌟 <strong>Bonus Client Twist:</strong> Calculate the total <strong>perimeter fence length in metres</strong> needed around your Sports Court!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-STEP 4C: PEER AUDIT, 60-SECOND PITCH & STUDIO AWARDS -->
+        <div id="c3-panel-2" class="cycle-panel">
+          <div class="space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Peer-Audit Inspector Checklist -->
+              <div class="studio-card rounded-3xl p-6 space-y-4">
+                <div>
+                  <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Swap Posters With Another Team!</span>
+                  <h3 class="font-studio-serif text-2xl text-emerald-950">🔍 Peer-Audit Inspector Checklist</h3>
+                </div>
+                <div class="space-y-2.5" id="peer-audit-list">
+                  <label class="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
+                    <input type="checkbox" onchange="updateAuditCounter()" class="audit-chk mt-1 w-5 h-5 accent-emerald-700" />
+                    <span class="text-sm font-bold text-emerald-950">1. Right-Angle Check: Both triangles sit on two 90° grid lines and show (b × h) ÷ 2!</span>
+                  </label>
+                  <label class="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
+                    <input type="checkbox" onchange="updateAuditCounter()" class="audit-chk mt-1 w-5 h-5 accent-emerald-700" />
+                    <span class="text-sm font-bold text-emerald-950">2. Zero-Gap 120 m² Proof: All zone areas add up to exactly 120 m² with no overlaps.</span>
+                  </label>
+                  <label class="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
+                    <input type="checkbox" onchange="updateAuditCounter()" class="audit-chk mt-1 w-5 h-5 accent-emerald-700" />
+                    <span class="text-sm font-bold text-emerald-950">3. Budget Proof: Every multiplication is accurate and total cost is ≤ 600 Eco-Credits.</span>
+                  </label>
+                  <label class="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
+                    <input type="checkbox" onchange="updateAuditCounter()" class="audit-chk mt-1 w-5 h-5 accent-emerald-700" />
+                    <span class="text-sm font-bold text-emerald-950">4. Poster Sign-Off: Written "One Star &amp; One Suggestion" completed on Page 4!</span>
+                  </label>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-stone-200">
+                  <span class="text-xs font-extrabold text-slate-600">Audit Status:</span>
+                  <span id="audit-status-badge" class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold">0 / 4 Verified</span>
+                </div>
+              </div>
+
+              <!-- 60-Second Pitch Countdown -->
+              <div class="studio-blueprint-banner rounded-3xl p-6 text-white border-4 border-amber-400/80 flex flex-col justify-between">
+                <div>
+                  <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase">Hanoi City Council Presentation</span>
+                  <h3 class="font-studio-serif text-3xl text-white mt-2">🎤 60-Second Studio Pitch</h3>
+                  <p class="text-sm text-emerald-100 mt-1">Lead Reasoning Writers present their poster! Include exact m² totals, one right-angled triangle calculation, and one clever budget trade-off.</p>
+                </div>
+                <div class="my-5 flex flex-col items-center">
+                  <div id="pitch-clock" class="font-mono-tech text-7xl font-extrabold text-amber-300 bg-emerald-950/90 px-8 py-3 rounded-2xl border-2 border-amber-400/70">
+                    01:00
+                  </div>
+                  <div class="flex gap-2.5 mt-4">
+                    <button id="btn-pitch-start" onclick="togglePitchTimer()" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-sm transition shadow">▶ Start 60s Pitch</button>
+                    <button onclick="resetPitchTimer()" class="px-4 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-sm transition">↺ Reset</button>
+                  </div>
+                </div>
+                <div class="bg-emerald-950/70 rounded-xl p-3 text-xs text-emerald-100 border border-emerald-700">
+                  <strong>Pitch Stem:</strong> "Our Eco-Park covers 120 m² for ___ credits. Our Koi Pond triangle is (___ × ___) ÷ 2 = ___ m², and we saved ___ credits by..."
+                </div>
+              </div>
+            </div>
+
+            <!-- Clickable Studio Award Badges -->
+            <div class="studio-card rounded-3xl p-6">
+              <div class="text-center mb-5">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Tap Any Award to Celebrate a Winning Team!</span>
+                <h3 class="font-studio-serif text-3xl text-emerald-950">🏅 Hanoi Eco-Park Studio Awards</h3>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <button onclick="celebrateAward(this)" class="award-card p-5 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 border-2 border-emerald-400 hover:scale-[1.03] transition text-center shadow-sm">
+                  <div class="text-4xl mb-2">📐</div>
+                  <div class="font-extrabold text-emerald-950 text-base">Most Accurate Maths</div>
+                  <div class="text-xs text-emerald-800 mt-1">Zero errors in (b × h) ÷ 2 and exact 120 m² proof!</div>
+                  <div class="award-winner mt-3 text-xs font-extrabold text-amber-700 uppercase tracking-wider">Tap to Award!</div>
+                </button>
+                <button onclick="celebrateAward(this)" class="award-card p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-amber-400 hover:scale-[1.03] transition text-center shadow-sm">
+                  <div class="text-4xl mb-2">✍️</div>
+                  <div class="font-extrabold text-amber-950 text-base">Best Written Justification</div>
+                  <div class="text-xs text-amber-900 mt-1">Clear mathematical sentences on the Poster Reasoning Panel!</div>
+                  <div class="award-winner mt-3 text-xs font-extrabold text-emerald-800 uppercase tracking-wider">Tap to Award!</div>
+                </button>
+                <button onclick="celebrateAward(this)" class="award-card p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100 border-2 border-teal-400 hover:scale-[1.03] transition text-center shadow-sm">
+                  <div class="text-4xl mb-2">💰</div>
+                  <div class="font-extrabold text-teal-950 text-base">Smartest Budget</div>
+                  <div class="text-xs text-teal-800 mt-1">Clever surface swaps keeping maximum fun under 600 credits!</div>
+                  <div class="award-winner mt-3 text-xs font-extrabold text-amber-700 uppercase tracking-wider">Tap to Award!</div>
+                </button>
+                <button onclick="celebrateAward(this)" class="award-card p-5 rounded-2xl bg-gradient-to-br from-yellow-50 to-amber-100 border-2 border-yellow-500 hover:scale-[1.03] transition text-center shadow-sm">
+                  <div class="text-4xl mb-2">🤝</div>
+                  <div class="font-extrabold text-amber-950 text-base">Best 4-Role Teamwork</div>
+                  <div class="text-xs text-amber-900 mt-1">Every role contributed actively and respectfully!</div>
+                  <div class="award-winner mt-3 text-xs font-extrabold text-emerald-800 uppercase tracking-wider">Tap to Award!</div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 5: SUCCESS CRITERIA INDIVIDUAL WHITEBOARD REVIEW         -->
     <!-- ============================================================ -->
     <section id="phase-5" class="phase-section">
       <div class="space-y-6">
 
-        <!-- Sub-view Switcher: Gallery Pitch & Awards vs Unit 7.1 Finale Quickfire -->
-        <div class="flex flex-wrap justify-center gap-3">
-          <button onclick="setPhase5Mode('pitch')" id="p5-tab-pitch" class="px-5 py-2.5 rounded-2xl font-extrabold text-sm border-2 transition shadow-sm">
-            🎤 Peer Audit, 60s Pitch &amp; Studio Awards
-          </button>
-          <button onclick="setPhase5Mode('quickfire')" id="p5-tab-qf" class="px-5 py-2.5 rounded-2xl font-extrabold text-sm border-2 transition shadow-sm">
-            ⚡ Unit 7.1 Finale 8-Question Quickfire
-          </button>
-        </div>
-
-        <!-- PANEL A: PEER AUDIT, PITCH TIMER & STUDIO AWARDS -->
-        <div id="p5-panel-pitch" class="space-y-6">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Peer-Audit Inspector Checklist -->
-            <div class="studio-card rounded-3xl p-6 space-y-4">
-              <div>
-                <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Swap Posters With Another Team!</span>
-                <h3 class="font-studio-serif text-2xl text-emerald-950">🔍 Peer-Audit Inspector Checklist</h3>
-              </div>
-              <div class="space-y-2.5" id="peer-audit-list">
-                <label class="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
-                  <input type="checkbox" onchange="updateAuditCounter()" class="audit-chk mt-1 w-5 h-5 accent-emerald-700" />
-                  <span class="text-sm font-bold text-emerald-950">1. Right-Angle Check: Both triangles sit on two 90° grid lines and show (b × h) ÷ 2!</span>
-                </label>
-                <label class="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
-                  <input type="checkbox" onchange="updateAuditCounter()" class="audit-chk mt-1 w-5 h-5 accent-emerald-700" />
-                  <span class="text-sm font-bold text-emerald-950">2. Zero-Gap 120 m² Proof: All zone areas add up to exactly 120 m² with no overlaps.</span>
-                </label>
-                <label class="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
-                  <input type="checkbox" onchange="updateAuditCounter()" class="audit-chk mt-1 w-5 h-5 accent-emerald-700" />
-                  <span class="text-sm font-bold text-emerald-950">3. Budget Proof: Every multiplication is accurate and total cost is ≤ 600 Eco-Credits.</span>
-                </label>
-                <label class="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
-                  <input type="checkbox" onchange="updateAuditCounter()" class="audit-chk mt-1 w-5 h-5 accent-emerald-700" />
-                  <span class="text-sm font-bold text-emerald-950">4. Poster Sign-Off: Written "One Star &amp; One Suggestion" completed on Page 4!</span>
-                </label>
-              </div>
-              <div class="flex items-center justify-between pt-2 border-t border-stone-200">
-                <span class="text-xs font-extrabold text-slate-600">Audit Status:</span>
-                <span id="audit-status-badge" class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold">0 / 4 Verified</span>
-              </div>
+        <!-- SC Review Header & Live 0 / 3 Mastery Progress Bar -->
+        <div class="studio-blueprint-banner rounded-3xl p-6 text-white border-4 border-amber-400/80 shadow-xl space-y-4">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase tracking-wider">Individual Mini-Whiteboard Check • 7 mins</span>
+              <h2 class="font-studio-serif text-3xl sm:text-4xl text-white mt-1.5">✅ Success Criteria Mastery Review</h2>
+              <p class="text-emerald-100 text-sm font-medium mt-0.5">Prove YOU have met all 3 Success Criteria solo on your mini-whiteboard before the Finale Quickfire!</p>
             </div>
-
-            <!-- 60-Second Pitch Countdown -->
-            <div class="studio-blueprint-banner rounded-3xl p-6 text-white border-4 border-amber-400/80 flex flex-col justify-between">
-              <div>
-                <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase">Hanoi City Council Presentation</span>
-                <h3 class="font-studio-serif text-3xl text-white mt-2">🎤 60-Second Studio Pitch</h3>
-                <p class="text-sm text-emerald-100 mt-1">Lead Reasoning Writers present their poster! Include exact m² totals, one right-angled triangle calculation, and one clever budget trade-off.</p>
-              </div>
-              <div class="my-5 flex flex-col items-center">
-                <div id="pitch-clock" class="font-mono-tech text-7xl font-extrabold text-amber-300 bg-emerald-950/90 px-8 py-3 rounded-2xl border-2 border-amber-400/70">
-                  01:00
-                </div>
-                <div class="flex gap-2.5 mt-4">
-                  <button id="btn-pitch-start" onclick="togglePitchTimer()" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-sm transition shadow">▶ Start 60s Pitch</button>
-                  <button onclick="resetPitchTimer()" class="px-4 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-sm transition">↺ Reset</button>
-                </div>
-              </div>
-              <div class="bg-emerald-950/70 rounded-xl p-3 text-xs text-emerald-100 border border-emerald-700">
-                <strong>Pitch Stem:</strong> "Our Eco-Park covers 120 m² for ___ credits. Our Koi Pond triangle is (___ × ___) ÷ 2 = ___ m², and we saved ___ credits by..."
-              </div>
+            <div class="bg-emerald-950/90 border-2 border-amber-400 rounded-2xl px-5 py-3 text-center min-w-[180px] shrink-0">
+              <div class="text-[11px] uppercase font-extrabold text-amber-300">Class Mastery</div>
+              <div id="sc-met-counter" class="font-mono-tech text-3xl font-extrabold text-white mt-0.5">0 / 3 Met</div>
             </div>
           </div>
-
-          <!-- Clickable Studio Award Badges -->
-          <div class="studio-card rounded-3xl p-6">
-            <div class="text-center mb-5">
-              <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Tap Any Award to Celebrate a Winning Team!</span>
-              <h3 class="font-studio-serif text-3xl text-emerald-950">🏅 Hanoi Eco-Park Studio Awards</h3>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <button onclick="celebrateAward(this, 'Most Accurate Maths')" class="award-card p-5 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 border-2 border-emerald-400 hover:scale-[1.03] transition text-center shadow-sm">
-                <div class="text-4xl mb-2">📐</div>
-                <div class="font-extrabold text-emerald-950 text-base">Most Accurate Maths</div>
-                <div class="text-xs text-emerald-800 mt-1">Zero errors in (b × h) ÷ 2 and exact 120 m² proof!</div>
-                <div class="award-winner mt-3 text-xs font-extrabold text-amber-700 uppercase tracking-wider">Tap to Award!</div>
-              </button>
-              <button onclick="celebrateAward(this, 'Best Written Justification')" class="award-card p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-amber-400 hover:scale-[1.03] transition text-center shadow-sm">
-                <div class="text-4xl mb-2">✍️</div>
-                <div class="font-extrabold text-amber-950 text-base">Best Written Justification</div>
-                <div class="text-xs text-amber-900 mt-1">Clear mathematical sentences on the Poster Reasoning Panel!</div>
-                <div class="award-winner mt-3 text-xs font-extrabold text-emerald-800 uppercase tracking-wider">Tap to Award!</div>
-              </button>
-              <button onclick="celebrateAward(this, 'Smartest Budget')" class="award-card p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100 border-2 border-teal-400 hover:scale-[1.03] transition text-center shadow-sm">
-                <div class="text-4xl mb-2">💰</div>
-                <div class="font-extrabold text-teal-950 text-base">Smartest Budget</div>
-                <div class="text-xs text-teal-800 mt-1">Clever surface swaps keeping maximum fun under 600 credits!</div>
-                <div class="award-winner mt-3 text-xs font-extrabold text-amber-700 uppercase tracking-wider">Tap to Award!</div>
-              </button>
-              <button onclick="celebrateAward(this, 'Best 4-Role Teamwork')" class="award-card p-5 rounded-2xl bg-gradient-to-br from-yellow-50 to-amber-100 border-2 border-yellow-500 hover:scale-[1.03] transition text-center shadow-sm">
-                <div class="text-4xl mb-2">🤝</div>
-                <div class="font-extrabold text-amber-950 text-base">Best 4-Role Teamwork</div>
-                <div class="text-xs text-amber-900 mt-1">Every role contributed actively and respectfully!</div>
-                <div class="award-winner mt-3 text-xs font-extrabold text-emerald-800 uppercase tracking-wider">Tap to Award!</div>
-              </button>
-            </div>
+          <div class="w-full h-3.5 bg-emerald-950 rounded-full overflow-hidden border border-emerald-600">
+            <div id="sc-progress-bar" class="h-full bg-gradient-to-r from-amber-400 to-emerald-400 transition-all duration-300" style="width: 0%;"></div>
           </div>
         </div>
 
-        <!-- PANEL B: UNIT 7.1 FINALE 8-QUESTION QUICKFIRE -->
-        <div id="p5-panel-qf" class="hidden">
-          <div class="studio-blueprint-banner rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-400 shadow-xl space-y-6">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase">Unit 7.1 Mastery Finale</span>
-                <h3 class="font-studio-serif text-3xl text-white mt-1">⚡ 8-Question Rapid Quickfire</h3>
+        <!-- 3 Individual SC Diagnostic Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+          <!-- SC 1 CARD -->
+          <div id="sc-card-1" class="studio-card rounded-3xl p-5 flex flex-col justify-between space-y-4 transition">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-emerald-800 text-amber-300 text-xs font-extrabold uppercase">SC 1 • Grid Design</span>
+                <span id="sc-badge-1" class="text-xs font-extrabold text-slate-400">Pending</span>
               </div>
-              <div class="flex items-center gap-3">
-                <span id="qf-progress" class="font-mono-tech text-sm font-bold bg-emerald-900 px-3.5 py-1.5 rounded-xl border border-emerald-600">Q 1 / 8</span>
-                <span id="qf-timer" class="font-mono-tech text-3xl font-extrabold text-amber-300 bg-emerald-950 px-4 py-1 rounded-xl border-2 border-amber-400">15s</span>
+              <p class="text-xs font-bold text-emerald-900 bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 leading-snug">
+                "I can design scaled rectangular and right-angled triangular zones on a grid to meet exact area requirements."
+              </p>
+              <div class="bg-[#f5efe2] border-2 border-amber-900/15 rounded-2xl p-3.5">
+                <div class="text-[11px] font-extrabold uppercase text-amber-800 mb-1">✏️ Mini-Whiteboard Challenge 1</div>
+                <p class="text-sm font-extrabold text-emerald-950 leading-snug">
+                  Sketch or state the base and perpendicular height of ANY right-angled triangle on a 1 m grid that has an exact area of <span class="text-emerald-700 underline">18 m²</span>!
+                </p>
+              </div>
+              <div id="sc-proof-1" class="hidden rounded-2xl bg-emerald-100 border-2 border-emerald-600 p-3.5 text-xs sm:text-sm font-bold text-emerald-950">
+                <div class="font-mono-tech text-base font-extrabold text-emerald-900 mb-1">Any pair with b × h = 36</div>
+                e.g. <strong>9 m × 4 m</strong>, <strong>6 m × 6 m</strong>, or <strong>12 m × 3 m</strong> because <strong>(b × h) ÷ 2 = 18 m²</strong>!
               </div>
             </div>
+            <div class="space-y-2 pt-2 border-t border-stone-200">
+              <button onclick="revealScProof(1)" class="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-extrabold text-sm transition">
+                👁️ Reveal Proof
+              </button>
+              <label class="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-amber-50 border-2 border-amber-300 cursor-pointer hover:bg-amber-100 transition text-sm font-extrabold text-amber-950">
+                <input type="checkbox" id="sc-chk-1" onchange="updateScMastery()" class="sc-chk w-5 h-5 accent-emerald-700" />
+                <span>Mark SC 1 Met</span>
+              </label>
+            </div>
+          </div>
 
-            <!-- Question Stage -->
-            <div class="bg-[#fffdf8] text-emerald-950 rounded-3xl p-6 sm:p-10 text-center min-h-[250px] flex flex-col justify-center items-center shadow-inner border-4 border-emerald-800 relative">
-              <div id="qf-boards-up" class="hidden absolute top-3 right-3 px-4 py-1.5 rounded-full bg-rose-600 text-white font-extrabold text-sm animate-bounce shadow">
-                📣 BOARDS UP!
+          <!-- SC 2 CARD -->
+          <div id="sc-card-2" class="studio-card rounded-3xl p-5 flex flex-col justify-between space-y-4 transition">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-amber-600 text-white text-xs font-extrabold uppercase">SC 2 • Compound Area</span>
+                <span id="sc-badge-2" class="text-xs font-extrabold text-slate-400">Pending</span>
               </div>
-              <div id="qf-question" class="text-2xl sm:text-4xl font-extrabold leading-snug max-w-3xl"></div>
-              <div id="qf-answer-box" class="hidden mt-6 px-6 py-4 rounded-2xl bg-emerald-100 border-2 border-emerald-600">
-                <div id="qf-answer" class="text-3xl sm:text-5xl font-mono-tech font-extrabold text-emerald-900"></div>
-                <div id="qf-method" class="text-sm font-bold text-emerald-800 mt-1"></div>
+              <p class="text-xs font-bold text-amber-950 bg-amber-50 border border-amber-200 rounded-xl p-2.5 leading-snug">
+                "I can calculate total compound areas and verify another team's triangle calculations by checking perpendicular sides."
+              </p>
+              <div class="bg-[#f5efe2] border-2 border-amber-900/15 rounded-2xl p-3.5">
+                <div class="text-[11px] font-extrabold uppercase text-amber-800 mb-1">✏️ Mini-Whiteboard Challenge 2</div>
+                <p class="text-sm font-extrabold text-emerald-950 leading-snug">
+                  A park zone joins a <strong>7 m × 5 m</strong> rectangle to a right-angled triangle with base <strong>6 m</strong>, perpendicular height <strong>5 m</strong>, and sloping side <span class="text-rose-700">7.8 m</span>. Write the <strong>TOTAL compound area</strong> on your whiteboard!
+                </p>
+              </div>
+              <div id="sc-proof-2" class="hidden rounded-2xl bg-emerald-100 border-2 border-emerald-600 p-3.5 text-xs sm:text-sm font-bold text-emerald-950">
+                <div class="font-mono-tech text-xl font-extrabold text-emerald-900 mb-1">50 m²</div>
+                Rectangle: <strong>7 × 5 = 35 m²</strong>; Triangle: <strong>(6 × 5) ÷ 2 = 15 m²</strong> (ignore 7.8 m!); Total: <strong>35 + 15 = 50 m²</strong>.
               </div>
             </div>
+            <div class="space-y-2 pt-2 border-t border-stone-200">
+              <button onclick="revealScProof(2)" class="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-extrabold text-sm transition">
+                👁️ Reveal Proof
+              </button>
+              <label class="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-amber-50 border-2 border-amber-300 cursor-pointer hover:bg-amber-100 transition text-sm font-extrabold text-amber-950">
+                <input type="checkbox" id="sc-chk-2" onchange="updateScMastery()" class="sc-chk w-5 h-5 accent-emerald-700" />
+                <span>Mark SC 2 Met</span>
+              </label>
+            </div>
+          </div>
 
-            <!-- Quickfire Controls -->
-            <div class="flex flex-wrap items-center justify-between gap-3">
-              <div class="flex flex-wrap gap-2">
-                <button onclick="startQfTimer()" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-sm transition">⏱️ Start 15s</button>
-                <button onclick="revealQfAnswer()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm transition">👁️ Reveal Answer</button>
-                <button onclick="nextQf(-1)" class="px-4 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-white font-bold text-sm transition">← Prev</button>
-                <button onclick="nextQf(1)" class="px-4 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-white font-bold text-sm transition">Next →</button>
+          <!-- SC 3 CARD -->
+          <div id="sc-card-3" class="studio-card rounded-3xl p-5 flex flex-col justify-between space-y-4 transition">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-teal-800 text-amber-200 text-xs font-extrabold uppercase">SC 3 • Trade-Off Proof</span>
+                <span id="sc-badge-3" class="text-xs font-extrabold text-slate-400">Pending</span>
               </div>
-              <div class="flex gap-2">
-                <button onclick="awardTeam('red', 1)" class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-sm shadow transition">+1 Team Red 🔴</button>
-                <button onclick="awardTeam('blue', 1)" class="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-sm shadow transition">+1 Team Blue 🔵</button>
+              <p class="text-xs font-bold text-teal-950 bg-teal-50 border border-teal-200 rounded-xl p-2.5 leading-snug">
+                "I can justify design trade-offs clearly using accurate area calculations in square metres (m²)."
+              </p>
+              <div class="bg-[#f5efe2] border-2 border-amber-900/15 rounded-2xl p-3.5">
+                <div class="text-[11px] font-extrabold uppercase text-amber-800 mb-1">✏️ Mini-Whiteboard Challenge 3</div>
+                <p class="text-sm font-extrabold text-emerald-950 leading-snug">
+                  A team replaces <strong>5 m²</strong> of Koi Pond (<strong>6 cr/m²</strong>) with Flowerbed (<strong>4 cr/m²</strong>). How many Eco-Credits do they save — and write <strong>ONE short proof calculation</strong>!
+                </p>
               </div>
+              <div id="sc-proof-3" class="hidden rounded-2xl bg-emerald-100 border-2 border-emerald-600 p-3.5 text-xs sm:text-sm font-bold text-emerald-950">
+                <div class="font-mono-tech text-xl font-extrabold text-emerald-900 mb-1">10 Eco-Credits saved</div>
+                Difference is <strong>6 − 4 = 2 cr/m²</strong>, so <strong>5 × 2 = 10 credits saved</strong> (or 5 × 6 = 30 cr down to 5 × 4 = 20 cr).
+              </div>
+            </div>
+            <div class="space-y-2 pt-2 border-t border-stone-200">
+              <button onclick="revealScProof(3)" class="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-extrabold text-sm transition">
+                👁️ Reveal Proof
+              </button>
+              <label class="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-amber-50 border-2 border-amber-300 cursor-pointer hover:bg-amber-100 transition text-sm font-extrabold text-amber-950">
+                <input type="checkbox" id="sc-chk-3" onchange="updateScMastery()" class="sc-chk w-5 h-5 accent-emerald-700" />
+                <span>Mark SC 3 Met</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Celebratory CTA to Launch Finale Quickfire -->
+        <div class="text-center pt-2">
+          <button onclick="goPhase(6)" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-emerald-950 font-extrabold text-lg shadow-xl border-2 border-emerald-900/20 transition transform hover:scale-[1.02]">
+            ⚡ Launch Finale Quickfire →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 6: FINALE 8-QUESTION RAPID QUICKFIRE                     -->
+    <!-- ============================================================ -->
+    <section id="phase-6" class="phase-section">
+      <div class="space-y-6">
+        <div class="studio-blueprint-banner rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-400 shadow-xl space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase">Unit 7.1 Mastery Finale • 5 mins</span>
+              <h2 class="font-studio-serif text-3xl sm:text-4xl text-white mt-1">⚡ 8-Question Rapid Quickfire</h2>
+            </div>
+            <div class="flex items-center gap-3">
+              <span id="qf-progress" class="font-mono-tech text-sm font-bold bg-emerald-900 px-3.5 py-1.5 rounded-xl border border-emerald-600">Q 1 / 8</span>
+              <span id="qf-timer" class="font-mono-tech text-3xl font-extrabold text-amber-300 bg-emerald-950 px-4 py-1 rounded-xl border-2 border-amber-400">15s</span>
+            </div>
+          </div>
+
+          <!-- Question Stage -->
+          <div class="bg-[#fffdf8] text-emerald-950 rounded-3xl p-6 sm:p-10 text-center min-h-[260px] flex flex-col justify-center items-center shadow-inner border-4 border-emerald-800 relative">
+            <div id="qf-boards-up" class="hidden absolute top-3 right-3 px-4 py-1.5 rounded-full bg-rose-600 text-white font-extrabold text-sm animate-bounce shadow">
+              📣 BOARDS UP!
+            </div>
+            <div id="qf-question" class="text-2xl sm:text-4xl font-extrabold leading-snug max-w-3xl"></div>
+            <div id="qf-answer-box" class="hidden mt-6 px-6 py-4 rounded-2xl bg-emerald-100 border-2 border-emerald-600">
+              <div id="qf-answer" class="text-3xl sm:text-5xl font-mono-tech font-extrabold text-emerald-900"></div>
+              <div id="qf-method" class="text-sm font-bold text-emerald-800 mt-1"></div>
+            </div>
+          </div>
+
+          <!-- Quickfire Controls -->
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap gap-2">
+              <button onclick="startQfTimer()" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-sm transition">⏱️ Start 15s</button>
+              <button onclick="revealQfAnswer()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm transition">👁️ Reveal Answer</button>
+              <button onclick="nextQf(-1)" class="px-4 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-white font-bold text-sm transition">← Prev</button>
+              <button onclick="nextQf(1)" class="px-4 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-white font-bold text-sm transition">Next →</button>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="awardTeam('red', 1)" class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-sm shadow transition">+1 Team Red 🔴</button>
+              <button onclick="awardTeam('blue', 1)" class="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-sm shadow transition">+1 Team Blue 🔵</button>
             </div>
           </div>
         </div>
@@ -949,34 +1718,40 @@
     </div>
     <div class="space-y-4 text-sm">
       <div class="bg-emerald-900/70 rounded-2xl p-4 border border-emerald-700">
-        <h4 class="font-extrabold text-amber-300 uppercase text-xs mb-1">70-Minute Studio Pacing</h4>
-        <ul class="space-y-1 text-emerald-100 list-disc pl-4">
-          <li><strong>0–8 min:</strong> Phase 0 Brief &amp; Assign 4 Roles + Phase 1 Flashback 3.</li>
-          <li><strong>8–16 min:</strong> Phase 2 Glossary + Phase 3 Live Sandbox Demo (load Sample Park, show why two triangles sharing a diagonal leave ZERO gaps!).</li>
-          <li><strong>16–44 min:</strong> Phase 4 Three Sprints (10m Draft ➔ 8m Budget ➔ 8m Poster &amp; Reasoning).</li>
-          <li><strong>44–58 min:</strong> Phase 5 Peer Audit Swap + 60-Second Pitches + Studio Awards.</li>
-          <li><strong>58–70 min:</strong> Unit 7.1 Finale 8-Question Quickfire!</li>
+        <h4 class="font-extrabold text-amber-300 uppercase text-xs mb-1.5">70-Minute 3-Cycle Pacing</h4>
+        <ul class="space-y-1.5 text-emerald-100 list-disc pl-4 text-xs sm:text-sm">
+          <li><strong>0–5 min (Tab 0):</strong> WALT, 3 "I can..." Success Criteria, assign 4 Studio Roles &amp; review 600-credit rules.</li>
+          <li><strong>5–11 min (Tab 1):</strong> Brisk Flashback 3 (3m) + Bilingual Glossary &amp; Hanoi Architects link (3m).</li>
+          <li><strong>11–26 min (Tab 2 — Cycle 1):</strong> 3m Sandbox Demo (Diagonal Zero-Gap Trap) ➔ 10m Blueprint Task ➔ 2m Pit-Stop 1 whiteboard check (20 m²).</li>
+          <li><strong>26–40 min (Tab 3 — Cycle 2):</strong> 3m Swap-to-Save Simulator (628 cr ➔ ≤600 cr) ➔ 9m Budget Task ➔ 2m Pit-Stop 2 whiteboard check (595 cr).</li>
+          <li><strong>40–58 min (Tab 4 — Cycle 3):</strong> 3m WAGOLL Reasoning Spotlight ➔ 10m A3 Poster &amp; Rehearsal ➔ 5m Peer Audit, 60s Pitch &amp; Studio Awards.</li>
+          <li><strong>58–65 min (Tab 5):</strong> Individual SC Review (3 fresh solo whiteboard checks + 0/3 Met bar).</li>
+          <li><strong>65–70 min (Tab 6):</strong> 8-Question Unit 7.1 Finale Quickfire!</li>
         </ul>
       </div>
       <div class="bg-rose-950/70 rounded-2xl p-4 border border-rose-600/60">
-        <h4 class="font-extrabold text-rose-300 uppercase text-xs mb-1">Red-Flag Misconception Watch</h4>
-        <p class="text-rose-100"><strong>1. Forgetting ÷ 2:</strong> Area Accountants often multiply base × height for the Koi Pond or Flowerbed and forget to halve it, blowing the 600-credit budget.<br/><strong>2. Non-90° Slant Sides:</strong> Remind Chief Architects that BOTH straight sides of every triangle must lie along horizontal &amp; vertical grid lines!<br/><strong>3. Leftover Gaps:</strong> Show how pairing two right-angled triangles inside one bounding rectangle guarantees zero awkward gaps.</p>
+        <h4 class="font-extrabold text-rose-300 uppercase text-xs mb-1.5">Live Intervention &amp; Misconception Watch</h4>
+        <ul class="space-y-1.5 text-rose-100 list-disc pl-4 text-xs sm:text-sm">
+          <li><strong>Pit-Stop 1 Red Flag (40 m² or 75.2 m²):</strong> If >20% forget ÷ 2 or multiply by the 9.4 m sloping side, open David's Board (W) and draw the enclosing 8 × 5 rectangle split diagonally!</li>
+          <li><strong>Pit-Stop 2 Red Flag (forgetting difference):</strong> Pupils often subtract 6 × 8 = 48 instead of 6 × (8 − 3) = 30. Re-show the Swap Simulator slider at 6 m².</li>
+          <li><strong>Team Bottleneck Fix:</strong> If Role 4 is idle during Cycle 1, assign them to pre-label all zone titles and dimensions in pencil directly on Page 2.</li>
+        </ul>
       </div>
       <div class="bg-amber-950/60 rounded-2xl p-4 border border-amber-500/60">
-        <h4 class="font-extrabold text-amber-300 uppercase text-xs mb-1">EAL Speaking Stems for Pitch</h4>
-        <ul class="space-y-1 text-amber-100 list-disc pl-4">
+        <h4 class="font-extrabold text-amber-300 uppercase text-xs mb-1.5">EAL Speaking Stems for Pitch</h4>
+        <ul class="space-y-1 text-amber-100 list-disc pl-4 text-xs sm:text-sm">
           <li>"Our right-angled triangle has a base of ___ m and a perpendicular height of ___ m."</li>
           <li>"We halved the rectangle area so the triangle equals ___ m²."</li>
-          <li>"To stay under 600 credits, we swapped ___ m² of ___ for ___."</li>
+          <li>"To stay under 600 credits, we swapped ___ m² of ___ for ___, saving ___ credits."</li>
         </ul>
       </div>
     </div>
   </aside>
 
   <!-- ============================================================ -->
-  <!-- DAVID'S BOARD FULL-SCREEN WHITEBOARD (W) z-70                -->
+  <!-- DAVID'S BOARD FULL-SCREEN WHITEBOARD (W) z-80                -->
   <!-- ============================================================ -->
-  <div id="davids-board" class="hidden fixed inset-0 z-[70] bg-white flex flex-col">
+  <div id="davids-board" class="hidden fixed inset-0 z-[80] bg-white flex flex-col">
     <div class="bg-emerald-950 text-white px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 border-b-2 border-amber-400">
       <div class="flex items-center gap-2 font-extrabold text-sm">
         <span>✏️ David's Studio Sketch Board</span>
@@ -1052,6 +1827,12 @@
         : '🔊 <span class="hidden sm:inline">Sound (M)</span>';
     }
 
+    function formatMMSS(s) {
+      const m = Math.floor(s / 60);
+      const r = s % 60;
+      return `${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}`;
+    }
+
     // =========================================================================
     // AUTO-HIDING TOP HEADER
     // =========================================================================
@@ -1068,10 +1849,44 @@
     });
 
     // =========================================================================
-    // PHASE NAVIGATION
+    // 7-TAB MAIN NAVIGATION & FULL-SCREEN STAGE MANAGER
     // =========================================================================
+    function exitAllFullScreenStages() {
+      const stages = [
+        { wrap: 'c1-sandbox-wrap', btn: 'btn-fs-c1', label: '⛶ Full Screen' },
+        { wrap: 'c2-swap-wrap',    btn: 'btn-fs-c2', label: '⛶ Full Screen' },
+        { wrap: 'c3-wagoll-wrap',  btn: 'btn-fs-c3', label: '⛶ Full Screen' }
+      ];
+      stages.forEach(s => {
+        const w = document.getElementById(s.wrap);
+        const b = document.getElementById(s.btn);
+        if (w && w.classList.contains('fullscreen-stage')) {
+          w.classList.remove('fullscreen-stage');
+          if (b) b.textContent = s.label;
+        }
+      });
+    }
+
+    function hasActiveFullScreenStage() {
+      return !!document.querySelector('.fullscreen-stage');
+    }
+
+    function toggleFullScreenStage(wrapId, btnId, defaultLabel) {
+      const w = document.getElementById(wrapId);
+      const b = document.getElementById(btnId);
+      if (!w) return;
+      const willOpen = !w.classList.contains('fullscreen-stage');
+      exitAllFullScreenStages();
+      if (willOpen) {
+        w.classList.add('fullscreen-stage');
+        if (b) b.textContent = '✕ Exit Full Screen (Esc)';
+      }
+      playTone(520, 0.07, 'sine', 0.07);
+    }
+
     function goPhase(idx) {
-      if (idx < 0 || idx > 5) return;
+      if (idx < 0 || idx > 6) return;
+      exitAllFullScreenStages();
       currentPhase = idx;
       document.querySelectorAll('.phase-section').forEach((sec, i) => {
         sec.classList.toggle('active', i === idx);
@@ -1079,17 +1894,49 @@
       document.querySelectorAll('.phase-tab').forEach((btn) => {
         const p = Number(btn.dataset.phase);
         if (p === idx) {
-          btn.className = 'phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition bg-emerald-900 text-amber-300 shadow border-2 border-amber-400';
+          btn.className = 'phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition bg-emerald-900 text-amber-300 shadow border-2 border-amber-400';
         } else {
-          btn.className = 'phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition bg-stone-100 text-emerald-950 hover:bg-emerald-50 border-2 border-transparent';
+          btn.className = 'phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition bg-stone-100 text-emerald-950 hover:bg-emerald-50 border-2 border-transparent';
         }
       });
-      playTone(440 + idx * 40, 0.08, 'sine', 0.07);
+      playTone(440 + idx * 35, 0.08, 'sine', 0.07);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // =========================================================================
-    // PHASE 0: GROUP SIZE SWITCHER & 4 ROLE CARDS
+    // CYCLE SUB-STEP SWITCHER (CYCLES 1, 2, 3)
+    // =========================================================================
+    function setCycleStep(cycleNum, stepIdx) {
+      exitAllFullScreenStages();
+      for (let i = 0; i < 3; i++) {
+        const panel = document.getElementById(`c${cycleNum}-panel-${i}`);
+        const btn = document.getElementById(`c${cycleNum}-btn-${i}`);
+        if (panel) panel.classList.toggle('active', i === stepIdx);
+        if (btn) {
+          btn.className = i === stepIdx
+            ? `c${cycleNum}-step-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold border-2 transition bg-emerald-900 text-amber-300 border-amber-400 shadow`
+            : `c${cycleNum}-step-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold border-2 transition bg-white text-emerald-950 border-stone-300 hover:bg-emerald-50`;
+        }
+      }
+      playTone(500 + stepIdx * 55, 0.07, 'triangle', 0.07);
+    }
+
+    function toggleTwist(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('hidden');
+      playTone(580, 0.08, 'triangle', 0.08);
+    }
+
+    function revealPitStop(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('hidden');
+        playChime();
+      }
+    }
+
+    // =========================================================================
+    // TAB 0: GROUP SIZE SWITCHER & 4 ROLE CARDS
     // =========================================================================
     const BASE_ROLES = [
       {
@@ -1101,7 +1948,7 @@
         tasks: [
           'Draw every rectangle & right-angled triangle cleanly with a ruler on the 12 × 10 grid.',
           'Verify every triangle sits on two 90° perpendicular grid lines and draw the ∟ mark.',
-          'Label exact base (b) and height (h) measurements on the poster blueprint.'
+          'Mount and neaten Page 2 Blueprint on the A3 poster with clear dimensions.'
         ]
       },
       {
@@ -1112,8 +1959,8 @@
         badge: 'Role 2',
         tasks: [
           'Calculate every zone area accurately: b × h for rectangles and (b × h) ÷ 2 for triangles.',
-          'Check for zero overlaps and zero empty squares anywhere on the blueprint.',
-          'Prove mathematically on Page 3 that all zones sum to exactly 120 m².'
+          'Verify zero overlaps and zero gaps so all zones sum to exactly 120 m².',
+          'Write and verify 1 full proof sentence on the Page 4 Poster Panel.'
         ]
       },
       {
@@ -1124,19 +1971,19 @@
         badge: 'Role 3',
         tasks: [
           'Multiply each zone area by its unit cost (3, 4, 5, 6, or 8 credits/m²).',
-          'Keep total park cost ≤ 600 Eco-Credits while meeting all 4 mandatory sizes.',
-          'Suggest clever surface swaps to save credits and boost park quality.'
+          'Keep total park cost ≤ 600 Eco-Credits using smart surface swaps.',
+          'Double-check, sign, and mount the Page 3 Budget Ledger on the A3 poster.'
         ]
       },
       {
         id: 4,
         icon: '✍️',
-        title: 'Lead Reasoning Writer & Presenter',
+        title: 'Lead Reasoning Writer',
         colour: 'rose',
         badge: 'Role 4',
         tasks: [
-          'Write formal mathematical justifications on the Page 4 Poster Reasoning Panel.',
-          'Explain your halving checks and budget trade-off using exact m² numbers.',
+          'Label zones cleanly and record the exact credit saving from one smart swap.',
+          'Write the team\'s 3-star mathematical justification on Page 4 in square metres (m²).',
           'Lead your team\'s confident 60-second pitch to Hanoi City Council!'
         ]
       }
@@ -1161,14 +2008,14 @@
         grid.innerHTML = BASE_ROLES.map(r => renderRoleCard(r.badge, r.icon, r.title, r.tasks, r.colour)).join('');
       } else if (size === 3) {
         banner.classList.remove('hidden');
-        banner.innerHTML = '👥 <strong>Group of 3 Adaptation:</strong> Pupil 1 leads Architecture, Pupil 2 combines Area &amp; Budget Verification, and Pupil 3 leads Writing, Poster Design &amp; Pitch (all 3 co-check the 120 m² sum!).';
+        banner.innerHTML = '👥 <strong>Group of 3 Adaptation:</strong> Pupil 1 leads Architecture, Pupil 2 combines Area &amp; Budget Verification, and Pupil 3 leads Writing, Poster Assembly &amp; Pitch (all 3 co-check the 120 m² sum!).';
         grid.className = 'grid grid-cols-1 md:grid-cols-3 gap-4';
         grid.innerHTML = [
           renderRoleCard('Pupil 1', '📐', 'Chief Architect & Grid Checker', BASE_ROLES[0].tasks, 'emerald'),
           renderRoleCard('Pupil 2', '🧮💰', 'Area & Budget Director', [
             'Calculate every zone area using b × h and (b × h) ÷ 2 and prove Total = 120 m².',
             'Multiply each zone by its unit cost and keep total cost ≤ 600 Eco-Credits.',
-            'Propose one smart surface swap to save credits.'
+            'Propose one smart surface swap to save credits and sign Page 3.'
           ], 'amber'),
           renderRoleCard('Pupil 3', '✍️🎤', 'Lead Writer & Presenter', BASE_ROLES[3].tasks, 'rose')
         ].join('');
@@ -1184,7 +2031,7 @@
           ], 'emerald'),
           renderRoleCard('Partner B (Roles 3 + 4)', '💰✍️', 'Budget Director & Lead Writer', [
             'Calculate every zone cost, keep total ≤ 600 credits, and find a clever budget swap.',
-            'Write the team\'s formal mathematical reasoning on the Page 4 Poster Panel.',
+            'Write the team\'s 3-star mathematical reasoning on the Page 4 Poster Panel.',
             'Lead the 60-second pitch and check another team\'s poster in the Peer Audit.'
           ], 'amber')
         ].join('');
@@ -1193,12 +2040,12 @@
 
     function renderRoleCard(badge, icon, title, tasks, colour) {
       const palettes = {
-        emerald: 'bg-emerald-50 border-emerald-400 text-emerald-950 badge:bg-emerald-800 badge:text-amber-300',
+        emerald: 'bg-emerald-50 border-emerald-400 text-emerald-950',
         amber: 'bg-amber-50 border-amber-400 text-amber-950',
         teal: 'bg-teal-50 border-teal-400 text-teal-950',
         rose: 'bg-rose-50 border-rose-300 text-rose-950'
       };
-      const badgeColors = {
+      const badgeStyles = {
         emerald: 'bg-emerald-800 text-amber-300',
         amber: 'bg-amber-600 text-white',
         teal: 'bg-teal-800 text-amber-200',
@@ -1208,7 +2055,7 @@
         <div class="rounded-2xl border-2 p-4 flex flex-col justify-between ${palettes[colour]}">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold uppercase ${badgeColors[colour]}">${badge}</span>
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold uppercase ${badgeStyles[colour]}">${badge}</span>
               <span class="text-2xl">${icon}</span>
             </div>
             <h4 class="font-extrabold text-base leading-snug mb-2">${title}</h4>
@@ -1221,7 +2068,7 @@
     }
 
     // =========================================================================
-    // PHASE 1: FLASHBACK 3 FLIP CARDS
+    // TAB 1: FLASHBACK 3 & BILINGUAL GLOSSARY MODAL (SOLE VIETNAMESE ZONE)
     // =========================================================================
     function toggleFlip(cardEl) {
       cardEl.classList.toggle('flipped');
@@ -1235,9 +2082,6 @@
       playChime();
     }
 
-    // =========================================================================
-    // PHASE 2: BILINGUAL GLOSSARY MODAL (SOLE VIETNAMESE ZONE)
-    // =========================================================================
     const VOCAB_ITEMS = [
       {
         en: 'scale',
@@ -1286,7 +2130,7 @@
         vn: 'giải thích và chứng minh',
         defEn: 'To give clear mathematical reasons and exact calculations proving why your answer or choice is valid.',
         defVn: 'Đưa ra lý do toán học rõ ràng và phép tính chính xác để chứng minh lựa chọn của em là hợp lý.',
-        svg: `<svg viewBox="0 0 200 70" class="w-48 h-16"><rect x="18" y="10" width="164" height="50" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2.2"/><text x="100" y="31" text-anchor="middle" font-size="12" font-weight="800" fill="#92400e">"Because (6 × 5) ÷ 2 = 15 m²,"</text><text x="100" y="49" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Proof + Exact Numbers ✓</text></svg>`
+        svg: `<svg viewBox="0 0 200 70" class="w-48 h-16"><rect x="10" y="10" width="180" height="50" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2.2"/><text x="100" y="31" text-anchor="middle" font-size="9.5" font-weight="800" fill="#92400e">"Because (6 × 5) ÷ 2 = 15 m²,"</text><text x="100" y="49" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">Proof + Exact Numbers ✓</text></svg>`
       },
       {
         en: 'optimise',
@@ -1307,7 +2151,7 @@
             <span class="text-xs font-mono-tech font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-900">0${i + 1}</span>
             <span class="text-amber-600 group-hover:scale-110 transition">🔊</span>
           </div>
-          <div class="font-extrabold text-lg text-emerald-950 capitalize">${v.en}</div>
+          <div class="font-extrabold text-base sm:text-lg text-emerald-950 capitalize">${v.en}</div>
           <div class="text-xs text-slate-500 font-semibold mt-1">Tap for diagram &amp; audio</div>
         </button>
       `).join('');
@@ -1342,7 +2186,7 @@
     }
 
     // =========================================================================
-    // PHASE 3: INTERACTIVE 12 x 10 ECO-PARK BLUEPRINT SANDBOX
+    // TAB 2 (CYCLE 1): INTERACTIVE 12 x 10 ECO-PARK BLUEPRINT SANDBOX
     // =========================================================================
     const TOOLS = {
       'sports':     { name: 'Sports Court', shape: 'rect', rate: 8, fill: 'rgba(244, 63, 94, 0.72)', stroke: '#ffe4e6', tag: 'sports' },
@@ -1354,7 +2198,7 @@
     };
 
     let selectedToolKey = 'sports';
-    let triCorner = 'TL'; // Right-angle vertex corner of bounding box
+    let triCorner = 'TL';
     let placedZones = [];
     let nextZoneId = 1;
 
@@ -1450,8 +2294,8 @@
       placedZones = [
         { id: nextZoneId++, toolKey: 'sports', name: 'Sports Court', shape: 'rect', corner: 'TL', x: 0, y: 0, b: 6, h: 4, area: 24, rate: 8, cost: 192, fill: TOOLS['sports'].fill, stroke: TOOLS['sports'].stroke, tag: 'sports', compound: false },
         { id: nextZoneId++, toolKey: 'flower', name: 'Flowerbed', shape: 'tri', corner: 'TR', x: 6, y: 0, b: 6, h: 4, area: 12, rate: 4, cost: 48, fill: TOOLS['flower'].fill, stroke: TOOLS['flower'].stroke, tag: 'flower', compound: false },
-        { id: nextZoneId++, toolKey: 'grass-tri', name: 'Picnic Zone △ (Compound)', shape: 'tri', corner: 'BL', x: 6, y: 0, b: 6, h: 4, area: 12, rate: 3, cost: 36, fill: 'rgba(16, 185, 129, 0.78)', stroke: '#fef08a', tag: 'grass', compound: true },
-        { id: nextZoneId++, toolKey: 'grass-rect', name: 'Picnic Zone Rect (Compound)', shape: 'rect', corner: 'TL', x: 6, y: 4, b: 6, h: 3, area: 18, rate: 3, cost: 54, fill: 'rgba(16, 185, 129, 0.78)', stroke: '#fef08a', tag: 'grass', compound: true },
+        { id: nextZoneId++, toolKey: 'grass-tri', name: 'Picnic △', shape: 'tri', corner: 'BL', x: 6, y: 0, b: 6, h: 4, area: 12, rate: 3, cost: 36, fill: 'rgba(16, 185, 129, 0.78)', stroke: '#fef08a', tag: 'grass', compound: true },
+        { id: nextZoneId++, toolKey: 'grass-rect', name: 'Picnic Rect', shape: 'rect', corner: 'TL', x: 6, y: 4, b: 6, h: 3, area: 18, rate: 3, cost: 54, fill: 'rgba(16, 185, 129, 0.78)', stroke: '#fef08a', tag: 'grass', compound: true },
         { id: nextZoneId++, toolKey: 'path', name: 'Stone Path Plaza', shape: 'rect', corner: 'TL', x: 6, y: 7, b: 6, h: 3, area: 18, rate: 5, cost: 90, fill: TOOLS['path'].fill, stroke: TOOLS['path'].stroke, tag: 'path', compound: false },
         { id: nextZoneId++, toolKey: 'pond', name: 'Koi Pond', shape: 'tri', corner: 'TL', x: 0, y: 4, b: 6, h: 6, area: 18, rate: 6, cost: 108, fill: TOOLS['pond'].fill, stroke: TOOLS['pond'].stroke, tag: 'pond', compound: false },
         { id: nextZoneId++, toolKey: 'grass-tri', name: 'South Grass Lawn', shape: 'tri', corner: 'BR', x: 0, y: 4, b: 6, h: 6, area: 18, rate: 3, cost: 54, fill: 'rgba(52, 211, 153, 0.68)', stroke: '#d1fae5', tag: 'grass', compound: false }
@@ -1472,10 +2316,9 @@
 
     function renderBlueprint() {
       const svg = document.getElementById('park-svg');
-      const ox = 42, oy = 32, cell = 48; // 12*48=576, 10*48=480
+      const ox = 42, oy = 32, cell = 48;
       let html = '';
 
-      // Grid lines & numbered axes
       for (let i = 0; i <= 12; i++) {
         const gx = ox + i * cell;
         html += `<line x1="${gx}" y1="${oy}" x2="${gx}" y2="${oy + 10 * cell}" stroke="rgba(255,255,255,0.22)" stroke-width="${i % 6 === 0 ? 1.8 : 1}"/>`;
@@ -1488,7 +2331,6 @@
       }
       html += `<rect x="${ox}" y="${oy}" width="${12 * cell}" height="${10 * cell}" fill="none" stroke="#fbbf24" stroke-width="2.5"/>`;
 
-      // Placed Zones
       placedZones.forEach(z => {
         if (z.shape === 'rect') {
           const rx = ox + z.x * cell, ry = oy + z.y * cell, rw = z.b * cell, rh = z.h * cell;
@@ -1505,7 +2347,6 @@
         }
       });
 
-      // Live Dashed Ghost Preview of Current Tool Selection
       const px = Number(document.getElementById('inp-x').value);
       const py = Number(document.getElementById('inp-y').value);
       const pb = Number(document.getElementById('inp-b').value);
@@ -1576,13 +2417,6 @@
       el.querySelector('.chk-val').textContent = valText;
     }
 
-    function toggleSandboxFullscreen() {
-      const wrap = document.getElementById('sandbox-wrapper');
-      const isFs = wrap.classList.toggle('sandbox-fullscreen');
-      document.getElementById('btn-fullscreen-sandbox').textContent = isFs ? '✕ Exit Full Screen (Esc)' : '⛶ Full Screen Sandbox';
-    }
-
-    // Allow clicking directly on SVG grid to set Start X, Y
     document.getElementById('park-svg').addEventListener('click', (e) => {
       const svg = e.currentTarget;
       const rect = svg.getBoundingClientRect();
@@ -1598,113 +2432,160 @@
     });
 
     // =========================================================================
-    // PHASE 4: 3-SPRINT STUDIO TIMER & ROLE CHECKLISTS
+    // TAB 3 (CYCLE 2): LIVE SWAP-TO-SAVE COSTING SIMULATOR (TARGETED DOM ONLY)
     // =========================================================================
-    const SPRINTS = {
-      1: { title: 'Sprint 1: Blueprint & Mandatory Zones', goal: 'Draw all 4 mandatory zones cleanly with a ruler on Page 2 (12 × 10 grid) and mark every 90° right angle!', secs: 600 },
-      2: { title: 'Sprint 2: Budget Optimisation & Verification', goal: 'Complete the Page 3 Area & Budget Ledger — verify every triangle uses (b × h) ÷ 2, Total = 120 m², and Cost ≤ 600 credits!', secs: 480 },
-      3: { title: 'Sprint 3: Team Poster Assembly & Written Reasoning', goal: 'Mount your Blueprint & Reasoning Panel onto A3 poster paper, finish all 3 justifications on Page 4, and rehearse your 60s pitch!', secs: 480 }
+    let swapWasUnder = false;
+
+    function updateSwapSim() {
+      const swapped = Number(document.getElementById('swap-slider').value);
+      const startCost = 628;
+      const savingPerM2 = 5; // 8 - 3
+      const totalSaved = swapped * savingPerM2;
+      const newCost = startCost - totalSaved;
+      const courtM2 = 36 - swapped;
+      const grassM2 = 43 + swapped;
+      const isUnder = newCost <= 600;
+
+      document.getElementById('swap-m2-val').textContent = swapped;
+      document.getElementById('swap-court-m2').textContent = courtM2;
+      document.getElementById('swap-grass-m2').textContent = grassM2;
+      document.getElementById('swap-new-cost').textContent = newCost;
+      document.getElementById('swap-total-saved').textContent = totalSaved;
+      document.getElementById('swap-calc-text').textContent = `${startCost} − ${totalSaved} = ${newCost}`;
+
+      // Proportional bar for Court + Grass (79 m² combined)
+      const courtPct = ((courtM2 / 79) * 100).toFixed(1);
+      const grassPct = ((grassM2 / 79) * 100).toFixed(1);
+      document.getElementById('swap-bar-court').style.width = courtPct + '%';
+      document.getElementById('swap-bar-grass').style.width = grassPct + '%';
+
+      const card = document.getElementById('swap-status-card');
+      const pill = document.getElementById('swap-status-pill');
+      const bar = document.getElementById('swap-cost-bar');
+
+      bar.style.width = Math.min(100, (newCost / 600) * 100) + '%';
+
+      if (isUnder) {
+        card.className = 'rounded-3xl p-6 border-4 bg-emerald-900 text-white border-emerald-400 shadow-xl transition-all duration-300 space-y-4';
+        pill.className = 'px-3.5 py-1 rounded-full bg-emerald-400 text-emerald-950 text-xs font-extrabold uppercase';
+        pill.textContent = `🟢 UNDER 600 CREDITS (${600 - newCost} cr spare!)`;
+        bar.className = 'h-full bg-emerald-400 transition-all duration-200';
+        if (!swapWasUnder) {
+          playChime();
+        }
+      } else {
+        card.className = 'rounded-3xl p-6 border-4 bg-rose-950 text-white border-rose-500 shadow-xl transition-all duration-300 space-y-4';
+        pill.className = 'px-3.5 py-1 rounded-full bg-rose-500 text-white text-xs font-extrabold uppercase';
+        pill.textContent = `🔴 OVER BUDGET (+${newCost - 600} cr)`;
+        bar.className = 'h-full bg-rose-400 transition-all duration-200';
+      }
+      swapWasUnder = isUnder;
+    }
+
+    function resetSwapSim() {
+      document.getElementById('swap-slider').value = 0;
+      swapWasUnder = false;
+      updateSwapSim();
+      playTone(360, 0.08, 'sine', 0.08);
+    }
+
+    // =========================================================================
+    // TAB 4 (CYCLE 3): WAGOLL SPOTLIGHT HIGHLIGHTER
+    // =========================================================================
+    function setWagollSpotlight(mode) {
+      const f1 = document.getElementById('wg-form-1');
+      const f2 = document.getElementById('wg-form-2');
+      const p1 = document.getElementById('wg-perp-1');
+      const b1 = document.getElementById('wg-budg-1');
+      const note = document.getElementById('wg-note');
+
+      [f1, f2, p1, b1].forEach(el => {
+        el.classList.remove('wagoll-hl-formula', 'wagoll-hl-perp', 'wagoll-hl-budget');
+      });
+
+      if (mode === 'formula' || mode === 'all') {
+        f1.classList.add('wagoll-hl-formula');
+        f2.classList.add('wagoll-hl-formula');
+      }
+      if (mode === 'perp' || mode === 'all') {
+        p1.classList.add('wagoll-hl-perp');
+      }
+      if (mode === 'budget' || mode === 'all') {
+        b1.classList.add('wagoll-hl-budget');
+      }
+
+      const notes = {
+        formula: '1️⃣ Exact Formula & Units: Shows (6 × 5) ÷ 2 = 15 m² and states the exact 4 m² reduction with square metre units!',
+        perp: '2️⃣ Perpendicular 90° Check: Explicitly names the right-angled base (6 m) and perpendicular height (5 m) — zero sloping-side traps!',
+        budget: '3️⃣ Exact Credit Trade-Off Maths: Proves 8 − 3 = 5 cr/m², 4 × 5 = 20 credits saved, and compares final 580 cr against the 600 limit!',
+        all: '★★★ All 3 Mathematician Pillars Active! Include formula + units (m²), 90° check, and exact credit savings on Page 4!',
+        none: '👆 Click any spotlight button above to inspect what earns a 3-Star Poster Justification!'
+      };
+      note.textContent = notes[mode] || notes.none;
+      playTone(mode === 'all' ? 660 : 540, 0.08, 'triangle', 0.08);
+    }
+
+    // =========================================================================
+    // 3 INDEPENDENT CYCLE COUNTDOWN TIMERS (10m, 9m, 10m)
+    // =========================================================================
+    const CYCLE_TIMERS = {
+      1: { defaultSecs: 600, secs: 600, interval: null, label: '▶ Start 10m' },
+      2: { defaultSecs: 540, secs: 540, interval: null, label: '▶ Start 9m' },
+      3: { defaultSecs: 600, secs: 600, interval: null, label: '▶ Start 10m' }
     };
 
-    let activeSprint = 1;
-    let sprintSecsLeft = 600;
-    let sprintInterval = null;
-
-    function formatMMSS(s) {
-      const m = Math.floor(s / 60);
-      const r = s % 60;
-      return `${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}`;
-    }
-
-    function selectSprint(num) {
-      activeSprint = num;
-      stopSprintTimer();
-      sprintSecsLeft = SPRINTS[num].secs;
-      document.getElementById('sprint-title').textContent = SPRINTS[num].title;
-      document.getElementById('sprint-goal').textContent = SPRINTS[num].goal;
-      document.getElementById('sprint-clock').textContent = formatMMSS(sprintSecsLeft);
-      [1, 2, 3].forEach(i => {
-        const b = document.getElementById('sprint-btn-' + i);
-        b.className = i === num
-          ? 'sprint-btn text-left p-3.5 rounded-2xl border-2 transition bg-amber-400 text-emerald-950 border-white shadow'
-          : 'sprint-btn text-left p-3.5 rounded-2xl border-2 transition bg-emerald-950/60 text-emerald-100 border-emerald-700 hover:bg-emerald-900';
-      });
-    }
-
-    function stopSprintTimer() {
-      if (sprintInterval) { clearInterval(sprintInterval); sprintInterval = null; }
-      document.getElementById('btn-sprint-start').textContent = '▶ Start Sprint';
-    }
-
-    function toggleSprintTimer() {
-      if (sprintInterval) {
-        stopSprintTimer();
-      } else {
-        document.getElementById('btn-sprint-start').textContent = '⏸ Pause';
-        playTone(520, 0.1, 'sine', 0.1);
-        sprintInterval = setInterval(() => {
-          if (sprintSecsLeft > 0) {
-            sprintSecsLeft--;
-            document.getElementById('sprint-clock').textContent = formatMMSS(sprintSecsLeft);
-            if (sprintSecsLeft <= 5 && sprintSecsLeft > 0) playTone(660, 0.08, 'triangle', 0.08);
-            if (sprintSecsLeft === 0) {
-              stopSprintTimer();
-              playBuzzer();
-            }
-          }
-        }, 1000);
+    function stopCycleTimer(num) {
+      const t = CYCLE_TIMERS[num];
+      if (t.interval) {
+        clearInterval(t.interval);
+        t.interval = null;
       }
+      const btn = document.getElementById(`c${num}-timer-btn`);
+      if (btn) btn.textContent = t.secs === t.defaultSecs ? t.label : '▶ Resume';
     }
 
-    function resetSprintTimer() {
-      stopSprintTimer();
-      sprintSecsLeft = SPRINTS[activeSprint].secs;
-      document.getElementById('sprint-clock').textContent = formatMMSS(sprintSecsLeft);
+    function toggleCycleTimer(num) {
+      const t = CYCLE_TIMERS[num];
+      if (t.interval) {
+        stopCycleTimer(num);
+        return;
+      }
+      // Pause other cycle timers cleanly
+      [1, 2, 3].forEach(k => { if (k !== num) stopCycleTimer(k); });
+      if (t.secs <= 0) {
+        t.secs = t.defaultSecs;
+        document.getElementById(`c${num}-clock`).textContent = formatMMSS(t.secs);
+      }
+
+      const btn = document.getElementById(`c${num}-timer-btn`);
+      if (btn) btn.textContent = '⏸ Pause';
+      playTone(520, 0.1, 'sine', 0.1);
+      t.interval = setInterval(() => {
+        if (t.secs > 0) {
+          t.secs--;
+          document.getElementById(`c${num}-clock`).textContent = formatMMSS(t.secs);
+          if (t.secs <= 5 && t.secs > 0) playTone(660, 0.08, 'triangle', 0.08);
+          if (t.secs === 0) {
+            stopCycleTimer(num);
+            if (btn) btn.textContent = t.label;
+            playBuzzer();
+          }
+        }
+      }, 1000);
     }
 
-    function buildSprintChecklists() {
-      const container = document.getElementById('sprint-checklists');
-      const roleShort = [
-        { icon: '📐', name: 'Chief Architect', items: ['All zones drawn with ruler', 'Both △ sit on 90° lines', 'Park title & legend neat'] },
-        { icon: '🧮', name: 'Area Accountant', items: ['Every △ divided by 2', 'Compound zone ≥ 25 m²', 'Total proved = 120 m²'] },
-        { icon: '💰', name: 'Budget Director', items: ['Unit costs multiplied accurately', 'Total cost ≤ 600 credits', '1 smart swap recorded'] },
-        { icon: '✍️', name: 'Lead Writer', items: ['Accuracy proof written', 'Trade-off explained', '60-second pitch rehearsed'] }
-      ];
-      container.innerHTML = roleShort.map(r => `
-        <div class="rounded-2xl bg-stone-50 border-2 border-stone-200 p-4 space-y-2">
-          <div class="font-extrabold text-emerald-950 text-sm flex items-center gap-1.5"><span>${r.icon}</span> ${r.name}</div>
-          ${r.items.map(it => `
-            <label class="flex items-start gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
-              <input type="checkbox" onchange="updateStudioCheckCount()" class="studio-chk mt-0.5 w-4 h-4 accent-emerald-700" />
-              <span>${it}</span>
-            </label>
-          `).join('')}
-        </div>
-      `).join('');
-    }
-
-    function updateStudioCheckCount() {
-      const all = document.querySelectorAll('.studio-chk');
-      const checked = Array.from(all).filter(c => c.checked).length;
-      document.getElementById('studio-check-count').textContent = `${checked} / ${all.length}`;
-      if (checked === all.length) { playChime(); fireConfetti(); }
+    function resetCycleTimer(num) {
+      const t = CYCLE_TIMERS[num];
+      stopCycleTimer(num);
+      t.secs = t.defaultSecs;
+      document.getElementById(`c${num}-clock`).textContent = formatMMSS(t.secs);
+      const btn = document.getElementById(`c${num}-timer-btn`);
+      if (btn) btn.textContent = t.label;
     }
 
     // =========================================================================
-    // PHASE 5: PEER AUDIT, 60S PITCH TIMER, AWARDS & UNIT FINALE QUICKFIRE
+    // CYCLE 3C: PEER AUDIT, 60s PITCH TIMER & STUDIO AWARDS
     // =========================================================================
-    function setPhase5Mode(mode) {
-      const isPitch = mode === 'pitch';
-      document.getElementById('p5-panel-pitch').classList.toggle('hidden', !isPitch);
-      document.getElementById('p5-panel-qf').classList.toggle('hidden', isPitch);
-      document.getElementById('p5-tab-pitch').className = isPitch
-        ? 'px-5 py-2.5 rounded-2xl font-extrabold text-sm border-2 transition shadow bg-emerald-900 text-amber-300 border-amber-500'
-        : 'px-5 py-2.5 rounded-2xl font-bold text-sm border-2 transition bg-white text-emerald-950 border-stone-300';
-      document.getElementById('p5-tab-qf').className = !isPitch
-        ? 'px-5 py-2.5 rounded-2xl font-extrabold text-sm border-2 transition shadow bg-emerald-900 text-amber-300 border-amber-500'
-        : 'px-5 py-2.5 rounded-2xl font-bold text-sm border-2 transition bg-white text-emerald-950 border-stone-300';
-    }
-
     function updateAuditCounter() {
       const all = document.querySelectorAll('.audit-chk');
       const done = Array.from(all).filter(c => c.checked).length;
@@ -1725,6 +2606,10 @@
         clearInterval(pitchInt); pitchInt = null;
         document.getElementById('btn-pitch-start').textContent = '▶ Resume Pitch';
       } else {
+        if (pitchSecs <= 0) {
+          pitchSecs = 60;
+          document.getElementById('pitch-clock').textContent = '01:00';
+        }
         document.getElementById('btn-pitch-start').textContent = '⏸ Pause';
         pitchInt = setInterval(() => {
           if (pitchSecs > 0) {
@@ -1749,18 +2634,58 @@
       document.getElementById('btn-pitch-start').textContent = '▶ Start 60s Pitch';
     }
 
-    function celebrateAward(btn, title) {
+    function celebrateAward(btn) {
       btn.classList.add('pulse-gold', 'ring-4', 'ring-amber-400');
       btn.querySelector('.award-winner').textContent = '🏆 AWARDED!';
       playChime();
       fireConfetti();
     }
 
-    // Unit 7.1 Finale 8-Question Quickfire (100% Fresh Numbers)
+    // =========================================================================
+    // TAB 5: SUCCESS CRITERIA INDIVIDUAL REVIEW (0 / 3 MET TRACKER)
+    // =========================================================================
+    function revealScProof(num) {
+      const box = document.getElementById(`sc-proof-${num}`);
+      if (box) {
+        box.classList.remove('hidden');
+        playChime();
+      }
+    }
+
+    function updateScMastery() {
+      let met = 0;
+      for (let i = 1; i <= 3; i++) {
+        const chk = document.getElementById(`sc-chk-${i}`);
+        const card = document.getElementById(`sc-card-${i}`);
+        const badge = document.getElementById(`sc-badge-${i}`);
+        if (chk && chk.checked) {
+          met++;
+          card.classList.add('ring-4', 'ring-emerald-500');
+          badge.textContent = '✓ MET';
+          badge.className = 'text-xs font-extrabold text-emerald-700';
+        } else {
+          card.classList.remove('ring-4', 'ring-emerald-500');
+          badge.textContent = 'Pending';
+          badge.className = 'text-xs font-extrabold text-slate-400';
+        }
+      }
+      document.getElementById('sc-met-counter').textContent = `${met} / 3 Met`;
+      document.getElementById('sc-progress-bar').style.width = `${(met / 3) * 100}%`;
+      if (met === 3) {
+        playChime();
+        fireConfetti();
+      } else {
+        playTone(540 + met * 60, 0.08, 'triangle', 0.08);
+      }
+    }
+
+    // =========================================================================
+    // TAB 6: UNIT 7.1 FINALE 8-QUESTION QUICKFIRE (100% FRESH NUMBERS)
+    // =========================================================================
     const QF_QUESTIONS = [
       { q: 'Find the area of a rectangular plaza measuring 9 m by 7 m.', a: '63 m²', m: '9 × 7 = 63 m²' },
       { q: 'Find the area of a right-angled triangle with base 14 cm and perpendicular height 7 cm.', a: '49 cm²', m: '(14 × 7) ÷ 2 = 98 ÷ 2 = 49 cm²' },
-      { q: 'A rectangular grass lawn is 8 m × 5 m. At 3 credits/m², what is its total cost?', a: '120 credits', m: 'Area = 40 m²; Cost = 40 × 3 = 120 credits' },
+      { q: 'A rectangular grass lawn is 11 m × 3 m. At 3 credits/m², what is its total cost?', a: '99 credits', m: 'Area = 33 m²; Cost = 33 × 3 = 99 credits' },
       { q: 'A right-angled triangle has base 12 m, perpendicular height 9 m, and slanted side 15 m. What is its area?', a: '54 m²', m: '(12 × 9) ÷ 2 = 54 m² (ignore the 15 m slanted side!)' },
       { q: 'A right-angled triangle has area 28 cm² and base 8 cm. What is its perpendicular height?', a: '7 cm', m: 'Double area: 28 × 2 = 56; then 56 ÷ 8 = 7 cm' },
       { q: 'A compound zone joins a 7 m × 4 m rectangle to a 4 m × 4 m right-angled triangle. Total area?', a: '36 m²', m: 'Rectangle = 28 m², Triangle = (4 × 4) ÷ 2 = 8 m²; 28 + 8 = 36 m²' },
@@ -1824,13 +2749,13 @@
     }
 
     // =========================================================================
-    // TEACHER DRAWER & DAVID'S BOARD WHITEBOARD
+    // TEACHER DRAWER & DAVID'S BOARD WHITEBOARD (DPR-SAFE RESIZE + SNAPSHOT)
     // =========================================================================
     function toggleTeacherDrawer() {
       document.getElementById('teacher-drawer').classList.toggle('hidden');
     }
 
-    let bCanvas, bCtx, isDrawing = false, inkColor = '#064e3b', penWidth = 4, isEraser = false;
+    let bCanvas, bCtx, isDrawing = false, inkColour = '#064e3b', penWidth = 4, isEraser = false;
 
     function openDavidsBoard() {
       document.getElementById('davids-board').classList.remove('hidden');
@@ -1882,7 +2807,7 @@
           if (!isDrawing) return;
           const p = getPos(e);
           bCtx.globalCompositeOperation = isEraser ? 'destination-out' : 'source-over';
-          bCtx.strokeStyle = inkColor;
+          bCtx.strokeStyle = inkColour;
           bCtx.lineWidth = isEraser ? 26 : penWidth;
           bCtx.lineTo(p.x, p.y);
           bCtx.stroke();
@@ -1896,7 +2821,7 @@
       }
     }
 
-    function setInk(c) { isEraser = false; inkColor = c; }
+    function setInk(c) { isEraser = false; inkColour = c; }
     function setPenWidth(w) { isEraser = false; penWidth = w; }
     function setEraser() { isEraser = true; }
     function clearBoard() { if (bCtx) bCtx.clearRect(0, 0, bCanvas.width, bCanvas.height); }
@@ -1953,20 +2878,21 @@
     // GUARDED KEYBOARD SHORTCUTS
     // =========================================================================
     document.addEventListener('keydown', (e) => {
-      const tag = document.activeElement?.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-
       const vocabOpen = !document.getElementById('vocab-modal').classList.contains('hidden');
       const boardOpen = !document.getElementById('davids-board').classList.contains('hidden');
-      const sandboxFs = document.getElementById('sandbox-wrapper').classList.contains('sandbox-fullscreen');
+      const drawerOpen = !document.getElementById('teacher-drawer').classList.contains('hidden');
+      const fsOpen = hasActiveFullScreenStage();
 
       if (e.key === 'Escape') {
         if (vocabOpen) closeVocabModal();
         if (boardOpen) closeDavidsBoard();
-        if (sandboxFs) toggleSandboxFullscreen();
-        document.getElementById('teacher-drawer').classList.add('hidden');
+        if (fsOpen) exitAllFullScreenStages();
+        if (drawerOpen) document.getElementById('teacher-drawer').classList.add('hidden');
         return;
       }
+
+      const tag = document.activeElement ? document.activeElement.tagName : '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
 
       if (e.key === 'w' || e.key === 'W') {
         boardOpen ? closeDavidsBoard() : openDavidsBoard();
@@ -1981,22 +2907,24 @@
         return;
       }
 
-      if (vocabOpen || boardOpen) return;
-      if (e.key === 'ArrowRight') goPhase(Math.min(5, currentPhase + 1));
+      // Guard ArrowLeft / ArrowRight whenever any modal, drawer, board, or full-screen stage is open
+      if (vocabOpen || boardOpen || drawerOpen || fsOpen) return;
+      if (e.key === 'ArrowRight') goPhase(Math.min(6, currentPhase + 1));
       if (e.key === 'ArrowLeft') goPhase(Math.max(0, currentPhase - 1));
     });
 
     // =========================================================================
-    // INITIALISE STUDIO
+    // INITIALISE 7-TAB STUDIO
     // =========================================================================
     goPhase(0);
     setGroupSize(4);
     buildVocabGrid();
+    setCycleStep(1, 0);
+    setCycleStep(2, 0);
+    setCycleStep(3, 0);
     selectTool('sports');
     setTriCorner('TL');
-    selectSprint(1);
-    buildSprintChecklists();
-    setPhase5Mode('pitch');
+    updateSwapSim();
     renderQf();
   </script>
 </body>
