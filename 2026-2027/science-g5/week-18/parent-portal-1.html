@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parent Portal — Grade 5 Science: Unit 5 Forces Mastery Clinic</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 45%, #f0fdfa 100%);
+    color: #0f172a;
+  }
+  h1, h2, h3, .font-display { font-family: 'Fredoka', sans-serif; }
+
+  /* Bilingual toggle logic (applies cleanly to HTML and SVG elements!) */
+  body.mode-en .lang-vn { display: none !important; }
+  body.mode-vn .lang-en { display: none !important; }
+
+  @keyframes bobFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+  }
+  .bob-float { animation: bobFloat 2.3s ease-in-out infinite; }
+
+  #confettiCanvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 90;
+  }
+</style>
+</head>
+<body class="mode-en min-h-screen pb-14">
+
+<canvas id="confettiCanvas"></canvas>
+
+<!-- ========================================================================= -->
+<!-- STICKY BILINGUAL HEADER                                                   -->
+<!-- ========================================================================= -->
+<header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur text-white shadow-lg border-b-4 border-sky-400">
+  <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <div class="w-9 h-9 rounded-xl bg-sky-400 text-slate-950 flex items-center justify-center font-bold text-lg shrink-0">⚖️</div>
+      <div class="min-w-0">
+        <div class="text-[11px] font-extrabold uppercase tracking-wider text-sky-300 truncate">
+          <span class="lang-en">Grade 5 Science · Unit 5 Parent Portal</span>
+          <span class="lang-vn">Khoa học Lớp 5 · Chương 5 Cổng Phụ Huynh</span>
+        </div>
+        <div class="font-display font-bold text-base md:text-lg truncate">
+          <span class="lang-en">Forces Mastery Clinic (Topics 5.1–5.3)</span>
+          <span class="lang-vn">Ôn tập Chuyên sâu về Lực (Chủ đề 5.1–5.3)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky EN / VN Toggle -->
+    <div class="flex bg-slate-800 p-1 rounded-xl border border-slate-700 shrink-0">
+      <button id="btnEn" onclick="setLang('en')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-sky-400 text-slate-950">
+        🇬🇧 EN
+      </button>
+      <button id="btnVn" onclick="setLang('vn')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-300 hover:text-white">
+        🇻🇳 VN
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-4 pt-6 space-y-8">
+
+  <!-- ======================================================================= -->
+  <!-- HERO WELCOME CARD                                                       -->
+  <!-- ======================================================================= -->
+  <section class="bg-gradient-to-br from-blue-700 via-indigo-700 to-sky-600 text-white rounded-3xl p-6 md:p-8 shadow-xl">
+    <span class="inline-block bg-amber-400 text-slate-950 font-extrabold text-xs px-3 py-1 rounded-full uppercase mb-3">
+      <span class="lang-en">Week 18 · Lesson 1 Pre-Assessment Home Explorer</span>
+      <span class="lang-vn">Tuần 18 · Bài 1 Ôn tập cùng Con trước Kiểm tra Chương 5</span>
+    </span>
+    <h1 class="font-display text-3xl md:text-4xl font-bold leading-tight">
+      <span class="lang-en">Master mass, weight, force arrows and floating together!</span>
+      <span class="lang-vn">Cùng con làm chủ khối lượng, trọng lượng, sơ đồ lực và sự nổi!</span>
+    </h1>
+    <p class="mt-3 text-sky-100 text-sm md:text-base leading-relaxed">
+      <span class="lang-en">This week your child is preparing for the Cambridge Stage 6 Unit 5 Assessment. Today&rsquo;s Mastery Clinic tackled the three biggest Forces exam traps: keeping mass constant in space, drawing equal/unequal force arrows, and explaining why hollow shapes float. Play with the two interactive science labs below together!</span>
+      <span class="lang-vn">Tuần này con đang ôn tập chuẩn bị cho Bài kiểm tra Chương 5 (Hệ 6 Cambridge). Hôm nay trên lớp, con đã rèn luyện cách tránh 3 bẫy thi hay gặp nhất: khối lượng không đổi ngoài không gian, vẽ mũi tên lực cân bằng/không cân bằng và giải thích vì sao tàu thép rỗng lại nổi. Ba mẹ hãy cùng con thử 2 phòng thí nghiệm ảo bên dưới nhé!</span>
+    </p>
+  </section>
+
+  <!-- ======================================================================= -->
+  <!-- MODEL A: PLANET GRAVITY WEIGHT SCALE                                    -->
+  <!-- ======================================================================= -->
+  <section class="bg-white rounded-3xl p-5 md:p-6 shadow-lg border-2 border-indigo-100 space-y-4">
+    <div>
+      <span class="bg-indigo-100 text-indigo-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
+        <span class="lang-en">Interactive Model A · Space Gravity Lab</span>
+        <span class="lang-vn">Mô hình Tương tác A · Cân Trọng lực Hành tinh</span>
+      </span>
+      <h2 class="font-display text-2xl md:text-3xl font-bold text-slate-900 mt-2">
+        <span class="lang-en">🪐 Planet Gravity Weight Scale</span>
+        <span class="lang-vn">🪐 Cân Khối lượng &amp; Trọng lượng trên các Hành tinh</span>
+      </h2>
+      <p class="text-slate-600 text-sm">
+        <span class="lang-en">Slide the astronaut&rsquo;s mass and teleport between worlds. Watch closely: <strong>Mass (kg)</strong> stays frozen while <strong>Weight (N)</strong> changes!</span>
+        <span class="lang-vn">Kéo thanh trượt chọn khối lượng phi hành gia rồi chọn hành tinh. Hãy quan sát: <strong>Khối lượng (kg)</strong> luôn giữ nguyên, còn <strong>Trọng lượng (N)</strong> thay đổi theo trọng lực!</span>
+      </p>
+    </div>
+
+    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4">
+      <div>
+        <label for="pMassSlider" class="flex justify-between font-bold text-sm text-slate-800 mb-1">
+          <span>
+            <span class="lang-en">Astronaut Mass:</span>
+            <span class="lang-vn">Khối lượng Phi hành gia:</span>
+          </span>
+          <span id="pMassOut" class="text-indigo-700 font-extrabold">60 kg</span>
+        </label>
+        <input id="pMassSlider" type="range" min="10" max="100" step="5" value="60" oninput="renderPortalGravity()" class="w-full accent-indigo-600 cursor-pointer">
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button onclick="selectPortalPlanet('earth')" id="pp-earth" class="py-2 px-3 rounded-xl text-xs font-extrabold bg-indigo-600 text-white shadow">
+          <span class="lang-en">🌍 Earth</span><span class="lang-vn">🌍 Trái Đất</span>
+        </button>
+        <button onclick="selectPortalPlanet('moon')" id="pp-moon" class="py-2 px-3 rounded-xl text-xs font-extrabold bg-slate-200 text-slate-800">
+          <span class="lang-en">🌙 Moon</span><span class="lang-vn">🌙 Mặt Trăng</span>
+        </button>
+        <button onclick="selectPortalPlanet('mars')" id="pp-mars" class="py-2 px-3 rounded-xl text-xs font-extrabold bg-slate-200 text-slate-800">
+          <span class="lang-en">🔴 Mars</span><span class="lang-vn">🔴 Sao Hỏa</span>
+        </button>
+        <button onclick="selectPortalPlanet('jupiter')" id="pp-jupiter" class="py-2 px-3 rounded-xl text-xs font-extrabold bg-slate-200 text-slate-800">
+          <span class="lang-en">🟠 Jupiter</span><span class="lang-vn">🟠 Sao Mộc</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bilingual Live SVG -->
+    <div id="portalGravitySvg" class="rounded-2xl overflow-hidden border-4 border-slate-800 bg-slate-900 p-2"></div>
+
+    <!-- Bilingual Anchored Dashboard -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-3.5 text-center">
+        <div class="text-xs font-extrabold uppercase text-emerald-700">
+          <span class="lang-en">Mass (Constant)</span>
+          <span class="lang-vn">Khối lượng (Không đổi)</span>
+        </div>
+        <div id="pDashMass" class="font-display text-3xl font-bold text-emerald-950">60 kg</div>
+      </div>
+      <div class="bg-rose-50 border-2 border-rose-400 rounded-2xl p-3.5 text-center">
+        <div class="text-xs font-extrabold uppercase text-rose-700">
+          <span class="lang-en">Weight (Force)</span>
+          <span class="lang-vn">Trọng lượng (Lực hút)</span>
+        </div>
+        <div id="pDashWeight" class="font-display text-3xl font-bold text-rose-950">600 N</div>
+      </div>
+      <div class="bg-indigo-50 border-2 border-indigo-300 rounded-2xl p-3.5 text-center">
+        <div class="text-xs font-extrabold uppercase text-indigo-700">
+          <span class="lang-en">Gravity Rule</span>
+          <span class="lang-vn">Quy tắc Trọng lực</span>
+        </div>
+        <div id="pDashRule" class="font-display text-lg font-bold text-indigo-950 mt-1">
+          <span class="lang-en">Earth: 10 N/kg</span>
+          <span class="lang-vn">Trái Đất: 10 N/kg</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================= -->
+  <!-- MODEL B: LIVE FORCE-ARROW BALANCE TESTER                                -->
+  <!-- ======================================================================= -->
+  <section class="bg-white rounded-3xl p-5 md:p-6 shadow-lg border-2 border-sky-100 space-y-4">
+    <div>
+      <span class="bg-sky-100 text-sky-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
+        <span class="lang-en">Interactive Model B · Live Force Arrows</span>
+        <span class="lang-vn">Mô hình Tương tác B · Thử nghiệm Mũi tên Lực</span>
+      </span>
+      <h2 class="font-display text-2xl md:text-3xl font-bold text-slate-900 mt-2">
+        <span class="lang-en">➡️ Live Force-Arrow Balance Tester</span>
+        <span class="lang-vn">➡️ Trình thử nghiệm Cân bằng Mũi tên Lực</span>
+      </h2>
+      <p class="text-slate-600 text-sm">
+        <span class="lang-en">Tap one of the 4 exam scenarios or drag the sliders to compare opposing forces and see whether the object floats, sinks, accelerates, or travels at a steady speed!</span>
+        <span class="lang-vn">Chạm vào 4 tình huống mẫu hoặc kéo thanh trượt để so sánh hai lực ngược chiều và xem vật nổi, chìm, tăng tốc hay chuyển động đều!</span>
+      </p>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <button onclick="setPortalPreset('float')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs py-2.5 px-2 rounded-xl shadow">
+        <span class="lang-en">🪵 Float (40=40 N)</span>
+        <span class="lang-vn">🪵 Nổi (40=40 N)</span>
+      </button>
+      <button onclick="setPortalPreset('sink')" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs py-2.5 px-2 rounded-xl shadow">
+        <span class="lang-en">⚓ Sink (90&gt;25 N)</span>
+        <span class="lang-vn">⚓ Chìm (90&gt;25 N)</span>
+      </button>
+      <button onclick="setPortalPreset('accel')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs py-2.5 px-2 rounded-xl shadow">
+        <span class="lang-en">🚤 Speed Up (85&gt;30 N)</span>
+        <span class="lang-vn">🚤 Tăng tốc (85&gt;30 N)</span>
+      </button>
+      <button onclick="setPortalPreset('steady')" class="bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs py-2.5 px-2 rounded-xl shadow">
+        <span class="lang-en">🪂 Steady (65=65 N)</span>
+        <span class="lang-vn">🪂 Rơi đều (65=65 N)</span>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+      <div>
+        <label for="pForce1" class="flex justify-between font-bold text-xs text-emerald-800 mb-1">
+          <span id="pForce1Name">
+            <span class="lang-en">Upthrust / Push</span><span class="lang-vn">Lực đẩy lên / Đẩy tới</span>
+          </span>
+          <span id="pForce1Val">40 N</span>
+        </label>
+        <input id="pForce1" type="range" min="10" max="100" step="5" value="40" oninput="renderPortalArrows()" class="w-full accent-emerald-600 cursor-pointer">
+      </div>
+      <div>
+        <label for="pForce2" class="flex justify-between font-bold text-xs text-rose-800 mb-1">
+          <span id="pForce2Name">
+            <span class="lang-en">Weight / Drag</span><span class="lang-vn">Trọng lượng / Lực cản</span>
+          </span>
+          <span id="pForce2Val">40 N</span>
+        </label>
+        <input id="pForce2" type="range" min="10" max="100" step="5" value="40" oninput="renderPortalArrows()" class="w-full accent-rose-600 cursor-pointer">
+      </div>
+    </div>
+
+    <!-- Bilingual Live Force SVG -->
+    <div id="portalArrowSvg" class="rounded-2xl overflow-hidden border-4 border-sky-900 bg-sky-100 p-2"></div>
+
+    <!-- Bilingual Live Outcome Banner -->
+    <div id="portalArrowStatus" class="bg-slate-900 text-white rounded-2xl p-4 text-center space-y-1"></div>
+  </section>
+
+  <!-- ======================================================================= -->
+  <!-- 8 VISUAL SVG BILINGUAL VOCABULARY CARDS WITH EN/VN AUDIO                -->
+  <!-- ======================================================================= -->
+  <section class="bg-white rounded-3xl p-5 md:p-6 shadow-lg border-2 border-teal-100 space-y-4">
+    <div>
+      <span class="bg-teal-100 text-teal-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
+        <span class="lang-en">8 Visual Bilingual Flashcards · Tap to Listen</span>
+        <span class="lang-vn">8 Thẻ Từ vựng Hình ảnh Song ngữ · Chạm để Nghe</span>
+      </span>
+      <h2 class="font-display text-2xl md:text-3xl font-bold text-slate-900 mt-2">
+        <span class="lang-en">🗣️ Key Unit 5 Forces Vocabulary</span>
+        <span class="lang-vn">🗣️ Từ vựng Trọng tâm Chương 5 (Lực)</span>
+      </h2>
+    </div>
+
+    <div id="portalVocabGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- Populated by JS -->
+    </div>
+  </section>
+
+  <!-- ======================================================================= -->
+  <!-- 3-TIER DINNER TABLE TALKS                                               -->
+  <!-- ======================================================================= -->
+  <section class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-3xl p-5 md:p-6 shadow-lg border-2 border-amber-300 space-y-4">
+    <div>
+      <span class="bg-amber-400 text-slate-950 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
+        <span class="lang-en">3-Minute Family Conversations</span>
+        <span class="lang-vn">Trò chuyện Khoa học bên Bàn ăn (3 Phút)</span>
+      </span>
+      <h2 class="font-display text-2xl md:text-3xl font-bold text-slate-900 mt-2">
+        <span class="lang-en">🍜 Dinner Table Talks (3 Challenge Tiers)</span>
+        <span class="lang-vn">🍜 Câu hỏi Gợi mở cùng Con (3 Cấp độ)</span>
+      </h2>
+    </div>
+
+    <div class="space-y-3">
+      <!-- Tier 1 -->
+      <div class="bg-white rounded-2xl p-4 border-2 border-emerald-300">
+        <div class="text-xs font-extrabold uppercase text-emerald-700 mb-1">
+          <span class="lang-en">Tier 1 · Starter Question</span>
+          <span class="lang-vn">Cấp 1 · Khởi động nhẹ nhàng</span>
+        </div>
+        <p class="font-bold text-slate-900">
+          <span class="lang-en">&ldquo;If you took a 5 kg rice bag to the Moon, would its mass change? Would it feel lighter to lift?&rdquo;</span>
+          <span class="lang-vn">&ldquo;Nếu con mang bao gạo 5 kg lên Mặt Trăng, khối lượng của nó có đổi không? Nhấc nó lên có thấy nhẹ hơn không?&rdquo;</span>
+        </p>
+        <p class="text-xs text-slate-600 mt-1.5 font-semibold">
+          <span class="lang-en">💡 Parent Tip: Mass stays 5 kg (same rice grains!), while its weight drops to 1/6 so it feels much lighter to lift!</span>
+          <span class="lang-vn">💡 Gợi ý cho Ba mẹ: Khối lượng vẫn là 5 kg (số hạt gạo không đổi!), nhưng trọng lượng giảm còn 1/6 nên nhấc lên rất nhẹ!</span>
+        </p>
+      </div>
+
+      <!-- Tier 2 -->
+      <div class="bg-white rounded-2xl p-4 border-2 border-amber-400">
+        <div class="text-xs font-extrabold uppercase text-amber-700 mb-1">
+          <span class="lang-en">Tier 2 · Explorer Question</span>
+          <span class="lang-vn">Cấp 2 · Khám phá sâu hơn</span>
+        </div>
+        <p class="font-bold text-slate-900">
+          <span class="lang-en">&ldquo;Drop a metal spoon in a bowl of soup and it sinks — why does a giant metal bowl float on top of the water?&rdquo;</span>
+          <span class="lang-vn">&ldquo;Thả chiếc thìa kim loại vào bát nước nó sẽ chìm ngay — vậy tại sao chiếc bát kim loại lớn hơn lại nổi trên mặt nước?&rdquo;</span>
+        </p>
+        <p class="text-xs text-slate-600 mt-1.5 font-semibold">
+          <span class="lang-en">💡 Parent Tip: Listen for the magic chain: hollow wide shape ➔ pushes aside (displaces) more water ➔ bigger upthrust = weight!</span>
+          <span class="lang-vn">💡 Gợi ý cho Ba mẹ: Hãy nghe con nhắc đủ chuỗi từ khóa: hình dáng rỗng rộng ➔ chiếm chỗ nhiều nước hơn ➔ lực đẩy lên lớn hơn, bằng trọng lượng!</span>
+        </p>
+      </div>
+
+      <!-- Tier 3 -->
+      <div class="bg-white rounded-2xl p-4 border-2 border-purple-400">
+        <div class="text-xs font-extrabold uppercase text-purple-700 mb-1">
+          <span class="lang-en">Tier 3 · Genius Checkpoint Question</span>
+          <span class="lang-vn">Cấp 3 · Thử thách Tư duy Checkpoint</span>
+        </div>
+        <p class="font-bold text-slate-900">
+          <span class="lang-en">&ldquo;When a skydiver falls downwards at a steady constant speed, are the forces balanced or unbalanced?&rdquo;</span>
+          <span class="lang-vn">&ldquo;Khi người nhảy dù đang rơi xuống với tốc độ đều không đổi, các lực tác dụng lên họ là cân bằng hay không cân bằng?&rdquo;</span>
+        </p>
+        <p class="text-xs text-slate-600 mt-1.5 font-semibold">
+          <span class="lang-en">💡 Parent Tip: Steady speed ALWAYS means BALANCED forces (upward air resistance equals downward weight)!</span>
+          <span class="lang-vn">💡 Gợi ý cho Ba mẹ: Tốc độ đều luôn có nghĩa là CÁC LỰC CÂN BẰNG (lực cản không khí hướng lên bằng đúng trọng lượng hướng xuống)!</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================= -->
+  <!-- GAMIFIED 4-QUESTION INTERACTIVE HOME CHECK QUIZ                         -->
+  <!-- ======================================================================= -->
+  <section class="bg-white rounded-3xl p-5 md:p-6 shadow-xl border-2 border-indigo-200 space-y-5">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <span class="bg-rose-100 text-rose-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
+          <span class="lang-en">3-Minute Instant-Feedback Quiz</span>
+          <span class="lang-vn">Kiểm tra Nhanh 3 Phút · Chấm điểm Tức thì</span>
+        </span>
+        <h2 class="font-display text-2xl md:text-3xl font-bold text-slate-900 mt-1">
+          <span class="lang-en">🏆 Unit 5 Forces Home Check (4 Questions)</span>
+          <span class="lang-vn">🏆 Thử tài Chương 5 cùng Con (4 Câu hỏi)</span>
+        </h2>
+      </div>
+      <div class="bg-indigo-900 text-white px-4 py-2 rounded-2xl font-display text-xl font-bold">
+        <span class="lang-en">Score: </span><span class="lang-vn">Điểm: </span><span id="quizScore">0</span> / 4
+      </div>
+    </div>
+
+    <div id="quizContainer" class="space-y-4">
+      <!-- Populated by JS -->
+    </div>
+
+    <div id="quizBanner" class="hidden bg-gradient-to-r from-emerald-600 to-teal-500 text-white rounded-2xl p-5 text-center space-y-2 shadow-lg">
+      <div class="font-display text-2xl md:text-3xl font-bold">
+        <span class="lang-en">🎉 Amazing Work! Unit 5 Forces Ready!</span>
+        <span class="lang-vn">🎉 Tuyệt vời! Con đã sẵn sàng cho bài thi Lực Chương 5!</span>
+      </div>
+      <button onclick="resetQuiz()" class="bg-white text-emerald-900 font-extrabold text-sm px-5 py-2 rounded-xl shadow">
+        <span class="lang-en">🔄 Play Again</span>
+        <span class="lang-vn">🔄 Chơi lại</span>
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ----------------- STICKY BILINGUAL TOGGLE ----------------- */
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  document.body.classList.toggle('mode-en', lang === 'en');
+  document.body.classList.toggle('mode-vn', lang === 'vn');
+  document.getElementById('btnEn').className = lang === 'en'
+    ? 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-sky-400 text-slate-950'
+    : 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-300 hover:text-white';
+  document.getElementById('btnVn').className = lang === 'vn'
+    ? 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-sky-400 text-slate-950'
+    : 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-300 hover:text-white';
+}
+
+/* ----------------- MODEL A: PLANET GRAVITY WEIGHT SCALE ----------------- */
+let pPlanet = 'earth';
+const pWorlds = {
+  earth:   { en: 'Earth',   vn: 'Trái Đất',   g: 10,     ruleEn: 'Earth: 10 N/kg',   ruleVn: 'Trái Đất: 10 N/kg',   sky: '#0c4a6e', ground: '#15803d' },
+  moon:    { en: 'Moon',    vn: 'Mặt Trăng',  g: 10 / 6, ruleEn: 'Moon: 1/6 Earth',  ruleVn: 'Mặt Trăng: 1/6 Trái Đất', sky: '#0f172a', ground: '#64748b' },
+  mars:    { en: 'Mars',    vn: 'Sao Hỏa',    g: 3.7,    ruleEn: 'Mars: 3.7 N/kg',   ruleVn: 'Sao Hỏa: 3.7 N/kg',   sky: '#451a03', ground: '#c2410c' },
+  jupiter: { en: 'Jupiter', vn: 'Sao Mộc',    g: 25,     ruleEn: 'Jupiter: 25 N/kg', ruleVn: 'Sao Mộc: 25 N/kg',    sky: '#431407', ground: '#d97706' }
+};
+
+function selectPortalPlanet(key) {
+  pPlanet = key;
+  Object.keys(pWorlds).forEach(k => {
+    document.getElementById('pp-' + k).className = k === key
+      ? 'py-2 px-3 rounded-xl text-xs font-extrabold bg-indigo-600 text-white shadow'
+      : 'py-2 px-3 rounded-xl text-xs font-extrabold bg-slate-200 text-slate-800';
+  });
+  renderPortalGravity();
+}
+
+function renderPortalGravity() {
+  const mass = parseInt(document.getElementById('pMassSlider').value, 10);
+  const w = pWorlds[pPlanet];
+  const weight = Math.round(mass * w.g);
+
+  document.getElementById('pMassOut').textContent = mass + ' kg';
+  document.getElementById('pDashMass').textContent = mass + ' kg';
+  document.getElementById('pDashWeight').textContent = weight + ' N';
+  document.getElementById('pDashRule').innerHTML = `<span class="lang-en">${w.ruleEn}</span><span class="lang-vn">${w.ruleVn}</span>`;
+
+  const arrowLen = Math.min(88, Math.max(18, Math.round((weight / 2500) * 88 + 16)));
+  const hop = pPlanet === 'moon' ? -8 : 0;
+
+  document.getElementById('portalGravitySvg').innerHTML = `
+    <svg viewBox="0 0 480 230" class="w-full h-auto">
+      <rect x="0" y="0" width="480" height="230" rx="12" fill="${w.sky}"/>
+      <circle cx="52" cy="36" r="2" fill="#fff"/><circle cx="122" cy="24" r="2.2" fill="#fde047"/><circle cx="415" cy="40" r="2" fill="#fff"/>
+      <rect x="0" y="186" width="480" height="44" fill="${w.ground}"/>
+      <rect x="176" y="172" width="128" height="20" rx="6" fill="#e2e8f0" stroke="#0f172a" stroke-width="2.5"/>
+      <text x="240" y="186" text-anchor="middle" font-size="10" font-weight="800" fill="#0f172a" class="lang-en">NEWTON SCALE</text>
+      <text x="240" y="186" text-anchor="middle" font-size="10" font-weight="800" fill="#0f172a" class="lang-vn">CÂN LỰC KẾ (N)</text>
+
+      <g transform="translate(0, ${hop})">
+        <circle cx="240" cy="68" r="22" fill="#f8fafc" stroke="#0f172a" stroke-width="3"/>
+        <rect x="225" y="59" width="30" height="14" rx="6" fill="#38bdf8"/>
+        <rect x="218" y="92" width="44" height="50" rx="10" fill="#e2e8f0" stroke="#0f172a" stroke-width="3"/>
+        <rect x="223" y="142" width="13" height="28" rx="4" fill="#cbd5e1" stroke="#0f172a" stroke-width="2"/>
+        <rect x="244" y="142" width="13" height="28" rx="4" fill="#cbd5e1" stroke="#0f172a" stroke-width="2"/>
+        <rect x="224" y="108" width="32" height="19" rx="5" fill="#059669"/>
+        <text x="240" y="121" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">${mass} kg</text>
+      </g>
+
+      <line x1="316" y1="95" x2="316" y2="${95 + arrowLen}" stroke="#f43f5e" stroke-width="6"/>
+      <polygon points="316,${107 + arrowLen} 307,${92 + arrowLen} 325,${92 + arrowLen}" fill="#f43f5e"/>
+      <text x="334" y="${102 + Math.round(arrowLen / 2)}" font-size="13.5" font-weight="800" fill="#fda4af" class="lang-en">Weight: ${weight} N</text>
+      <text x="334" y="${102 + Math.round(arrowLen / 2)}" font-size="13.5" font-weight="800" fill="#fda4af" class="lang-vn">Trọng lượng: ${weight} N</text>
+
+      <text x="18" y="28" font-size="14" font-weight="800" fill="#bae6fd" class="lang-en">World: ${w.en}</text>
+      <text x="18" y="28" font-size="14" font-weight="800" fill="#bae6fd" class="lang-vn">Hành tinh: ${w.vn}</text>
+    </svg>
+  `;
+}
+
+/* ----------------- MODEL B: LIVE FORCE-ARROW BALANCE TESTER ----------------- */
+let arrowMode = 'vertical'; // vertical (float/sink/steady) or horizontal (accel)
+let arrowPresetKey = 'float';
+
+function setPortalPreset(key) {
+  arrowPresetKey = key;
+  const s1 = document.getElementById('pForce1');
+  const s2 = document.getElementById('pForce2');
+  if (key === 'float')  { arrowMode = 'vertical';   s1.value = 40; s2.value = 40; }
+  if (key === 'sink')   { arrowMode = 'vertical';   s1.value = 25; s2.value = 90; }
+  if (key === 'accel')  { arrowMode = 'horizontal'; s1.value = 85; s2.value = 30; }
+  if (key === 'steady') { arrowMode = 'vertical';   s1.value = 65; s2.value = 65; }
+  renderPortalArrows();
+}
+
+function renderPortalArrows() {
+  const f1 = parseInt(document.getElementById('pForce1').value, 10);
+  const f2 = parseInt(document.getElementById('pForce2').value, 10);
+  document.getElementById('pForce1Val').textContent = f1 + ' N';
+  document.getElementById('pForce2Val').textContent = f2 + ' N';
+
+  const diff = f1 - f2;
+  const l1 = Math.round(f1 * 0.78);
+  const l2 = Math.round(f2 * 0.78);
+
+  if (arrowMode === 'horizontal') {
+    document.getElementById('pForce1Name').innerHTML = `<span class="lang-en">Forward Thrust ➡</span><span class="lang-vn">Lực đẩy tới ➡</span>`;
+    document.getElementById('pForce2Name').innerHTML = `<span class="lang-en">Water Drag ⬅</span><span class="lang-vn">Lực cản nước ⬅</span>`;
+    document.getElementById('portalArrowSvg').innerHTML = `
+      <svg viewBox="0 0 480 220" class="w-full h-auto">
+        <rect x="0" y="0" width="480" height="125" fill="#e0f2fe"/>
+        <rect x="0" y="125" width="480" height="95" fill="#7dd3fc"/>
+        <path d="M188 102 L292 102 L276 134 L198 134 Z" fill="#f59e0b" stroke="#0f172a" stroke-width="3"/>
+        <text x="240" y="123" text-anchor="middle" font-size="11" font-weight="800" fill="#0f172a" class="lang-en">Speedboat</text>
+        <text x="240" y="123" text-anchor="middle" font-size="11" font-weight="800" fill="#0f172a" class="lang-vn">Ca-nô</text>
+
+        <!-- Forward arrow right -->
+        <line x1="292" y1="115" x2="${292 + l1}" y2="115" stroke="#059669" stroke-width="7"/>
+        <polygon points="${304 + l1},115 ${290 + l1},106 ${290 + l1},124" fill="#059669"/>
+        <text x="${295 + Math.round(l1 / 2)}" y="96" text-anchor="middle" font-size="12" font-weight="800" fill="#047857" class="lang-en">Thrust ${f1} N</text>
+        <text x="${295 + Math.round(l1 / 2)}" y="96" text-anchor="middle" font-size="12" font-weight="800" fill="#047857" class="lang-vn">Lực đẩy ${f1} N</text>
+
+        <!-- Drag arrow left -->
+        <line x1="188" y1="115" x2="${188 - l2}" y2="115" stroke="#e11d48" stroke-width="7"/>
+        <polygon points="${176 - l2},115 ${190 - l2},106 ${190 - l2},124" fill="#e11d48"/>
+        <text x="${185 - Math.round(l2 / 2)}" y="96" text-anchor="middle" font-size="12" font-weight="800" fill="#be123c" class="lang-en">Drag ${f2} N</text>
+        <text x="${185 - Math.round(l2 / 2)}" y="96" text-anchor="middle" font-size="12" font-weight="800" fill="#be123c" class="lang-vn">Lực cản ${f2} N</text>
+      </svg>
+    `;
+  } else {
+    const isSteady = arrowPresetKey === 'steady';
+    document.getElementById('pForce1Name').innerHTML = isSteady
+      ? `<span class="lang-en">Air Resistance ⬆</span><span class="lang-vn">Lực cản không khí ⬆</span>`
+      : `<span class="lang-en">Upthrust ⬆</span><span class="lang-vn">Lực đẩy lên ⬆</span>`;
+    document.getElementById('pForce2Name').innerHTML = `<span class="lang-en">Weight ⬇</span><span class="lang-vn">Trọng lượng ⬇</span>`;
+
+    const boxY = diff === 0 ? 94 : (diff < 0 ? 124 : 74);
+    const upEn = isSteady ? `Air Resistance ${f1} N` : `Upthrust ${f1} N`;
+    const upVn = isSteady ? `Lực cản KK ${f1} N` : `Lực đẩy lên ${f1} N`;
+    const objEn = isSteady ? 'Parachute' : (diff < 0 ? 'Anchor' : 'Raft');
+    const objVn = isSteady ? 'Dù rơi' : (diff < 0 ? 'Mỏ neo' : 'Bè gỗ');
+
+    document.getElementById('portalArrowSvg').innerHTML = `
+      <svg viewBox="0 0 480 245" class="w-full h-auto">
+        <rect x="0" y="0" width="480" height="245" fill="${isSteady ? '#dbeafe' : '#e0f2fe'}"/>
+        ${!isSteady ? `<rect x="0" y="112" width="480" height="133" fill="#7dd3fc"/><line x1="0" y1="112" x2="480" y2="112" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="8 5"/>` : ''}
+
+        <g class="${diff === 0 ? 'bob-float' : ''}">
+          <rect x="190" y="${boxY}" width="100" height="32" rx="8" fill="${isSteady ? '#2563eb' : (diff < 0 ? '#334155' : '#b45309')}" stroke="#0f172a" stroke-width="2.5"/>
+          <text x="240" y="${boxY + 20}" text-anchor="middle" font-size="12" font-weight="800" fill="#fff" class="lang-en">${objEn}</text>
+          <text x="240" y="${boxY + 20}" text-anchor="middle" font-size="12" font-weight="800" fill="#fff" class="lang-vn">${objVn}</text>
+
+          <!-- Up arrow touching top -->
+          <line x1="240" y1="${boxY}" x2="240" y2="${Math.max(16, boxY - l1)}" stroke="#059669" stroke-width="6"/>
+          <polygon points="240,${Math.max(6, boxY - l1 - 10)} 231,${Math.max(18, boxY - l1 + 2)} 249,${Math.max(18, boxY - l1 + 2)}" fill="#059669"/>
+          <text x="302" y="${Math.max(22, boxY - Math.round(l1 / 2))}" font-size="12.5" font-weight="800" fill="#047857" class="lang-en">${upEn}</text>
+          <text x="302" y="${Math.max(22, boxY - Math.round(l1 / 2))}" font-size="12.5" font-weight="800" fill="#047857" class="lang-vn">${upVn}</text>
+
+          <!-- Down arrow touching bottom -->
+          <line x1="240" y1="${boxY + 32}" x2="240" y2="${Math.min(228, boxY + 32 + l2)}" stroke="#e11d48" stroke-width="6"/>
+          <polygon points="240,${Math.min(238, boxY + 42 + l2)} 231,${Math.min(226, boxY + 30 + l2)} 249,${Math.min(226, boxY + 30 + l2)}" fill="#e11d48"/>
+          <text x="302" y="${Math.min(234, boxY + 36 + Math.round(l2 / 2))}" font-size="12.5" font-weight="800" fill="#be123c" class="lang-en">Weight ${f2} N</text>
+          <text x="302" y="${Math.min(234, boxY + 36 + Math.round(l2 / 2))}" font-size="12.5" font-weight="800" fill="#be123c" class="lang-vn">Trọng lượng ${f2} N</text>
+        </g>
+      </svg>
+    `;
+  }
+
+  let statusEn = '', statusVn = '', detailEn = '', detailVn = '';
+  if (diff === 0) {
+    statusEn = '✅ BALANCED FORCES (Resultant = 0 N)';
+    statusVn = '✅ CÁC LỰC CÂN BẰNG (Hợp lực = 0 N)';
+    detailEn = arrowPresetKey === 'steady'
+      ? 'Equal opposite arrows! The parachute falls at a STEADY, constant speed.'
+      : (arrowMode === 'horizontal' ? 'Equal opposite arrows! The speedboat cruises at a steady speed.' : 'Equal opposite arrows! The object FLOATS completely still.');
+    detailVn = arrowPresetKey === 'steady'
+      ? 'Hai mũi tên bằng nhau và ngược chiều! Dù rơi xuống với tốc độ ĐỀU không đổi.'
+      : (arrowMode === 'horizontal' ? 'Hai mũi tên bằng nhau! Ca-nô chạy đều với tốc độ không đổi.' : 'Hai mũi tên bằng nhau! Vật NỔI yên trên mặt nước.');
+  } else if (diff > 0) {
+    statusEn = `⚡ UNBALANCED FORCES (${diff} N ${arrowMode === 'horizontal' ? 'Forward' : 'Upwards'})`;
+    statusVn = `⚡ CÁC LỰC KHÔNG CÂN BẰNG (${diff} N ${arrowMode === 'horizontal' ? 'Về phía trước' : 'Hướng lên'})`;
+    detailEn = arrowMode === 'horizontal'
+      ? 'Forward thrust is larger than water drag — the boat SPEEDS UP (accelerates)!'
+      : 'Upthrust is larger than weight — the object RISES upwards!';
+    detailVn = arrowMode === 'horizontal'
+      ? 'Lực đẩy tới lớn hơn lực cản nước — ca-nô TĂNG TỐC về phía trước!'
+      : 'Lực đẩy lên lớn hơn trọng lượng — vật NỔI TRỒI lên trên!';
+  } else {
+    const absD = Math.abs(diff);
+    statusEn = `⚡ UNBALANCED FORCES (${absD} N ${arrowMode === 'horizontal' ? 'Backward' : 'Downwards'})`;
+    statusVn = `⚡ CÁC LỰC KHÔNG CÂN BẰNG (${absD} N ${arrowMode === 'horizontal' ? 'Ngược lại' : 'Hướng xuống'})`;
+    detailEn = arrowMode === 'horizontal'
+      ? 'Water drag is larger than thrust — the boat SLOWS DOWN!'
+      : 'Weight is larger than upthrust — the object SINKS downwards!';
+    detailVn = arrowMode === 'horizontal'
+      ? 'Lực cản nước lớn hơn lực đẩy — ca-nô CHẬM DẦN lại!'
+      : 'Trọng lượng lớn hơn lực đẩy lên — vật CHÌM xuống đáy!';
+  }
+
+  document.getElementById('portalArrowStatus').innerHTML = `
+    <div class="font-display text-xl font-bold text-amber-300">
+      <span class="lang-en">${statusEn}</span>
+      <span class="lang-vn">${statusVn}</span>
+    </div>
+    <p class="text-sm text-sky-100">
+      <span class="lang-en">${detailEn}</span>
+      <span class="lang-vn">${detailVn}</span>
+    </p>
+  `;
+}
+
+/* ----------------- 8 VISUAL SVG BILINGUAL VOCAB CARDS ----------------- */
+const portalVocab = [
+  {
+    en: 'Mass (kg)', vn: 'Khối lượng (kg)',
+    descEn: 'Amount of matter inside an object. Never changes in space.',
+    descVn: 'Lượng vật chất bên trong vật. Không bao giờ thay đổi ngoài không gian.',
+    svg: `<svg viewBox="0 0 120 70" class="w-24 h-14 shrink-0"><rect x="18" y="46" width="84" height="10" rx="3" fill="#cbd5e1"/><rect x="38" y="16" width="44" height="30" rx="6" fill="#4f46e5"/><text x="60" y="36" text-anchor="middle" fill="#fff" font-size="13" font-weight="800">5 kg</text></svg>`
+  },
+  {
+    en: 'Weight (N)', vn: 'Trọng lượng (N)',
+    descEn: 'Downward pull of gravity measured in newtons (N).',
+    descVn: 'Lực hút hướng xuống của trọng lực, đo bằng đơn vị Niutơn (N).',
+    svg: `<svg viewBox="0 0 120 70" class="w-24 h-14 shrink-0"><rect x="44" y="6" width="32" height="22" rx="5" fill="#0284c7"/><line x1="60" y1="28" x2="60" y2="56" stroke="#e11d48" stroke-width="5"/><polygon points="60,65 52,52 68,52" fill="#e11d48"/></svg>`
+  },
+  {
+    en: 'Gravity', vn: 'Trọng lực',
+    descEn: 'Invisible force pulling objects towards the centre of a planet.',
+    descVn: 'Lực hút vô hình kéo mọi vật hướng về tâm hành tinh hoặc Mặt Trăng.',
+    svg: `<svg viewBox="0 0 120 70" class="w-24 h-14 shrink-0"><circle cx="60" cy="48" r="20" fill="#2563eb"/><circle cx="60" cy="10" r="6" fill="#ef4444"/><line x1="60" y1="16" x2="60" y2="25" stroke="#f59e0b" stroke-width="3"/></svg>`
+  },
+  {
+    en: 'Forcemeter', vn: 'Lực kế',
+    descEn: 'Spring instrument that measures force or weight in newtons (N).',
+    descVn: 'Dụng cụ có lò xo và vạch chia dùng để đo lực hoặc trọng lượng (N).',
+    svg: `<svg viewBox="0 0 120 70" class="w-24 h-14 shrink-0"><rect x="46" y="6" width="28" height="46" rx="6" fill="#fef3c7" stroke="#0f172a" stroke-width="2.5"/><line x1="50" y1="22" x2="64" y2="22" stroke="#0f172a" stroke-width="2"/><line x1="50" y1="36" x2="64" y2="36" stroke="#e11d48" stroke-width="3"/><path d="M60 52 L60 60 Q66 65 60 67" fill="none" stroke="#0f172a" stroke-width="2.5"/></svg>`
+  },
+  {
+    en: 'Balanced Forces', vn: 'Các lực cân bằng',
+    descEn: 'Equal opposite forces — object stays still or moves at steady speed.',
+    descVn: 'Hai lực bằng nhau ngược chiều — vật đứng yên hoặc chuyển động đều.',
+    svg: `<svg viewBox="0 0 120 70" class="w-24 h-14 shrink-0"><rect x="44" y="22" width="32" height="24" rx="5" fill="#334155"/><line x1="44" y1="34" x2="14" y2="34" stroke="#059669" stroke-width="4"/><polygon points="6,34 16,28 16,40" fill="#059669"/><line x1="76" y1="34" x2="106" y2="34" stroke="#059669" stroke-width="4"/><polygon points="114,34 104,28 104,40" fill="#059669"/></svg>`
+  },
+  {
+    en: 'Unbalanced Forces', vn: 'Các lực không cân bằng',
+    descEn: 'Unequal opposite forces — causes speeding up, slowing down or sinking.',
+    descVn: 'Hai lực không bằng nhau — làm vật tăng tốc, chậm lại hoặc chìm.',
+    svg: `<svg viewBox="0 0 120 70" class="w-24 h-14 shrink-0"><rect x="38" y="22" width="28" height="24" rx="5" fill="#334155"/><line x1="38" y1="34" x2="22" y2="34" stroke="#64748b" stroke-width="4"/><polygon points="14,34 24,28 24,40" fill="#64748b"/><line x1="66" y1="34" x2="108" y2="34" stroke="#e11d48" stroke-width="5"/><polygon points="117,34 105,27 105,41" fill="#e11d48"/></svg>`
+  },
+  {
+    en: 'Upthrust', vn: 'Lực đẩy lên của nước',
+    descEn: 'Upward pushing force from water supporting a floating object.',
+    descVn: 'Lực đẩy hướng lên trên của nước giúp nâng đỡ vật nổi.',
+    svg: `<svg viewBox="0 0 120 70" class="w-24 h-14 shrink-0"><rect x="8" y="34" width="104" height="30" rx="5" fill="#bae6fd"/><rect x="38" y="24" width="44" height="18" rx="4" fill="#d97706"/><line x1="60" y1="24" x2="60" y2="8" stroke="#059669" stroke-width="4.5"/><polygon points="60,2 53,12 67,12" fill="#059669"/></svg>`
+  },
+  {
+    en: 'Displaced Water', vn: 'Lượng nước bị chiếm chỗ',
+    descEn: 'Water pushed aside by a hull. More displaced water = bigger upthrust!',
+    descVn: 'Phần nước bị thân tàu đẩy dạt sang bên. Chiếm chỗ càng nhiều, lực đẩy lên càng lớn!',
+    svg: `<svg viewBox="0 0 120 70" class="w-24 h-14 shrink-0"><rect x="14" y="14" width="92" height="48" fill="#e0f2fe" stroke="#0f172a" stroke-width="2"/><rect x="15" y="34" width="90" height="27" fill="#7dd3fc"/><path d="M36 22 L84 22 L76 44 L44 44 Z" fill="#f59e0b" stroke="#0f172a" stroke-width="2"/></svg>`
+  }
+];
+
+function speakPortal(text, lang) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang;
+  u.rate = 0.92;
+  window.speechSynthesis.speak(u);
+}
+
+function buildPortalVocab() {
+  document.getElementById('portalVocabGrid').innerHTML = portalVocab.map((v, idx) => `
+    <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-3.5 flex items-center gap-3 shadow-sm">
+      ${v.svg}
+      <div class="flex-1 min-w-0 space-y-1">
+        <div class="font-display font-bold text-lg text-slate-900 leading-tight">${v.en}</div>
+        <div class="font-bold text-sm text-indigo-700 leading-tight">${v.vn}</div>
+        <p class="text-xs text-slate-600 leading-snug">
+          <span class="lang-en">${v.descEn}</span>
+          <span class="lang-vn">${v.descVn}</span>
+        </p>
+        <div class="flex gap-1.5 pt-1">
+          <button onclick="speakPortal('${v.en.replace('(kg)', 'kilograms').replace('(N)', 'newtons')}', 'en-GB')" class="bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-lg">🔊 EN</button>
+          <button onclick="speakPortal('${v.vn}', 'vi-VN')" class="bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-lg">🔊 VN</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ----------------- GAMIFIED 4-QUESTION HOME CHECK QUIZ ----------------- */
+const quizData = [
+  {
+    qEn: '1. An astronaut has a mass of 50 kg on Earth. What is their MASS on the Moon?',
+    qVn: '1. Một phi hành gia có khối lượng 50 kg trên Trái Đất. KHỐI LƯỢNG của họ trên Mặt Trăng là bao nhiêu?',
+    opts: [
+      { en: '50 kg (Mass never changes!)', vn: '50 kg (Khối lượng không đổi!)', ok: true },
+      { en: '8 kg (Divided by 6)', vn: '8 kg (Chia cho 6)', ok: false },
+      { en: '500 N', vn: '500 N', ok: false }
+    ],
+    fbEn: 'Spot on! Mass is the amount of matter (kg) and stays 50 kg everywhere in space. Only weight (N) changes!',
+    fbVn: 'Chính xác! Khối lượng là lượng vật chất (kg) nên luôn giữ nguyên 50 kg ở mọi nơi. Chỉ có trọng lượng (N) thay đổi!'
+  },
+  {
+    qEn: '2. A rubber duck floats still with a downward weight of 15 N. What is the size of the upward upthrust?',
+    qVn: '2. Một chú vịt cao su nổi yên trên nước với trọng lượng hướng xuống là 15 N. Độ lớn lực đẩy lên của nước là bao nhiêu?',
+    opts: [
+      { en: '0 N', vn: '0 N', ok: false },
+      { en: '15 N (Equal and balanced!)', vn: '15 N (Bằng nhau và cân bằng!)', ok: true },
+      { en: '30 N', vn: '30 N', ok: false }
+    ],
+    fbEn: 'Brilliant! Floating still means balanced forces: Upthrust (15 N) equals Weight (15 N).',
+    fbVn: 'Xuất sắc! Vật nổi yên nghĩa là hai lực cân bằng: Lực đẩy lên (15 N) bằng đúng Trọng lượng (15 N).'
+  },
+  {
+    qEn: '3. Why does a hollow clay bowl float while a solid clay ball of the exact same mass sinks?',
+    qVn: '3. Tại sao chiếc bát đất nặn rỗng lại nổi trong khi viên đất nặn đặc cùng khối lượng lại chìm?',
+    opts: [
+      { en: 'The hollow bowl loses mass in water.', vn: 'Chiếc bát rỗng bị mất khối lượng trong nước.', ok: false },
+      { en: 'The hollow shape displaces more water, giving bigger upthrust.', vn: 'Hình dáng rỗng chiếm chỗ nhiều nước hơn, tạo lực đẩy lên lớn hơn.', ok: true },
+      { en: 'Gravity stops pulling on bowls.', vn: 'Trọng lực ngừng kéo chiếc bát.', ok: false }
+    ],
+    fbEn: 'Yes! Wide hollow shapes displace more water, increasing upthrust until it balances the weight.',
+    fbVn: 'Chuẩn luôn! Hình dáng rỗng rộng đẩy chiếm chỗ nhiều nước hơn, tăng lực đẩy lên đến khi cân bằng trọng lượng.'
+  },
+  {
+    qEn: '4. Boat tests held 6, 12, 18, 7 and 30 coins as boats got wider. Which result is anomalous?',
+    qVn: '4. Khi tăng chiều rộng thuyền, số đồng xu giữ được lần lượt là 6, 12, 18, 7 và 30. Kết quả nào là bất thường?',
+    opts: [
+      { en: '6 coins', vn: '6 đồng xu', ok: false },
+      { en: '30 coins', vn: '30 đồng xu', ok: false },
+      { en: '7 coins (Drops far off the upward pattern!)', vn: '7 đồng xu (Tụt mạnh khỏi quy luật tăng dần!)', ok: true }
+    ],
+    fbEn: 'Well spotted! 7 coins does not fit the upward trend (expected ~24), so scientists circle it and repeat that test!',
+    fbVn: 'Tinh mắt lắm! 7 đồng xu không khớp với quy luật tăng dần (dự đoán ~24), nên cần khoanh tròn và đo lại lần thử đó!'
+  }
+];
+
+let quizAnswered = [false, false, false, false];
+let quizPoints = 0;
+
+function renderQuiz() {
+  document.getElementById('quizContainer').innerHTML = quizData.map((q, qi) => `
+    <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 space-y-2.5" id="qCard-${qi}">
+      <div class="font-bold text-slate-900 text-sm md:text-base">
+        <span class="lang-en">${q.qEn}</span>
+        <span class="lang-vn">${q.qVn}</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        ${q.opts.map((o, oi) => `
+          <button onclick="answerQuiz(${qi}, ${oi})" id="qBtn-${qi}-${oi}" class="text-left bg-white hover:bg-indigo-50 border-2 border-slate-300 rounded-xl px-3 py-2.5 text-xs md:text-sm font-bold text-slate-800 transition">
+            <span class="lang-en">${o.en}</span>
+            <span class="lang-vn">${o.vn}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div id="qFb-${qi}" class="hidden rounded-xl p-3 text-xs md:text-sm font-bold"></div>
+    </div>
+  `).join('');
+}
+
+function answerQuiz(qi, oi) {
+  if (quizAnswered[qi]) return;
+  quizAnswered[qi] = true;
+  const q = quizData[qi];
+  const chosen = q.opts[oi];
+  const fb = document.getElementById('qFb-' + qi);
+  fb.classList.remove('hidden');
+
+  if (chosen.ok) {
+    quizPoints++;
+    document.getElementById('quizScore').textContent = quizPoints;
+    document.getElementById(`qBtn-${qi}-${oi}`).className = 'text-left bg-emerald-600 text-white border-2 border-emerald-700 rounded-xl px-3 py-2.5 text-xs md:text-sm font-extrabold';
+    fb.className = 'bg-emerald-50 border border-emerald-400 text-emerald-900 rounded-xl p-3 text-xs md:text-sm font-bold';
+    fb.innerHTML = `<span class="lang-en">✅ ${q.fbEn}</span><span class="lang-vn">✅ ${q.fbVn}</span>`;
+  } else {
+    document.getElementById(`qBtn-${qi}-${oi}`).className = 'text-left bg-rose-600 text-white border-2 border-rose-700 rounded-xl px-3 py-2.5 text-xs md:text-sm font-extrabold';
+    q.opts.forEach((o, idx) => {
+      if (o.ok) document.getElementById(`qBtn-${qi}-${idx}`).className = 'text-left bg-emerald-100 text-emerald-950 border-2 border-emerald-500 rounded-xl px-3 py-2.5 text-xs md:text-sm font-extrabold';
+    });
+    fb.className = 'bg-rose-50 border border-rose-400 text-rose-900 rounded-xl p-3 text-xs md:text-sm font-bold';
+    fb.innerHTML = `<span class="lang-en">💡 Not quite! ${q.fbEn}</span><span class="lang-vn">💡 Chưa đúng rồi! ${q.fbVn}</span>`;
+  }
+
+  if (quizAnswered.every(Boolean)) {
+    document.getElementById('quizBanner').classList.remove('hidden');
+    launchPortalConfetti();
+  }
+}
+
+function resetQuiz() {
+  quizAnswered = [false, false, false, false];
+  quizPoints = 0;
+  document.getElementById('quizScore').textContent = '0';
+  document.getElementById('quizBanner').classList.add('hidden');
+  renderQuiz();
+}
+
+function launchPortalConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const pieces = [];
+  const palette = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'];
+  for (let i = 0; i < 80; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 140,
+      w: 7 + Math.random() * 6,
+      h: 10 + Math.random() * 7,
+      vx: (Math.random() - 0.5) * 6,
+      vy: 3 + Math.random() * 5,
+      rot: Math.random() * 360,
+      vr: (Math.random() - 0.5) * 12,
+      col: palette[i % palette.length]
+    });
+  }
+  let f = 0;
+  function step() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.col;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    f++;
+    if (f < 105) requestAnimationFrame(step);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  step();
+}
+
+/* ----------------- INITIALISE ----------------- */
+renderPortalGravity();
+renderPortalArrows();
+buildPortalVocab();
+renderQuiz();
+</script>
+</body>
+</html>

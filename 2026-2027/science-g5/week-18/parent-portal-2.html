@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parent Portal — Grade 5 Science: Week 18, Lesson 2 (Electricity Mastery Clinic)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(160deg, #eff6ff 0%, #f5f3ff 48%, #fffbeb 100%);
+      color: #0f172a;
+      min-height: 100vh;
+    }
+    /* Dual-language visibility control (works seamlessly for HTML spans AND SVG <tspan>!) */
+    body.lang-mode-en .lang-vn { display: none; }
+    body.lang-mode-vn .lang-en { display: none; }
+
+    @keyframes flowDash {
+      to { stroke-dashoffset: -24; }
+    }
+    .flow-fast {
+      stroke-dasharray: 7 9;
+      animation: flowDash 0.8s linear infinite;
+    }
+    .flow-med {
+      stroke-dasharray: 7 11;
+      animation: flowDash 1.35s linear infinite;
+    }
+    .flow-slow {
+      stroke-dasharray: 7 13;
+      animation: flowDash 2.0s linear infinite;
+    }
+    @keyframes bulbGlow {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.85)); }
+      50% { filter: drop-shadow(0 0 15px rgba(251, 191, 36, 1)); }
+    }
+    .bulb-bright {
+      animation: bulbGlow 1.5s ease-in-out infinite;
+    }
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 95;
+    }
+  </style>
+</head>
+<body class="lang-mode-en antialiased pb-16">
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- STICKY BILINGUAL HEADER -->
+  <header class="sticky top-0 z-50 bg-indigo-950/95 backdrop-blur-md text-white shadow-lg border-b-2 border-amber-400">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="min-w-0">
+        <div class="text-[11px] font-black uppercase tracking-wider text-amber-300">
+          <span class="lang-en">Grade 5 Science • Stage 6 • Week 18 Lesson 2</span>
+          <span class="lang-vn">Khoa học Lớp 5 • Hệ Cambridge Stage 6 • Tuần 18 Tiết 2</span>
+        </div>
+        <h1 class="text-sm sm:text-lg font-black truncate">
+          <span class="lang-en">Unit 5 Electricity Mastery &amp; Parent Lab</span>
+          <span class="lang-vn">Ôn tập Chương 5: Điện học &amp; Phòng thí nghiệm tại nhà</span>
+        </h1>
+      </div>
+
+      <!-- Sticky EN / VN Toggle -->
+      <div class="flex items-center bg-indigo-900 p-1 rounded-xl border border-indigo-700 shrink-0">
+        <button id="btnEn" onclick="setLanguage('en')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-amber-400 text-indigo-950 transition">🇬🇧 EN</button>
+        <button id="btnVn" onclick="setLanguage('vn')" class="px-3 py-1.5 rounded-lg text-xs font-black text-indigo-200 hover:text-white transition">🇻🇳 VN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 pt-6 space-y-8">
+
+    <!-- HERO SUMMARY CARD -->
+    <section class="bg-gradient-to-br from-indigo-900 via-indigo-800 to-sky-800 text-white rounded-3xl p-6 sm:p-8 shadow-xl border-2 border-amber-300">
+      <div class="inline-block px-3 py-1 rounded-full bg-amber-400 text-indigo-950 font-black text-xs uppercase mb-3">
+        <span class="lang-en">Cambridge 6Pe.01 • 6Pe.02 • 6TWSm.02 • 6TWSa.03</span>
+        <span class="lang-vn">Chuẩn Cambridge 6Pe.01 • 6Pe.02 • 6TWSm.02 • 6TWSa.03</span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-black leading-tight">
+        <span class="lang-en">Master Official Circuit Symbols, Fault-Finding &amp; Series vs Parallel Brightness!</span>
+        <span class="lang-vn">Làm chủ Ký hiệu Mạch điện Chuẩn, Chẩn đoán Lỗi &amp; Độ sáng Mạch Nối tiếp / Song song!</span>
+      </h2>
+      <p class="mt-3 text-indigo-100 text-sm sm:text-base font-medium leading-relaxed">
+        <span class="lang-en">This week prepares pupils for the Unit 5 Assessment. Explore both interactive circuit labs together below, practise the 8 official Cambridge symbols with UK/Vietnamese audio, and finish the 4-question Home Check quiz!</span>
+        <span class="lang-vn">Tuần này giúp các con sẵn sàng cho bài kiểm tra Chương 5. Ba mẹ hãy cùng con trải nghiệm 2 mô hình mạch điện tương tác bên dưới, luyện phát âm 8 ký hiệu chuẩn Cambridge và chinh phục bài trắc nghiệm 4 câu nhé!</span>
+      </p>
+    </section>
+
+    <!-- ==================== MODEL A: CIRCUIT FAULT-DOCTOR SIMULATOR ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-xl border-2 border-indigo-100">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider text-rose-600">
+            <span class="lang-en">Interactive Lab 1 • Model A</span>
+            <span class="lang-vn">Thí nghiệm Tương tác 1 • Mô hình A</span>
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black text-indigo-950">
+            <span class="lang-en">Circuit Fault-Doctor Simulator</span>
+            <span class="lang-vn">Bác sĩ Chẩn đoán Lỗi Mạch điện</span>
+          </h3>
+        </div>
+        <div class="flex gap-1.5">
+          <button id="maSymbolBtn" onclick="setModelAView('symbol')" class="px-3 py-1.5 rounded-xl text-xs font-black bg-indigo-950 text-white">
+            <span class="lang-en">Symbol View</span>
+            <span class="lang-vn">Sơ đồ Ký hiệu</span>
+          </button>
+          <button id="maPictureBtn" onclick="setModelAView('picture')" class="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-200 text-slate-800">
+            <span class="lang-en">Picture View</span>
+            <span class="lang-vn">Hình ảnh Thực tế</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3 Mystery Fault Selectors -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
+        <button id="faBtn0" onclick="selectFaultA(0)" class="py-2.5 px-3 rounded-xl text-xs font-extrabold bg-indigo-600 text-white shadow">
+          <span class="lang-en">Fault 1: Reversed Cell (+ to +)</span>
+          <span class="lang-vn">Lỗi 1: Pin ngược (+ đối +)</span>
+        </button>
+        <button id="faBtn1" onclick="selectFaultA(1)" class="py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-700 hover:bg-indigo-50">
+          <span class="lang-en">Fault 2: Open Switch</span>
+          <span class="lang-vn">Lỗi 2: Công tắc mở</span>
+        </button>
+        <button id="faBtn2" onclick="selectFaultA(2)" class="py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-700 hover:bg-indigo-50">
+          <span class="lang-en">Fault 3: Broken Series Bulb</span>
+          <span class="lang-vn">Lỗi 3: Đèn nối tiếp hỏng</span>
+        </button>
+      </div>
+
+      <!-- Interactive SVG Canvas with Bilingual <tspan> Labels -->
+      <div class="bg-slate-50 rounded-2xl border-2 border-slate-200 p-3 flex items-center justify-center">
+        <svg id="modelASvg" viewBox="0 0 640 250" class="w-full h-auto" role="img" aria-label="Circuit Fault-Doctor Simulator"></svg>
+      </div>
+
+      <!-- Anchored Bilingual Live Readout & Fix Button -->
+      <div class="mt-4 bg-indigo-950 text-white rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-lg bg-amber-400 text-indigo-950 font-black text-xs" id="maVoltBadge">0.0 V</span>
+            <span class="font-black text-sm text-cyan-300">
+              <span class="lang-en" id="maStatusEn">Fault Active — Lamp OFF</span>
+              <span class="lang-vn" id="maStatusVn">Mạch đang lỗi — Đèn TẮT</span>
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-indigo-100 font-medium">
+            <span class="lang-en" id="maExplainEn"></span>
+            <span class="lang-vn" id="maExplainVn"></span>
+          </p>
+        </div>
+        <button onclick="toggleFixA()" id="maFixBtn" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-indigo-950 font-black text-sm shadow shrink-0 w-full sm:w-auto">
+          <span class="lang-en" id="maFixTextEn">🔧 Fix This Fault!</span>
+          <span class="lang-vn" id="maFixTextVn">🔧 Sửa lỗi mạch ngay!</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== MODEL B: SERIES VS PARALLEL BRIGHTNESS & BREAK-TEST LAB ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-xl border-2 border-indigo-100">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider text-emerald-600">
+            <span class="lang-en">Interactive Lab 2 • Model B</span>
+            <span class="lang-vn">Thí nghiệm Tương tác 2 • Mô hình B</span>
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black text-indigo-950">
+            <span class="lang-en">Series vs Parallel Brightness &amp; Break-Test Lab (3.0 V)</span>
+            <span class="lang-vn">Phòng thí nghiệm Độ sáng &amp; Thử nghiệm Hỏng 1 Đèn (3.0 V)</span>
+          </h3>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4 bg-slate-50 p-3 rounded-2xl border border-slate-200">
+        <div class="flex items-center gap-2">
+          <button id="mbSeriesBtn" onclick="setModelBType('series')" class="px-3.5 py-2 rounded-xl text-xs font-black bg-indigo-600 text-white shadow">
+            <span class="lang-en">Series (1 Loop)</span>
+            <span class="lang-vn">Mắc Nối tiếp (1 vòng)</span>
+          </button>
+          <button id="mbParallelBtn" onclick="setModelBType('parallel')" class="px-3.5 py-2 rounded-xl text-xs font-black bg-white border border-slate-300 text-slate-800">
+            <span class="lang-en">Parallel (Branches)</span>
+            <span class="lang-vn">Mắc Song song (Nhiều nhánh)</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-extrabold text-slate-600">
+            <span class="lang-en">Lamps:</span>
+            <span class="lang-vn">Số bóng đèn:</span>
+          </span>
+          <button id="mbCount1" onclick="setModelBCount(1)" class="w-9 h-9 rounded-xl font-black text-sm bg-white border border-slate-300">1</button>
+          <button id="mbCount2" onclick="setModelBCount(2)" class="w-9 h-9 rounded-xl font-black text-sm bg-amber-400 text-indigo-950 shadow">2</button>
+          <button id="mbCount3" onclick="setModelBCount(3)" class="w-9 h-9 rounded-xl font-black text-sm bg-white border border-slate-300">3</button>
+        </div>
+      </div>
+
+      <!-- Interactive Circuit SVG with Clickable Lamps & Bilingual <tspan> -->
+      <div class="bg-slate-50 rounded-2xl border-2 border-slate-200 p-3 flex items-center justify-center">
+        <svg id="modelBSvg" viewBox="0 0 640 280" class="w-full h-auto" role="img" aria-label="Series vs Parallel Brightness Lab"></svg>
+      </div>
+
+      <!-- Break / Repair Buttons + Live Lux Meter -->
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-stretch">
+        <div class="md:col-span-5 bg-amber-50 rounded-2xl p-4 border border-amber-200">
+          <div class="text-xs font-black uppercase text-amber-800 mb-2">
+            <span class="lang-en">Tap a lamp (or button) to Break / Repair:</span>
+            <span class="lang-vn">Chạm bóng đèn (hoặc nút) để thử Làm hỏng / Sửa:</span>
+          </div>
+          <div id="mbLampControls" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <div class="md:col-span-7 bg-slate-900 text-white rounded-2xl p-4 flex flex-col justify-between">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <div class="text-[11px] font-bold uppercase text-cyan-300">
+                <span class="lang-en">Brightness per Lit Lamp</span>
+                <span class="lang-vn">Độ sáng mỗi bóng đèn đang sáng</span>
+              </div>
+              <div id="mbLuxReadout" class="text-2xl font-black text-amber-300">50 lux</div>
+            </div>
+            <div class="w-40">
+              <div class="h-3.5 bg-slate-700 rounded-full overflow-hidden">
+                <div id="mbLuxBar" class="h-full bg-gradient-to-r from-amber-500 to-yellow-300 transition-all duration-300" style="width: 50%;"></div>
+              </div>
+              <div class="text-[11px] text-slate-300 font-bold mt-1 text-right" id="mbLitBadge">2/2 lit</div>
+            </div>
+          </div>
+          <p class="text-xs sm:text-sm text-indigo-100 mt-2 font-medium">
+            <span class="lang-en" id="mbExplainEn"></span>
+            <span class="lang-vn" id="mbExplainVn"></span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 8 OFFICIAL SYMBOL SVG BILINGUAL VOCAB CARDS ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-xl border-2 border-indigo-100">
+      <div class="mb-4">
+        <span class="text-xs font-black uppercase tracking-wider text-indigo-600">
+          <span class="lang-en">Official Cambridge Symbols • UK &amp; Vietnamese Audio</span>
+          <span class="lang-vn">8 Ký hiệu Chuẩn Cambridge • Phát âm Anh – Việt</span>
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-indigo-950">
+          <span class="lang-en">Visual Vocabulary Flashcards</span>
+          <span class="lang-vn">Thẻ Từ vựng Hình ảnh Trực quan</span>
+        </h3>
+      </div>
+      <div id="portalVocabGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5"></div>
+    </section>
+
+    <!-- ==================== 3-TIER DINNER TABLE TALKS ==================== -->
+    <section class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-3xl p-5 sm:p-7 shadow-lg border-2 border-amber-200">
+      <div class="mb-4">
+        <span class="text-xs font-black uppercase tracking-wider text-amber-700">
+          <span class="lang-en">Family Science Conversation</span>
+          <span class="lang-vn">Trò chuyện Khoa học Bàn ăn</span>
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-indigo-950">
+          <span class="lang-en">3-Tier Dinner Table Talks</span>
+          <span class="lang-vn">3 Cấp độ Hỏi – Đáp Cùng Con</span>
+        </h3>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white rounded-2xl p-4 border-t-4 border-emerald-500 shadow-sm">
+          <span class="text-xs font-black uppercase text-emerald-700">
+            <span class="lang-en">Tier 1 • Foundation</span>
+            <span class="lang-vn">Cấp độ 1 • Cơ bản</span>
+          </span>
+          <p class="font-extrabold text-slate-900 mt-1.5 text-sm">
+            <span class="lang-en">"Show me the difference between a single cell and a battery — and what must sit between the two plates?"</span>
+            <span class="lang-vn">"Con hãy chỉ giúp ba mẹ sự khác nhau giữa 1 pin đơn (cell) và bộ pin (battery), và giữa hai vạch pin phải có gì?"</span>
+          </p>
+          <p class="text-xs text-slate-600 mt-2">
+            <span class="lang-en">Look for: Tall thin (+), CLEAN EMPTY GAP, short thick (−); battery = 2+ cells.</span>
+            <span class="lang-vn">Gợi ý: Vạch dài mảnh (+), khoảng trống sạch ở giữa, vạch ngắn dày (−); bộ pin gồm từ 2 pin trở lên.</span>
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 border-t-4 border-amber-500 shadow-sm">
+          <span class="text-xs font-black uppercase text-amber-700">
+            <span class="lang-en">Tier 2 • Deepen</span>
+            <span class="lang-vn">Cấp độ 2 • Hiểu sâu</span>
+          </span>
+          <p class="font-extrabold text-slate-900 mt-1.5 text-sm">
+            <span class="lang-en">"Why does our living room lamp stay bright even when a bathroom ceiling bulb breaks?"</span>
+            <span class="lang-vn">"Tại sao đèn phòng khách nhà mình vẫn sáng bình thường khi bóng đèn phòng tắm bị cháy?"</span>
+          </p>
+          <p class="text-xs text-slate-600 mt-2">
+            <span class="lang-en">Look for: Home lights are wired in parallel — each room has its own complete branch!</span>
+            <span class="lang-vn">Gợi ý: Đèn trong nhà mắc song song — mỗi phòng có một nhánh mạch riêng hoàn chỉnh!</span>
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 border-t-4 border-indigo-600 shadow-sm">
+          <span class="text-xs font-black uppercase text-indigo-700">
+            <span class="lang-en">Tier 3 • Challenge</span>
+            <span class="lang-vn">Cấp độ 3 • Thử thách</span>
+          </span>
+          <p class="font-extrabold text-slate-900 mt-1.5 text-sm">
+            <span class="lang-en">"If I put two fresh 1.5 V batteries in a TV remote with + touching +, why will the remote refuse to turn on?"</span>
+            <span class="lang-vn">"Nếu ba lắp 2 viên pin mới 1.5 V vào điều khiển tivi sao cho cực + chạm cực +, vì sao điều khiển không chạy?"</span>
+          </p>
+          <p class="text-xs text-slate-600 mt-2">
+            <span class="lang-en">Look for: Opposing pushes cancel to 0 V (1.5 V − 1.5 V = 0 V). Flip one cell so + touches −!</span>
+            <span class="lang-vn">Gợi ý: Hai lực đẩy ngược chiều triệt tiêu nhau về 0 V (1.5 V − 1.5 V = 0 V). Phải đảo lại 1 viên để cực + nối cực −!</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== GAMIFIED 4-QUESTION HOME CHECK QUIZ ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-xl border-2 border-indigo-200">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider text-indigo-600">
+            <span class="lang-en">3-Minute Interactive Home Check</span>
+            <span class="lang-vn">Kiểm tra nhanh 3 phút tại nhà</span>
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black text-indigo-950">
+            <span class="lang-en">Unit 5 Readiness Quiz (4 Questions)</span>
+            <span class="lang-vn">Trắc nghiệm Sẵn sàng Chương 5 (4 Câu hỏi)</span>
+          </h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="quizScorePill" class="px-4 py-1.5 rounded-full bg-indigo-100 text-indigo-900 font-black text-sm">0 / 4</span>
+          <button onclick="resetQuiz()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700">
+            <span class="lang-en">Retry</span>
+            <span class="lang-vn">Làm lại</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="quizContainer" class="space-y-4"></div>
+
+      <div id="quizFinishBanner" class="hidden mt-5 p-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-center shadow-lg">
+        <div class="text-2xl font-black">
+          <span class="lang-en" id="quizFinishEn">🎉 Unit 5 Ready!</span>
+          <span class="lang-vn" id="quizFinishVn">🎉 Sẵn sàng cho Bài kiểm tra Chương 5!</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ================= LANGUAGE & SPEECH ENGINE =================
+    let currentLang = 'en';
+    function setLanguage(lang) {
+      if ('speechSynthesis' in window) speechSynthesis.cancel();
+      currentLang = lang;
+      document.body.classList.toggle('lang-mode-en', lang === 'en');
+      document.body.classList.toggle('lang-mode-vn', lang === 'vn');
+      document.getElementById('btnEn').className = lang === 'en'
+        ? 'px-3 py-1.5 rounded-lg text-xs font-black bg-amber-400 text-indigo-950 transition'
+        : 'px-3 py-1.5 rounded-lg text-xs font-black text-indigo-200 hover:text-white transition';
+      document.getElementById('btnVn').className = lang === 'vn'
+        ? 'px-3 py-1.5 rounded-lg text-xs font-black bg-amber-400 text-indigo-950 transition'
+        : 'px-3 py-1.5 rounded-lg text-xs font-black text-indigo-200 hover:text-white transition';
+    }
+    function speakText(text, langCode) {
+      if (!('speechSynthesis' in window)) return;
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = langCode;
+      u.rate = 0.92;
+      speechSynthesis.speak(u);
+    }
+
+    // ================= OFFLINE WEB AUDIO & CONFETTI =================
+    let audioCtx = null;
+    function playTone(ok) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.type = ok ? 'triangle' : 'sawtooth';
+        if (ok) {
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.08);
+          osc.frequency.setValueAtTime(783.99, now + 0.16);
+        } else {
+          osc.frequency.setValueAtTime(240, now);
+          osc.frequency.setValueAtTime(190, now + 0.12);
+        }
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.start(now); osc.stop(now + 0.36);
+      } catch (e) {}
+    }
+    function burstConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const items = Array.from({ length: 100 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 160,
+        r: 5 + Math.random() * 6,
+        vx: (Math.random() - 0.5) * 6,
+        vy: 3 + Math.random() * 5,
+        c: ['#f59e0b', '#10b981', '#06b6d4', '#6366f1', '#ef4444'][Math.floor(Math.random() * 5)],
+        a: Math.random() * 360
+      }));
+      let f = 0;
+      function step() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        items.forEach(p => {
+          p.x += p.vx; p.y += p.vy; p.a += 7;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.a * Math.PI / 180);
+          ctx.fillStyle = p.c;
+          ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 0.6);
+          ctx.restore();
+        });
+        f++;
+        if (f < 120) requestAnimationFrame(step);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      step();
+    }
+
+    // ================= SHARED OFFICIAL SYMBOL HELPERS =================
+    function batterySvg(xStart, y, isPic, reversedPlusToPlus) {
+      // Polarity STRICTLY matched between Symbol View and Picture View!
+      // Normal: Cell 1 (+ left, - right) joined to Cell 2 (+ left, - right)
+      // Reversed (+ facing +): Cell 1 (- left, + right) joined to Cell 2 (+ left, - right)
+      if (!isPic) {
+        const c1L = xStart + 18, c1R = xStart + 32;
+        const c2L = xStart + 108, c2R = xStart + 122;
+        const c1Svg = reversedPlusToPlus
+          ? `<line x1="${c1L}" y1="${y-11}" x2="${c1L}" y2="${y+11}" stroke="#0f172a" stroke-width="6.5"/>
+             <line x1="${c1R}" y1="${y-20}" x2="${c1R}" y2="${y+20}" stroke="#0f172a" stroke-width="2.8"/>
+             <text x="${c1R+6}" y="${y-13}" font-size="13" font-weight="900" fill="#dc2626">+</text>`
+          : `<line x1="${c1L}" y1="${y-20}" x2="${c1L}" y2="${y+20}" stroke="#0f172a" stroke-width="2.8"/>
+             <line x1="${c1R}" y1="${y-11}" x2="${c1R}" y2="${y+11}" stroke="#0f172a" stroke-width="6.5"/>
+             <text x="${c1L-13}" y="${y-13}" font-size="13" font-weight="900" fill="#dc2626">+</text>`;
+        return `
+          <line x1="${xStart}" y1="${y}" x2="${c1L}" y2="${y}" stroke="#0f172a" stroke-width="3.5"/>
+          ${c1Svg}
+          <line x1="${c1R}" y1="${y}" x2="${c2L}" y2="${y}" stroke="${reversedPlusToPlus ? '#dc2626' : '#0f172a'}" stroke-width="3.5"/>
+          <line x1="${c2L}" y1="${y-20}" x2="${c2L}" y2="${y+20}" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="${c2R}" y1="${y-11}" x2="${c2R}" y2="${y+11}" stroke="#0f172a" stroke-width="6.5"/>
+          <text x="${c2L-13}" y="${y-13}" font-size="13" font-weight="900" fill="#dc2626">+</text>
+          <text x="${c2R+7}" y="${y-11}" font-size="15" font-weight="900" fill="#2563eb">−</text>
+          <line x1="${c2R}" y1="${y}" x2="${xStart+140}" y2="${y}" stroke="#0f172a" stroke-width="3.5"/>
+        `;
+      } else {
+        // Picture View: exact same polarity (+ nub left normal; reversed Cell 1 has + nub right facing Cell 2 + nub left!)
+        const c1Pic = reversedPlusToPlus
+          ? `<rect x="${xStart+8}" y="${y-16}" width="50" height="32" rx="4" fill="#f59e0b" stroke="#dc2626" stroke-width="2.2"/>
+             <rect x="${xStart+8}" y="${y-16}" width="18" height="32" rx="3" fill="#1e293b" stroke="#dc2626" stroke-width="1.8"/>
+             <rect x="${xStart+58}" y="${y-7}" width="6" height="14" rx="2" fill="#94a3b8" stroke="#dc2626" stroke-width="1.8"/>
+             <text x="${xStart+14}" y="${y+5}" font-size="13" font-weight="900" fill="#ffffff">−</text>
+             <text x="${xStart+41}" y="${y+5}" font-size="13" font-weight="900" fill="#ffffff">+</text>`
+          : `<rect x="${xStart+8}" y="${y-7}" width="6" height="14" rx="2" fill="#94a3b8" stroke="#0f172a" stroke-width="1.8"/>
+             <rect x="${xStart+14}" y="${y-16}" width="50" height="32" rx="4" fill="#f59e0b" stroke="#0f172a" stroke-width="2.2"/>
+             <rect x="${xStart+46}" y="${y-16}" width="18" height="32" rx="3" fill="#1e293b" stroke="#0f172a" stroke-width="1.8"/>
+             <text x="${xStart+23}" y="${y+5}" font-size="13" font-weight="900" fill="#ffffff">+</text>
+             <text x="${xStart+51}" y="${y+5}" font-size="13" font-weight="900" fill="#ffffff">−</text>`;
+        return `
+          <line x1="${xStart}" y1="${y}" x2="${xStart+8}" y2="${y}" stroke="#0f172a" stroke-width="3.5"/>
+          ${c1Pic}
+          <line x1="${xStart+64}" y1="${y}" x2="${xStart+76}" y2="${y}" stroke="${reversedPlusToPlus ? '#dc2626' : '#0f172a'}" stroke-width="3.5"/>
+          <rect x="${xStart+76}" y="${y-7}" width="6" height="14" rx="2" fill="#94a3b8" stroke="#0f172a" stroke-width="1.8"/>
+          <rect x="${xStart+82}" y="${y-16}" width="50" height="32" rx="4" fill="#f59e0b" stroke="#0f172a" stroke-width="2.2"/>
+          <rect x="${xStart+114}" y="${y-16}" width="18" height="32" rx="3" fill="#1e293b" stroke="#0f172a" stroke-width="1.8"/>
+          <text x="${xStart+91}" y="${y+5}" font-size="13" font-weight="900" fill="#ffffff">+</text>
+          <text x="${xStart+119}" y="${y+5}" font-size="13" font-weight="900" fill="#ffffff">−</text>
+          <line x1="${xStart+132}" y1="${y}" x2="${xStart+140}" y2="${y}" stroke="#0f172a" stroke-width="3.5"/>
+        `;
+      }
+    }
+
+    function lampSvg(cx, cy, lux, broken, isPic, clickAttr) {
+      const fill = broken ? '#fee2e2' : (lux >= 90 ? '#fde047' : (lux > 0 ? '#fef3c7' : '#ffffff'));
+      const glow = (!broken && lux >= 90) ? 'bulb-bright' : '';
+      if (!isPic) {
+        return `<g ${clickAttr || ''}>
+          <circle cx="${cx}" cy="${cy}" r="19" fill="${fill}" stroke="${broken ? '#dc2626' : '#0f172a'}" stroke-width="3" class="${glow}"/>
+          <line x1="${(cx-13.4).toFixed(1)}" y1="${(cy-13.4).toFixed(1)}" x2="${(cx+13.4).toFixed(1)}" y2="${(cy+13.4).toFixed(1)}" stroke="${broken ? '#dc2626' : '#0f172a'}" stroke-width="2.6"/>
+          <line x1="${(cx+13.4).toFixed(1)}" y1="${(cy-13.4).toFixed(1)}" x2="${(cx-13.4).toFixed(1)}" y2="${(cy+13.4).toFixed(1)}" stroke="${broken ? '#dc2626' : '#0f172a'}" stroke-width="2.6"/>
+        </g>`;
+      }
+      return `<g ${clickAttr || ''}>
+        <rect x="${cx-10}" y="${cy+3}" width="20" height="12" rx="3" fill="#64748b" stroke="#0f172a" stroke-width="2"/>
+        <circle cx="${cx}" cy="${cy-9}" r="18" fill="${fill}" stroke="${broken ? '#dc2626' : '#0f172a'}" stroke-width="2.8" class="${glow}"/>
+        <path d="M ${cx-6} ${cy+1} L ${cx-3} ${cy-11} L ${cx+3} ${cy-11} L ${cx+6} ${cy+1}" fill="none" stroke="${broken ? '#dc2626' : '#92400e'}" stroke-width="2.2" ${broken ? 'stroke-dasharray="3 2"' : ''}/>
+      </g>`;
+    }
+
+    // ================= MODEL A: FAULT-DOCTOR SIMULATOR =================
+    const modelA = { fault: 0, fixed: false, view: 'symbol' };
+    function selectFaultA(idx) {
+      modelA.fault = idx;
+      modelA.fixed = false;
+      [0, 1, 2].forEach(i => {
+        document.getElementById('faBtn' + i).className = i === idx
+          ? 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-indigo-600 text-white shadow'
+          : 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-700 hover:bg-indigo-50';
+      });
+      renderModelA();
+    }
+    function setModelAView(v) {
+      modelA.view = v;
+      document.getElementById('maSymbolBtn').className = v === 'symbol'
+        ? 'px-3 py-1.5 rounded-xl text-xs font-black bg-indigo-950 text-white'
+        : 'px-3 py-1.5 rounded-xl text-xs font-black bg-slate-200 text-slate-800';
+      document.getElementById('maPictureBtn').className = v === 'picture'
+        ? 'px-3 py-1.5 rounded-xl text-xs font-black bg-indigo-950 text-white'
+        : 'px-3 py-1.5 rounded-xl text-xs font-black bg-slate-200 text-slate-800';
+      renderModelA();
+    }
+    function toggleFixA() {
+      modelA.fixed = !modelA.fixed;
+      playTone(modelA.fixed);
+      renderModelA();
+    }
+    function renderModelA() {
+      const svg = document.getElementById('modelASvg');
+      const isPic = modelA.view === 'picture';
+      const f = modelA.fault;
+      const fixed = modelA.fixed;
+      const rev = (f === 0 && !fixed);
+      const swClosed = !(f === 1 && !fixed);
+      const twoBulbs = (f === 2);
+      const b1Broken = (f === 2 && !fixed);
+      const netV = rev ? 0.0 : 3.0;
+      const flows = netV > 0 && swClosed && !b1Broken;
+      const lux = flows ? (twoBulbs ? 50 : 100) : 0;
+
+      // Top y=52, Bottom y=190, Left x=75, Right x=565; Battery x=190..330; Switch x=420..480
+      let bottomWires = '';
+      let lamps = '';
+      if (!twoBulbs) {
+        bottomWires = `
+          <polyline points="477,52 565,52 565,190 339,190" fill="none" stroke="#0f172a" stroke-width="3.5"/>
+          <polyline points="301,190 75,190 75,52" fill="none" stroke="#0f172a" stroke-width="3.5"/>
+          ${flows ? `
+            <polyline points="330,52 423,52" fill="none" stroke="#f59e0b" stroke-width="2.8" class="flow-fast"/>
+            <polyline points="477,52 565,52 565,190 339,190" fill="none" stroke="#f59e0b" stroke-width="2.8" class="flow-fast"/>
+            <polyline points="301,190 75,190 75,52 190,52" fill="none" stroke="#f59e0b" stroke-width="2.8" class="flow-fast"/>
+          ` : ''}
+        `;
+        lamps = `
+          ${lampSvg(320, 190, lux, false, isPic, '')}
+          <text x="320" y="232" text-anchor="middle" font-size="12" font-weight="800" fill="#1e293b">
+            <tspan class="lang-en">Lamp (${lux} lux)</tspan>
+            <tspan class="lang-vn">Bóng đèn (${lux} lux)</tspan>
+          </text>
+        `;
+      } else {
+        bottomWires = `
+          <polyline points="477,52 565,52 565,190 444,190" fill="none" stroke="#0f172a" stroke-width="3.5"/>
+          <line x1="406" y1="190" x2="234" y2="190" stroke="#0f172a" stroke-width="3.5"/>
+          <polyline points="196,190 75,190 75,52" fill="none" stroke="#0f172a" stroke-width="3.5"/>
+          ${flows ? `
+            <polyline points="330,52 423,52" fill="none" stroke="#0284c7" stroke-width="2.8" class="flow-med"/>
+            <polyline points="477,52 565,52 565,190 444,190" fill="none" stroke="#0284c7" stroke-width="2.8" class="flow-med"/>
+            <line x1="406" y1="190" x2="234" y2="190" stroke="#0284c7" stroke-width="2.8" class="flow-med"/>
+            <polyline points="196,190 75,190 75,52 190,52" fill="none" stroke="#0284c7" stroke-width="2.8" class="flow-med"/>
+          ` : ''}
+        `;
+        lamps = `
+          ${lampSvg(215, 190, lux, b1Broken, isPic, '')}
+          ${lampSvg(425, 190, lux, false, isPic, '')}
+          <text x="215" y="232" text-anchor="middle" font-size="12" font-weight="800" fill="${b1Broken ? '#dc2626' : '#1e293b'}">
+            <tspan class="lang-en">${b1Broken ? 'Lamp 1 (BROKEN ✗)' : 'Lamp 1 (50 lux)'}</tspan>
+            <tspan class="lang-vn">${b1Broken ? 'Đèn 1 (HỎNG ✗)' : 'Đèn 1 (50 lux)'}</tspan>
+          </text>
+          <text x="425" y="232" text-anchor="middle" font-size="12" font-weight="800" fill="#1e293b">
+            <tspan class="lang-en">Lamp 2 (${lux} lux)</tspan>
+            <tspan class="lang-vn">Đèn 2 (${lux} lux)</tspan>
+          </text>
+        `;
+      }
+
+      svg.innerHTML = `
+        <line x1="75" y1="52" x2="190" y2="52" stroke="#0f172a" stroke-width="3.5"/>
+        <line x1="330" y1="52" x2="423" y2="52" stroke="#0f172a" stroke-width="3.5"/>
+        ${bottomWires}
+        ${batterySvg(190, 52, isPic, rev)}
+        <text x="260" y="96" text-anchor="middle" font-size="12" font-weight="900" fill="${rev ? '#dc2626' : '#059669'}">
+          <tspan class="lang-en">${rev ? 'Reversed (+ to +) = 0 V' : '2-Cell Battery = 3.0 V'}</tspan>
+          <tspan class="lang-vn">${rev ? 'Pin ngược (+ đối +) = 0 V' : 'Bộ 2 pin = 3.0 V'}</tspan>
+        </text>
+        <!-- Switch x=420..480 -->
+        <circle cx="428" cy="52" r="5" fill="#ffffff" stroke="#0f172a" stroke-width="2.8"/>
+        ${swClosed
+          ? `<line x1="433" y1="52" x2="467" y2="52" stroke="#059669" stroke-width="3.5"/>`
+          : `<line x1="432" y1="49" x2="468" y2="30" stroke="#dc2626" stroke-width="3.5"/>`}
+        <circle cx="472" cy="52" r="5" fill="#ffffff" stroke="#0f172a" stroke-width="2.8"/>
+        <text x="450" y="96" text-anchor="middle" font-size="12" font-weight="800" fill="${swClosed ? '#059669' : '#dc2626'}">
+          <tspan class="lang-en">${swClosed ? 'Switch Closed' : 'Switch Open'}</tspan>
+          <tspan class="lang-vn">${swClosed ? 'Công tắc đóng' : 'Công tắc mở'}</tspan>
+        </text>
+        ${lamps}
+      `;
+
+      document.getElementById('maVoltBadge').textContent = netV.toFixed(1) + ' V';
+      const msgs = [
+        {
+          stEn: fixed ? 'FIXED! Battery = 3.0 V (Bright 100 lux)' : 'FAULT: Reversed Cell (+ facing +)',
+          stVn: fixed ? 'ĐÃ SỬA! Bộ pin = 3.0 V (Sáng 100 lux)' : 'LỖI: Pin lắp ngược (+ đối +)',
+          exEn: fixed ? 'Cell 1 is flipped so + connects to − cleanly. Both 1.5 V pushes add to 3.0 V!' : 'Both cells push against each other (+ facing +), cancelling to 0 V so the lamp stays dark.',
+          exVn: fixed ? 'Pin 1 đã đảo đúng chiều (+ nối −). Hai lực đẩy 1.5 V cộng lại thành 3.0 V!' : 'Hai viên pin đẩy ngược nhau (+ đối +) nên triệt tiêu về 0 V, đèn không thể sáng.'
+        },
+        {
+          stEn: fixed ? 'FIXED! Closed Loop (Bright 100 lux)' : 'FAULT: Open Switch (Gap in Wire)',
+          stVn: fixed ? 'ĐÃ SỬA! Mạch kín (Sáng 100 lux)' : 'LỖI: Công tắc mở (Hở mạch)',
+          exEn: fixed ? 'Closing the switch bridges the gap so electricity flows continuously around the loop.' : 'An open switch leaves an air gap. Electricity cannot jump across the gap until it is closed.',
+          exVn: fixed ? 'Đóng công tắc giúp nối liền khoảng hở để dòng điện chạy liên tục quanh vòng mạch.' : 'Công tắc mở tạo ra khoảng không khí ngắt mạch. Dòng điện không thể nhảy qua khoảng hở.'
+        },
+        {
+          stEn: fixed ? 'FIXED! Series Loop Complete (50 lux each)' : 'FAULT: Broken Series Bulb Stops BOTH',
+          stVn: fixed ? 'ĐÃ SỬA! Mạch nối tiếp kín (50 lux mỗi đèn)' : 'LỖI: Hỏng 1 đèn làm TẮT CẢ HAI đèn',
+          exEn: fixed ? 'Replacing Lamp 1 completes the single series loop, so both lamps share 3.0 V equally (50 lux each).' : 'Series circuits have only ONE pathway. When Lamp 1 breaks, Lamp 2 immediately goes out too!',
+          exVn: fixed ? 'Thay bóng đèn 1 làm kín lại vòng mạch duy nhất, cả hai bóng chia đều 3.0 V (50 lux mỗi bóng).' : 'Mạch nối tiếp chỉ có MỘT đường đi duy nhất. Đèn 1 hỏng khiến đèn 2 cũng tắt ngay lập tức!'
+        }
+      ][f];
+      document.getElementById('maStatusEn').textContent = msgs.stEn;
+      document.getElementById('maStatusVn').textContent = msgs.stVn;
+      document.getElementById('maExplainEn').textContent = msgs.exEn;
+      document.getElementById('maExplainVn').textContent = msgs.exVn;
+      document.getElementById('maFixTextEn').textContent = fixed ? '↺ Show Fault Again' : '🔧 Fix This Fault!';
+      document.getElementById('maFixTextVn').textContent = fixed ? '↺ Xem lại lỗi' : '🔧 Sửa lỗi mạch ngay!';
+    }
+
+    // ================= MODEL B: SERIES VS PARALLEL BRIGHTNESS & BREAK-TEST LAB =================
+    const modelB = { type: 'series', count: 2, broken: [false, false, false] };
+    function setModelBType(t) {
+      modelB.type = t;
+      modelB.broken = [false, false, false];
+      document.getElementById('mbSeriesBtn').className = t === 'series'
+        ? 'px-3.5 py-2 rounded-xl text-xs font-black bg-indigo-600 text-white shadow'
+        : 'px-3.5 py-2 rounded-xl text-xs font-black bg-white border border-slate-300 text-slate-800';
+      document.getElementById('mbParallelBtn').className = t === 'parallel'
+        ? 'px-3.5 py-2 rounded-xl text-xs font-black bg-indigo-600 text-white shadow'
+        : 'px-3.5 py-2 rounded-xl text-xs font-black bg-white border border-slate-300 text-slate-800';
+      renderModelB();
+    }
+    function setModelBCount(n) {
+      modelB.count = n;
+      modelB.broken = [false, false, false];
+      [1, 2, 3].forEach(k => {
+        document.getElementById('mbCount' + k).className = k === n
+          ? 'w-9 h-9 rounded-xl font-black text-sm bg-amber-400 text-indigo-950 shadow'
+          : 'w-9 h-9 rounded-xl font-black text-sm bg-white border border-slate-300';
+      });
+      renderModelB();
+    }
+    function toggleLampB(idx) {
+      modelB.broken[idx] = !modelB.broken[idx];
+      playTone(!modelB.broken[idx]);
+      renderModelB();
+    }
+    function renderModelB() {
+      const svg = document.getElementById('modelBSvg');
+      const n = modelB.count;
+      const isPar = modelB.type === 'parallel';
+
+      let litArr = [false, false, false];
+      let luxPerLit = 0;
+      let litCount = 0;
+
+      if (!isPar) {
+        const anyBroken = modelB.broken.slice(0, n).some(Boolean);
+        if (!anyBroken) {
+          luxPerLit = n === 1 ? 100 : (n === 2 ? 50 : 33);
+          for (let i = 0; i < n; i++) litArr[i] = true;
+          litCount = n;
+        }
+      } else {
+        // Strictly guard litCount > 0 in parallel mode!
+        for (let i = 0; i < n; i++) {
+          if (!modelB.broken[i]) {
+            litArr[i] = true;
+            litCount++;
+          }
+        }
+        if (litCount > 0) luxPerLit = 100;
+      }
+
+      let markup = '';
+      if (!isPar) {
+        // Series layout: Top y=48 (Battery x=250..390), Bottom y=200, Left x=70, Right x=570
+        const xs = n === 1 ? [320] : (n === 2 ? [210, 430] : [165, 320, 475]);
+        const flowCls = n === 1 ? 'flow-fast' : (n === 2 ? 'flow-med' : 'flow-slow');
+        const flowCol = n === 1 ? '#f59e0b' : (n === 2 ? '#0284c7' : '#6366f1');
+        // Build clean bottom segments skipping lamp interiors
+        let bSegs = `<polyline points="390,48 570,48 570,200 ${xs[n-1]+19},200" fill="none" stroke="#0f172a" stroke-width="3.5"/>`;
+        for (let i = n - 1; i > 0; i--) {
+          bSegs += `<line x1="${xs[i]-19}" y1="200" x2="${xs[i-1]+19}" y2="200" stroke="#0f172a" stroke-width="3.5"/>`;
+        }
+        bSegs += `<polyline points="${xs[0]-19},200 70,200 70,48 250,48" fill="none" stroke="#0f172a" stroke-width="3.5"/>`;
+
+        let flowSegs = '';
+        if (litCount > 0) {
+          flowSegs += `<polyline points="390,48 570,48 570,200 ${xs[n-1]+19},200" fill="none" stroke="${flowCol}" stroke-width="2.8" class="${flowCls}"/>`;
+          for (let i = n - 1; i > 0; i--) {
+            flowSegs += `<line x1="${xs[i]-19}" y1="200" x2="${xs[i-1]+19}" y2="200" stroke="${flowCol}" stroke-width="2.8" class="${flowCls}"/>`;
+          }
+          flowSegs += `<polyline points="${xs[0]-19},200 70,200 70,48 250,48" fill="none" stroke="${flowCol}" stroke-width="2.8" class="${flowCls}"/>`;
+        }
+
+        const lampsMarkup = xs.map((x, idx) => `
+          ${lampSvg(x, 200, litArr[idx] ? luxPerLit : 0, modelB.broken[idx], false, `class="cursor-pointer" onclick="toggleLampB(${idx})"`)}
+          <text x="${x}" y="242" text-anchor="middle" font-size="12" font-weight="800" fill="${modelB.broken[idx] ? '#dc2626' : '#1e293b'}">
+            <tspan class="lang-en">L${idx+1}: ${modelB.broken[idx] ? 'BROKEN' : (litArr[idx] ? luxPerLit + ' lux' : 'OFF')}</tspan>
+            <tspan class="lang-vn">Đèn ${idx+1}: ${modelB.broken[idx] ? 'HỎNG' : (litArr[idx] ? luxPerLit + ' lux' : 'TẮT')}</tspan>
+          </text>
+        `).join('');
+
+        markup = `
+          ${bSegs}
+          ${flowSegs}
+          ${batterySvg(250, 48, false, false)}
+          <text x="320" y="92" text-anchor="middle" font-size="12" font-weight="900" fill="#1e1b4b">
+            <tspan class="lang-en">3.0 V Battery — Series (${n} lamp${n>1?'s':''})</tspan>
+            <tspan class="lang-vn">Bộ pin 3.0 V — Mắc nối tiếp (${n} bóng đèn)</tspan>
+          </text>
+          ${lampsMarkup}
+        `;
+      } else {
+        // Parallel layout: Top y=44 (Battery x=250..390), Branches at ys
+        const ys = n === 1 ? [160] : (n === 2 ? [136, 224] : [118, 182, 246]);
+        const bottomY = ys[n - 1];
+        let wires = `
+          <polyline points="70,44 250,44" fill="none" stroke="#0f172a" stroke-width="3.5"/>
+          <polyline points="390,44 570,44 570,${bottomY}" fill="none" stroke="#0f172a" stroke-width="3.5"/>
+          <line x1="70" y1="44" x2="70" y2="${bottomY}" stroke="#0f172a" stroke-width="3.5"/>
+        `;
+        let flows = '';
+        if (litCount > 0) {
+          // Guarded main trunk flow only up to lowest lit branch!
+          let lowestLitY = ys[0];
+          for (let i = 0; i < n; i++) if (litArr[i]) lowestLitY = ys[i];
+          flows += `<polyline points="390,44 570,44 570,${lowestLitY}" fill="none" stroke="#f59e0b" stroke-width="2.8" class="flow-fast"/>`;
+          flows += `<polyline points="70,${lowestLitY} 70,44 250,44" fill="none" stroke="#f59e0b" stroke-width="2.8" class="flow-fast"/>`;
+        }
+
+        let branches = '';
+        ys.forEach((y, idx) => {
+          branches += `
+            <line x1="70" y1="${y}" x2="301" y2="${y}" stroke="#0f172a" stroke-width="3.5"/>
+            <line x1="339" y1="${y}" x2="570" y2="${y}" stroke="#0f172a" stroke-width="3.5"/>
+            <circle cx="70" cy="${y}" r="4.5" fill="#0f172a"/>
+            <circle cx="570" cy="${y}" r="4.5" fill="#0f172a"/>
+          `;
+          if (litArr[idx]) {
+            flows += `
+              <line x1="570" y1="${y}" x2="339" y2="${y}" stroke="#f59e0b" stroke-width="2.8" class="flow-fast"/>
+              <line x1="301" y1="${y}" x2="70" y2="${y}" stroke="#f59e0b" stroke-width="2.8" class="flow-fast"/>
+            `;
+          }
+          branches += `
+            ${lampSvg(320, y, litArr[idx] ? 100 : 0, modelB.broken[idx], false, `class="cursor-pointer" onclick="toggleLampB(${idx})"`)}
+            <text x="455" y="${y-7}" text-anchor="middle" font-size="11.5" font-weight="800" fill="${modelB.broken[idx] ? '#dc2626' : '#065f46'}">
+              <tspan class="lang-en">Branch ${idx+1}: ${modelB.broken[idx] ? 'BROKEN ✗' : '100 lux'}</tspan>
+              <tspan class="lang-vn">Nhánh ${idx+1}: ${modelB.broken[idx] ? 'HỎNG ✗' : '100 lux'}</tspan>
+            </text>
+          `;
+        });
+
+        markup = `
+          ${wires}
+          ${branches}
+          ${flows}
+          ${batterySvg(250, 44, false, false)}
+          <text x="320" y="84" text-anchor="middle" font-size="12" font-weight="900" fill="#1e1b4b">
+            <tspan class="lang-en">3.0 V Battery — Parallel (${n} branch${n>1?'es':''})</tspan>
+            <tspan class="lang-vn">Bộ pin 3.0 V — Mắc song song (${n} nhánh)</tspan>
+          </text>
+        `;
+      }
+      svg.innerHTML = markup;
+
+      // Render break/repair buttons
+      document.getElementById('mbLampControls').innerHTML = Array.from({ length: n }, (_, i) => `
+        <button onclick="toggleLampB(${i})" class="px-3 py-1.5 rounded-xl text-xs font-black border-2 transition ${modelB.broken[i] ? 'bg-rose-600 text-white border-rose-700' : 'bg-white text-slate-800 border-amber-400 hover:bg-amber-100'}">
+          <span class="lang-en">${modelB.broken[i] ? `Repair Lamp ${i+1}` : `Break Lamp ${i+1}`}</span>
+          <span class="lang-vn">${modelB.broken[i] ? `Sửa Đèn ${i+1}` : `Làm hỏng Đèn ${i+1}`}</span>
+        </button>
+      `).join('');
+
+      document.getElementById('mbLuxReadout').textContent = `${luxPerLit} lux`;
+      document.getElementById('mbLuxBar').style.width = `${luxPerLit}%`;
+      document.getElementById('mbLitBadge').innerHTML = `<span class="lang-en">${litCount}/${n} lit</span><span class="lang-vn">${litCount}/${n} đang sáng</span>`;
+
+      let enMsg = '', vnMsg = '';
+      if (litCount === 0) {
+        enMsg = isPar ? 'All parallel branches are broken! Repair any lamp to light its branch immediately.' : 'One broken bulb breaks the ENTIRE single series loop — every lamp goes out!';
+        vnMsg = isPar ? 'Tất cả các nhánh song song đều bị hỏng! Hãy sửa bất kỳ bóng đèn nào để nhánh đó sáng trở lại.' : 'Chỉ 1 bóng hỏng đã ngắt toàn bộ vòng mạch nối tiếp — tất cả các đèn đều tắt!';
+      } else if (!isPar) {
+        enMsg = n === 1
+          ? '1 lamp receives the full 3.0 V push and glows brightly at 100 lux.'
+          : `${n} lamps in series share the 3.0 V push equally (${(3/n).toFixed(1)} V each), so all glow equally dimmer at ${luxPerLit} lux.`;
+        vnMsg = n === 1
+          ? '1 bóng đèn nhận trọn lực đẩy 3.0 V nên phát sáng tối đa ở mức 100 lux.'
+          : `${n} bóng mắc nối tiếp chia đều điện áp 3.0 V (${(3/n).toFixed(1)} V mỗi bóng) nên cùng mờ đi như nhau ở mức ${luxPerLit} lux.`;
+      } else {
+        enMsg = litCount < n
+          ? `Parallel win! ${litCount} working branch${litCount>1?'es':''} still get the full 3.0 V push and stay bright at 100 lux!`
+          : `Every parallel branch connects directly to the 3.0 V battery, so all ${n} lamps shine equally bright at 100 lux!`;
+        vnMsg = litCount < n
+          ? `Ưu điểm mạch song song! ${litCount} nhánh còn nguyên vẫn nhận đủ 3.0 V và giữ nguyên độ sáng 100 lux!`
+          : `Mỗi nhánh song song đều nối trực tiếp với bộ pin 3.0 V nên cả ${n} bóng đều sáng rực như nhau ở mức 100 lux!`;
+      }
+      document.getElementById('mbExplainEn').textContent = enMsg;
+      document.getElementById('mbExplainVn').textContent = vnMsg;
+    }
+
+    // ================= 8 OFFICIAL SYMBOL SVG BILINGUAL VOCAB CARDS =================
+    const portalVocab = [
+      {
+        en: 'Conventional symbol', vn: 'Ký hiệu quy ước chuẩn',
+        svg: `<svg viewBox="0 0 150 56" width="136" height="50">
+          <line x1="10" y1="28" x2="48" y2="28" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="48" y1="12" x2="48" y2="44" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="58" y1="20" x2="58" y2="36" stroke="#0f172a" stroke-width="5.5"/>
+          <line x1="58" y1="28" x2="90" y2="28" stroke="#0f172a" stroke-width="2.5"/>
+          <circle cx="105" cy="28" r="14" fill="#ffffff" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="95.1" y1="18.1" x2="114.9" y2="37.9" stroke="#0f172a" stroke-width="2.2"/>
+          <line x1="114.9" y1="18.1" x2="95.1" y2="37.9" stroke="#0f172a" stroke-width="2.2"/>
+          <line x1="119" y1="28" x2="142" y2="28" stroke="#0f172a" stroke-width="2.5"/>
+        </svg>`
+      },
+      {
+        en: 'Cell', vn: 'Pin đơn (1.5 V)',
+        svg: `<svg viewBox="0 0 150 56" width="136" height="50">
+          <line x1="14" y1="28" x2="68" y2="28" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="68" y1="10" x2="68" y2="46" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="80" y1="19" x2="80" y2="37" stroke="#0f172a" stroke-width="6"/>
+          <line x1="80" y1="28" x2="136" y2="28" stroke="#0f172a" stroke-width="2.8"/>
+          <text x="55" y="16" font-size="12" font-weight="900" fill="#dc2626">+</text>
+          <text x="86" y="18" font-size="13" font-weight="900" fill="#2563eb">−</text>
+        </svg>`
+      },
+      {
+        en: 'Battery', vn: 'Bộ pin (2+ pin)',
+        svg: `<svg viewBox="0 0 150 56" width="136" height="50">
+          <line x1="10" y1="28" x2="42" y2="28" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="42" y1="10" x2="42" y2="46" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="52" y1="19" x2="52" y2="37" stroke="#0f172a" stroke-width="6"/>
+          <line x1="52" y1="28" x2="94" y2="28" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="94" y1="10" x2="94" y2="46" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="104" y1="19" x2="104" y2="37" stroke="#0f172a" stroke-width="6"/>
+          <line x1="104" y1="28" x2="140" y2="28" stroke="#0f172a" stroke-width="2.8"/>
+        </svg>`
+      },
+      {
+        en: 'Lamp', vn: 'Bóng đèn',
+        svg: `<svg viewBox="0 0 150 56" width="136" height="50">
+          <line x1="16" y1="28" x2="57" y2="28" stroke="#0f172a" stroke-width="2.8"/>
+          <circle cx="75" cy="28" r="18" fill="#fef08a" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="62.3" y1="15.3" x2="87.7" y2="40.7" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="87.7" y1="15.3" x2="62.3" y2="40.7" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="93" y1="28" x2="134" y2="28" stroke="#0f172a" stroke-width="2.8"/>
+        </svg>`
+      },
+      {
+        en: 'Switch', vn: 'Công tắc',
+        svg: `<svg viewBox="0 0 150 56" width="136" height="50">
+          <line x1="14" y1="34" x2="48" y2="34" stroke="#0f172a" stroke-width="2.8"/>
+          <circle cx="53" cy="34" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="2.4"/>
+          <line x1="57" y1="31" x2="94" y2="14" stroke="#dc2626" stroke-width="2.8"/>
+          <circle cx="97" cy="34" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="2.4"/>
+          <line x1="102" y1="34" x2="136" y2="34" stroke="#0f172a" stroke-width="2.8"/>
+        </svg>`
+      },
+      {
+        en: 'Buzzer', vn: 'Chuông điện',
+        svg: `<svg viewBox="0 0 150 56" width="136" height="50">
+          <line x1="14" y1="42" x2="64" y2="42" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="64" y1="42" x2="64" y2="28" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="86" y1="42" x2="86" y2="28" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="86" y1="42" x2="136" y2="42" stroke="#0f172a" stroke-width="2.8"/>
+          <path d="M 55 28 A 20 20 0 0 1 95 28 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2.8"/>
+        </svg>`
+      },
+      {
+        en: 'Series circuit', vn: 'Mạch nối tiếp',
+        svg: `<svg viewBox="0 0 150 56" width="136" height="50">
+          <polyline points="18,12 68,12" fill="none" stroke="#0f172a" stroke-width="2.4"/>
+          <line x1="68" y1="4" x2="68" y2="20" stroke="#0f172a" stroke-width="2.2"/>
+          <line x1="76" y1="8" x2="76" y2="16" stroke="#0f172a" stroke-width="4.8"/>
+          <polyline points="76,12 132,12 132,42 108,42" fill="none" stroke="#0f172a" stroke-width="2.4"/>
+          <line x1="90" y1="42" x2="60" y2="42" stroke="#0f172a" stroke-width="2.4"/>
+          <polyline points="42,42 18,42 18,12" fill="none" stroke="#0f172a" stroke-width="2.4"/>
+          <circle cx="51" cy="42" r="9" fill="#fde68a" stroke="#0f172a" stroke-width="2"/>
+          <line x1="44.6" y1="35.6" x2="57.4" y2="48.4" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="57.4" y1="35.6" x2="44.6" y2="48.4" stroke="#0f172a" stroke-width="1.8"/>
+          <circle cx="99" cy="42" r="9" fill="#fde68a" stroke="#0f172a" stroke-width="2"/>
+          <line x1="92.6" y1="35.6" x2="105.4" y2="48.4" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="105.4" y1="35.6" x2="92.6" y2="48.4" stroke="#0f172a" stroke-width="1.8"/>
+        </svg>`
+      },
+      {
+        en: 'Parallel circuit', vn: 'Mạch song song',
+        svg: `<svg viewBox="0 0 150 62" width="136" height="54">
+          <polyline points="20,10 68,10" fill="none" stroke="#0f172a" stroke-width="2.4"/>
+          <line x1="68" y1="3" x2="68" y2="17" stroke="#0f172a" stroke-width="2.2"/>
+          <line x1="76" y1="6" x2="76" y2="14" stroke="#0f172a" stroke-width="4.8"/>
+          <polyline points="76,10 130,10 130,52 84,52" fill="none" stroke="#0f172a" stroke-width="2.4"/>
+          <polyline points="66,52 20,52 20,10" fill="none" stroke="#0f172a" stroke-width="2.4"/>
+          <line x1="20" y1="31" x2="66" y2="31" stroke="#0f172a" stroke-width="2.4"/>
+          <line x1="84" y1="31" x2="130" y2="31" stroke="#0f172a" stroke-width="2.4"/>
+          <circle cx="75" cy="31" r="9" fill="#fcd34d" stroke="#0f172a" stroke-width="2"/>
+          <line x1="68.6" y1="24.6" x2="81.4" y2="37.4" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="81.4" y1="24.6" x2="68.6" y2="37.4" stroke="#0f172a" stroke-width="1.8"/>
+          <circle cx="75" cy="52" r="9" fill="#fcd34d" stroke="#0f172a" stroke-width="2"/>
+          <line x1="68.6" y1="45.6" x2="81.4" y2="58.4" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="81.4" y1="45.6" x2="68.6" y2="58.4" stroke="#0f172a" stroke-width="1.8"/>
+        </svg>`
+      }
+    ];
+    function renderPortalVocab() {
+      document.getElementById('portalVocabGrid').innerHTML = portalVocab.map((v, i) => `
+        <div class="rounded-2xl border-2 border-indigo-100 bg-slate-50 p-3 flex flex-col justify-between gap-2">
+          <div class="bg-white rounded-xl border border-slate-200 p-2 flex items-center justify-center">${v.svg}</div>
+          <div>
+            <div class="font-black text-sm text-indigo-950">${v.en}</div>
+            <div class="font-bold text-xs text-amber-700">${v.vn}</div>
+          </div>
+          <div class="flex gap-1.5 pt-1">
+            <button onclick="speakText('${v.en.replace(/'/g, "\\'")}', 'en-GB')" class="flex-1 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-black">🔊 UK</button>
+            <button onclick="speakText('${v.vn.replace(/'/g, "\\'")}', 'vi-VN')" class="flex-1 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-black">🔊 VN</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ================= GAMIFIED 4-QUESTION INTERACTIVE QUIZ =================
+    const quizData = [
+      {
+        qEn: '1. Four fresh 1.5 V cells are joined properly (+ to −) in a camping lantern. What is the total battery voltage?',
+        qVn: '1. Bốn viên pin mới 1.5 V được lắp đúng chiều (+ nối −) trong đèn cắm trại. Tổng điện áp bộ pin là bao nhiêu?',
+        opts: [
+          { en: '3.0 V', vn: '3.0 V' },
+          { en: '4.5 V', vn: '4.5 V' },
+          { en: '6.0 V', vn: '6.0 V' }
+        ],
+        ans: 2,
+        fbEn: 'Spot on! 4 × 1.5 V = 6.0 V when all cells push in the same direction (+ to −).',
+        fbVn: 'Chính xác! 4 × 1.5 V = 6.0 V khi tất cả các viên pin đẩy cùng một chiều (+ nối −).'
+      },
+      {
+        qEn: '2. In a parallel circuit, the kitchen light and porch light are both glowing brightly. The porch bulb breaks. What happens to the kitchen light?',
+        qVn: '2. Trong mạch điện song song, đèn bếp và đèn hiên đang sáng rõ. Đèn hiên bị cháy. Chuyện gì xảy ra với đèn bếp?',
+        opts: [
+          { en: 'It stays lit at the exact same brightness', vn: 'Đèn bếp vẫn sáng nguyên độ sáng cũ' },
+          { en: 'It immediately turns off too', vn: 'Đèn bếp cũng tắt ngay lập tức' },
+          { en: 'It becomes half as bright', vn: 'Đèn bếp mờ đi một nửa' }
+        ],
+        ans: 0,
+        fbEn: 'Brilliant! Each parallel branch has its own complete pathway directly to the power supply.',
+        fbVn: 'Xuất sắc! Mỗi nhánh song song có đường dẫn kín riêng nối trực tiếp với nguồn điện.'
+      },
+      {
+        qEn: '3. Which drawing rule is STRICTLY required for an official Cambridge cell symbol?',
+        qVn: '3. Quy tắc vẽ nào là BẮT BUỘC đối với ký hiệu pin đơn chuẩn Cambridge?',
+        opts: [
+          { en: 'Draw the connecting wire straight through the middle of the cell', vn: 'Vẽ đường dây dẫn xuyên thẳng qua giữa hai vạch pin' },
+          { en: 'Tall thin (+) plate, CLEAN EMPTY GAP, short thick (−) plate', vn: 'Vạch dài mảnh (+), KHOẢNG TRỐNG SẠCH, vạch ngắn dày (−)' },
+          { en: 'Place the cell directly on a 90° corner', vn: 'Đặt ký hiệu pin ngay trên góc vuông 90°' }
+        ],
+        ans: 1,
+        fbEn: 'Yes! Never draw a wire through the empty gap between the tall thin (+) and short thick (−) plates.',
+        fbVn: 'Đúng rồi! Tuyệt đối không vẽ dây dẫn xuyên qua khoảng trống giữa vạch dài mảnh (+) và vạch ngắn dày (−).'
+      },
+      {
+        qEn: '4. Unit 5 Forces Spiral: A lunar sample bag has a mass of 12 kg (weight 120 N) on Earth. What are its mass and weight on the Moon (1/6 gravity)?',
+        qVn: '4. Ôn tập Lực Chương 5: Một túi mẫu vật có khối lượng 12 kg (trọng lượng 120 N) trên Trái Đất. Trên Mặt Trăng (trọng lực bằng 1/6), khối lượng và trọng lượng là bao nhiêu?',
+        opts: [
+          { en: 'Mass = 2 kg, Weight = 20 N', vn: 'Khối lượng = 2 kg, Trọng lượng = 20 N' },
+          { en: 'Mass = 12 kg, Weight = 120 N', vn: 'Khối lượng = 12 kg, Trọng lượng = 120 N' },
+          { en: 'Mass = 12 kg, Weight = 20 N', vn: 'Khối lượng = 12 kg, Trọng lượng = 20 N' }
+        ],
+        ans: 2,
+        fbEn: 'Champion! Mass stays 12 kg everywhere in space, while weight drops to 120 ÷ 6 = 20 N on the Moon!',
+        fbVn: 'Tuyệt vời! Khối lượng luôn giữ nguyên 12 kg ở mọi nơi trong vũ trụ, còn trọng lượng giảm xuống 120 ÷ 6 = 20 N trên Mặt Trăng!'
+      }
+    ];
+    let quizAnswered = [null, null, null, null];
+    function renderQuiz() {
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = quizData.map((q, qi) => {
+        const chosen = quizAnswered[qi];
+        const locked = chosen !== null;
+        return `
+          <div class="rounded-2xl border-2 ${locked ? (chosen === q.ans ? 'border-emerald-400 bg-emerald-50/60' : 'border-rose-300 bg-rose-50/60') : 'border-slate-200 bg-slate-50'} p-4">
+            <div class="font-extrabold text-sm sm:text-base text-indigo-950 mb-3">
+              <span class="lang-en">${q.qEn}</span>
+              <span class="lang-vn">${q.qVn}</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              ${q.opts.map((opt, oi) => {
+                let cls = 'bg-white border-slate-300 text-slate-800 hover:border-indigo-500';
+                if (locked) {
+                  if (oi === q.ans) cls = 'bg-emerald-600 border-emerald-700 text-white';
+                  else if (oi === chosen) cls = 'bg-rose-600 border-rose-700 text-white';
+                  else cls = 'bg-white/60 border-slate-200 text-slate-400';
+                }
+                return `<button ${locked ? 'disabled' : ''} onclick="answerQuiz(${qi}, ${oi})" class="p-2.5 rounded-xl border-2 text-xs sm:text-sm font-bold text-left transition ${cls}">
+                  <span class="lang-en">${opt.en}</span>
+                  <span class="lang-vn">${opt.vn}</span>
+                </button>`;
+              }).join('')}
+            </div>
+            ${locked ? `<div class="mt-3 text-xs sm:text-sm font-bold ${chosen === q.ans ? 'text-emerald-800' : 'text-rose-800'}">
+              <span class="lang-en">${chosen === q.ans ? '✓ ' : '✗ '}${q.fbEn}</span>
+              <span class="lang-vn">${chosen === q.ans ? '✓ ' : '✗ '}${q.fbVn}</span>
+            </div>` : ''}
+          </div>
+        `;
+      }).join('');
+      const score = quizAnswered.filter((v, i) => v === quizData[i].ans).length;
+      const done = quizAnswered.every(v => v !== null);
+      document.getElementById('quizScorePill').textContent = `${score} / 4`;
+      const banner = document.getElementById('quizFinishBanner');
+      if (done) {
+        banner.classList.remove('hidden');
+        document.getElementById('quizFinishEn').textContent = score === 4 ? '🏆 4/4 — Unit 5 Electricity Champion!' : `🎉 Completed! Score: ${score}/4 — Review any tricky questions above!`;
+        document.getElementById('quizFinishVn').textContent = score === 4 ? '🏆 4/4 — Nhà vô địch Điện học Chương 5!' : `🎉 Hoàn thành! Điểm: ${score}/4 — Cùng xem lại câu còn nhầm ở trên nhé!`;
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+    function answerQuiz(qi, oi) {
+      if (quizAnswered[qi] !== null) return;
+      quizAnswered[qi] = oi;
+      const ok = oi === quizData[qi].ans;
+      playTone(ok);
+      renderQuiz();
+      if (quizAnswered.every(v => v !== null)) {
+        burstConfetti();
+      }
+    }
+    function resetQuiz() {
+      quizAnswered = [null, null, null, null];
+      renderQuiz();
+    }
+
+    // ================= INITIALISE =================
+    renderModelA();
+    renderModelB();
+    renderPortalVocab();
+    renderQuiz();
+  </script>
+</body>
+</html>

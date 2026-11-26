@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parent Portal — Grade 4 Science Week 18 Lesson 2: Modelling Digestion &amp; Vertebrates</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap');
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, #ecfeff 0%, #f0fdfa 45%, #fefce8 100%);
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, .font-display { font-family: 'Fredoka', sans-serif; }
+
+    /* Dual-language visibility (works for HTML AND SVG <text>!) */
+    body:not(.lang-mode-vn) .lang-vn { display: none !important; }
+    body.lang-mode-vn .lang-en { display: none !important; }
+
+    @keyframes bobbing {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    @keyframes squish {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04, 0.95); }
+    }
+    @keyframes fallDrop {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(28px); opacity: 0; }
+    }
+    .anim-bob { animation: bobbing 1.7s ease-in-out infinite; }
+    .anim-squish { animation: squish 0.9s ease-in-out infinite; transform-origin: center; }
+    .anim-drop-1 { animation: fallDrop 1.1s linear infinite; }
+    .anim-drop-2 { animation: fallDrop 1.1s linear 0.4s infinite; }
+
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-16">
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- STICKY BILINGUAL TOP BAR -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-4 border-teal-500 shadow-md">
+    <div class="max-w-4xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white font-display font-bold flex items-center justify-center text-lg shadow flex-shrink-0">
+          G4
+        </div>
+        <div class="min-w-0">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-teal-700 truncate">
+            <span class="lang-en">Cambridge Stage 5 Science &bull; Week 18, Lesson 2</span>
+            <span class="lang-vn">Khoa học Cambridge Stage 5 &bull; Tuần 18, Bài 2</span>
+          </div>
+          <div class="text-sm sm:text-base font-display font-bold text-slate-900 truncate">
+            <span class="lang-en">Parent &amp; Family Learning Portal</span>
+            <span class="lang-vn">Cổng Học Tập Gia Đình Song Ngữ</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sticky Language Toggle -->
+      <div class="flex items-center bg-slate-100 p-1 rounded-2xl border-2 border-teal-200 flex-shrink-0">
+        <button id="btnEn" onclick="setLanguage('en')" class="px-3 py-1.5 rounded-xl font-extrabold text-xs sm:text-sm transition bg-teal-600 text-white shadow">
+          🇬🇧 EN
+        </button>
+        <button id="btnVn" onclick="setLanguage('vn')" class="px-3 py-1.5 rounded-xl font-extrabold text-xs sm:text-sm transition text-slate-700 hover:bg-white">
+          🇻🇳 VN
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 pt-6 space-y-8">
+
+    <!-- HERO BANNER -->
+    <section class="bg-gradient-to-br from-teal-600 via-emerald-600 to-cyan-700 text-white rounded-3xl p-6 sm:p-8 shadow-xl">
+      <div class="inline-block px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase tracking-wider mb-3">
+        <span class="lang-en">Unit 4.1 &bull; Modelling Digestion &amp; Vertebrate Systems</span>
+        <span class="lang-vn">Chủ đề 4.1 &bull; Mô hình Hệ Tiêu Hoá &amp; Động Vật Có Xương Sống</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-display font-bold leading-tight">
+        <span class="lang-en">How do scientific models explain digestion in humans and other vertebrates?</span>
+        <span class="lang-vn">Mô hình khoa học giúp chúng ta hiểu sự tiêu hoá ở người và các động vật có xương sống khác như thế nào?</span>
+      </h1>
+      <p class="mt-3 text-sm sm:text-base text-teal-50 font-semibold leading-relaxed">
+        <span class="lang-en">Explore two hands-on interactive models with your child below! Notice how scientists always look at both the <strong>strengths</strong> and <strong>limitations</strong> of a model, and discover how humans, dogs, birds, and fish all share a 1-way digestive tube.</span>
+        <span class="lang-vn">Hãy cùng con khám phá hai mô hình tương tác trực quan bên dưới! Các nhà khoa học luôn đánh giá cả <strong>ưu điểm</strong> và <strong>hạn chế</strong> của mô hình, đồng thời khám phá điểm chung trong hệ tiêu hoá dạng ống một chiều ở người, chó, chim và cá.</span>
+      </p>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- MODEL A: STEP-BY-STEP VIRTUAL DIGESTIVE MODEL LAB            -->
+    <!-- ============================================================ -->
+    <section class="bg-white rounded-3xl shadow-xl border-4 border-teal-400 p-5 sm:p-6">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-800 text-xs font-extrabold uppercase">
+            <span class="lang-en">Interactive Model A</span>
+            <span class="lang-vn">Mô hình Tương tác A</span>
+          </span>
+          <h2 class="text-2xl font-display font-bold text-slate-900 mt-1">
+            <span class="lang-en">Step-by-Step Virtual Digestive Model Lab</span>
+            <span class="lang-vn">Phòng Thí Nghiệm Ảo: Mô Hình Hệ Tiêu Hoá Từng Bước</span>
+          </h2>
+        </div>
+        <button onclick="setModelStep(0)" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-xs text-slate-700">
+          <span class="lang-en">Reset</span>
+          <span class="lang-vn">Làm lại</span>
+        </button>
+      </div>
+
+      <!-- Step Buttons -->
+      <div id="portalStepBtns" class="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-4"></div>
+
+      <!-- Visual SVG Stage (with dual-language SVG text!) -->
+      <div id="portalModelSvg" class="bg-gradient-to-b from-sky-50 to-teal-50 rounded-2xl border-2 border-teal-200 p-3 flex items-center justify-center min-h-[220px]"></div>
+
+      <!-- Dual-Language Readout Dashboard -->
+      <div class="mt-4 bg-slate-900 text-white rounded-2xl p-4 space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span id="pModelProp" class="text-base sm:text-lg font-display font-bold text-teal-300"></span>
+          <span id="pModelOrgan" class="px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm"></span>
+        </div>
+        <p id="pModelDesc" class="text-sm font-semibold text-slate-100 leading-relaxed"></p>
+      </div>
+
+      <!-- Next / Prev Buttons -->
+      <div class="mt-3 flex items-center justify-between">
+        <button onclick="moveModel(-1)" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 font-extrabold text-xs sm:text-sm">
+          <span class="lang-en">&larr; Previous</span>
+          <span class="lang-vn">&larr; Bước trước</span>
+        </button>
+        <span id="pStepNum" class="font-display font-bold text-teal-800 text-sm"></span>
+        <button onclick="moveModel(1)" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-xs sm:text-sm">
+          <span class="lang-en">Next Step &rarr;</span>
+          <span class="lang-vn">Bước tiếp theo &rarr;</span>
+        </button>
+      </div>
+
+      <!-- Strength vs Limitation Toggle Card -->
+      <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300">
+          <div class="font-display font-bold text-emerald-900 text-base mb-1">
+            <span class="lang-en">Model Strength (What it shows well)</span>
+            <span class="lang-vn">Ưu điểm của Mô hình</span>
+          </div>
+          <p class="text-xs sm:text-sm font-semibold text-emerald-950">
+            <span class="lang-en">Safely shows the 1-way organ order, stomach churning, and how tiny dissolved nutrients pass through tiny filter holes into the blood.</span>
+            <span class="lang-vn">Minh hoạ an toàn thứ tự ống tiêu hoá một chiều, dạ dày co bóp nghiền thức ăn và cách chất dinh dưỡng nhỏ hoà tan thấm qua lỗ nhỏ vào máu.</span>
+          </p>
+        </div>
+        <div class="p-4 rounded-2xl bg-rose-50 border-2 border-rose-300">
+          <div class="font-display font-bold text-rose-900 text-base mb-1">
+            <span class="lang-en">Model Limitation (How real bodies differ)</span>
+            <span class="lang-vn">Hạn chế của Mô hình</span>
+          </div>
+          <p class="text-xs sm:text-sm font-semibold text-rose-950">
+            <span class="lang-en">A plastic bag has NO real living stomach acid, NO living muscles, and NO blood vessels carrying nutrients around the body.</span>
+            <span class="lang-vn">Túi ni-lông KHÔNG có axit dạ dày thật, KHÔNG có cơ sống tự co bóp và KHÔNG có mạch máu vận chuyển chất dinh dưỡng đi khắp cơ thể.</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- MODEL B: VERTEBRATE DIGESTIVE COMPARATOR                     -->
+    <!-- ============================================================ -->
+    <section class="bg-white rounded-3xl shadow-xl border-4 border-indigo-400 p-5 sm:p-6">
+      <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase">
+        <span class="lang-en">Interactive Model B</span>
+        <span class="lang-vn">Mô hình Tương tác B</span>
+      </span>
+      <h2 class="text-2xl font-display font-bold text-slate-900 mt-1">
+        <span class="lang-en">Vertebrate Digestive System Comparator</span>
+        <span class="lang-vn">So Sánh Hệ Tiêu Hoá Các Động Vật Có Xương Sống</span>
+      </h2>
+      <p class="text-sm font-semibold text-slate-600 mt-1 mb-4">
+        <span class="lang-en">Tap a vertebrate below to explore its digestive pathway and compare it with a human!</span>
+        <span class="lang-vn">Chạm vào từng loài động vật có xương sống bên dưới để khám phá đường đi thức ăn và so sánh với con người!</span>
+      </p>
+
+      <!-- Animal Selector -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+        <button onclick="selectPortalVert('human')" data-pv="human" class="pv-btn py-2.5 px-3 rounded-2xl font-extrabold text-sm transition bg-indigo-600 text-white shadow">
+          <span class="lang-en">Human</span><span class="lang-vn">Con người</span>
+        </button>
+        <button onclick="selectPortalVert('dog')" data-pv="dog" class="pv-btn py-2.5 px-3 rounded-2xl font-extrabold text-sm transition bg-slate-100 text-slate-800 hover:bg-slate-200">
+          <span class="lang-en">Dog</span><span class="lang-vn">Chó</span>
+        </button>
+        <button onclick="selectPortalVert('bird')" data-pv="bird" class="pv-btn py-2.5 px-3 rounded-2xl font-extrabold text-sm transition bg-slate-100 text-slate-800 hover:bg-slate-200">
+          <span class="lang-en">Bird</span><span class="lang-vn">Chim (Gà)</span>
+        </button>
+        <button onclick="selectPortalVert('fish')" data-pv="fish" class="pv-btn py-2.5 px-3 rounded-2xl font-extrabold text-sm transition bg-slate-100 text-slate-800 hover:bg-slate-200">
+          <span class="lang-en">Fish</span><span class="lang-vn">Cá hồi</span>
+        </button>
+      </div>
+
+      <!-- Vertebrate SVG Stage -->
+      <div id="portalVertSvg" class="bg-indigo-50/70 rounded-2xl border-2 border-indigo-200 p-3 flex items-center justify-center min-h-[210px]"></div>
+
+      <!-- Bilingual Comparison Readout -->
+      <div id="portalVertInfo" class="mt-4 p-4 rounded-2xl bg-indigo-950 text-white space-y-2"></div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 8 VISUAL SVG BILINGUAL VOCABULARY CARDS WITH EN/VN AUDIO     -->
+    <!-- ============================================================ -->
+    <section class="bg-white rounded-3xl shadow-xl border-2 border-teal-200 p-5 sm:p-6">
+      <h2 class="text-2xl font-display font-bold text-slate-900">
+        <span class="lang-en">8 Key Science Words (Tap to Listen!)</span>
+        <span class="lang-vn">8 Từ Vựng Khoa Học Trọng Tâm (Chạm để nghe phát âm!)</span>
+      </h2>
+      <p class="text-sm font-semibold text-slate-600 mt-1 mb-4">
+        <span class="lang-en">Practise British English pronunciation (especially <strong>oesophagus</strong>) alongside natural Vietnamese meanings.</span>
+        <span class="lang-vn">Luyện phát âm chuẩn tiếng Anh-Anh (đặc biệt là từ <strong>oesophagus</strong>) cùng nghĩa tiếng Việt tự nhiên.</span>
+      </p>
+      <div id="portalVocabGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 3-TIER DINNER TABLE TALKS (EN/VN)                            -->
+    <!-- ============================================================ -->
+    <section class="bg-white rounded-3xl shadow-xl border-2 border-amber-300 p-5 sm:p-6 space-y-4">
+      <h2 class="text-2xl font-display font-bold text-amber-950">
+        <span class="lang-en">3-Tier Dinner Table Talks</span>
+        <span class="lang-vn">Trò Chuyện Khoa Học Bên Bàn Ăn (3 Cấp Độ)</span>
+      </h2>
+
+      <div class="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300">
+        <span class="inline-block px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-xs font-extrabold mb-1">
+          <span class="lang-en">Tier 1 &bull; Warm-Up</span>
+          <span class="lang-vn">Cấp độ 1 &bull; Khởi động</span>
+        </span>
+        <p class="font-bold text-slate-900 text-sm sm:text-base">
+          <span class="lang-en">"If we built a digestive model using a sponge and a tea strainer from our kitchen, which real organs would they represent?"</span>
+          <span class="lang-vn">"Nếu nhà mình làm mô hình tiêu hoá bằng miếng bọt biển và cái rây lọc trà trong bếp, chúng sẽ đại diện cho cơ quan thật nào?"</span>
+        </p>
+        <p class="text-xs font-semibold text-emerald-900 mt-1">
+          <span class="lang-en">Hint: Tea strainer = small intestine (nutrients pass through); sponge = large intestine (soaks up water).</span>
+          <span class="lang-vn">Gợi ý: Rây lọc trà = ruột non (dinh dưỡng thấm qua); bọt biển = ruột già (hấp thụ nước).</span>
+        </p>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-sky-50 border-2 border-sky-300">
+        <span class="inline-block px-2.5 py-0.5 rounded-full bg-sky-600 text-white text-xs font-extrabold mb-1">
+          <span class="lang-en">Tier 2 &bull; Go Deeper</span>
+          <span class="lang-vn">Cấp độ 2 &bull; Khám phá sâu hơn</span>
+        </span>
+        <p class="font-bold text-slate-900 text-sm sm:text-base">
+          <span class="lang-en">"How is a bird's digestive system similar to ours — and how does a chicken grind hard seeds without any teeth?"</span>
+          <span class="lang-vn">"Hệ tiêu hoá của loài chim giống con người ở điểm nào — và gà nghiền hạt cứng ra sao khi không có răng?"</span>
+        </p>
+        <p class="text-xs font-semibold text-sky-900 mt-1">
+          <span class="lang-en">Hint: Same 1-way tube (oesophagus, stomach, intestines), plus a muscular gizzard with tiny swallowed stones (grit)!</span>
+          <span class="lang-vn">Gợi ý: Đều có ống tiêu hoá một chiều (thực quản, dạ dày, ruột), nhưng gà có mề cơ khoẻ chứa sỏi nhỏ để nghiền hạt!</span>
+        </p>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-purple-50 border-2 border-purple-300">
+        <span class="inline-block px-2.5 py-0.5 rounded-full bg-purple-600 text-white text-xs font-extrabold mb-1">
+          <span class="lang-en">Tier 3 &bull; Scientist Challenge</span>
+          <span class="lang-vn">Cấp độ 3 &bull; Thử thách Nhà khoa học</span>
+        </span>
+        <p class="font-bold text-slate-900 text-sm sm:text-base">
+          <span class="lang-en">"Why is chewing your dinner thoroughly so important before food ever reaches your small intestine?"</span>
+          <span class="lang-vn">"Vì sao việc nhai kỹ thức ăn trong bữa tối lại vô cùng quan trọng trước khi thức ăn đi tới ruột non?"</span>
+        </p>
+        <p class="text-xs font-semibold text-purple-900 mt-1">
+          <span class="lang-en">Hint: Breaking food into tiny soluble pieces lets dissolved nutrients pass through the small intestine wall into the blood!</span>
+          <span class="lang-vn">Gợi ý: Nghiền nhỏ thức ăn giúp các chất dinh dưỡng hoà tan dễ dàng thấm qua thành ruột non vào máu!</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- GAMIFIED 4-QUESTION INTERACTIVE HOME CHECK QUIZ              -->
+    <!-- ============================================================ -->
+    <section class="bg-gradient-to-br from-slate-900 to-teal-950 text-white rounded-3xl p-5 sm:p-7 shadow-2xl border-4 border-amber-400">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-xs font-extrabold uppercase">
+            <span class="lang-en">3-Minute Family Challenge</span>
+            <span class="lang-vn">Thử Thách Gia Đình 3 Phút</span>
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-display font-bold mt-1">
+            <span class="lang-en">4-Question Digestive Quiz</span>
+            <span class="lang-vn">Trắc Nghiệm Nhanh 4 Câu</span>
+          </h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="quizScorePill" class="px-4 py-1.5 rounded-full bg-white/15 border border-white/25 font-extrabold text-sm">0 / 4</span>
+          <button onclick="resetQuiz()" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs">
+            <span class="lang-en">Try Again</span>
+            <span class="lang-vn">Chơi lại</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="quizContainer" class="space-y-4"></div>
+    </section>
+  </main>
+
+  <script>
+    // ============================================================
+    // LANGUAGE TOGGLE WITH speechSynthesis.cancel()
+    // ============================================================
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      currentLang = lang;
+      document.body.classList.toggle('lang-mode-vn', lang === 'vn');
+      document.getElementById('btnEn').className = lang === 'en'
+        ? 'px-3 py-1.5 rounded-xl font-extrabold text-xs sm:text-sm transition bg-teal-600 text-white shadow'
+        : 'px-3 py-1.5 rounded-xl font-extrabold text-xs sm:text-sm transition text-slate-700 hover:bg-white';
+      document.getElementById('btnVn').className = lang === 'vn'
+        ? 'px-3 py-1.5 rounded-xl font-extrabold text-xs sm:text-sm transition bg-teal-600 text-white shadow'
+        : 'px-3 py-1.5 rounded-xl font-extrabold text-xs sm:text-sm transition text-slate-700 hover:bg-white';
+      renderPortalModelStep();
+      renderPortalVert();
+    }
+
+    // Offline chime
+    let actx = null;
+    function chime(ok) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!actx) actx = new AC();
+      if (actx.state === 'suspended') actx.resume();
+      const osc = actx.createOscillator();
+      const g = actx.createGain();
+      osc.type = ok ? 'triangle' : 'sawtooth';
+      osc.frequency.setValueAtTime(ok ? 660 : 210, actx.currentTime);
+      g.gain.setValueAtTime(0.12, actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.18);
+      osc.connect(g); g.connect(actx.destination);
+      osc.start(); osc.stop(actx.currentTime + 0.18);
+    }
+
+    // ============================================================
+    // MODEL A: VIRTUAL DIGESTIVE MODEL LAB (APPLE & BREAD MODEL)
+    // ============================================================
+    const pModelSteps = [
+      {
+        btnEn: '1. Chop', btnVn: '1. Cắt nhỏ',
+        propEn: 'Fork & Scissors (Apple + Bread)', propVn: 'Nĩa & Kéo (Táo + Bánh mì)',
+        organEn: 'Teeth (Mouth)', organVn: 'Răng (Miệng)',
+        descEn: 'Chops solid apple and bread into smaller pieces so digestion can begin.',
+        descVn: 'Cắt và nghiền miếng táo cùng bánh mì thành những mảnh nhỏ để bắt đầu tiêu hoá.',
+        svg: `<svg viewBox="0 0 360 185" class="w-full max-w-md h-48">
+          <rect x="45" y="108" width="270" height="44" rx="16" fill="#e2e8f0" stroke="#334155" stroke-width="2.5"/>
+          <rect x="95" y="114" width="38" height="24" rx="5" fill="#fbbf24" stroke="#92400e" stroke-width="2"/>
+          <circle cx="170" cy="126" r="14" fill="#f87171" stroke="#991b1b" stroke-width="2"/>
+          <rect x="210" y="116" width="34" height="22" rx="5" fill="#fde68a" stroke="#92400e" stroke-width="2"/>
+          <g class="anim-bob">
+            <rect x="166" y="18" width="12" height="52" rx="4" fill="#64748b"/>
+            <path d="M154 70h36v22h-7v-14h-5v14h-6v-14h-5v14h-13z" fill="#334155"/>
+          </g>
+          <text x="180" y="174" font-size="12" font-weight="800" text-anchor="middle" fill="#0f172a" class="lang-en">Fork &amp; scissors = Teeth chopping food</text>
+          <text x="180" y="174" font-size="12" font-weight="800" text-anchor="middle" fill="#0f172a" class="lang-vn">Nĩa &amp; kéo = Răng nhai nhỏ thức ăn</text>
+        </svg>`
+      },
+      {
+        btnEn: '2. Spray', btnVn: '2. Xịt nước',
+        propEn: 'Water Spray Bottle', propVn: 'Bình Xịt Nước',
+        organEn: 'Saliva (Mouth)', organVn: 'Nước bọt (Miệng)',
+        descEn: 'Wets and softens the crushed bread & apple so it becomes easy to swallow.',
+        descVn: 'Làm ướt và mềm hỗn hợp bánh mì & táo để dễ nuốt xuống thực quản.',
+        svg: `<svg viewBox="0 0 360 185" class="w-full max-w-md h-48">
+          <rect x="44" y="54" width="54" height="82" rx="10" fill="#38bdf8" stroke="#0369a1" stroke-width="2.5"/>
+          <rect x="60" y="34" width="22" height="20" fill="#0284c7"/>
+          <path d="M82 38h28l-5 12H82z" fill="#0f172a"/>
+          <g class="anim-drop-1"><circle cx="132" cy="56" r="4.5" fill="#0ea5e9"/><circle cx="152" cy="68" r="4" fill="#38bdf8"/></g>
+          <g class="anim-drop-2"><circle cx="172" cy="80" r="4.5" fill="#0284c7"/><circle cx="192" cy="94" r="4" fill="#0ea5e9"/></g>
+          <path d="M168 118h140c-6 28-24 40-70 40s-64-12-70-40z" fill="#e2e8f0" stroke="#334155" stroke-width="2.5"/>
+          <ellipse cx="238" cy="120" rx="58" ry="12" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+          <text x="180" y="176" font-size="12" font-weight="800" text-anchor="middle" fill="#0369a1" class="lang-en">Water spray = Saliva softening food</text>
+          <text x="180" y="176" font-size="12" font-weight="800" text-anchor="middle" fill="#0369a1" class="lang-vn">Bình xịt nước = Nước bọt làm mềm thức ăn</text>
+        </svg>`
+      },
+      {
+        btnEn: '3. Squeeze', btnVn: '3. Bóp ống',
+        propEn: 'Squeezing a Soft Tube', propVn: 'Bóp Đẩy Qua Ống Mềm',
+        organEn: 'Oesophagus', organVn: 'Thực quản',
+        descEn: 'Squeezing behind the food ball pushes it down — just like real oesophagus muscles!',
+        descVn: 'Bóp phía sau viên thức ăn đẩy nó đi xuống — giống hệt cơ thực quản co bóp!',
+        svg: `<svg viewBox="0 0 360 185" class="w-full max-w-md h-48">
+          <rect x="148" y="14" width="64" height="142" rx="28" fill="#ffedd5" stroke="#ea580c" stroke-width="3.5"/>
+          <path d="M100 66h40M130 56l10 10-10 10" fill="none" stroke="#c2410c" stroke-width="4" stroke-linecap="round"/>
+          <path d="M260 66h-40M230 56l-10 10 10 10" fill="none" stroke="#c2410c" stroke-width="4" stroke-linecap="round"/>
+          <g class="anim-bob"><ellipse cx="180" cy="96" rx="21" ry="16" fill="#f59e0b" stroke="#92400e" stroke-width="2.5"/></g>
+          <text x="180" y="176" font-size="12" font-weight="800" text-anchor="middle" fill="#c2410c" class="lang-en">Squeezing tube = Oesophagus pushing food</text>
+          <text x="180" y="176" font-size="12" font-weight="800" text-anchor="middle" fill="#c2410c" class="lang-vn">Ống bóp đẩy = Thực quản đẩy thức ăn xuống</text>
+        </svg>`
+      },
+      {
+        btnEn: '4. Churn', btnVn: '4. Nhào trộn',
+        propEn: 'Sealed Bag + Lemon Juice', propVn: 'Túi Zip + Nước Chanh Bóp Đều',
+        organEn: 'Stomach', organVn: 'Dạ dày',
+        descEn: 'Squeezing the sealed bag churns food with sour juice into a thick liquid soup.',
+        descVn: 'Bóp túi zip giúp nhào trộn thức ăn với nước chanh chua thành hỗn hợp lỏng sệt.',
+        svg: `<svg viewBox="0 0 360 185" class="w-full max-w-md h-48">
+          <g class="anim-squish">
+            <rect x="108" y="18" width="144" height="134" rx="14" fill="#e0f2fe" stroke="#0284c7" stroke-width="3.5"/>
+            <line x1="108" y1="36" x2="252" y2="36" stroke="#0369a1" stroke-width="3.5"/>
+            <path d="M114 92 Q146 80 180 92 T246 92 V146 Q180 152 114 146 Z" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+          </g>
+          <text x="180" y="175" font-size="12" font-weight="800" text-anchor="middle" fill="#0369a1" class="lang-en">Sealed bag churning = Stomach &amp; acid</text>
+          <text x="180" y="175" font-size="12" font-weight="800" text-anchor="middle" fill="#0369a1" class="lang-vn">Túi zip nhào trộn = Dạ dày &amp; axit tiêu hoá</text>
+        </svg>`
+      },
+      {
+        btnEn: '5. Filter', btnVn: '5. Lọc dưỡng chất',
+        propEn: 'Fine Cloth Filter Over Bowl', propVn: 'Vải Lọc Mịn Đặt Trên Tô',
+        organEn: 'Small Intestine', organVn: 'Ruột non',
+        descEn: 'Tiny dissolved nutrients drip through tiny holes into the bowl ("blood") while big lumps stay inside!',
+        descVn: 'Chất dinh dưỡng hoà tan siêu nhỏ thấm qua lỗ vải xuống tô ("máu"), còn cặn lớn ở lại bên trong!',
+        svg: `<svg viewBox="0 0 360 185" class="w-full max-w-md h-48">
+          <rect x="112" y="16" width="136" height="52" rx="18" fill="#fce7f3" stroke="#be185d" stroke-width="3" stroke-dasharray="6 4"/>
+          <ellipse cx="180" cy="42" rx="52" ry="14" fill="#d97706"/>
+          <g class="anim-drop-1"><circle cx="148" cy="76" r="5" fill="#f59e0b"/></g>
+          <g class="anim-drop-2"><circle cx="180" cy="76" r="5" fill="#ec4899"/><circle cx="212" cy="76" r="5" fill="#f59e0b"/></g>
+          <path d="M104 110h152c-8 34-32 46-76 46s-68-12-76-46z" fill="#fecdd3" stroke="#be123c" stroke-width="3"/>
+          <text x="180" y="140" font-size="11" font-weight="800" text-anchor="middle" fill="#881337" class="lang-en">Blood (Nutrients)</text>
+          <text x="180" y="140" font-size="11" font-weight="800" text-anchor="middle" fill="#881337" class="lang-vn">Máu (Dinh dưỡng)</text>
+          <text x="180" y="176" font-size="12" font-weight="800" text-anchor="middle" fill="#be185d" class="lang-en">Cloth filter = Small intestine absorbing nutrients</text>
+          <text x="180" y="176" font-size="12" font-weight="800" text-anchor="middle" fill="#be185d" class="lang-vn">Vải lọc = Ruột non hấp thụ chất dinh dưỡng</text>
+        </svg>`
+      },
+      {
+        btnEn: '6. Dry & Exit', btnVn: '6. Hút nước & Thải',
+        propEn: 'Paper Towel + Snipped Corner', propVn: 'Khăn Giấy + Góc Túi Cắt Nhỏ',
+        organEn: 'Large Intestine & Anus', organVn: 'Ruột già & Hậu môn',
+        descEn: 'Paper towel soaks up leftover water (large intestine), and the snipped corner pushes solid waste out (anus).',
+        descVn: 'Khăn giấy thấm phần nước còn lại (ruột già), còn góc túi cắt nhỏ đẩy chất thải rắn ra ngoài (hậu môn).',
+        svg: `<svg viewBox="0 0 360 185" class="w-full max-w-md h-48">
+          <rect x="38" y="24" width="116" height="106" rx="12" fill="#d1fae5" stroke="#047857" stroke-width="3"/>
+          <circle cx="76" cy="68" r="9" fill="#38bdf8"/><circle cx="114" cy="90" r="10" fill="#0ea5e9"/>
+          <text x="96" y="118" font-size="10" font-weight="800" text-anchor="middle" fill="#065f46" class="lang-en">Water absorbed</text>
+          <text x="96" y="118" font-size="10" font-weight="800" text-anchor="middle" fill="#065f46" class="lang-vn">Hấp thụ nước</text>
+          <path d="M164 78h34M188 68l10 10-10 10" fill="none" stroke="#0f172a" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M210 28h96l-32 76h-32z" fill="#f1f5f9" stroke="#334155" stroke-width="3"/>
+          <g class="anim-bob"><rect x="242" y="112" width="32" height="28" rx="9" fill="#92400e"/></g>
+          <text x="180" y="175" font-size="12" font-weight="800" text-anchor="middle" fill="#065f46" class="lang-en">Paper towel (Large int.) &amp; Snipped tip (Anus)</text>
+          <text x="180" y="175" font-size="12" font-weight="800" text-anchor="middle" fill="#065f46" class="lang-vn">Khăn giấy (Ruột già) &amp; Góc túi (Hậu môn)</text>
+        </svg>`
+      }
+    ];
+
+    let pStep = 0;
+
+    function buildPortalStepBtns() {
+      const box = document.getElementById('portalStepBtns');
+      box.innerHTML = pModelSteps.map((s, i) => `
+        <button onclick="setModelStep(${i})" id="pBtn-${i}" class="py-2 px-2 rounded-xl text-xs font-extrabold border-2 transition">
+          <span class="lang-en">${s.btnEn}</span><span class="lang-vn">${s.btnVn}</span>
+        </button>
+      `).join('');
+    }
+
+    function setModelStep(idx) {
+      pStep = (idx + pModelSteps.length) % pModelSteps.length;
+      renderPortalModelStep();
+      chime(true);
+    }
+
+    function moveModel(delta) {
+      setModelStep(pStep + delta);
+    }
+
+    function renderPortalModelStep() {
+      const s = pModelSteps[pStep];
+      document.getElementById('portalModelSvg').innerHTML = s.svg;
+      document.getElementById('pModelProp').innerHTML = `<span class="lang-en">${s.propEn}</span><span class="lang-vn">${s.propVn}</span>`;
+      document.getElementById('pModelOrgan').innerHTML = `<span class="lang-en">= ${s.organEn}</span><span class="lang-vn">= ${s.organVn}</span>`;
+      document.getElementById('pModelDesc').innerHTML = `<span class="lang-en">${s.descEn}</span><span class="lang-vn">${s.descVn}</span>`;
+      document.getElementById('pStepNum').innerHTML = `<span class="lang-en">Step ${pStep + 1} of 6</span><span class="lang-vn">Bước ${pStep + 1} / 6</span>`;
+
+      pModelSteps.forEach((_, i) => {
+        const b = document.getElementById(`pBtn-${i}`);
+        if (!b) return;
+        b.className = i === pStep
+          ? 'py-2 px-2 rounded-xl text-xs font-extrabold border-2 transition bg-teal-600 text-white border-teal-700 shadow'
+          : 'py-2 px-2 rounded-xl text-xs font-extrabold border-2 transition bg-slate-50 text-slate-700 border-slate-200 hover:bg-teal-50';
+      });
+    }
+
+    // ============================================================
+    // MODEL B: VERTEBRATE DIGESTIVE COMPARATOR
+    // ============================================================
+    const pVerts = {
+      human: {
+        titleEn: 'Human — Omnivore Mammal',
+        titleVn: 'Con người — Động vật có vú ăn tạp',
+        simEn: '1-Way Tube: Mouth (teeth + saliva) &rarr; Oesophagus &rarr; Stomach &rarr; Small Intestine (nutrients) &rarr; Large Intestine (water) &rarr; Anus.',
+        simVn: 'Ống 1 chiều: Miệng (răng + nước bọt) &rarr; Thực quản &rarr; Dạ dày &rarr; Ruột non (dinh dưỡng) &rarr; Ruột già (nước) &rarr; Hậu môn.',
+        funEn: 'Medium-length small intestine absorbs nutrients from both plants and meat.',
+        funVn: 'Ruột non có độ dài trung bình giúp hấp thụ dinh dưỡng từ cả thực vật lẫn thịt.',
+        svg: `<svg viewBox="0 0 360 185" class="w-full max-w-md h-48">
+          <circle cx="88" cy="30" r="16" fill="#fef3c7" stroke="#0f172a" stroke-width="2.5"/>
+          <path d="M52 64 Q88 50 124 64 L128 164 Q88 175 48 164 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2.5"/>
+          <circle cx="88" cy="35" r="4.5" fill="#ef4444"/>
+          <path d="M88 40 V82" stroke="#f97316" stroke-width="6"/>
+          <ellipse cx="98" cy="96" rx="16" ry="11" fill="#f59e0b" stroke="#92400e" stroke-width="2"/>
+          <path d="M74 114 C106 114 106 128 74 128 C106 128 106 142 74 142" fill="none" stroke="#ec4899" stroke-width="6" stroke-linecap="round"/>
+          <path d="M64 152 V112 H112 V152 L88 160" fill="none" stroke="#10b981" stroke-width="6" opacity="0.8"/>
+          <text x="155" y="36" font-size="11.5" font-weight="800" fill="#dc2626" class="lang-en">1. Mouth (teeth + saliva)</text>
+          <text x="155" y="36" font-size="11.5" font-weight="800" fill="#dc2626" class="lang-vn">1. Miệng (răng + nước bọt)</text>
+          <text x="155" y="64" font-size="11.5" font-weight="800" fill="#c2410c" class="lang-en">2. Oesophagus</text>
+          <text x="155" y="64" font-size="11.5" font-weight="800" fill="#c2410c" class="lang-vn">2. Thực quản</text>
+          <text x="155" y="96" font-size="11.5" font-weight="800" fill="#b45309" class="lang-en">3. Stomach</text>
+          <text x="155" y="96" font-size="11.5" font-weight="800" fill="#b45309" class="lang-vn">3. Dạ dày</text>
+          <text x="155" y="128" font-size="11.5" font-weight="800" fill="#be185d" class="lang-en">4. Small Intestine</text>
+          <text x="155" y="128" font-size="11.5" font-weight="800" fill="#be185d" class="lang-vn">4. Ruột non (hấp thụ chất)</text>
+          <text x="155" y="158" font-size="11.5" font-weight="800" fill="#047857" class="lang-en">5–6. Large Int. &amp; Anus</text>
+          <text x="155" y="158" font-size="11.5" font-weight="800" fill="#047857" class="lang-vn">5–6. Ruột già &amp; Hậu môn</text>
+        </svg>`
+      },
+      dog: {
+        titleEn: 'Dog — Carnivore Mammal',
+        titleVn: 'Chó — Động vật có vú ăn thịt',
+        simEn: 'Similarity: Exact same 6-organ 1-way digestive tube as a human!',
+        simVn: 'Điểm giống: Có cùng 6 cơ quan trong ống tiêu hoá một chiều y như con người!',
+        funEn: 'Difference: Sharp canine teeth tear meat, and a shorter small intestine digests meat faster.',
+        funVn: 'Điểm khác: Răng nanh sắc để xé thịt và ruột non ngắn hơn vì thịt tiêu hoá nhanh hơn thực vật.',
+        svg: `<svg viewBox="0 0 360 185" class="w-full max-w-md h-48">
+          <path d="M36 78 Q52 54 80 64 H256 Q296 64 302 90 L292 130 H96 L64 98 Z" fill="#fef3c7" stroke="#0f172a" stroke-width="2.5"/>
+          <circle cx="44" cy="86" r="5" fill="#ef4444"/>
+          <path d="M49 86 L130 90" stroke="#f97316" stroke-width="6"/>
+          <ellipse cx="154" cy="92" rx="20" ry="13" fill="#f59e0b" stroke="#92400e" stroke-width="2"/>
+          <path d="M174 92 C190 78 202 108 218 92 C232 78 242 106 254 92 H286" fill="none" stroke="#ec4899" stroke-width="6" stroke-linecap="round"/>
+          <text x="58" y="38" font-size="11" font-weight="800" text-anchor="middle" fill="#dc2626" class="lang-en">Sharp teeth</text>
+          <text x="58" y="38" font-size="11" font-weight="800" text-anchor="middle" fill="#dc2626" class="lang-vn">Răng sắc</text>
+          <text x="154" y="38" font-size="11" font-weight="800" text-anchor="middle" fill="#b45309" class="lang-en">Stomach</text>
+          <text x="154" y="38" font-size="11" font-weight="800" text-anchor="middle" fill="#b45309" class="lang-vn">Dạ dày</text>
+          <text x="108" y="160" font-size="11" font-weight="800" text-anchor="middle" fill="#c2410c" class="lang-en">Oesophagus</text>
+          <text x="108" y="160" font-size="11" font-weight="800" text-anchor="middle" fill="#c2410c" class="lang-vn">Thực quản</text>
+          <text x="236" y="160" font-size="11" font-weight="800" text-anchor="middle" fill="#be185d" class="lang-en">Short Intestines &amp; Anus</text>
+          <text x="236" y="160" font-size="11" font-weight="800" text-anchor="middle" fill="#be185d" class="lang-vn">Ruột ngắn &amp; Hậu môn</text>
+        </svg>`
+      },
+      bird: {
+        titleEn: 'Bird (Chicken) — Seed-Eating Vertebrate',
+        titleVn: 'Chim (Gà) — Động vật có xương sống ăn hạt',
+        simEn: 'Similarity: Same 1-way digestive pathway with oesophagus, stomach, and intestines!',
+        simVn: 'Điểm giống: Vẫn có ống tiêu hoá 1 chiều gồm thực quản, dạ dày và ruột!',
+        funEn: 'Difference: NO teeth! Swallows tiny stones (grit) into a muscular gizzard to grind hard seeds.',
+        funVn: 'Điểm khác: KHÔNG có răng! Chim nuốt sỏi nhỏ vào mề cơ khoẻ để nghiền nát hạt cứng.',
+        svg: `<svg viewBox="0 0 360 185" class="w-full max-w-md h-48">
+          <path d="M44 68 L74 58 Q92 44 112 60 L226 68 Q282 74 294 104 Q276 142 204 142 Q122 142 96 110 L74 82 Z" fill="#fef9c3" stroke="#0f172a" stroke-width="2.5"/>
+          <polygon points="44,68 74,60 74,78" fill="#f59e0b" stroke="#0f172a" stroke-width="2"/>
+          <path d="M74 70 L118 92" stroke="#f97316" stroke-width="5.5"/>
+          <circle cx="124" cy="102" r="13" fill="#fde047" stroke="#ca8a04" stroke-width="2"/>
+          <ellipse cx="182" cy="106" rx="18" ry="14" fill="#d97706" stroke="#78350f" stroke-width="2"/>
+          <circle cx="177" cy="104" r="2.5" fill="#fff"/><circle cx="188" cy="109" r="2.5" fill="#fff"/>
+          <path d="M137 104 H164" stroke="#f97316" stroke-width="5.5"/>
+          <path d="M200 106 C214 90 228 122 244 106 C256 94 266 112 276 106" fill="none" stroke="#ec4899" stroke-width="5.5" stroke-linecap="round"/>
+          <text x="64" y="34" font-size="11" font-weight="800" text-anchor="middle" fill="#b45309" class="lang-en">Beak (no teeth)</text>
+          <text x="64" y="34" font-size="11" font-weight="800" text-anchor="middle" fill="#b45309" class="lang-vn">Mỏ (không răng)</text>
+          <text x="182" y="34" font-size="11" font-weight="800" text-anchor="middle" fill="#92400e" class="lang-en">Gizzard (grit)</text>
+          <text x="182" y="34" font-size="11" font-weight="800" text-anchor="middle" fill="#92400e" class="lang-vn">Mề (nghiền sỏi)</text>
+          <text x="118" y="166" font-size="11" font-weight="800" text-anchor="middle" fill="#a16207" class="lang-en">Crop</text>
+          <text x="118" y="166" font-size="11" font-weight="800" text-anchor="middle" fill="#a16207" class="lang-vn">Diều</text>
+          <text x="242" y="166" font-size="11" font-weight="800" text-anchor="middle" fill="#be185d" class="lang-en">Intestines &amp; Exit</text>
+          <text x="242" y="166" font-size="11" font-weight="800" text-anchor="middle" fill="#be185d" class="lang-vn">Ruột &amp; Lối thoát</text>
+        </svg>`
+      },
+      fish: {
+        titleEn: 'Fish (Salmon) — Aquatic Vertebrate',
+        titleVn: 'Cá hồi — Động vật có xương sống dưới nước',
+        simEn: 'Similarity: Has a mouth, short oesophagus, stomach, intestine, and exit just like humans!',
+        simVn: 'Điểm giống: Cũng có miệng, thực quản ngắn, dạ dày, ruột và lối thoát chất thải như con người!',
+        funEn: 'Difference: Streamlined short digestive tube; usually swallows prey whole without chewing.',
+        funVn: 'Điểm khác: Ống tiêu hoá ngắn gọn theo thân thuôn dài; cá thường nuốt trọn con mồi không nhai.',
+        svg: `<svg viewBox="0 0 360 185" class="w-full max-w-md h-48">
+          <path d="M38 94 Q120 40 264 86 L316 58 L302 94 L316 130 L264 102 Q120 148 38 94 Z" fill="#e0f2fe" stroke="#0369a1" stroke-width="2.5"/>
+          <circle cx="70" cy="82" r="4.5" fill="#0f172a"/>
+          <circle cx="46" cy="96" r="5" fill="#ef4444"/>
+          <path d="M51 96 L116 96" stroke="#f97316" stroke-width="6"/>
+          <ellipse cx="144" cy="98" rx="22" ry="13" fill="#f59e0b" stroke="#92400e" stroke-width="2"/>
+          <path d="M166 98 Q204 112 242 102" fill="none" stroke="#ec4899" stroke-width="6.5" stroke-linecap="round"/>
+          <text x="58" y="36" font-size="11" font-weight="800" text-anchor="middle" fill="#dc2626" class="lang-en">Mouth</text>
+          <text x="58" y="36" font-size="11" font-weight="800" text-anchor="middle" fill="#dc2626" class="lang-vn">Miệng</text>
+          <text x="148" y="36" font-size="11" font-weight="800" text-anchor="middle" fill="#b45309" class="lang-en">Stomach</text>
+          <text x="148" y="36" font-size="11" font-weight="800" text-anchor="middle" fill="#b45309" class="lang-vn">Dạ dày</text>
+          <text x="102" y="164" font-size="11" font-weight="800" text-anchor="middle" fill="#c2410c" class="lang-en">Short Oesophagus</text>
+          <text x="102" y="164" font-size="11" font-weight="800" text-anchor="middle" fill="#c2410c" class="lang-vn">Thực quản ngắn</text>
+          <text x="220" y="164" font-size="11" font-weight="800" text-anchor="middle" fill="#be185d" class="lang-en">Intestine &amp; Exit</text>
+          <text x="220" y="164" font-size="11" font-weight="800" text-anchor="middle" fill="#be185d" class="lang-vn">Ruột &amp; Lối thoát</text>
+        </svg>`
+      }
+    };
+
+    let activePVert = 'human';
+
+    function selectPortalVert(key) {
+      activePVert = key;
+      document.querySelectorAll('.pv-btn').forEach(b => {
+        const on = b.dataset.pv === key;
+        b.className = on
+          ? 'pv-btn py-2.5 px-3 rounded-2xl font-extrabold text-sm transition bg-indigo-600 text-white shadow'
+          : 'pv-btn py-2.5 px-3 rounded-2xl font-extrabold text-sm transition bg-slate-100 text-slate-800 hover:bg-slate-200';
+      });
+      renderPortalVert();
+      chime(true);
+    }
+
+    function renderPortalVert() {
+      const v = pVerts[activePVert];
+      document.getElementById('portalVertSvg').innerHTML = v.svg;
+      document.getElementById('portalVertInfo').innerHTML = `
+        <div class="font-display font-bold text-lg text-amber-300">
+          <span class="lang-en">${v.titleEn}</span><span class="lang-vn">${v.titleVn}</span>
+        </div>
+        <p class="text-sm font-semibold text-indigo-100">
+          <span class="lang-en">${v.simEn}</span><span class="lang-vn">${v.simVn}</span>
+        </p>
+        <p class="text-xs sm:text-sm font-semibold text-teal-200">
+          <span class="lang-en">${v.funEn}</span><span class="lang-vn">${v.funVn}</span>
+        </p>
+      `;
+    }
+
+    // ============================================================
+    // 8 VISUAL SVG BILINGUAL VOCAB CARDS WITH EN/VN AUDIO
+    // ============================================================
+    const pVocab = [
+      { en: 'model', vn: 'mô hình khoa học', defEn: 'A simple representation used to explain how real things work.', defVn: 'Vật mẫu hoặc sơ đồ đơn giản giúp giải thích cách thế giới thật hoạt động.', svg: `<svg viewBox="0 0 80 64" class="w-16 h-14"><rect x="10" y="14" width="24" height="36" rx="5" fill="#bae6fd" stroke="#0369a1" stroke-width="2.5"/><path d="M38 32h10" stroke="#0f172a" stroke-width="2.5"/><ellipse cx="62" cy="32" rx="12" ry="16" fill="#fde68a" stroke="#b45309" stroke-width="2.5"/></svg>` },
+      { en: 'vertebrate', vn: 'động vật có xương sống', defEn: 'An animal with a backbone (human, dog, bird, frog, fish).', defVn: 'Động vật có cột sống bên trong cơ thể (người, chó, chim, ếch, cá).', svg: `<svg viewBox="0 0 80 64" class="w-16 h-14"><path d="M10 38 Q40 16 70 38" fill="none" stroke="#0f766e" stroke-width="4"/><circle cx="24" cy="30" r="4" fill="#14b8a6"/><circle cx="40" cy="26" r="4" fill="#14b8a6"/><circle cx="56" cy="30" r="4" fill="#14b8a6"/></svg>` },
+      { en: 'nutrients', vn: 'chất dinh dưỡng', defEn: 'Tiny useful parts of digested food that give energy and growth.', defVn: 'Các chất nhỏ bé có ích từ thức ăn tiêu hoá giúp cơ thể khoẻ và lớn lên.', svg: `<svg viewBox="0 0 80 64" class="w-16 h-14"><circle cx="24" cy="24" r="7" fill="#f59e0b"/><circle cx="48" cy="20" r="6" fill="#10b981"/><circle cx="56" cy="40" r="7" fill="#ec4899"/><circle cx="32" cy="44" r="6" fill="#3b82f6"/></svg>` },
+      { en: 'absorb', vn: 'hấp thụ', defEn: 'To take in dissolved nutrients or water through an organ wall.', defVn: 'Hút hoặc thấm chất dinh dưỡng hoà tan hay nước qua thành cơ quan vào cơ thể.', svg: `<svg viewBox="0 0 80 64" class="w-16 h-14"><line x1="10" y1="30" x2="70" y2="30" stroke="#0f172a" stroke-width="3" stroke-dasharray="4 3"/><path d="M26 14v28M40 14v28M54 14v28" stroke="#2563eb" stroke-width="2.5"/><rect x="12" y="44" width="56" height="12" rx="5" fill="#fecdd3" stroke="#be123c" stroke-width="1.5"/></svg>` },
+      { en: 'waste', vn: 'chất thải', defEn: 'Leftover solid food the body cannot absorb, pushed out via the anus.', defVn: 'Phần cặn thức ăn rắn cơ thể không hấp thụ được, thải ra qua hậu môn.', svg: `<svg viewBox="0 0 80 64" class="w-16 h-14"><path d="M20 12h40l-8 28H28z" fill="#e2e8f0" stroke="#334155" stroke-width="2.5"/><circle cx="40" cy="50" r="8" fill="#92400e"/></svg>` },
+      { en: 'oesophagus', vn: 'thực quản', defEn: 'The muscular tube that squeezes food from mouth to stomach.', defVn: 'Ống cơ co bóp đẩy thức ăn từ miệng xuống dạ dày (chính tả Anh: oesophagus).', svg: `<svg viewBox="0 0 80 64" class="w-16 h-14"><rect x="28" y="8" width="24" height="48" rx="10" fill="#fed7aa" stroke="#c2410c" stroke-width="2.5"/><circle cx="40" cy="32" r="7" fill="#eab308"/></svg>` },
+      { en: 'small intestine', vn: 'ruột non', defEn: 'Long coiled tube that absorbs tiny dissolved nutrients into the blood.', defVn: 'Ống dài cuộn xoắn nơi hấp thụ các chất dinh dưỡng hoà tan vào máu.', svg: `<svg viewBox="0 0 80 64" class="w-16 h-14"><path d="M18 16 C62 16 62 28 22 28 C62 28 62 40 22 40 C62 40 62 52 22 52" fill="none" stroke="#ec4899" stroke-width="6" stroke-linecap="round"/></svg>` },
+      { en: 'conclusion', vn: 'kết luận khoa học', defEn: 'A clear scientific explanation of what your model or test results show.', defVn: 'Nhận định khoa học ngắn gọn giải thích kết quả thí nghiệm hoặc mô hình cho thấy điều gì.', svg: `<svg viewBox="0 0 80 64" class="w-16 h-14"><rect x="14" y="10" width="44" height="44" rx="6" fill="#fef9c3" stroke="#ca8a04" stroke-width="2.5"/><circle cx="58" cy="48" r="10" fill="#10b981"/><path d="M53 48l3 3 7-7" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>` }
+    ];
+
+    function buildPortalVocab() {
+      document.getElementById('portalVocabGrid').innerHTML = pVocab.map((v, i) => `
+        <div class="p-4 rounded-2xl bg-gradient-to-br from-teal-50 to-white border-2 border-teal-200 flex items-center gap-3.5 shadow-sm">
+          <div class="bg-white rounded-xl border border-teal-200 p-1.5 flex-shrink-0">${v.svg}</div>
+          <div class="flex-1 min-w-0">
+            <div class="font-display font-bold text-lg text-slate-900 leading-tight">${v.en}</div>
+            <div class="text-sm font-extrabold text-teal-700">${v.vn}</div>
+            <p class="text-xs font-semibold text-slate-600 mt-1">
+              <span class="lang-en">${v.defEn}</span><span class="lang-vn">${v.defVn}</span>
+            </p>
+            <div class="flex gap-2 mt-2">
+              <button onclick="speakPortal(${i}, 'en')" class="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold">🇬🇧 EN</button>
+              <button onclick="speakPortal(${i}, 'vn')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold">🇻🇳 VN</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function speakPortal(i, lang) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const v = pVocab[i];
+      const u = new SpeechSynthesisUtterance(lang === 'en' ? v.en : v.vn);
+      u.lang = lang === 'en' ? 'en-GB' : 'vi-VN';
+      u.rate = 0.9;
+      window.speechSynthesis.speak(u);
+    }
+
+    // ============================================================
+    // GAMIFIED 4-QUESTION INTERACTIVE QUIZ WITH CONFETTI
+    // ============================================================
+    const quizData = [
+      {
+        qEn: '1. In a classroom digestive model, what real human organ does a fine cloth filter letting nutrient liquid drip into a bowl represent?',
+        qVn: '1. Trong mô hình tiêu hoá, mảnh vải lọc mịn để chất lỏng dinh dưỡng nhỏ giọt xuống tô đại diện cho cơ quan thật nào?',
+        opts: [
+          { en: 'Oesophagus', vn: 'Thực quản', ok: false },
+          { en: 'Small intestine', vn: 'Ruột non', ok: true },
+          { en: 'Anus', vn: 'Hậu môn', ok: false }
+        ],
+        fbEn: 'Correct! The small intestine absorbs tiny dissolved nutrients into the blood.',
+        fbVn: 'Chính xác! Ruột non hấp thụ các chất dinh dưỡng hoà tan siêu nhỏ vào máu.'
+      },
+      {
+        qEn: '2. Which statement describes a LIMITATION of the resealable-bag digestive model?',
+        qVn: '2. Câu nào mô tả đúng một HẠN CHẾ của mô hình tiêu hoá bằng túi zip?',
+        opts: [
+          { en: 'It has no real living stomach acid or blood vessels.', vn: 'Nó không có axit dạ dày sống hay mạch máu thật.', ok: true },
+          { en: 'It shows the order of organs from mouth to anus.', vn: 'Nó thể hiện thứ tự các cơ quan từ miệng tới hậu môn.', ok: false },
+          { en: 'Squeezing the bag shows food being churned.', vn: 'Bóp túi cho thấy thức ăn được nhào trộn.', ok: false }
+        ],
+        fbEn: 'Spot on! Real bodies have living muscles, real acid, and blood vessels.',
+        fbVn: 'Tuyệt vời! Cơ thể thật có cơ sống, axit thật và mạch máu vận chuyển dưỡng chất.'
+      },
+      {
+        qEn: '3. How is a bird (chicken) digestive system SIMILAR to a human digestive system?',
+        qVn: '3. Hệ tiêu hoá của loài chim (gà) GIỐNG hệ tiêu hoá của con người ở điểm nào?',
+        opts: [
+          { en: 'Both have sharp chewing teeth in their mouths.', vn: 'Cả hai đều có răng sắc nhọn để nhai trong miệng.', ok: false },
+          { en: 'Both have a 1-way tube with an oesophagus, stomach, and intestines.', vn: 'Cả hai đều có ống 1 chiều gồm thực quản, dạ dày và ruột.', ok: true },
+          { en: 'Neither animal absorbs nutrients into its blood.', vn: 'Cả hai loài đều không hấp thụ chất dinh dưỡng vào máu.', ok: false }
+        ],
+        fbEn: 'Brilliant! All vertebrates share the same 1-way digestive tube pattern.',
+        fbVn: 'Xuất sắc! Tất cả động vật có xương sống đều có chung cấu tạo ống tiêu hoá 1 chiều.'
+      },
+      {
+        qEn: '4. Why MUST food be broken into tiny soluble pieces BEFORE reaching the small intestine?',
+        qVn: '4. Vì sao thức ăn BẮT BUỘC phải được nghiền thành các hạt nhỏ hoà tan TRƯỚC KHI tới ruột non?',
+        opts: [
+          { en: 'So food can turn into solid rock inside the stomach.', vn: 'Để thức ăn biến thành đá rắn bên trong dạ dày.', ok: false },
+          { en: 'So tiny dissolved nutrients can pass through the small intestine wall into the blood.', vn: 'Để chất dinh dưỡng nhỏ hoà tan có thể thấm qua thành ruột non vào máu.', ok: true },
+          { en: 'So the oesophagus does not need any muscles.', vn: 'Để thực quản không cần cơ co bóp.', ok: false }
+        ],
+        fbEn: 'Super scientific conclusion! Only tiny soluble nutrients can be absorbed into the blood.',
+        fbVn: 'Kết luận khoa học quá chuẩn! Chỉ các chất dinh dưỡng nhỏ hoà tan mới thấm qua thành ruột non vào máu.'
+      }
+    ];
+
+    let quizAnswered = [false, false, false, false];
+    let quizCorrectCount = 0;
+
+    function renderQuiz() {
+      quizAnswered = [false, false, false, false];
+      quizCorrectCount = 0;
+      document.getElementById('quizScorePill').textContent = '0 / 4';
+      document.getElementById('quizContainer').innerHTML = quizData.map((q, qi) => `
+        <div class="bg-white text-slate-900 rounded-2xl p-4 sm:p-5 space-y-3">
+          <div class="font-display font-bold text-base sm:text-lg">
+            <span class="lang-en">${q.qEn}</span><span class="lang-vn">${q.qVn}</span>
+          </div>
+          <div class="grid grid-cols-1 gap-2">
+            ${q.opts.map((o, oi) => `
+              <button id="qopt-${qi}-${oi}" onclick="answerQuiz(${qi}, ${oi})" class="text-left px-4 py-2.5 rounded-xl border-2 border-slate-200 hover:border-teal-500 hover:bg-teal-50 font-bold text-sm transition">
+                <span class="lang-en">${o.en}</span><span class="lang-vn">${o.vn}</span>
+              </button>
+            `).join('')}
+          </div>
+          <div id="qfb-${qi}" class="hidden p-3 rounded-xl font-bold text-xs sm:text-sm"></div>
+        </div>
+      `).join('');
+    }
+
+    function answerQuiz(qi, oi) {
+      if (quizAnswered[qi]) return;
+      quizAnswered[qi] = true;
+      const q = quizData[qi];
+      const chosen = q.opts[oi];
+      const fb = document.getElementById(`qfb-${qi}`);
+      fb.classList.remove('hidden');
+
+      q.opts.forEach((o, idx) => {
+        const btn = document.getElementById(`qopt-${qi}-${idx}`);
+        if (o.ok) {
+          btn.className = 'text-left px-4 py-2.5 rounded-xl border-2 border-emerald-600 bg-emerald-100 text-emerald-950 font-extrabold text-sm';
+        } else if (idx === oi) {
+          btn.className = 'text-left px-4 py-2.5 rounded-xl border-2 border-rose-500 bg-rose-100 text-rose-950 font-extrabold text-sm';
+        }
+      });
+
+      if (chosen.ok) {
+        quizCorrectCount++;
+        document.getElementById('quizScorePill').textContent = `${quizCorrectCount} / 4`;
+        fb.className = 'p-3 rounded-xl font-bold text-xs sm:text-sm bg-emerald-100 text-emerald-950 border border-emerald-400';
+        fb.innerHTML = `<span class="lang-en">${q.fbEn}</span><span class="lang-vn">${q.fbVn}</span>`;
+        chime(true);
+        if (quizCorrectCount === 4) fireConfetti();
+      } else {
+        fb.className = 'p-3 rounded-xl font-bold text-xs sm:text-sm bg-amber-100 text-amber-950 border border-amber-400';
+        fb.innerHTML = `<span class="lang-en">Good try! ${q.fbEn}</span><span class="lang-vn">Cố lên nhé! ${q.fbVn}</span>`;
+        chime(false);
+      }
+    }
+
+    function resetQuiz() {
+      renderQuiz();
+      chime(true);
+    }
+
+    function fireConfetti() {
+      const c = document.getElementById('confettiCanvas');
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      const ctx = c.getContext('2d');
+      const cols = ['#14b8a6', '#f59e0b', '#ec4899', '#3b82f6', '#10b981', '#8b5cf6'];
+      const parts = Array.from({ length: 90 }, () => ({
+        x: Math.random() * c.width,
+        y: -20 - Math.random() * 100,
+        vx: (Math.random() - 0.5) * 6,
+        vy: 3 + Math.random() * 5,
+        s: 6 + Math.random() * 6,
+        col: cols[Math.floor(Math.random() * cols.length)],
+        r: Math.random() * 360
+      }));
+      let f = 0;
+      function tick() {
+        ctx.clearRect(0, 0, c.width, c.height);
+        parts.forEach(p => {
+          p.x += p.vx; p.y += p.vy; p.r += 6;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.r * Math.PI) / 180);
+          ctx.fillStyle = p.col;
+          ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s);
+          ctx.restore();
+        });
+        f++;
+        if (f < 115) requestAnimationFrame(tick);
+        else ctx.clearRect(0, 0, c.width, c.height);
+      }
+      tick();
+    }
+
+    // INIT
+    buildPortalStepBtns();
+    renderPortalModelStep();
+    renderPortalVert();
+    buildPortalVocab();
+    renderQuiz();
+  </script>
+</body>
+</html>

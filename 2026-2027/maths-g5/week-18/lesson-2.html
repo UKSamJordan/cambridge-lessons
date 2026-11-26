@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grade 5 Maths — Week 18, Lesson 2: Decimal Minutes, Seconds &amp; Mixed Time</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
+    :root {
+      --font-display: 'Fredoka', system-ui, sans-serif;
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: linear-gradient(135deg, #f0f9ff 0%, #eef2ff 50%, #fdf4ff 100%);
+      color: #0f172a;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: var(--font-display);
+    }
+
+    /* Auto-hiding fixed top header */
+    #top-header {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    #top-header.header-hidden {
+      transform: translateY(-100%);
+    }
+
+    /* 3D Flashback Flip Cards */
+    .flip-perspective {
+      perspective: 1200px;
+    }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .flip-card.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+
+    /* David's Board 32px squared grid */
+    .davids-grid {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.35) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.35) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* Full Screen I Do Mode */
+    #ido-stage.ido-fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 65;
+      margin: 0;
+      border-radius: 0;
+      overflow-y: auto;
+      background: linear-gradient(160deg, #0f172a 0%, #1e1b4b 55%, #0f172a 100%);
+      padding: 1.5rem 2rem;
+    }
+
+    /* Confetti canvas */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 95;
+    }
+
+    /* Pulse alert for BOARDS UP */
+    @keyframes boardsPop {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+    .boards-up-pulse {
+      animation: boardsPop 0.6s ease-in-out infinite;
+    }
+
+    /* Smooth wheel slice hover */
+    .wheel-slice {
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .wheel-slice:hover {
+      opacity: 0.92;
+    }
+
+    /* Custom slider thumb */
+    input[type="range"].time-slider {
+      accent-color: #4f46e5;
+      height: 10px;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-indigo-200 selection:text-indigo-950">
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- AUTO-HIDING FIXED TOP HEADER -->
+  <header id="top-header" class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b-2 border-indigo-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <!-- Title & Simplified LO -->
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-cyan-500 text-white flex items-center justify-center font-display text-xl font-bold shadow-md shrink-0">
+          60
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-xs font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">Grade 5 Maths • 6Gt.01</span>
+            <span class="text-xs font-bold text-slate-500">Week 18 • Lesson 2</span>
+          </div>
+          <p class="text-sm sm:text-base font-extrabold text-slate-900 truncate">LO: Convert decimal minutes, seconds and mixed time.</p>
+        </div>
+      </div>
+
+      <!-- Controls + Synced Team Scoreboard -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- Team Red vs Team Blue Score Pill -->
+        <div class="flex items-center bg-slate-900 text-white rounded-full px-2 py-1 shadow-inner gap-1.5 text-xs sm:text-sm font-bold">
+          <button onclick="awardTeam('red', 1)" title="Add 1 point to Team Red" class="flex items-center gap-1 bg-rose-600 hover:bg-rose-500 active:scale-95 transition px-2.5 py-1 rounded-full">
+            <span>🔴</span>
+            <span id="header-red-score" class="tabular-nums">0</span>
+          </button>
+          <span class="text-slate-400 text-xs px-0.5">vs</span>
+          <button onclick="awardTeam('blue', 1)" title="Add 1 point to Team Blue" class="flex items-center gap-1 bg-sky-600 hover:bg-sky-500 active:scale-95 transition px-2.5 py-1 rounded-full">
+            <span>🔵</span>
+            <span id="header-blue-score" class="tabular-nums">0</span>
+          </button>
+          <button onclick="resetScores()" title="Reset team scores" class="text-slate-400 hover:text-white px-1.5 text-xs">↺</button>
+        </div>
+
+        <button onclick="toggleDavidsBoard()" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs sm:text-sm shadow-sm transition active:scale-95 flex items-center gap-1.5" title="Open David's Board (W)">
+          <span>✏️</span><span>David's Board</span><kbd class="hidden sm:inline bg-amber-200/80 px-1.5 rounded text-[11px]">W</kbd>
+        </button>
+
+        <button onclick="toggleTeacherDrawer()" class="px-3 py-1.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs sm:text-sm shadow-sm transition active:scale-95 flex items-center gap-1.5" title="Teacher Prompts (T)">
+          <span>👩‍🏫</span><span class="hidden md:inline">Prompts</span><kbd class="hidden sm:inline bg-violet-500 px-1.5 rounded text-[11px]">T</kbd>
+        </button>
+
+        <button id="mute-btn" onclick="toggleMute()" class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs sm:text-sm transition" title="Toggle Sound (M)">
+          🔊
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER WITH pt-24 CLEARANCE -->
+  <main class="max-w-7xl mx-auto px-4 pt-24 pb-16">
+
+    <!-- FLEX-WRAP STATION NAVIGATION BAR -->
+    <nav aria-label="Lesson Stations" class="bg-white/90 backdrop-blur border-2 border-indigo-100 rounded-2xl p-2 shadow-sm mb-6 flex flex-wrap items-center justify-center gap-1.5">
+      <button data-station="0" onclick="goStation(0)" class="station-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">0. 🎯 LO &amp; Criteria</button>
+      <button data-station="1" onclick="goStation(1)" class="station-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">1. ⚡ Flashback 3</button>
+      <button data-station="2" onclick="goStation(2)" class="station-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">2. 📖 Vocabulary</button>
+      <button data-station="3" onclick="goStation(3)" class="station-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">3. ⏱️ I Do &amp; Lab</button>
+      <button data-station="4" onclick="goStation(4)" class="station-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">4. 🧩 You Do Board</button>
+      <button data-station="5" onclick="goStation(5)" class="station-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">5. 🧠 Reasoning Lab</button>
+      <button data-station="6" onclick="goStation(6)" class="station-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">6. ✅ SC Check</button>
+      <button data-station="7" onclick="goStation(7)" class="station-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">7. 🏆 Quickfire</button>
+    </nav>
+
+    <!-- ===================================================== -->
+    <!-- STATION 0: LO, 3 "I CAN..." SCs & MUST/SHOULD/COULD   -->
+    <!-- ===================================================== -->
+    <section id="station-0" class="station-panel">
+      <div class="space-y-6">
+        <!-- Hero LO Banner -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-700 via-blue-600 to-cyan-500 text-white p-6 sm:p-8 shadow-xl">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <div class="lg:col-span-8 space-y-3">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur text-xs sm:text-sm font-extrabold tracking-wide">
+                <span>UNIT 7.2 • TIME</span>
+                <span>•</span>
+                <span>CAMBRIDGE STAGE 6 (6Gt.01)</span>
+              </div>
+              <h1 class="font-display text-3xl sm:text-5xl font-bold leading-tight">
+                Convert decimal minutes, seconds and mixed time.
+              </h1>
+              <p class="text-blue-100 text-base sm:text-lg font-semibold">
+                Today we convert BOTH ways: forward using <span class="bg-white/20 px-2 py-0.5 rounded-lg font-extrabold text-white">× 60</span> and backward using <span class="bg-white/20 px-2 py-0.5 rounded-lg font-extrabold text-white">÷ 60</span>!
+              </p>
+            </div>
+            <!-- Visual Two-Way Stopwatch Badge -->
+            <div class="lg:col-span-4 flex justify-center">
+              <svg viewBox="0 0 220 180" class="w-56 h-44 drop-shadow-lg" aria-label="Two-way base-60 conversion diagram">
+                <rect x="8" y="10" width="204" height="160" rx="22" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+                <circle cx="110" cy="92" r="52" fill="#ffffff" stroke="#fde047" stroke-width="5"/>
+                <rect x="98" y="28" width="24" height="10" rx="4" fill="#fde047"/>
+                <line x1="110" y1="92" x2="110" y2="54" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>
+                <line x1="110" y1="92" x2="144" y2="92" stroke="#4f46e5" stroke-width="4" stroke-linecap="round"/>
+                <path d="M 110 40 A 52 52 0 0 1 162 92 L 110 92 Z" fill="rgba(79,70,229,0.22)"/>
+                <circle cx="110" cy="92" r="5" fill="#0f172a"/>
+                <text x="110" y="160" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="800">× 60 FORWARD  ⇄  ÷ 60 BACKWARD</text>
+                <text x="110" y="51" text-anchor="middle" fill="#475569" font-size="10" font-weight="800">60</text>
+                <text x="150" y="96" text-anchor="middle" fill="#4f46e5" font-size="11" font-weight="800">15</text>
+                <text x="110" y="138" text-anchor="middle" fill="#475569" font-size="10" font-weight="800">30</text>
+                <text x="70" y="96" text-anchor="middle" fill="#475569" font-size="10" font-weight="800">45</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Exact "I can..." Success Criteria -->
+        <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-indigo-100">
+          <div class="flex items-center justify-between flex-wrap gap-2 mb-4">
+            <h2 class="font-display text-2xl font-bold text-slate-900">🎯 Today's 3 "I Can..." Success Criteria</h2>
+            <span class="text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-100 text-emerald-800">Checked in Station 6</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="rounded-2xl bg-sky-50 border-2 border-sky-200 p-4 flex items-start gap-3">
+              <div class="w-9 h-9 rounded-xl bg-sky-600 text-white font-display text-lg font-bold flex items-center justify-center shrink-0">1</div>
+              <p class="text-sm sm:text-base font-bold text-slate-800 leading-snug">
+                I can convert decimal minutes into minutes and seconds by multiplying the decimal part by 60.
+              </p>
+            </div>
+            <div class="rounded-2xl bg-indigo-50 border-2 border-indigo-200 p-4 flex items-start gap-3">
+              <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white font-display text-lg font-bold flex items-center justify-center shrink-0">2</div>
+              <p class="text-sm sm:text-base font-bold text-slate-800 leading-snug">
+                I can convert mixed units (hours &amp; minutes, or minutes &amp; seconds) back into decimal time by dividing the smaller unit by 60.
+              </p>
+            </div>
+            <div class="rounded-2xl bg-fuchsia-50 border-2 border-fuchsia-200 p-4 flex items-start gap-3">
+              <div class="w-9 h-9 rounded-xl bg-fuchsia-600 text-white font-display text-lg font-bold flex items-center justify-center shrink-0">3</div>
+              <p class="text-sm sm:text-base font-bold text-slate-800 leading-snug">
+                I can compare and order time intervals written in mixed and decimal forms.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Colour-Coded Must / Should / Could Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="rounded-3xl bg-gradient-to-br from-emerald-50 to-green-100 border-2 border-emerald-300 p-5 shadow-sm">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-3 py-1 rounded-full bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-wider">🟢 Must • Level 1</span>
+            </div>
+            <p class="font-display text-xl font-bold text-emerald-950">Convert decimal minutes into minutes and seconds.</p>
+            <p class="text-xs font-bold text-emerald-800 mt-2">Example: 2.5 min ➔ 2 min 30 s</p>
+          </div>
+
+          <div class="rounded-3xl bg-gradient-to-br from-amber-50 to-orange-100 border-2 border-orange-300 p-5 shadow-sm">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-3 py-1 rounded-full bg-orange-600 text-white font-extrabold text-xs uppercase tracking-wider">🟠 Should • Level 2</span>
+            </div>
+            <p class="font-display text-xl font-bold text-orange-950">Convert mixed time back into decimal form.</p>
+            <p class="text-xs font-bold text-orange-800 mt-2">Example: 2 h 15 min ➔ 2.25 h</p>
+          </div>
+
+          <div class="rounded-3xl bg-gradient-to-br from-purple-50 to-fuchsia-100 border-2 border-purple-300 p-5 shadow-sm">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-3 py-1 rounded-full bg-purple-600 text-white font-extrabold text-xs uppercase tracking-wider">🟣 Could • Level 3</span>
+            </div>
+            <p class="font-display text-xl font-bold text-purple-950">Compare and order mixed and decimal race times.</p>
+            <p class="text-xs font-bold text-purple-800 mt-2">Example: 3.2 min &lt; 3 min 15 s &lt; 3.3 min</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- STATION 1: SPACED FLASHBACK 3 (UNITS 5, 8 & 3)        -->
+    <!-- ===================================================== -->
+    <section id="station-1" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-3 bg-white rounded-2xl p-4 border-2 border-indigo-100 shadow-sm">
+          <div>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">⚡ Spaced Flashback 3 — Mini-Whiteboards Ready!</h2>
+            <p class="text-sm font-semibold text-slate-600">Three quick retrieval challenges from earlier units. Tap any card to flip and reveal the worked answer.</p>
+          </div>
+          <button onclick="flipAllFlashbacks()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow transition active:scale-95">
+            🔄 Flip All Cards
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 5 Circles & Symmetry -->
+          <div class="flip-card flip-perspective h-[350px] cursor-pointer" onclick="toggleFlip(this)">
+            <div class="flip-inner">
+              <div class="flip-face rounded-3xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white p-6 shadow-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Unit 5 • Circles &amp; Symmetry</span>
+                  <span class="text-xs font-bold opacity-85">6Gg.02 / 6Gg.08</span>
+                </div>
+                <div class="text-center space-y-3 my-auto">
+                  <div class="font-display text-5xl sm:text-6xl font-bold">d = 18 cm</div>
+                  <p class="text-lg font-bold text-sky-100">1) What is the radius?</p>
+                  <p class="text-lg font-bold text-sky-100">2) Rotational symmetry order of a regular hexagon?</p>
+                </div>
+                <div class="text-center text-xs font-extrabold uppercase tracking-wider bg-black/15 rounded-xl py-2">👆 Tap to Reveal</div>
+              </div>
+              <div class="flip-face flip-back rounded-3xl bg-white border-4 border-sky-500 p-6 shadow-xl flex flex-col justify-between">
+                <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-extrabold uppercase self-start">Unit 5 • Answer</span>
+                <div class="text-center space-y-3 my-auto">
+                  <div class="font-display text-5xl font-bold text-sky-700">r = 9 cm</div>
+                  <p class="text-base font-bold text-slate-700">Radius = diameter ÷ 2 = 18 ÷ 2 = 9 cm</p>
+                  <div class="font-display text-4xl font-bold text-indigo-700 pt-1">Order = 6</div>
+                  <p class="text-sm font-semibold text-slate-600">A regular hexagon matches itself 6 times in a full turn.</p>
+                </div>
+                <div class="text-center text-xs font-bold text-slate-400">Tap to flip back</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 8 Fractions -->
+          <div class="flip-card flip-perspective h-[350px] cursor-pointer" onclick="toggleFlip(this)">
+            <div class="flip-inner">
+              <div class="flip-face rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 shadow-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Unit 8 • Fractions</span>
+                  <span class="text-xs font-bold opacity-85">6Nf.05</span>
+                </div>
+                <div class="text-center space-y-4 my-auto">
+                  <div class="font-display text-6xl sm:text-7xl font-bold">2/5 + 3/10</div>
+                  <p class="text-lg font-bold text-emerald-100">Use a common denominator to calculate.</p>
+                </div>
+                <div class="text-center text-xs font-extrabold uppercase tracking-wider bg-black/15 rounded-xl py-2">👆 Tap to Reveal</div>
+              </div>
+              <div class="flip-face flip-back rounded-3xl bg-white border-4 border-emerald-500 p-6 shadow-xl flex flex-col justify-between">
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase self-start">Unit 8 • Answer</span>
+                <div class="text-center space-y-3 my-auto">
+                  <div class="font-display text-6xl font-bold text-emerald-700">7/10</div>
+                  <p class="text-lg font-bold text-slate-700">2/5 = 4/10</p>
+                  <p class="text-base font-bold text-slate-600">4/10 + 3/10 = 7/10 (also 0.7!)</p>
+                </div>
+                <div class="text-center text-xs font-bold text-slate-400">Tap to flip back</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 3 Averages -->
+          <div class="flip-card flip-perspective h-[350px] cursor-pointer" onclick="toggleFlip(this)">
+            <div class="flip-inner">
+              <div class="flip-face rounded-3xl bg-gradient-to-br from-amber-500 to-orange-600 text-white p-6 shadow-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Unit 3 • Averages</span>
+                  <span class="text-xs font-bold opacity-85">6Ss.03</span>
+                </div>
+                <div class="text-center space-y-3 my-auto">
+                  <p class="text-sm font-extrabold uppercase tracking-wider text-amber-100">Swimming Lap Times (s)</p>
+                  <div class="font-display text-4xl sm:text-5xl font-bold leading-tight">28, 32, 30, 34</div>
+                  <p class="text-lg font-bold text-amber-100">Find the Mean and the Range.</p>
+                </div>
+                <div class="text-center text-xs font-extrabold uppercase tracking-wider bg-black/15 rounded-xl py-2">👆 Tap to Reveal</div>
+              </div>
+              <div class="flip-face flip-back rounded-3xl bg-white border-4 border-orange-500 p-6 shadow-xl flex flex-col justify-between">
+                <span class="px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-xs font-extrabold uppercase self-start">Unit 3 • Answer</span>
+                <div class="text-center space-y-3 my-auto">
+                  <div class="font-display text-5xl font-bold text-orange-600">Mean = 31 s</div>
+                  <p class="text-sm font-bold text-slate-700">(28 + 32 + 30 + 34) ÷ 4 = 124 ÷ 4 = 31 s</p>
+                  <div class="font-display text-4xl font-bold text-slate-900">Range = 6 s</div>
+                  <p class="text-sm font-bold text-slate-600">34 − 28 = 6 s</p>
+                </div>
+                <div class="text-center text-xs font-bold text-slate-400">Tap to flip back</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- STATION 2: VOCABULARY MODAL + REAL-LIFE STRIP         -->
+    <!-- ===================================================== -->
+    <section id="station-2" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 border-2 border-indigo-100 shadow-sm">
+          <div class="flex items-center justify-between flex-wrap gap-3 mb-5">
+            <div>
+              <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">📖 Key Mathematical Vocabulary</h2>
+              <p class="text-sm font-semibold text-slate-600">Tap any tile to open the visual model, bilingual support and spoken pronunciation.</p>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold">8 Key Terms</span>
+          </div>
+
+          <div id="vocab-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Real-Life Relevance Strip (STRICTLY ENGLISH ONLY) -->
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 shadow-lg">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-2xl">🌍</span>
+            <h3 class="font-display text-2xl font-bold">Why Does This Matter in Real Life?</h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="rounded-2xl bg-white/10 border border-white/15 p-4 space-y-2">
+              <div class="text-3xl">🏊</div>
+              <h4 class="font-display text-lg font-bold text-cyan-300">Olympic Swimming &amp; Sprints</h4>
+              <p class="text-sm text-slate-200 leading-relaxed">
+                Pool touchpads and athletics stopwatches record race splits in seconds and decimals. Coaches convert between <strong>2.4 min</strong> and <strong>2 min 24 s</strong> to see who won by a few seconds!
+              </p>
+            </div>
+            <div class="rounded-2xl bg-white/10 border border-white/15 p-4 space-y-2">
+              <div class="text-3xl">🏃</div>
+              <h4 class="font-display text-lg font-bold text-amber-300">Hanoi School Sports Day</h4>
+              <p class="text-sm text-slate-200 leading-relaxed">
+                When one referee reads a digital timer in decimal minutes and another reads minutes and seconds, converting both ways keeps the medal leaderboard fair.
+              </p>
+            </div>
+            <div class="rounded-2xl bg-white/10 border border-white/15 p-4 space-y-2">
+              <div class="text-3xl">🚌</div>
+              <h4 class="font-display text-lg font-bold text-emerald-300">Transport &amp; Fitness Apps</h4>
+              <p class="text-sm text-slate-200 leading-relaxed">
+                Hanoi bus schedules, flight trackers and cycling apps calculate average speed using decimal hours (<strong>2 h 15 min = 2.25 h</strong>, never 2.15 h!).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- STATION 3: FULL-SCREEN VISUAL I DO + TWO-WAY LAB      -->
+    <!-- ===================================================== -->
+    <section id="station-3" class="station-panel hidden">
+      <div class="space-y-6">
+
+        <!-- FULL-SCREEN VISUAL ANIMATED I DO STAGE -->
+        <div id="ido-stage" class="rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-5 sm:p-7 shadow-2xl border-2 border-indigo-500/40">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-xs font-extrabold uppercase tracking-wider">I Do • Visual Stage</span>
+              <div class="flex flex-wrap gap-1.5" id="ido-example-tabs">
+                <button onclick="setIDoExample(0)" class="ido-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition">1. 3.4 min</button>
+                <button onclick="setIDoExample(1)" class="ido-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition">2. 0.75 min</button>
+                <button onclick="setIDoExample(2)" class="ido-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition">3. 2 h 15 min (Trap!)</button>
+                <button onclick="setIDoExample(3)" class="ido-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition">4. 4 min 18 s</button>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="toggleStepsChecklist()" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs sm:text-sm font-bold transition">📋 Steps</button>
+              <button id="ido-fs-btn" onclick="toggleIDoFullscreen()" class="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs sm:text-sm font-extrabold transition shadow">⛶ Full Screen I Do</button>
+            </div>
+          </div>
+
+          <!-- Compact Toggleable Steps Checklist Pill Bar -->
+          <div id="steps-checklist" class="hidden mb-4 rounded-2xl bg-white/10 border border-white/15 p-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+              <div class="bg-emerald-500/20 border border-emerald-400/30 rounded-xl p-2.5">
+                <p class="font-extrabold text-emerald-300 mb-1">➔ FORWARD (Decimal ➔ Mixed): MULTIPLY BY 60</p>
+                <p class="text-slate-100">1. Keep the whole number untouched. 2. Multiply ONLY the decimal part by 60. 3. Write both units cleanly.</p>
+              </div>
+              <div class="bg-amber-500/20 border border-amber-400/30 rounded-xl p-2.5">
+                <p class="font-extrabold text-amber-300 mb-1">⬅ BACKWARD (Mixed ➔ Decimal): DIVIDE BY 60</p>
+                <p class="text-slate-100">1. Keep the bigger unit as the whole number. 2. Put the smaller unit over 60 (÷ 60). 3. Simplify to tenths or quarters!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Animated Visual Stage Content -->
+          <div id="ido-content" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Step-by-step Reveal Controls -->
+          <div class="mt-5 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/10">
+            <div class="flex items-center gap-2">
+              <button onclick="prevIDoStep()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 font-bold text-sm transition">◀ Back</button>
+              <button onclick="nextIDoStep()" class="px-5 py-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-extrabold text-sm shadow transition">Next Step ▶</button>
+              <button onclick="revealAllIDoSteps()" class="px-3.5 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 font-bold text-sm transition">Show All</button>
+            </div>
+            <div id="ido-step-dots" class="flex items-center gap-2"></div>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE HANDS-ON CPA LABS: TWO-WAY STOPWATCH + FRIENDLY-60s WHEEL -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+          <!-- LAB 1: INTERACTIVE TWO-WAY STOPWATCH -->
+          <div class="lg:col-span-7 bg-white rounded-3xl p-6 border-2 border-indigo-200 shadow-md space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Interactive CPA Lab 1</span>
+                <h3 class="font-display text-2xl font-bold text-slate-900">⏱️ Two-Way Stopwatch Converter</h3>
+              </div>
+              <div class="inline-flex rounded-xl bg-slate-100 p-1">
+                <button id="lab-mode-fwd" onclick="setLabMode('forward')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition">Forward (× 60)</button>
+                <button id="lab-mode-rev" onclick="setLabMode('reverse')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition">Reverse (÷ 60)</button>
+              </div>
+            </div>
+
+            <!-- Unit Selector + Presets -->
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-bold text-slate-500">Quick Presets:</span>
+              <button onclick="setLabPreset('forward', 3.4)" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-xs font-bold">3.4 min</button>
+              <button onclick="setLabPreset('forward', 0.75)" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-xs font-bold">0.75 min</button>
+              <button onclick="setLabPreset('reverse', 2, 15, 'h')" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-800 text-xs font-bold">2 h 15 min (Trap!)</button>
+              <button onclick="setLabPreset('reverse', 4, 18, 'min')" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold">4 min 18 s</button>
+            </div>
+
+            <!-- Live Visual Display -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <div class="sm:col-span-5 flex justify-center">
+                <svg id="lab-stopwatch-svg" viewBox="0 0 200 200" class="w-44 h-44"></svg>
+              </div>
+              <div class="sm:col-span-7 space-y-3">
+                <div class="flex items-center justify-between gap-2 bg-white rounded-xl p-3 border-2 border-indigo-200 shadow-sm">
+                  <div>
+                    <div id="lab-in-label" class="text-[11px] font-extrabold uppercase text-slate-400">Decimal Minutes</div>
+                    <div id="lab-in-val" class="font-display text-3xl font-bold text-indigo-700">3.4 min</div>
+                  </div>
+                  <div class="text-2xl font-black text-slate-400">➔</div>
+                  <div class="text-right">
+                    <div id="lab-out-label" class="text-[11px] font-extrabold uppercase text-slate-400">Mixed Time</div>
+                    <div id="lab-out-val" class="font-display text-3xl font-bold text-emerald-700">3 min 24 s</div>
+                  </div>
+                </div>
+                <div id="lab-formula-box" class="rounded-xl bg-indigo-950 text-white p-3 text-sm font-bold leading-relaxed">
+                  <!-- Populated by JS -->
+                </div>
+                <div id="lab-trap-box" class="hidden rounded-xl bg-rose-100 border-2 border-rose-300 text-rose-900 p-2.5 text-xs font-extrabold">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive Sliders -->
+            <div id="lab-controls-forward" class="space-y-2">
+              <div class="flex justify-between text-xs font-bold text-slate-600">
+                <span>Whole Minutes: <strong id="fwd-whole-disp" class="text-indigo-700">3</strong></span>
+                <span>Decimal Part: <strong id="fwd-dec-disp" class="text-emerald-700">0.4</strong> (× 60 = <strong id="fwd-sec-disp">24</strong> s)</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <input id="fwd-whole-slider" type="range" min="0" max="9" step="1" value="3" oninput="updateLab()" class="time-slider w-full">
+                <input id="fwd-dec-slider" type="range" min="0" max="95" step="5" value="40" oninput="updateLab()" class="time-slider w-full">
+              </div>
+            </div>
+
+            <div id="lab-controls-reverse" class="hidden space-y-2">
+              <div class="flex items-center justify-between flex-wrap gap-2 text-xs font-bold text-slate-600">
+                <div class="flex items-center gap-2">
+                  <span>Units:</span>
+                  <button id="rev-unit-h" onclick="setRevUnit('h')" class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-bold">h &amp; min</button>
+                  <button id="rev-unit-min" onclick="setRevUnit('min')" class="px-2.5 py-1 rounded-lg bg-slate-200 text-slate-700 font-bold">min &amp; s</button>
+                </div>
+                <span>Smaller unit: <strong id="rev-small-disp" class="text-emerald-700">15</strong> ÷ 60</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="text-[11px] font-bold text-slate-500">Whole Unit (0–9): <span id="rev-whole-disp">2</span></label>
+                  <input id="rev-whole-slider" type="range" min="0" max="9" step="1" value="2" oninput="updateLab()" class="time-slider w-full">
+                </div>
+                <div>
+                  <label class="text-[11px] font-bold text-slate-500">Smaller Unit (multiples of 3): <span id="rev-small-disp-2">15</span></label>
+                  <input id="rev-small-slider" type="range" min="0" max="57" step="3" value="15" oninput="updateLab()" class="time-slider w-full">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- LAB 2: FRIENDLY-60s WHEEL -->
+          <div class="lg:col-span-5 bg-white rounded-3xl p-6 border-2 border-amber-200 shadow-md flex flex-col justify-between space-y-4">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-amber-600">Interactive CPA Lab 2</span>
+              <h3 class="font-display text-2xl font-bold text-slate-900">🎡 Friendly-60s Reverse Wheel</h3>
+              <p class="text-xs font-semibold text-slate-600 mt-0.5">Tap any benchmark below to spin the wheel and inspect its fraction &amp; decimal.</p>
+            </div>
+
+            <div class="flex justify-center">
+              <svg id="friendly-wheel-svg" viewBox="0 0 220 220" class="w-48 h-48"></svg>
+            </div>
+
+            <div id="wheel-readout" class="rounded-2xl bg-amber-50 border-2 border-amber-300 p-3 text-center">
+              <!-- Populated by JS -->
+            </div>
+
+            <div id="wheel-buttons" class="grid grid-cols-4 gap-1.5">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-QUESTION HINGE CHECK (MINI-WHITEBOARD GATE) -->
+        <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-3xl p-5 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h3 class="font-display text-xl sm:text-2xl font-bold">🚦 Station 3 Hinge Check — Show Your Mini-Whiteboards!</h3>
+            <span class="text-xs font-extrabold bg-white/20 px-3 py-1 rounded-full">Check before You Do</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="rounded-2xl bg-white/15 p-4 flex items-center justify-between gap-3">
+              <div>
+                <div class="text-xs font-extrabold uppercase text-emerald-100">Hinge 1 (Forward × 60)</div>
+                <div class="font-display text-2xl font-bold">Convert 1.6 min to min &amp; s</div>
+                <div id="hinge-ans-1" class="hidden mt-1 text-base font-extrabold text-yellow-200">➔ 1 min 36 s (0.6 × 60 = 36 s)</div>
+              </div>
+              <button onclick="document.getElementById('hinge-ans-1').classList.toggle('hidden'); playChime('reveal');" class="px-3.5 py-2 rounded-xl bg-white text-emerald-900 font-extrabold text-xs shrink-0 hover:bg-emerald-50">Reveal</button>
+            </div>
+            <div class="rounded-2xl bg-white/15 p-4 flex items-center justify-between gap-3">
+              <div>
+                <div class="text-xs font-extrabold uppercase text-emerald-100">Hinge 2 (Reverse ÷ 60)</div>
+                <div class="font-display text-2xl font-bold">Convert 2 min 48 s to decimal min</div>
+                <div id="hinge-ans-2" class="hidden mt-1 text-base font-extrabold text-yellow-200">➔ 2.8 min (48 ÷ 60 = 8/10 = 0.8)</div>
+              </div>
+              <button onclick="document.getElementById('hinge-ans-2').classList.toggle('hidden'); playChime('reveal');" class="px-3.5 py-2 rounded-xl bg-white text-emerald-900 font-extrabold text-xs shrink-0 hover:bg-emerald-50">Reveal</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- STATION 4: YOU DO — ALL-TIERS SIDE-BY-SIDE BOARD VIEW -->
+    <!-- ===================================================== -->
+    <section id="station-4" class="station-panel hidden">
+      <div class="space-y-5">
+        <div class="bg-white rounded-2xl p-4 border-2 border-indigo-100 shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">🧩 You Do Practice — Choose Your Tier &amp; Climb!</h2>
+            <p class="text-sm font-semibold text-slate-600">Tap any card to open Giant Projection Mode. Show your base-60 working clearly in your book.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button onclick="filterYouDo('all')" data-tier-btn="all" class="tier-filter-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-slate-900 text-white">All Tiers (9)</button>
+            <button onclick="filterYouDo('must')" data-tier-btn="must" class="tier-filter-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-emerald-100 text-emerald-900">🟢 Must</button>
+            <button onclick="filterYouDo('should')" data-tier-btn="should" class="tier-filter-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-orange-100 text-orange-900">🟠 Should</button>
+            <button onclick="filterYouDo('could')" data-tier-btn="could" class="tier-filter-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-purple-100 text-purple-900">🟣 Could</button>
+          </div>
+        </div>
+
+        <div id="youdo-board" class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- STATION 5: REASONING & JUSTIFICATION LAB (TWM FOCUS)  -->
+    <!-- ===================================================== -->
+    <section id="station-5" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-2xl p-5 border-2 border-indigo-100 shadow-sm">
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">🧠 Reasoning &amp; Justification Lab (TWM)</h2>
+          <p class="text-sm font-semibold text-slate-600">Part A: Decide True or False and prove it with a calculation. Part B: Spot the reverse-conversion mistake!</p>
+        </div>
+
+        <!-- Part A: 4 Mixed True/False Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="tf-matrix">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Part B: Spot the Reverse-Conversion Mistake + Always/Sometimes/Never -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <div class="lg:col-span-7 bg-white rounded-3xl p-6 border-2 border-rose-200 shadow-md space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-extrabold uppercase">Part B • Spot the Reverse Mistake</span>
+              <span class="text-xs font-bold text-slate-400">Convincing &amp; Critiquing</span>
+            </div>
+            <h3 class="font-display text-2xl font-bold text-slate-900">Who is right: Nam or Mai?</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="rounded-2xl bg-sky-50 border-2 border-sky-200 p-4">
+                <div class="font-extrabold text-sky-900 text-sm mb-1">💬 Nam says:</div>
+                <p class="text-sm font-bold text-slate-800">"To convert <strong>3 min 30 s</strong> into decimal minutes, I just put a decimal point between them: <strong>3.30 min</strong>."</p>
+              </div>
+              <div class="rounded-2xl bg-emerald-50 border-2 border-emerald-200 p-4">
+                <div class="font-extrabold text-emerald-900 text-sm mb-1">💬 Mai says:</div>
+                <p class="text-sm font-bold text-slate-800">"No! You must divide 30 seconds by 60 first: 30 ÷ 60 = 0.5, so <strong>3 min 30 s = 3.5 min</strong>."</p>
+              </div>
+            </div>
+            <button onclick="document.getElementById('mistake-proof').classList.toggle('hidden'); playChime('reveal');" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm shadow transition">
+              🔍 Reveal Mathematical Proof
+            </button>
+            <div id="mistake-proof" class="hidden rounded-2xl bg-emerald-950 text-emerald-100 p-4 text-sm font-semibold leading-relaxed">
+              <strong class="text-emerald-300">Mai is correct!</strong> Nam used base-100 thinking (30/100 = 0.30). Because 1 minute = 60 seconds, 30 seconds is <strong>half a minute</strong>: 30 ÷ 60 = 1/2 = 0.5. Therefore <strong>3 min 30 s = 3.5 min</strong> (whereas 3.30 min = 3 min 18 s!).
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 bg-white rounded-3xl p-6 border-2 border-indigo-200 shadow-md flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase">Always, Sometimes, or Never?</span>
+              <h3 class="font-display text-xl font-bold text-slate-900">
+                "Converting <em>a</em> minutes and <em>b</em> seconds into decimal minutes gives <em>a.b</em> minutes."
+              </h3>
+              <button onclick="document.getElementById('asn-proof').classList.toggle('hidden'); playChime('reveal');" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm transition">
+                Reveal Verdict
+              </button>
+              <div id="asn-proof" class="hidden rounded-xl bg-indigo-50 border-2 border-indigo-200 p-3 text-sm font-bold text-indigo-950">
+                <span class="text-indigo-700 font-extrabold">SOMETIMES TRUE!</span> It ONLY works when <em>b</em> = 0 (e.g. 4 min 0 s = 4.0 min). For every non-zero number of seconds (1 to 59), dividing by 60 gives a different decimal from 0.<em>b</em>!
+              </div>
+            </div>
+
+            <!-- EAL Reasoning Sentence Stems (English Only) -->
+            <div class="rounded-2xl bg-amber-50 border-2 border-amber-200 p-4 space-y-1.5">
+              <div class="text-xs font-extrabold uppercase text-amber-800">🗣️ Mathematician Sentence Stems</div>
+              <p class="text-xs font-bold text-slate-800">• "This is false because there are <strong>60</strong> seconds/minutes, not 100."</p>
+              <p class="text-xs font-bold text-slate-800">• "To convert forward, I multiply the decimal part by 60: ___ × 60 = ___."</p>
+              <p class="text-xs font-bold text-slate-800">• "To convert back, I divide the smaller unit by 60: ___ ÷ 60 = ___."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- STATION 6: SUCCESS CRITERIA WHITEBOARD CHECK          -->
+    <!-- ===================================================== -->
+    <section id="station-6" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 border-2 border-emerald-200 shadow-md">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <div>
+              <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">✅ Success Criteria Mini-Whiteboard Check</h2>
+              <p class="text-sm font-semibold text-slate-600">Every pupil proves mastery on their mini-whiteboard before unlocking Quickfire!</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span id="sc-counter-badge" class="px-4 py-2 rounded-2xl bg-slate-900 text-white font-display text-xl font-bold">0 / 3 Met</span>
+            </div>
+          </div>
+          <!-- Live Progress Bar -->
+          <div class="w-full h-4 bg-slate-200 rounded-full overflow-hidden">
+            <div id="sc-progress-bar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5" id="sc-check-cards">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Ready for Quickfire Banner -->
+        <div id="sc-complete-banner" class="hidden rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 text-white p-6 shadow-xl text-center space-y-3">
+          <div class="font-display text-3xl font-bold">🎉 3 / 3 Success Criteria Met — Class Ready for Quickfire!</div>
+          <button onclick="goStation(7)" class="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-display text-xl font-bold shadow-lg transition active:scale-95">
+            🏆 Launch Quickfire Engine ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- STATION 7: 10-QUESTION QUICKFIRE ENGINE               -->
+    <!-- ===================================================== -->
+    <section id="station-7" class="station-panel hidden">
+      <div class="space-y-5">
+        <!-- Quickfire Scoreboard & Controls -->
+        <div class="bg-slate-900 text-white rounded-3xl p-5 shadow-xl">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <span class="px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-extrabold text-xs uppercase">🏆 Quickfire Engine</span>
+              <span id="qf-progress" class="font-display text-xl font-bold text-cyan-300">Question 1 / 10</span>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <div class="flex items-center gap-2 bg-rose-600/30 border border-rose-400/50 rounded-2xl px-4 py-1.5">
+                <span class="text-sm font-bold">🔴 Team Red</span>
+                <span id="qf-red-score" class="font-display text-2xl font-bold tabular-nums">0</span>
+              </div>
+              <div class="flex items-center gap-2 bg-sky-600/30 border border-sky-400/50 rounded-2xl px-4 py-1.5">
+                <span class="text-sm font-bold">🔵 Team Blue</span>
+                <span id="qf-blue-score" class="font-display text-2xl font-bold tabular-nums">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Quickfire Stage -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border-4 border-indigo-200 shadow-xl text-center space-y-6">
+          <!-- Countdown Ring / Bar -->
+          <div class="flex flex-wrap items-center justify-center gap-4">
+            <div id="qf-timer-pill" class="px-6 py-2 rounded-2xl bg-indigo-100 text-indigo-900 font-display text-3xl font-bold tabular-nums">
+              ⏱️ 15s
+            </div>
+            <div id="qf-boards-up" class="hidden px-6 py-2 rounded-2xl bg-rose-600 text-white font-display text-3xl font-bold boards-up-pulse shadow-lg">
+              📣 BOARDS UP!
+            </div>
+          </div>
+
+          <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden max-w-2xl mx-auto">
+            <div id="qf-timer-bar" class="h-full bg-indigo-600 transition-all duration-1000 linear" style="width: 100%;"></div>
+          </div>
+
+          <!-- Question Text -->
+          <div class="py-4 space-y-2">
+            <div id="qf-tag" class="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-extrabold uppercase">Forward × 60</div>
+            <div id="qf-question" class="font-display text-4xl sm:text-6xl font-bold text-slate-900 leading-tight">
+              0.5 min = ? seconds
+            </div>
+          </div>
+
+          <!-- Revealed Answer Box -->
+          <div id="qf-answer-box" class="hidden max-w-2xl mx-auto rounded-2xl bg-emerald-50 border-4 border-emerald-400 p-5 space-y-1">
+            <div id="qf-answer" class="font-display text-4xl sm:text-5xl font-bold text-emerald-700">30 s</div>
+            <div id="qf-method" class="text-base font-bold text-emerald-900">0.5 × 60 = 30 s</div>
+          </div>
+
+          <!-- Action Controls -->
+          <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <button onclick="startQFTimer()" class="px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-base shadow transition active:scale-95">▶ Start 15s Timer</button>
+            <button onclick="revealQFAnswer()" class="px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-base shadow transition active:scale-95">👀 Reveal Answer</button>
+            <button onclick="awardQFPoint('red')" class="px-5 py-3 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-base shadow transition active:scale-95">+1 🔴 Red</button>
+            <button onclick="awardQFPoint('blue')" class="px-5 py-3 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-base shadow transition active:scale-95">+1 🔵 Blue</button>
+            <button onclick="prevQF()" class="px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm">◀ Prev</button>
+            <button onclick="nextQF()" class="px-5 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-base shadow transition active:scale-95">Next Q ▶</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================== -->
+  <!-- BILINGUAL VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION)-->
+  <!-- ===================================================== -->
+  <div id="vocab-modal" class="hidden fixed inset-0 z-[70] bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border-4 border-indigo-200 space-y-4 relative">
+      <button onclick="closeVocabModal()" aria-label="Close vocabulary modal" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 font-extrabold text-slate-700 text-lg">✕</button>
+      <div class="space-y-1 pr-10">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Bilingual Maths Glossary</span>
+        <h3 id="vm-en" class="font-display text-3xl font-bold text-slate-900"></h3>
+        <p id="vm-vn" class="font-display text-xl font-bold text-emerald-700"></p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="speakVocab('en')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm flex items-center gap-1.5">🔊 Listen (en-GB)</button>
+        <button onclick="speakVocab('vn')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm flex items-center gap-1.5">🔊 Nghe (vi-VN)</button>
+      </div>
+      <div id="vm-svg" class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex justify-center"></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <div class="rounded-xl bg-indigo-50 p-3 border border-indigo-100">
+          <div class="text-[11px] font-extrabold uppercase text-indigo-600 mb-1">English Meaning</div>
+          <p id="vm-def-en" class="font-semibold text-slate-800"></p>
+        </div>
+        <div class="rounded-xl bg-emerald-50 p-3 border border-emerald-100">
+          <div class="text-[11px] font-extrabold uppercase text-emerald-700 mb-1">Nghĩa tiếng Việt</div>
+          <p id="vm-def-vn" class="font-semibold text-slate-800"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- GIANT PROJECTION MODAL FOR YOU DO CARDS               -->
+  <!-- ===================================================== -->
+  <div id="proj-modal" class="hidden fixed inset-0 z-[72] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-8 shadow-2xl border-4 border-indigo-400 text-center space-y-6 relative">
+      <button onclick="closeProjModal()" class="absolute top-4 right-4 w-11 h-11 rounded-full bg-slate-100 hover:bg-slate-200 font-extrabold text-slate-700 text-xl">✕</button>
+      <div id="pm-badge" class="inline-block px-4 py-1.5 rounded-full text-sm font-extrabold uppercase"></div>
+      <div id="pm-prompt" class="font-display text-5xl sm:text-6xl font-bold text-slate-900 leading-tight py-4"></div>
+      <div id="pm-answer-wrap" class="hidden rounded-2xl bg-emerald-50 border-4 border-emerald-400 p-5 space-y-1">
+        <div id="pm-answer" class="font-display text-4xl sm:text-5xl font-bold text-emerald-700"></div>
+        <div id="pm-method" class="text-lg font-bold text-emerald-900"></div>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <button onclick="stepProj(-1)" class="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 font-bold text-base">← Prev</button>
+        <button onclick="toggleProjAnswer()" class="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-base shadow">👀 Toggle Answer</button>
+        <button onclick="stepProj(1)" class="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 font-bold text-base">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- TEACHER PROMPT DRAWER (z-[75], HIDDEN BY DEFAULT)     -->
+  <!-- ===================================================== -->
+  <aside id="teacher-drawer" class="hidden fixed top-0 right-0 bottom-0 w-full max-w-md bg-slate-900 text-white z-[75] shadow-2xl border-l-4 border-violet-500 overflow-y-auto p-6 space-y-5">
+    <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+      <div>
+        <span class="text-xs font-extrabold uppercase tracking-wider text-violet-300">Teacher Prompt Drawer (T)</span>
+        <h3 class="font-display text-2xl font-bold">Lesson 2 Coaching Notes</h3>
+      </div>
+      <button onclick="toggleTeacherDrawer()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 font-bold">✕</button>
+    </div>
+
+    <div class="rounded-2xl bg-rose-500/20 border border-rose-400/40 p-4 space-y-1.5">
+      <h4 class="font-extrabold text-rose-300 text-sm uppercase">🚨 Red-Flag Misconception Alert</h4>
+      <p class="text-sm text-slate-100">Watch out for pupils writing <strong>2 h 15 min = 2.15 h</strong> or dividing seconds by 100 instead of 60.</p>
+      <p class="text-xs text-rose-200 font-semibold">Pivot: Write 15/60 = 1/4 = 0.25 next to 15/100 = 0.15 on David's Board immediately.</p>
+    </div>
+
+    <div class="rounded-2xl bg-amber-500/20 border border-amber-400/40 p-4 space-y-1.5">
+      <h4 class="font-extrabold text-amber-300 text-sm uppercase">🛠️ Teacher Support Table</h4>
+      <p class="text-sm text-slate-100">Use the Friendly-60s Strip: <strong>6 = 0.1, 12 = 0.2, 15 = 0.25, 18 = 0.3, 30 = 0.5, 45 = 0.75</strong>. Match mixed cards physically to decimal cards.</p>
+    </div>
+
+    <div class="rounded-2xl bg-cyan-500/20 border border-cyan-400/40 p-4 space-y-1.5">
+      <h4 class="font-extrabold text-cyan-300 text-sm uppercase">❓ Hinge &amp; Cold-Call Questions</h4>
+      <ul class="text-sm text-slate-100 space-y-1.5 list-disc pl-4">
+        <li>"Why is 0.1 min equal to 6 seconds instead of 10 seconds?"</li>
+        <li>"How do we know 4.2 min is faster than 4 min 15 s without guessing?"</li>
+        <li>"If 12 ÷ 60 = 0.2, what is 24 ÷ 60? What is 48 ÷ 60?"</li>
+      </ul>
+    </div>
+
+    <div class="rounded-2xl bg-indigo-500/20 border border-indigo-400/40 p-4 space-y-1.5">
+      <h4 class="font-extrabold text-indigo-300 text-sm uppercase">⌨️ Keyboard Shortcuts</h4>
+      <p class="text-xs text-slate-200"><strong>← / →</strong> Switch Stations • <strong>W</strong> David's Board • <strong>T</strong> Teacher Drawer • <strong>M</strong> Mute Audio • <strong>Esc</strong> Close Modals</p>
+    </div>
+  </aside>
+
+  <!-- ===================================================== -->
+  <!-- DAVID'S BOARD FULL-SCREEN WHITEBOARD (W)              -->
+  <!-- ===================================================== -->
+  <div id="davids-board" class="hidden fixed inset-0 z-[80] bg-white flex flex-col">
+    <div class="bg-slate-900 text-white px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 shrink-0">
+      <div class="flex items-center gap-2">
+        <span class="font-display text-lg font-bold text-amber-300">✏️ David's Board</span>
+        <span class="text-xs text-slate-400 hidden sm:inline">32px Maths Grid • Ink preserved on resize</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- 5 Ink Colours -->
+        <button onclick="setPenColour('#0f172a')" class="w-7 h-7 rounded-full bg-slate-900 border-2 border-white ring-2 ring-amber-300" title="Black"></button>
+        <button onclick="setPenColour('#2563eb')" class="w-7 h-7 rounded-full bg-blue-600 border-2 border-white" title="Blue"></button>
+        <button onclick="setPenColour('#dc2626')" class="w-7 h-7 rounded-full bg-red-600 border-2 border-white" title="Red"></button>
+        <button onclick="setPenColour('#16a34a')" class="w-7 h-7 rounded-full bg-green-600 border-2 border-white" title="Green"></button>
+        <button onclick="setPenColour('#9333ea')" class="w-7 h-7 rounded-full bg-purple-600 border-2 border-white" title="Purple"></button>
+        <span class="text-slate-600">|</span>
+        <!-- 3 Pen Weights -->
+        <button onclick="setPenWidth(3)" class="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold">Fine</button>
+        <button onclick="setPenWidth(6)" class="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold">Med</button>
+        <button onclick="setPenWidth(12)" class="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold">Bold</button>
+        <button onclick="setEraser()" class="px-3 py-1 rounded-lg bg-pink-600 hover:bg-pink-500 text-xs font-bold">🧽 Eraser</button>
+        <button onclick="clearDavidsBoard()" class="px-3 py-1 rounded-lg bg-rose-700 hover:bg-rose-600 text-xs font-bold">🗑️ Clear</button>
+        <button onclick="toggleDavidsBoard()" class="px-3.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs">✕ Close (Esc)</button>
+      </div>
+    </div>
+    <div id="davids-canvas-wrap" class="flex-1 relative davids-grid overflow-hidden">
+      <canvas id="davids-canvas" class="absolute inset-0 w-full h-full touch-none cursor-crosshair"></canvas>
+    </div>
+  </div>
+
+  <script>
+    /* ============================================================
+       STATE, AUDIO & CONFETTI ENGINE
+    ============================================================ */
+    let currentStation = 0;
+    const totalStations = 8;
+    let isMuted = false;
+    let scores = { red: 0, blue: 0 };
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playChime(type) {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const playTone = (freq, start, dur, wave = 'sine', gainVal = 0.12) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = wave;
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(gainVal, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + dur);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + dur);
+      };
+      if (type === 'click') playTone(540, now, 0.08, 'triangle', 0.08);
+      else if (type === 'reveal') { playTone(523.25, now, 0.12); playTone(659.25, now + 0.08, 0.18); }
+      else if (type === 'point') { playTone(587.33, now, 0.1); playTone(783.99, now + 0.08, 0.14); playTone(1046.5, now + 0.16, 0.25); }
+      else if (type === 'tick') playTone(880, now, 0.05, 'square', 0.04);
+      else if (type === 'buzzer') { playTone(220, now, 0.25, 'sawtooth', 0.12); playTone(196, now + 0.22, 0.35, 'sawtooth', 0.12); }
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('mute-btn').textContent = isMuted ? '🔇' : '🔊';
+    }
+
+    /* Confetti burst */
+    const confCanvas = document.getElementById('confetti-canvas');
+    const confCtx = confCanvas.getContext('2d');
+    let confParticles = [];
+    let confAnimId = null;
+
+    function launchConfetti() {
+      confCanvas.width = window.innerWidth;
+      confCanvas.height = window.innerHeight;
+      const palette = ['#4f46e5', '#06b6d4', '#10b981', '#f59e0b', '#ec4899', '#ef4444'];
+      for (let i = 0; i < 85; i++) {
+        confParticles.push({
+          x: window.innerWidth * (0.2 + Math.random() * 0.6),
+          y: window.innerHeight * 0.3,
+          vx: (Math.random() - 0.5) * 14,
+          vy: -Math.random() * 12 - 3,
+          size: Math.random() * 7 + 5,
+          colour: palette[Math.floor(Math.random() * palette.length)],
+          rot: Math.random() * 360,
+          vrot: (Math.random() - 0.5) * 12,
+          life: 1
+        });
+      }
+      if (!confAnimId) animateConfetti();
+    }
+
+    function animateConfetti() {
+      confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+      confParticles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.35;
+        p.rot += p.vrot;
+        p.life -= 0.013;
+        confCtx.save();
+        confCtx.translate(p.x, p.y);
+        confCtx.rotate((p.rot * Math.PI) / 180);
+        confCtx.globalAlpha = Math.max(0, p.life);
+        confCtx.fillStyle = p.colour;
+        confCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+        confCtx.restore();
+      });
+      confParticles = confParticles.filter(p => p.life > 0);
+      if (confParticles.length > 0) confAnimId = requestAnimationFrame(animateConfetti);
+      else { confAnimId = null; confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height); }
+    }
+
+    /* Team Scoreboard Sync */
+    function syncScores() {
+      document.getElementById('header-red-score').textContent = scores.red;
+      document.getElementById('header-blue-score').textContent = scores.blue;
+      document.getElementById('qf-red-score').textContent = scores.red;
+      document.getElementById('qf-blue-score').textContent = scores.blue;
+    }
+
+    function awardTeam(team, delta) {
+      scores[team] = Math.max(0, scores[team] + delta);
+      syncScores();
+      playChime('point');
+      launchConfetti();
+    }
+
+    function resetScores() {
+      scores = { red: 0, blue: 0 };
+      syncScores();
+    }
+
+    /* ============================================================
+       AUTO-HIDING TOP HEADER & STATION SWITCHING
+    ============================================================ */
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('top-header');
+      const cur = window.scrollY;
+      if (cur > lastScroll && cur > 60) header.classList.add('header-hidden');
+      else header.classList.remove('header-hidden');
+      lastScroll = cur;
+    });
+
+    function goStation(idx) {
+      currentStation = Math.max(0, Math.min(totalStations - 1, idx));
+      document.querySelectorAll('.station-panel').forEach((sec, i) => {
+        sec.classList.toggle('hidden', i !== currentStation);
+      });
+      document.querySelectorAll('.station-tab').forEach((btn, i) => {
+        if (i === currentStation) {
+          btn.className = 'station-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-indigo-600 text-white shadow-md transition';
+        } else {
+          btn.className = 'station-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-indigo-50 transition';
+        }
+      });
+      playChime('click');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* Station 1 Flashback Flip */
+    function toggleFlip(card) {
+      card.classList.toggle('flipped');
+      playChime('reveal');
+    }
+    function flipAllFlashbacks() {
+      const cards = document.querySelectorAll('#station-1 .flip-card');
+      const anyUnflipped = Array.from(cards).some(c => !c.classList.contains('flipped'));
+      cards.forEach(c => c.classList.toggle('flipped', anyUnflipped));
+      playChime('reveal');
+    }
+
+    /* ============================================================
+       STATION 2: BILINGUAL VOCABULARY MODAL (SOLE VN EXCEPTION)
+    ============================================================ */
+    const vocabList = [
+      {
+        en: 'second (s)',
+        vn: 'giây (s)',
+        badge: 'bg-sky-100 text-sky-800 border-sky-300',
+        defEn: 'A small unit of time. There are 60 seconds in 1 minute.',
+        defVn: 'Đơn vị đo thời gian nhỏ. Có 60 giây trong 1 phút.',
+        svg: `<svg viewBox="0 0 220 90" class="w-52 h-24"><circle cx="55" cy="45" r="34" fill="#e0f2fe" stroke="#0284c7" stroke-width="3"/><line x1="55" y1="45" x2="55" y2="18" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/><line x1="55" y1="45" x2="78" y2="45" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/><text x="150" y="38" text-anchor="middle" font-size="16" font-weight="800" fill="#0369a1">1 min = 60 s</text><text x="150" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">0.1 min = 6 s</text></svg>`
+      },
+      {
+        en: 'stopwatch',
+        vn: 'đồng hồ bấm giờ',
+        badge: 'bg-indigo-100 text-indigo-800 border-indigo-300',
+        defEn: 'A precise timer used to measure how long a race or activity takes.',
+        defVn: 'Thiết bị đo chính xác thời gian của một cuộc đua hoặc hoạt động.',
+        svg: `<svg viewBox="0 0 220 90" class="w-52 h-24"><rect x="45" y="10" width="20" height="8" rx="3" fill="#4f46e5"/><circle cx="55" cy="50" r="32" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/><rect x="108" y="25" width="96" height="44" rx="10" fill="#0f172a"/><text x="156" y="53" text-anchor="middle" font-size="18" font-weight="800" fill="#38bdf8">03:24</text></svg>`
+      },
+      {
+        en: 'bidirectional conversion',
+        vn: 'chuyển đổi hai chiều',
+        badge: 'bg-violet-100 text-violet-800 border-violet-300',
+        defEn: 'Converting both ways: decimal to mixed units (× 60) AND mixed units back to decimals (÷ 60).',
+        defVn: 'Chuyển đổi cả hai chiều: từ số thập phân sang đơn vị hỗn hợp (× 60) và ngược lại (÷ 60).',
+        svg: `<svg viewBox="0 0 240 90" class="w-56 h-24"><rect x="8" y="24" width="72" height="42" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><text x="44" y="50" text-anchor="middle" font-size="13" font-weight="800" fill="#5b21b6">2.25 h</text><rect x="160" y="24" width="72" height="42" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/><text x="196" y="50" text-anchor="middle" font-size="12" font-weight="800" fill="#166534">2 h 15 m</text><text x="120" y="34" text-anchor="middle" font-size="11" font-weight="800" fill="#2563eb">× 60 ➔</text><text x="120" y="64" text-anchor="middle" font-size="11" font-weight="800" fill="#d97706">⬅ ÷ 60</text></svg>`
+      },
+      {
+        en: 'multiply by 60',
+        vn: 'nhân với 60',
+        badge: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+        defEn: 'The rule to turn a decimal part of an hour or minute into minutes or seconds.',
+        defVn: 'Quy tắc nhân phần thập phân của giờ hoặc phút với 60 để đổi sang phút hoặc giây.',
+        svg: `<svg viewBox="0 0 240 90" class="w-56 h-24"><rect x="10" y="20" width="220" height="50" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/><text x="120" y="42" text-anchor="middle" font-size="15" font-weight="800" fill="#065f46">0.4 min × 60 = 24 s</text><text x="120" y="61" text-anchor="middle" font-size="11" font-weight="700" fill="#047857">Keep whole minutes untouched!</text></svg>`
+      },
+      {
+        en: 'divide by 60',
+        vn: 'chia cho 60',
+        badge: 'bg-amber-100 text-amber-800 border-amber-300',
+        defEn: 'The reverse rule to turn minutes into decimal hours, or seconds into decimal minutes.',
+        defVn: 'Quy tắc ngược chia số phút hoặc số giây cho 60 để đổi về dạng số thập phân.',
+        svg: `<svg viewBox="0 0 240 90" class="w-56 h-24"><rect x="10" y="20" width="220" height="50" rx="12" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/><text x="120" y="42" text-anchor="middle" font-size="15" font-weight="800" fill="#92400e">18 s ÷ 60 = 3/10 = 0.3 min</text><text x="120" y="61" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">Over 60 — NEVER over 100!</text></svg>`
+      },
+      {
+        en: 'equivalent interval',
+        vn: 'khoảng thời gian tương đương',
+        badge: 'bg-cyan-100 text-cyan-800 border-cyan-300',
+        defEn: 'Two times written in different formats that represent the exact same duration.',
+        defVn: 'Hai cách viết khác nhau nhưng biểu diễn cùng một khoảng thời gian chính xác.',
+        svg: `<svg viewBox="0 0 240 90" class="w-56 h-24"><rect x="12" y="26" width="88" height="38" rx="10" fill="#cffafe" stroke="#0891b2" stroke-width="2"/><text x="56" y="50" text-anchor="middle" font-size="14" font-weight="800" fill="#155e75">0.75 min</text><text x="120" y="51" text-anchor="middle" font-size="22" font-weight="900" fill="#0f172a">=</text><rect x="140" y="26" width="88" height="38" rx="10" fill="#cffafe" stroke="#0891b2" stroke-width="2"/><text x="184" y="50" text-anchor="middle" font-size="14" font-weight="800" fill="#155e75">45 s</text></svg>`
+      },
+      {
+        en: 'compare',
+        vn: 'so sánh',
+        badge: 'bg-rose-100 text-rose-800 border-rose-300',
+        defEn: 'Convert both times into the SAME unit first, then check which is faster (<) or slower (>).',
+        defVn: 'Đổi cả hai thời gian về CÙNG một đơn vị trước, rồi kiểm tra xem thời gian nào nhanh hơn hay chậm hơn.',
+        svg: `<svg viewBox="0 0 240 90" class="w-56 h-24"><rect x="10" y="18" width="96" height="54" rx="10" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/><text x="58" y="42" text-anchor="middle" font-size="13" font-weight="800" fill="#9f1239">4.2 min</text><text x="58" y="60" text-anchor="middle" font-size="11" font-weight="700" fill="#be123c">(4m 12s)</text><text x="120" y="52" text-anchor="middle" font-size="22" font-weight="900" fill="#0f172a">&lt;</text><rect x="134" y="18" width="96" height="54" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/><text x="182" y="42" text-anchor="middle" font-size="13" font-weight="800" fill="#334155">4m 15s</text><text x="182" y="60" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">(4.25 min)</text></svg>`
+      },
+      {
+        en: 'order',
+        vn: 'sắp xếp thứ tự',
+        badge: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-300',
+        defEn: 'Arrange times from fastest (smallest) to slowest (largest) or slowest to fastest.',
+        defVn: 'Sắp xếp các mốc thời gian từ nhanh nhất (nhỏ nhất) đến chậm nhất (lớn nhất) hoặc ngược lại.',
+        svg: `<svg viewBox="0 0 240 90" class="w-56 h-24"><rect x="14" y="44" width="58" height="32" rx="6" fill="#fde047" stroke="#ca8a04" stroke-width="2"/><text x="43" y="64" text-anchor="middle" font-size="12" font-weight="800" fill="#854d0e">1st</text><rect x="90" y="30" width="58" height="46" rx="6" fill="#cbd5e1" stroke="#475569" stroke-width="2"/><text x="119" y="58" text-anchor="middle" font-size="12" font-weight="800" fill="#1e293b">2nd</text><rect x="166" y="16" width="58" height="60" rx="6" fill="#fed7aa" stroke="#ea580c" stroke-width="2"/><text x="195" y="52" text-anchor="middle" font-size="12" font-weight="800" fill="#9a3412">3rd</text></svg>`
+      }
+    ];
+
+    let activeVocabIdx = 0;
+
+    function renderVocabGrid() {
+      const grid = document.getElementById('vocab-grid');
+      grid.innerHTML = vocabList.map((v, i) => `
+        <button onclick="openVocabModal(${i})" class="rounded-2xl border-2 ${v.badge} p-4 text-left hover:scale-[1.03] active:scale-95 transition shadow-sm flex flex-col justify-between min-h-[104px]">
+          <span class="text-[11px] font-extrabold uppercase opacity-70">Tap to Explore</span>
+          <span class="font-display text-lg sm:text-xl font-bold leading-tight">${v.en}</span>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(i) {
+      activeVocabIdx = i;
+      const v = vocabList[i];
+      document.getElementById('vm-en').textContent = v.en;
+      document.getElementById('vm-vn').textContent = v.vn;
+      document.getElementById('vm-svg').innerHTML = v.svg;
+      document.getElementById('vm-def-en').textContent = v.defEn;
+      document.getElementById('vm-def-vn').textContent = v.defVn;
+      document.getElementById('vocab-modal').classList.remove('hidden');
+      playChime('click');
+    }
+
+    function closeVocabModal() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('vocab-modal').classList.add('hidden');
+    }
+
+    function speakVocab(lang) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const v = vocabList[activeVocabIdx];
+      const u = new SpeechSynthesisUtterance(lang === 'en' ? `${v.en}. ${v.defEn}` : `${v.vn}. ${v.defVn}`);
+      u.lang = lang === 'en' ? 'en-GB' : 'vi-VN';
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    /* ============================================================
+       STATION 3: FULL-SCREEN VISUAL ANIMATED I DO
+    ============================================================ */
+    const idoExamples = [
+      {
+        badge: 'FORWARD • DECIMAL MINUTES ➔ MIN & S (× 60)',
+        title: 'Convert 3.4 min into minutes and seconds',
+        fraction: 0.4,
+        label: '24 s',
+        colour: '#38bdf8',
+        steps: [
+          { title: 'Step 1: Split whole and decimal', expr: '3.4 min = 3 min + 0.4 min', note: 'Keep the 3 whole minutes untouched!' },
+          { title: 'Step 2: Multiply decimal by 60', expr: '0.4 × 60 = 24 s', note: 'Since 0.1 min = 6 s, four tenths = 4 × 6 = 24 s.' },
+          { title: 'Step 3: Combine into mixed units', expr: '3.4 min = 3 min 24 s', note: 'NOT 3 min 40 s! Base-60 means tenths jump by 6.' }
+        ]
+      },
+      {
+        badge: 'FORWARD • QUARTER MINUTES (× 60)',
+        title: 'Convert 0.75 min into seconds',
+        fraction: 0.75,
+        label: '45 s',
+        colour: '#34d399',
+        steps: [
+          { title: 'Step 1: Spot the friendly fraction', expr: '0.75 = 3/4 of a minute', note: '0 whole minutes — convert the entire 0.75 into seconds.' },
+          { title: 'Step 2: Multiply by 60', expr: '3/4 of 60 s = 3 × 15 s = 45 s', note: 'One quarter of 60 is 15, so three quarters is 45!' },
+          { title: 'Step 3: Final answer', expr: '0.75 min = 45 s', note: 'Notice 0.75 sweeps three quarters of the stopwatch face.' }
+        ]
+      },
+      {
+        badge: 'REVERSE • MIXED HOURS ➔ DECIMAL (÷ 60) — TRAP ALERT!',
+        title: 'Convert 2 h 15 min into decimal hours',
+        fraction: 0.25,
+        label: '15 min',
+        colour: '#f43f5e',
+        trap: 'TRAP! 2 h 15 min is NOT 2.15 h! 15 sits over 60 (15/60 = 0.25), NOT over 100 (15/100 = 0.15).',
+        steps: [
+          { title: 'Step 1: Keep whole hours', expr: '2 h 15 min = 2 h + 15 min', note: 'The 2 stays in front of the decimal point.' },
+          { title: 'Step 2: Divide minutes by 60', expr: '15 ÷ 60 = 15/60 = 1/4 = 0.25 h', note: '15 minutes is one quarter of a 60-minute hour!' },
+          { title: 'Step 3: Combine cleanly', expr: '2 h 15 min = 2.25 h', note: 'Check: 0.25 × 60 = 15 min. Confirmed!' }
+        ]
+      },
+      {
+        badge: 'REVERSE • MINUTES & SECONDS ➔ DECIMAL (÷ 60)',
+        title: 'Convert 4 min 18 s into decimal minutes',
+        fraction: 0.3,
+        label: '18 s',
+        colour: '#fbbf24',
+        steps: [
+          { title: 'Step 1: Keep whole minutes', expr: '4 min 18 s = 4 min + 18 s', note: 'The 4 stays untouched in the ones place.' },
+          { title: 'Step 2: Divide seconds by 60', expr: '18 ÷ 60 = 3/10 = 0.3 min', note: 'Divide top & bottom by 6! Every 6 s = 0.1 min, so 18 s = 0.3 min.' },
+          { title: 'Step 3: Combine cleanly', expr: '4 min 18 s = 4.3 min', note: 'NOT 4.18 min! 4.3 min checks back as 0.3 × 60 = 18 s.' }
+        ]
+      }
+    ];
+
+    let idoIdx = 0;
+    let idoStep = 0;
+
+    function buildDialSVG(frac, label, accent) {
+      const r = 74, cx = 100, cy = 100;
+      const clamped = Math.max(0, Math.min(0.9999, frac));
+      const angle = clamped * 2 * Math.PI - Math.PI / 2;
+      const x = cx + r * Math.cos(angle);
+      const y = cy + r * Math.sin(angle);
+      const largeArc = clamped > 0.5 ? 1 : 0;
+      const wedge = clamped > 0 ? `<path d="M ${cx} ${cy} L ${cx} ${cy - r} A ${r} ${r} 0 ${largeArc} 1 ${x.toFixed(1)} ${y.toFixed(1)} Z" fill="${accent}" fill-opacity="0.32"/>` : '';
+      let ticks = '';
+      for (let t = 0; t < 10; t++) {
+        const a = (t / 10) * 2 * Math.PI - Math.PI / 2;
+        const x1 = cx + 65 * Math.cos(a), y1 = cy + 65 * Math.sin(a);
+        const x2 = cx + 74 * Math.cos(a), y2 = cy + 74 * Math.sin(a);
+        ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#94a3b8" stroke-width="2"/>`;
+      }
+      return `
+        <svg viewBox="0 0 200 200" class="w-56 h-56 drop-shadow-xl">
+          <rect x="86" y="6" width="28" height="12" rx="4" fill="${accent}"/>
+          <circle cx="100" cy="100" r="82" fill="#0f172a" stroke="${accent}" stroke-width="4"/>
+          <circle cx="100" cy="100" r="74" fill="#ffffff"/>
+          ${wedge}
+          ${ticks}
+          <line x1="100" y1="100" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${accent}" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="100" cy="100" r="6" fill="#0f172a"/>
+          <text x="100" y="42" text-anchor="middle" font-size="11" font-weight="800" fill="#475569">60 / 0</text>
+          <text x="158" y="104" text-anchor="middle" font-size="11" font-weight="800" fill="#475569">15</text>
+          <text x="100" y="166" text-anchor="middle" font-size="11" font-weight="800" fill="#475569">30</text>
+          <text x="42" y="104" text-anchor="middle" font-size="11" font-weight="800" fill="#475569">45</text>
+          <rect x="58" y="114" width="84" height="24" rx="8" fill="#0f172a"/>
+          <text x="100" y="130" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">${label}</text>
+        </svg>
+      `;
+    }
+
+    function renderIDo() {
+      const ex = idoExamples[idoIdx];
+      document.querySelectorAll('.ido-tab').forEach((b, i) => {
+        b.className = i === idoIdx
+          ? 'ido-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-cyan-400 text-slate-950 shadow'
+          : 'ido-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-white/10 text-slate-200 hover:bg-white/20';
+      });
+      const visibleSteps = ex.steps.slice(0, idoStep + 1);
+      const htmlSteps = visibleSteps.map((s, idx) => `
+        <div class="rounded-2xl ${idx === idoStep ? 'bg-white text-slate-900 ring-4 ring-cyan-400' : 'bg-white/10 text-white'} p-4 transition">
+          <div class="text-xs font-extrabold uppercase ${idx === idoStep ? 'text-indigo-600' : 'text-cyan-300'}">${s.title}</div>
+          <div class="font-display text-2xl sm:text-3xl font-bold mt-0.5">${s.expr}</div>
+          <div class="text-xs sm:text-sm font-semibold mt-1 ${idx === idoStep ? 'text-slate-600' : 'text-slate-300'}">${s.note}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('ido-content').innerHTML = `
+        <div class="lg:col-span-4 flex flex-col items-center justify-center space-y-3">
+          ${buildDialSVG(ex.fraction, ex.label, ex.colour)}
+          ${ex.trap ? `<div class="rounded-xl bg-rose-600/90 border-2 border-rose-300 px-3 py-2 text-xs font-extrabold text-white text-center">${ex.trap}</div>` : ''}
+        </div>
+        <div class="lg:col-span-8 space-y-3">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-amber-300">${ex.badge}</div>
+          <h3 class="font-display text-3xl sm:text-4xl font-bold text-white">${ex.title}</h3>
+          <div class="space-y-2.5 pt-1">${htmlSteps}</div>
+        </div>
+      `;
+
+      document.getElementById('ido-step-dots').innerHTML = ex.steps.map((_, i) => `
+        <span class="w-3 h-3 rounded-full ${i <= idoStep ? 'bg-cyan-400' : 'bg-white/20'}"></span>
+      `).join('');
+    }
+
+    function setIDoExample(i) { idoIdx = i; idoStep = 0; renderIDo(); playChime('click'); }
+    function nextIDoStep() {
+      const max = idoExamples[idoIdx].steps.length - 1;
+      if (idoStep < max) { idoStep++; renderIDo(); playChime('reveal'); }
+    }
+    function prevIDoStep() {
+      if (idoStep > 0) { idoStep--; renderIDo(); playChime('click'); }
+    }
+    function revealAllIDoSteps() { idoStep = idoExamples[idoIdx].steps.length - 1; renderIDo(); playChime('reveal'); }
+    function toggleStepsChecklist() { document.getElementById('steps-checklist').classList.toggle('hidden'); }
+    function toggleIDoFullscreen() {
+      const el = document.getElementById('ido-stage');
+      const isFs = el.classList.toggle('ido-fullscreen');
+      document.getElementById('ido-fs-btn').textContent = isFs ? '✕ Exit Full Screen' : '⛶ Full Screen I Do';
+    }
+
+    /* ============================================================
+       STATION 3 CPA LAB 1: INTERACTIVE TWO-WAY STOPWATCH
+    ============================================================ */
+    let labMode = 'forward';
+    let revUnit = 'h';
+
+    function setLabMode(mode) {
+      labMode = mode;
+      document.getElementById('lab-controls-forward').classList.toggle('hidden', mode !== 'forward');
+      document.getElementById('lab-controls-reverse').classList.toggle('hidden', mode !== 'reverse');
+      document.getElementById('lab-mode-fwd').className = mode === 'forward'
+        ? 'px-3 py-1.5 rounded-lg text-xs font-extrabold bg-indigo-600 text-white shadow'
+        : 'px-3 py-1.5 rounded-lg text-xs font-extrabold text-slate-600';
+      document.getElementById('lab-mode-rev').className = mode === 'reverse'
+        ? 'px-3 py-1.5 rounded-lg text-xs font-extrabold bg-amber-500 text-slate-950 shadow'
+        : 'px-3 py-1.5 rounded-lg text-xs font-extrabold text-slate-600';
+      updateLab();
+    }
+
+    function setRevUnit(u) {
+      revUnit = u;
+      document.getElementById('rev-unit-h').className = u === 'h'
+        ? 'px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-bold'
+        : 'px-2.5 py-1 rounded-lg bg-slate-200 text-slate-700 font-bold';
+      document.getElementById('rev-unit-min').className = u === 'min'
+        ? 'px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-bold'
+        : 'px-2.5 py-1 rounded-lg bg-slate-200 text-slate-700 font-bold';
+      updateLab();
+    }
+
+    function setLabPreset(mode, a, b, u) {
+      if (mode === 'forward') {
+        const w = Math.floor(a);
+        const decPct = Math.round((a - w) * 100);
+        document.getElementById('fwd-whole-slider').value = w;
+        document.getElementById('fwd-dec-slider').value = decPct;
+        setLabMode('forward');
+      } else {
+        document.getElementById('rev-whole-slider').value = a;
+        document.getElementById('rev-small-slider').value = b;
+        revUnit = u || 'h';
+        setRevUnit(revUnit);
+        setLabMode('reverse');
+      }
+      playChime('click');
+    }
+
+    function formatCleanDec(n) {
+      return Number(n.toFixed(2)).toString();
+    }
+
+    function updateLab() {
+      const trapBox = document.getElementById('lab-trap-box');
+      if (labMode === 'forward') {
+        const w = parseInt(document.getElementById('fwd-whole-slider').value, 10);
+        const decPct = parseInt(document.getElementById('fwd-dec-slider').value, 10);
+        const dec = decPct / 100;
+        const secs = Math.round(dec * 60);
+        document.getElementById('fwd-whole-disp').textContent = w;
+        document.getElementById('fwd-dec-disp').textContent = formatCleanDec(dec);
+        document.getElementById('fwd-sec-disp').textContent = secs;
+        document.getElementById('lab-in-label').textContent = 'Decimal Minutes';
+        document.getElementById('lab-in-val').textContent = `${formatCleanDec(w + dec)} min`;
+        document.getElementById('lab-out-label').textContent = 'Minutes & Seconds';
+        document.getElementById('lab-out-val').textContent = w === 0 ? `${secs} s` : `${w} min ${secs} s`;
+        document.getElementById('lab-formula-box').innerHTML = `
+          Keep <strong>${w} min</strong> • Multiply decimal by 60:<br>
+          <span class="text-cyan-300">${formatCleanDec(dec)} × 60 = ${secs} s</span>
+        `;
+        document.getElementById('lab-stopwatch-svg').outerHTML = buildDialSVG(dec, `${secs} s`, '#4f46e5').replace('<svg ', '<svg id="lab-stopwatch-svg" ').replace('w-56 h-56', 'w-44 h-44');
+        if (dec > 0) {
+          trapBox.classList.remove('hidden');
+          trapBox.textContent = `Base-60 Check: ${formatCleanDec(w + dec)} min is ${w} min ${secs} s — NEVER ${w} min ${decPct} s!`;
+        } else {
+          trapBox.classList.add('hidden');
+        }
+      } else {
+        const w = parseInt(document.getElementById('rev-whole-slider').value, 10);
+        const small = parseInt(document.getElementById('rev-small-slider').value, 10);
+        const dec = small / 60;
+        const totalDec = formatCleanDec(w + dec);
+        const bigU = revUnit === 'h' ? 'h' : 'min';
+        const smallU = revUnit === 'h' ? 'min' : 's';
+        document.getElementById('rev-whole-disp').textContent = w;
+        document.getElementById('rev-small-disp').textContent = small;
+        document.getElementById('rev-small-disp-2').textContent = small;
+        document.getElementById('lab-in-label').textContent = `Mixed (${bigU} & ${smallU})`;
+        document.getElementById('lab-in-val').textContent = `${w} ${bigU} ${small} ${smallU}`;
+        document.getElementById('lab-out-label').textContent = `Decimal ${bigU}`;
+        document.getElementById('lab-out-val').textContent = `${totalDec} ${bigU}`;
+        document.getElementById('lab-formula-box').innerHTML = `
+          Keep <strong>${w} ${bigU}</strong> • Divide ${smallU} by 60:<br>
+          <span class="text-amber-300">${small} ÷ 60 = ${formatCleanDec(dec)}</span> ➔ <strong>${totalDec} ${bigU}</strong>
+        `;
+        document.getElementById('lab-stopwatch-svg').outerHTML = buildDialSVG(dec, `${small} ${smallU}`, '#d97706').replace('<svg ', '<svg id="lab-stopwatch-svg" ').replace('w-56 h-56', 'w-44 h-44');
+        if (small > 0) {
+          const wrongStr = small < 10 ? `${w}.0${small}` : `${w}.${small}`;
+          trapBox.classList.remove('hidden');
+          trapBox.textContent = `🚨 Reverse Trap Alert: ${w} ${bigU} ${small} ${smallU} = ${totalDec} ${bigU} — NOT ${wrongStr} ${bigU}!`;
+        } else {
+          trapBox.classList.add('hidden');
+        }
+      }
+    }
+
+    /* ============================================================
+       STATION 3 CPA LAB 2: FRIENDLY-60s REVERSE WHEEL
+    ============================================================ */
+    const friendly60 = [
+      { v: 6, frac: '1/10', dec: '0.1' },
+      { v: 12, frac: '2/10', dec: '0.2' },
+      { v: 15, frac: '1/4', dec: '0.25' },
+      { v: 18, frac: '3/10', dec: '0.3' },
+      { v: 24, frac: '4/10', dec: '0.4' },
+      { v: 30, frac: '1/2', dec: '0.5' },
+      { v: 36, frac: '6/10', dec: '0.6' },
+      { v: 42, frac: '7/10', dec: '0.7' },
+      { v: 45, frac: '3/4', dec: '0.75' },
+      { v: 48, frac: '8/10', dec: '0.8' },
+      { v: 54, frac: '9/10', dec: '0.9' },
+      { v: 60, frac: '1 whole', dec: '1.0' }
+    ];
+
+    let selectedWheelIdx = 2; // 15 -> 0.25 default
+
+    function renderWheel() {
+      const item = friendly60[selectedWheelIdx];
+      const frac = item.v === 60 ? 0.9999 : item.v / 60;
+      const svgEl = document.getElementById('friendly-wheel-svg');
+      const r = 82, cx = 110, cy = 110;
+      const angle = frac * 2 * Math.PI - Math.PI / 2;
+      const x = cx + r * Math.cos(angle);
+      const y = cy + r * Math.sin(angle);
+      const largeArc = frac > 0.5 ? 1 : 0;
+      const wedge = item.v === 60
+        ? `<circle cx="110" cy="110" r="82" fill="#f59e0b" fill-opacity="0.35"/>`
+        : `<path d="M 110 110 L 110 28 A 82 82 0 ${largeArc} 1 ${x.toFixed(1)} ${y.toFixed(1)} Z" fill="#f59e0b" fill-opacity="0.38"/>`;
+
+      let markers = '';
+      for (let m = 0; m < 10; m++) {
+        const a = (m / 10) * 2 * Math.PI - Math.PI / 2;
+        const tx = cx + 96 * Math.cos(a), ty = cy + 96 * Math.sin(a) + 4;
+        markers += `<text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="middle" font-size="10" font-weight="800" fill="#64748b">${m === 0 ? '60' : m * 6}</text>`;
+      }
+
+      svgEl.innerHTML = `
+        <circle cx="110" cy="110" r="82" fill="#fffbeb" stroke="#d97706" stroke-width="4"/>
+        ${wedge}
+        ${markers}
+        <line x1="110" y1="110" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#b45309" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="110" cy="110" r="6" fill="#78350f"/>
+        <rect x="52" y="122" width="116" height="28" rx="8" fill="#78350f"/>
+        <text x="110" y="141" text-anchor="middle" font-size="13.5" font-weight="800" fill="#fef3c7">${item.v}/60 = ${item.dec}</text>
+      `;
+
+      document.getElementById('wheel-readout').innerHTML = `
+        <div class="font-display text-2xl font-bold text-amber-950">${item.v} ÷ 60 = ${item.frac} = <span class="text-indigo-700">${item.dec}</span></div>
+        <div class="text-xs font-bold text-amber-800 mt-1">${item.v} min = ${item.dec} h &nbsp;|&nbsp; ${item.v} s = ${item.dec} min</div>
+      `;
+
+      document.getElementById('wheel-buttons').innerHTML = friendly60.map((f, i) => `
+        <button onclick="selectWheel(${i})" class="py-1.5 rounded-xl text-xs font-extrabold transition ${i === selectedWheelIdx ? 'bg-amber-500 text-slate-950 shadow' : 'bg-slate-100 hover:bg-amber-100 text-slate-700'}">
+          ${f.v} ➔ ${f.dec}
+        </button>
+      `).join('');
+    }
+
+    function selectWheel(i) { selectedWheelIdx = i; renderWheel(); playChime('click'); }
+
+    /* ============================================================
+       STATION 4: YOU DO — 9 RESERVED CARDS + PROJECTION MODE
+    ============================================================ */
+    const youDoCards = [
+      // Must
+      { tier: 'must', label: '🟢 Must #1', prompt: 'Convert 1.5 min to min & s', answer: '1 min 30 s', method: 'Keep 1 min • 0.5 × 60 = 30 s' },
+      { tier: 'must', label: '🟢 Must #2', prompt: 'Convert 2.25 min to min & s', answer: '2 min 15 s', method: 'Keep 2 min • 0.25 (1/4) × 60 = 15 s' },
+      { tier: 'must', label: '🟢 Must #3', prompt: 'Convert 4.75 min to min & s', answer: '4 min 45 s', method: 'Keep 4 min • 0.75 (3/4) × 60 = 45 s' },
+      // Should
+      { tier: 'should', label: '🟠 Should #4', prompt: 'Convert 2.6 min to min & s', answer: '2 min 36 s', method: 'Keep 2 min • 0.6 × 60 = 36 s (6 × 6)' },
+      { tier: 'should', label: '🟠 Should #5', prompt: 'Convert 5.9 min to min & s', answer: '5 min 54 s', method: 'Keep 5 min • 0.9 × 60 = 54 s (9 × 6)' },
+      { tier: 'should', label: '🟠 Should #6', prompt: 'Convert 3 h 45 min to decimal hours', answer: '3.75 h', method: 'Keep 3 h • 45 ÷ 60 = 3/4 = 0.75 h' },
+      // Could
+      { tier: 'could', label: '🟣 Could #7', prompt: 'Convert 4 h 42 min to decimal hours', answer: '4.7 h', method: 'Keep 4 h • 42 ÷ 60 = 7/10 = 0.7 h' },
+      { tier: 'could', label: '🟣 Could #8', prompt: 'Convert 6 min 54 s to decimal minutes', answer: '6.9 min', method: 'Keep 6 min • 54 ÷ 60 = 9/10 = 0.9 min' },
+      { tier: 'could', label: '🟣 Could #9', prompt: 'Order fastest to slowest: 3.3 min, 3 min 15 s, 3.2 min', answer: '3.2 min < 3 min 15 s < 3.3 min', method: '3.2 min = 3m 12s | 3m 15s = 3.25 min | 3.3 min = 3m 18s' }
+    ];
+
+    let activeTierFilter = 'all';
+    let projIdx = 0;
+
+    function renderYouDo() {
+      const tiers = [
+        { key: 'must', title: '🟢 Must (Level 1)', sub: 'Halves & quarters × 60', bg: 'bg-emerald-50 border-emerald-300', head: 'bg-emerald-600 text-white' },
+        { key: 'should', title: '🟠 Should (Level 2)', sub: 'Tenths × 60 & Reverse ÷ 60', bg: 'bg-orange-50 border-orange-300', head: 'bg-orange-600 text-white' },
+        { key: 'could', title: '🟣 Could (Level 3)', sub: 'Reverse tenths & Ordering', bg: 'bg-purple-50 border-purple-300', head: 'bg-purple-600 text-white' }
+      ].filter(t => activeTierFilter === 'all' || t.key === activeTierFilter);
+
+      const board = document.getElementById('youdo-board');
+      board.className = activeTierFilter === 'all' ? 'grid grid-cols-1 lg:grid-cols-3 gap-5' : 'grid grid-cols-1 max-w-2xl mx-auto gap-5';
+
+      board.innerHTML = tiers.map(t => {
+        const items = youDoCards.map((c, idx) => ({ ...c, idx })).filter(c => c.tier === t.key);
+        return `
+          <div class="rounded-3xl border-2 ${t.bg} p-4 space-y-3 shadow-sm">
+            <div class="rounded-2xl ${t.head} px-4 py-2.5 flex items-center justify-between">
+              <span class="font-display text-lg font-bold">${t.title}</span>
+              <span class="text-xs font-bold opacity-90">${t.sub}</span>
+            </div>
+            <div class="space-y-3">
+              ${items.map(c => `
+                <button onclick="openProjModal(${c.idx})" class="w-full text-left bg-white hover:bg-slate-50 rounded-2xl p-4 border-2 border-slate-200 hover:border-indigo-400 shadow-sm transition group">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-xs font-extrabold text-slate-400 uppercase">${c.label}</span>
+                    <span class="text-xs font-bold text-indigo-600 opacity-0 group-hover:opacity-100 transition">⛶ Project</span>
+                  </div>
+                  <div class="font-display text-xl font-bold text-slate-900 leading-snug">${c.prompt}</div>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterYouDo(tier) {
+      activeTierFilter = tier;
+      renderYouDo();
+      playChime('click');
+    }
+
+    function openProjModal(idx) {
+      projIdx = idx;
+      const c = youDoCards[projIdx];
+      const badgeStyles = {
+        must: 'bg-emerald-100 text-emerald-800',
+        should: 'bg-orange-100 text-orange-800',
+        could: 'bg-purple-100 text-purple-800'
+      };
+      document.getElementById('pm-badge').className = `inline-block px-4 py-1.5 rounded-full text-sm font-extrabold uppercase ${badgeStyles[c.tier]}`;
+      document.getElementById('pm-badge').textContent = c.label;
+      document.getElementById('pm-prompt').textContent = c.prompt;
+      document.getElementById('pm-answer').textContent = c.answer;
+      document.getElementById('pm-method').textContent = c.method;
+      document.getElementById('pm-answer-wrap').classList.add('hidden');
+      document.getElementById('proj-modal').classList.remove('hidden');
+      playChime('click');
+    }
+
+    function closeProjModal() { document.getElementById('proj-modal').classList.add('hidden'); }
+    function toggleProjAnswer() { document.getElementById('pm-answer-wrap').classList.toggle('hidden'); playChime('reveal'); }
+    function stepProj(dir) { openProjModal((projIdx + dir + youDoCards.length) % youDoCards.length); }
+
+    /* ============================================================
+       STATION 5: 4 MIXED TRUE/FALSE CARDS
+    ============================================================ */
+    const tfCards = [
+      {
+        stmt: 'In a race, 4.2 min is faster than 4 min 15 s.',
+        verdict: 'TRUE',
+        colour: 'emerald',
+        proof: '4.2 min = 4 min + (0.2 × 60) s = 4 min 12 s. Since 4 min 12 s < 4 min 15 s, 4.2 min is 3 seconds faster!'
+      },
+      {
+        stmt: '2 h 15 min is written as 2.15 h in decimal hours.',
+        verdict: 'FALSE',
+        colour: 'rose',
+        proof: '15 ÷ 60 = 1/4 = 0.25, NOT 0.15! So 2 h 15 min = 2.25 h.'
+      },
+      {
+        stmt: '5 min 48 s converts to 5.8 min.',
+        verdict: 'TRUE',
+        colour: 'emerald',
+        proof: '48 ÷ 60 = 8/10 = 0.8 (because 8 × 6 = 48). So 5 min 48 s = 5.8 min!'
+      },
+      {
+        stmt: '1.85 min is equal to 1 min 85 s.',
+        verdict: 'FALSE',
+        colour: 'rose',
+        proof: 'There are only 60 seconds in a minute! 0.85 × 60 = 51 s, so 1.85 min = 1 min 51 s.'
+      }
+    ];
+
+    function renderTFMatrix() {
+      document.getElementById('tf-matrix').innerHTML = tfCards.map((c, i) => `
+        <div class="bg-white rounded-3xl p-5 border-2 border-indigo-100 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="space-y-2">
+            <span class="px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase">Claim ${i + 1}</span>
+            <p class="font-display text-xl sm:text-2xl font-bold text-slate-900 leading-snug">"${c.stmt}"</p>
+          </div>
+          <div>
+            <button onclick="document.getElementById('tf-proof-${i}').classList.toggle('hidden'); playChime('reveal');" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm transition">
+              ⚖️ Reveal Verdict &amp; Proof
+            </button>
+            <div id="tf-proof-${i}" class="hidden mt-3 rounded-2xl ${c.colour === 'emerald' ? 'bg-emerald-50 border-2 border-emerald-400 text-emerald-950' : 'bg-rose-50 border-2 border-rose-400 text-rose-950'} p-3.5 text-sm font-bold">
+              <span class="font-display text-lg font-extrabold mr-1.5">${c.verdict}!</span> ${c.proof}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* ============================================================
+       STATION 6: SUCCESS CRITERIA WHITEBOARD CHECK
+    ============================================================ */
+    const scChecks = [
+      {
+        num: 1,
+        tier: '🟢 Must • SC 1 (Forward × 60)',
+        sc: 'I can convert decimal minutes into minutes and seconds by multiplying the decimal part by 60.',
+        q: 'Convert 2.35 min into minutes and seconds.',
+        ans: '2 min 21 s',
+        proof: '0.3 × 60 = 18 s and 0.05 × 60 = 3 s ➔ 18 + 3 = 21 s.'
+      },
+      {
+        num: 2,
+        tier: '🟠 Should • SC 2 (Reverse ÷ 60)',
+        sc: 'I can convert mixed units back into decimal time by dividing the smaller unit by 60.',
+        q: 'Convert 6 min 42 s into decimal minutes.',
+        ans: '6.7 min',
+        proof: '42 ÷ 60 = 7/10 = 0.7 ➔ 6 + 0.7 = 6.7 min.'
+      },
+      {
+        num: 3,
+        tier: '🟣 Could • SC 3 (Compare & Order)',
+        sc: 'I can compare and order time intervals written in mixed and decimal forms.',
+        q: 'Who swam faster: 3.1 min or 3 min 9 s? By how many seconds?',
+        ans: '3.1 min — faster by 3 s!',
+        proof: '3.1 min = 3 min 6 s. 3 min 9 s − 3 min 6 s = 3 s.'
+      }
+    ];
+
+    let scMet = [false, false, false];
+
+    function renderSCChecks() {
+      document.getElementById('sc-check-cards').innerHTML = scChecks.map((s, i) => `
+        <div class="bg-white rounded-3xl p-5 border-2 ${scMet[i] ? 'border-emerald-500 ring-2 ring-emerald-200' : 'border-slate-200'} shadow-sm flex flex-col justify-between space-y-4">
+          <div class="space-y-2">
+            <span class="text-xs font-extrabold uppercase text-indigo-600">${s.tier}</span>
+            <p class="text-xs font-bold text-slate-500 leading-snug">${s.sc}</p>
+            <div class="rounded-2xl bg-slate-900 text-white p-4 font-display text-xl font-bold leading-snug">
+              ${s.q}
+            </div>
+          </div>
+          <div class="space-y-3">
+            <div id="sc-ans-${i}" class="hidden rounded-xl bg-emerald-50 border-2 border-emerald-300 p-3">
+              <div class="font-display text-2xl font-bold text-emerald-700">${s.ans}</div>
+              <div class="text-xs font-bold text-emerald-900">${s.proof}</div>
+            </div>
+            <div class="flex items-center justify-between gap-2">
+              <button onclick="document.getElementById('sc-ans-${i}').classList.toggle('hidden'); playChime('reveal');" class="px-3.5 py-2 rounded-xl bg-indigo-100 hover:bg-indigo-200 text-indigo-900 font-bold text-xs">👀 Reveal</button>
+              <button onclick="toggleSCMet(${i})" class="px-4 py-2 rounded-xl font-extrabold text-xs transition ${scMet[i] ? 'bg-emerald-600 text-white shadow' : 'bg-slate-100 hover:bg-emerald-100 text-slate-800'}">
+                ${scMet[i] ? '☑ Met!' : '☐ Tick as Met'}
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      const count = scMet.filter(Boolean).length;
+      document.getElementById('sc-counter-badge').textContent = `${count} / 3 Met`;
+      document.getElementById('sc-progress-bar').style.width = `${(count / 3) * 100}%`;
+      document.getElementById('sc-complete-banner').classList.toggle('hidden', count < 3);
+    }
+
+    function toggleSCMet(i) {
+      scMet[i] = !scMet[i];
+      renderSCChecks();
+      if (scMet.filter(Boolean).length === 3) {
+        playChime('point');
+        launchConfetti();
+      } else {
+        playChime('click');
+      }
+    }
+
+    /* ============================================================
+       STATION 7: 10-QUESTION QUICKFIRE ENGINE (15s TIMER)
+    ============================================================ */
+    const qfQuestions = [
+      { tag: 'Forward × 60', q: '0.5 min = ? seconds', ans: '30 s', method: '0.5 × 60 = 30 s' },
+      { tag: 'Forward × 60', q: '0.25 min = ? seconds', ans: '15 s', method: '1/4 of 60 = 15 s' },
+      { tag: 'Forward × 60', q: '0.1 min = ? seconds', ans: '6 s', method: 'One tenth of 60 = 6 s' },
+      { tag: 'Forward × 60', q: '0.4 min = ? seconds', ans: '24 s', method: '4 × 6 s = 24 s' },
+      { tag: 'Forward × 60', q: 'Convert 1.2 min to min & s', ans: '1 min 12 s', method: 'Keep 1 min • 0.2 × 60 = 12 s' },
+      { tag: 'Forward × 60', q: 'Convert 2.8 min to min & s', ans: '2 min 48 s', method: 'Keep 2 min • 0.8 × 60 = 48 s' },
+      { tag: 'Reverse ÷ 60', q: 'Write 18 s as a decimal minute', ans: '0.3 min', method: '18 ÷ 60 = 3/10 = 0.3 min' },
+      { tag: 'Reverse ÷ 60', q: 'Write 45 min as a decimal hour', ans: '0.75 h', method: '45 ÷ 60 = 3/4 = 0.75 h' },
+      { tag: 'Reverse ÷ 60', q: 'Convert 6 h 30 min to decimal hours', ans: '6.5 h', method: '30 ÷ 60 = 0.5 ➔ 6.5 h' },
+      { tag: 'Compare & Beat the Trap', q: 'Which is shorter: 1.1 min or 65 s?', ans: '65 s (by 1 s!)', method: '1.1 min = 66 s, so 65 s is shorter!' }
+    ];
+
+    let qfIdx = 0;
+    let qfTime = 15;
+    let qfInterval = null;
+
+    function renderQF() {
+      stopQFTimer();
+      qfTime = 15;
+      const item = qfQuestions[qfIdx];
+      document.getElementById('qf-progress').textContent = `Question ${qfIdx + 1} / ${qfQuestions.length}`;
+      document.getElementById('qf-tag').textContent = item.tag;
+      document.getElementById('qf-question').textContent = item.q;
+      document.getElementById('qf-answer').textContent = item.ans;
+      document.getElementById('qf-method').textContent = item.method;
+      document.getElementById('qf-answer-box').classList.add('hidden');
+      document.getElementById('qf-boards-up').classList.add('hidden');
+      document.getElementById('qf-timer-pill').textContent = '⏱️ 15s';
+      document.getElementById('qf-timer-bar').style.width = '100%';
+    }
+
+    function stopQFTimer() {
+      if (qfInterval) { clearInterval(qfInterval); qfInterval = null; }
+    }
+
+    function startQFTimer() {
+      stopQFTimer();
+      qfTime = 15;
+      document.getElementById('qf-boards-up').classList.add('hidden');
+      document.getElementById('qf-timer-pill').textContent = '⏱️ 15s';
+      document.getElementById('qf-timer-bar').style.width = '100%';
+      playChime('click');
+      qfInterval = setInterval(() => {
+        qfTime--;
+        document.getElementById('qf-timer-pill').textContent = `⏱️ ${qfTime}s`;
+        document.getElementById('qf-timer-bar').style.width = `${(qfTime / 15) * 100}%`;
+        if (qfTime <= 3 && qfTime > 0) playChime('tick');
+        if (qfTime <= 0) {
+          stopQFTimer();
+          document.getElementById('qf-boards-up').classList.remove('hidden');
+          playChime('buzzer');
+        }
+      }, 1000);
+    }
+
+    function revealQFAnswer() {
+      stopQFTimer();
+      document.getElementById('qf-answer-box').classList.remove('hidden');
+      playChime('reveal');
+    }
+
+    function awardQFPoint(team) { awardTeam(team, 1); }
+    function nextQF() { qfIdx = (qfIdx + 1) % qfQuestions.length; renderQF(); playChime('click'); }
+    function prevQF() { qfIdx = (qfIdx - 1 + qfQuestions.length) % qfQuestions.length; renderQF(); playChime('click'); }
+
+    /* ============================================================
+       TEACHER DRAWER & DAVID'S BOARD (DPR + INK PRESERVE)
+    ============================================================ */
+    function toggleTeacherDrawer() {
+      document.getElementById('teacher-drawer').classList.toggle('hidden');
+    }
+
+    const dbOverlay = document.getElementById('davids-board');
+    const dbCanvas = document.getElementById('davids-canvas');
+    const dbWrap = document.getElementById('davids-canvas-wrap');
+    const dbCtx = dbCanvas.getContext('2d');
+    let dbDrawing = false;
+    let penColour = '#0f172a';
+    let penWidth = 4;
+    let eraserMode = false;
+
+    function resizeDavidsCanvas(preserveInk = true) {
+      const rect = dbWrap.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      let snap = null;
+      if (preserveInk && dbCanvas.width > 0 && dbCanvas.height > 0) {
+        snap = document.createElement('canvas');
+        snap.width = dbCanvas.width;
+        snap.height = dbCanvas.height;
+        snap.getContext('2d').drawImage(dbCanvas, 0, 0);
+      }
+      const dpr = window.devicePixelRatio || 1;
+      dbCanvas.width = Math.round(rect.width * dpr);
+      dbCanvas.height = Math.round(rect.height * dpr);
+      dbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      dbCtx.lineCap = 'round';
+      dbCtx.lineJoin = 'round';
+      if (snap) {
+        dbCtx.save();
+        dbCtx.globalCompositeOperation = 'source-over';
+        dbCtx.setTransform(1, 0, 0, 1, 0, 0);
+        dbCtx.drawImage(snap, 0, 0);
+        dbCtx.restore();
+      }
+    }
+
+    function toggleDavidsBoard() {
+      const hidden = dbOverlay.classList.toggle('hidden');
+      if (!hidden) requestAnimationFrame(() => resizeDavidsCanvas(true));
+    }
+
+    window.addEventListener('resize', () => {
+      if (!dbOverlay.classList.contains('hidden')) resizeDavidsCanvas(true);
+    });
+
+    function setPenColour(col) { penColour = col; eraserMode = false; }
+    function setPenWidth(w) { penWidth = w; eraserMode = false; }
+    function setEraser() { eraserMode = true; }
+    function clearDavidsBoard() {
+      dbCtx.save();
+      dbCtx.setTransform(1, 0, 0, 1, 0, 0);
+      dbCtx.clearRect(0, 0, dbCanvas.width, dbCanvas.height);
+      dbCtx.restore();
+    }
+
+    function getPointerPos(e) {
+      const r = dbCanvas.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    }
+
+    dbCanvas.addEventListener('pointerdown', (e) => {
+      dbDrawing = true;
+      dbCanvas.setPointerCapture(e.pointerId);
+      const p = getPointerPos(e);
+      dbCtx.beginPath();
+      dbCtx.moveTo(p.x, p.y);
+    });
+
+    dbCanvas.addEventListener('pointermove', (e) => {
+      if (!dbDrawing) return;
+      const p = getPointerPos(e);
+      dbCtx.globalCompositeOperation = eraserMode ? 'destination-out' : 'source-over';
+      dbCtx.strokeStyle = penColour;
+      dbCtx.lineWidth = eraserMode ? 24 : penWidth;
+      dbCtx.lineTo(p.x, p.y);
+      dbCtx.stroke();
+    });
+
+    dbCanvas.addEventListener('pointerup', () => { dbDrawing = false; dbCtx.globalCompositeOperation = 'source-over'; });
+    dbCanvas.addEventListener('pointercancel', () => { dbDrawing = false; dbCtx.globalCompositeOperation = 'source-over'; });
+
+    /* ============================================================
+       GUARDED KEYBOARD SHORTCUTS
+    ============================================================ */
+    function anyModalOpen() {
+      return !document.getElementById('vocab-modal').classList.contains('hidden') ||
+             !document.getElementById('proj-modal').classList.contains('hidden') ||
+             !document.getElementById('davids-board').classList.contains('hidden') ||
+             !document.getElementById('teacher-drawer').classList.contains('hidden') ||
+             document.getElementById('ido-stage').classList.contains('ido-fullscreen');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'Escape') {
+        closeVocabModal();
+        closeProjModal();
+        if (!dbOverlay.classList.contains('hidden')) toggleDavidsBoard();
+        if (!document.getElementById('teacher-drawer').classList.contains('hidden')) toggleTeacherDrawer();
+        if (document.getElementById('ido-stage').classList.contains('ido-fullscreen')) toggleIDoFullscreen();
+        return;
+      }
+      if (e.key.toLowerCase() === 'w') { toggleDavidsBoard(); return; }
+      if (e.key.toLowerCase() === 't') { toggleTeacherDrawer(); return; }
+      if (e.key.toLowerCase() === 'm') { toggleMute(); return; }
+
+      if (anyModalOpen()) {
+        if (!document.getElementById('proj-modal').classList.contains('hidden')) {
+          if (e.key === 'ArrowRight') stepProj(1);
+          if (e.key === 'ArrowLeft') stepProj(-1);
+        }
+        return;
+      }
+      if (e.key === 'ArrowRight') goStation(currentStation + 1);
+      if (e.key === 'ArrowLeft') goStation(currentStation - 1);
+    });
+
+    /* ============================================================
+       INITIALISE ALL STATIONS
+    ============================================================ */
+    renderVocabGrid();
+    renderIDo();
+    setLabMode('forward');
+    renderWheel();
+    renderYouDo();
+    renderTFMatrix();
+    renderSCChecks();
+    renderQF();
+    goStation(0);
+  </script>
+</body>
+</html>

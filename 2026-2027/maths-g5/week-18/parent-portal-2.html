@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Portal — Grade 5 Maths Week 18, Lesson 2 (Decimal Minutes, Seconds &amp; Mixed Time)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: linear-gradient(160deg, #f0f9ff 0%, #eef2ff 50%, #fdf2f8 100%);
+      color: #0f172a;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: 'Fredoka', system-ui, sans-serif;
+    }
+
+    /* Clean language visibility control — zero dangling slashes! */
+    body.mode-en .lang-vn { display: none !important; }
+    body.mode-vn .lang-en { display: none !important; }
+
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 95;
+    }
+
+    input[type="range"].portal-slider {
+      accent-color: #4f46e5;
+      height: 10px;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body class="mode-both antialiased">
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- STICKY BILINGUAL HEADER & LANGUAGE TOGGLE -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-2 border-indigo-100 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-cyan-500 text-white font-display font-bold text-lg flex items-center justify-center shadow">60</div>
+        <div>
+          <div class="text-[11px] font-extrabold uppercase tracking-wider text-indigo-600">
+            <span class="lang-en block">Grade 5 Maths • Week 18 • Lesson 2</span>
+            <span class="lang-vn block">Toán Lớp 5 • Tuần 18 • Bài 2</span>
+          </div>
+          <div class="font-display text-sm sm:text-base font-bold text-slate-900">
+            <span class="lang-en block">Family Home Portal (6Gt.01)</span>
+            <span class="lang-vn block">Cổng Hỗ Trợ Phụ Huynh (6Gt.01)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sticky EN / VN Toggle -->
+      <div class="inline-flex rounded-xl bg-slate-100 p-1 shadow-inner" role="group" aria-label="Language switch">
+        <button id="btn-both" onclick="setLang('both')" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold bg-indigo-600 text-white shadow transition">🇬🇧🇻🇳 Both</button>
+        <button id="btn-en" onclick="setLang('en')" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold text-slate-700 hover:bg-white transition">🇬🇧 EN</button>
+        <button id="btn-vn" onclick="setLang('vn')" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold text-slate-700 hover:bg-white transition">🇻🇳 VN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-6 space-y-8">
+
+    <!-- HERO OVERVIEW CARD -->
+    <section class="rounded-3xl bg-gradient-to-br from-indigo-700 via-blue-600 to-cyan-500 text-white p-6 sm:p-8 shadow-xl space-y-4">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold">
+        <span>⏱️ CAMBRIDGE STAGE 6 • UNIT 7.2 TIME</span>
+      </div>
+      <div class="space-y-2">
+        <h1 class="font-display text-2xl sm:text-4xl font-bold leading-tight">
+          <span class="lang-en block">Decimal Minutes to Seconds &amp; Mixed Time Back to Decimals</span>
+          <span class="lang-vn block text-cyan-100 mt-1">Đổi Phút Thập Phân Sang Giây &amp; Đổi Ngược Thời Gian Hỗn Hợp Về Thập Phân</span>
+        </h1>
+        <p class="text-sm sm:text-base text-blue-50 font-semibold leading-relaxed">
+          <span class="lang-en block">Today your child learnt to convert time <strong>both ways</strong> using base-60: multiply the decimal part by 60 to find seconds (e.g. 3.4 min = 3 min 24 s), and divide minutes or seconds by 60 to go back to decimals (e.g. 2 h 15 min = 2.25 h — never 2.15 h!).</span>
+          <span class="lang-vn block mt-1 text-cyan-50">Hôm nay con học cách chuyển đổi thời gian <strong>hai chiều</strong> theo hệ cơ số 60: nhân phần thập phân với 60 để ra giây (VD: 3.4 phút = 3 phút 24 giây), và chia số phút hoặc số giây cho 60 để đổi ngược về số thập phân (VD: 2 giờ 15 phút = 2.25 giờ — tuyệt đối không phải 2.15 giờ!).</span>
+        </p>
+      </div>
+
+      <!-- Parent Quick Cheat-Sheet -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+        <div class="rounded-2xl bg-white/15 border border-white/20 p-3.5 text-sm">
+          <div class="font-extrabold text-amber-300">
+            <span class="lang-en block">➔ Forward (Decimal ➔ Mixed): × 60</span>
+            <span class="lang-vn block">➔ Chiều thuận (Thập phân ➔ Hỗn hợp): × 60</span>
+          </div>
+          <p class="mt-1 font-semibold">
+            <span class="lang-en block">3.4 min ➔ Keep 3 min, then 0.4 × 60 = 24 s ➔ <strong>3 min 24 s</strong>.</span>
+            <span class="lang-vn block">3.4 phút ➔ Giữ nguyên 3 phút, lấy 0.4 × 60 = 24 giây ➔ <strong>3 phút 24 giây</strong>.</span>
+          </p>
+        </div>
+        <div class="rounded-2xl bg-white/15 border border-white/20 p-3.5 text-sm">
+          <div class="font-extrabold text-emerald-300">
+            <span class="lang-en block">⬅ Reverse (Mixed ➔ Decimal): ÷ 60</span>
+            <span class="lang-vn block">⬅ Chiều ngược (Hỗn hợp ➔ Thập phân): ÷ 60</span>
+          </div>
+          <p class="mt-1 font-semibold">
+            <span class="lang-en block">2 h 15 min ➔ Keep 2 h, then 15 ÷ 60 = 0.25 ➔ <strong>2.25 h</strong> (NOT 2.15 h!).</span>
+            <span class="lang-vn block">2 giờ 15 phút ➔ Giữ 2 giờ, lấy 15 ÷ 60 = 0.25 ➔ <strong>2.25 giờ</strong> (KHÔNG phải 2.15 giờ!).</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- INTERACTIVE EXPLORERS (2 BESPOKE VISUAL MODELS)       -->
+    <!-- ===================================================== -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- MODEL A: INTERACTIVE TWO-WAY STOPWATCH -->
+      <div class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-indigo-200 shadow-lg flex flex-col justify-between space-y-4">
+        <div class="space-y-1">
+          <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase">
+            <span class="lang-en">Interactive Model A</span>
+            <span class="lang-vn">Mô hình tương tác A</span>
+          </span>
+          <h2 class="font-display text-2xl font-bold text-slate-900">
+            <span class="lang-en block">⏱️ Two-Way Stopwatch (min.dec ⇄ min &amp; s)</span>
+            <span class="lang-vn block text-indigo-700 text-lg">⏱️ Đồng Hồ Bấm Giờ Hai Chiều</span>
+          </h2>
+          <p class="text-xs font-semibold text-slate-600">
+            <span class="lang-en block">Switch between Forward (× 60) and Reverse (÷ 60) and drag the sliders together!</span>
+            <span class="lang-vn block">Chuyển đổi giữa Chiều thuận (× 60) và Chiều ngược (÷ 60), rồi kéo thanh trượt cùng con!</span>
+          </p>
+        </div>
+
+        <!-- Mode & Preset Buttons -->
+        <div class="space-y-2">
+          <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl">
+            <button id="ma-fwd-btn" onclick="setModelAMode('forward')" class="py-2 rounded-lg text-xs font-extrabold bg-indigo-600 text-white shadow transition">
+              <span class="lang-en block">Forward (× 60)</span>
+              <span class="lang-vn block">Thuận (× 60)</span>
+            </button>
+            <button id="ma-rev-btn" onclick="setModelAMode('reverse')" class="py-2 rounded-lg text-xs font-extrabold text-slate-700 transition">
+              <span class="lang-en block">Reverse (÷ 60)</span>
+              <span class="lang-vn block">Ngược (÷ 60)</span>
+            </button>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setMAPreset('forward', 3, 40)" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-xs font-bold">3.4 min</button>
+            <button onclick="setMAPreset('forward', 0, 75)" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-xs font-bold">0.75 min</button>
+            <button onclick="setMAPreset('reverse', 2, 15, 'h')" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-800 text-xs font-bold">2 h 15 min</button>
+            <button onclick="setMAPreset('reverse', 4, 18, 'min')" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold">4 min 18 s</button>
+          </div>
+        </div>
+
+        <!-- Live SVG + Dual-Coded Readout -->
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col items-center space-y-3">
+          <svg id="ma-svg" viewBox="0 0 200 200" class="w-40 h-40"></svg>
+          <div class="w-full rounded-xl bg-white border-2 border-indigo-200 p-3 text-center">
+            <div id="ma-equation-main" class="font-display text-2xl sm:text-3xl font-bold text-indigo-700"></div>
+            <div id="ma-step-text" class="text-xs font-bold text-slate-700 mt-1 space-y-0.5"></div>
+          </div>
+          <div id="ma-trap" class="hidden w-full rounded-xl bg-rose-100 border-2 border-rose-300 p-2.5 text-xs font-extrabold text-rose-900 space-y-0.5"></div>
+        </div>
+
+        <!-- Sliders -->
+        <div id="ma-ctrl-fwd" class="space-y-2">
+          <div class="flex justify-between text-xs font-bold text-slate-600">
+            <span><span class="lang-en">Whole min:</span><span class="lang-vn">Số phút nguyên:</span> <strong id="ma-fw-val">3</strong></span>
+            <span><span class="lang-en">Decimal:</span><span class="lang-vn">Phần thập phân:</span> <strong id="ma-fd-val">0.4</strong></span>
+          </div>
+          <input id="ma-fw-slider" type="range" min="0" max="9" step="1" value="3" oninput="renderModelA()" class="portal-slider w-full">
+          <input id="ma-fd-slider" type="range" min="0" max="95" step="5" value="40" oninput="renderModelA()" class="portal-slider w-full">
+        </div>
+
+        <div id="ma-ctrl-rev" class="hidden space-y-2">
+          <div class="flex items-center justify-between gap-2 text-xs font-bold text-slate-600">
+            <div class="flex gap-1.5">
+              <button id="ma-u-h" onclick="setMAUnit('h')" class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-bold"><span class="lang-en">h &amp; min</span><span class="lang-vn">giờ &amp; phút</span></button>
+              <button id="ma-u-min" onclick="setMAUnit('min')" class="px-2.5 py-1 rounded-lg bg-slate-200 text-slate-700 font-bold"><span class="lang-en">min &amp; s</span><span class="lang-vn">phút &amp; giây</span></button>
+            </div>
+            <span><span class="lang-en">Whole:</span><span class="lang-vn">Nguyên:</span> <strong id="ma-rw-val">2</strong> • <span class="lang-en">Small:</span><span class="lang-vn">Đơn vị nhỏ:</span> <strong id="ma-rs-val">15</strong></span>
+          </div>
+          <input id="ma-rw-slider" type="range" min="0" max="9" step="1" value="2" oninput="renderModelA()" class="portal-slider w-full">
+          <input id="ma-rs-slider" type="range" min="0" max="57" step="3" value="15" oninput="renderModelA()" class="portal-slider w-full">
+        </div>
+      </div>
+
+      <!-- MODEL B: FRIENDLY-60s REVERSE FRACTION WHEEL -->
+      <div class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-amber-200 shadow-lg flex flex-col justify-between space-y-4">
+        <div class="space-y-1">
+          <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-extrabold uppercase">
+            <span class="lang-en">Interactive Model B</span>
+            <span class="lang-vn">Mô hình tương tác B</span>
+          </span>
+          <h2 class="font-display text-2xl font-bold text-slate-900">
+            <span class="lang-en block">🎡 Friendly-60s Reverse Fraction Wheel</span>
+            <span class="lang-vn block text-amber-700 text-lg">🎡 Bánh Xe Phân Số Cơ Số 60</span>
+          </h2>
+          <p class="text-xs font-semibold text-slate-600">
+            <span class="lang-en block">Tap any number of minutes or seconds below to see why dividing by 60 gives clean tenths and quarters!</span>
+            <span class="lang-vn block">Chạm vào số phút hoặc giây bên dưới để thấy tại sao chia cho 60 lại ra các số thập phân đẹp như 0.1, 0.25, 0.5!</span>
+          </p>
+        </div>
+
+        <div class="flex justify-center">
+          <svg id="mb-wheel-svg" viewBox="0 0 220 220" class="w-48 h-48"></svg>
+        </div>
+
+        <div id="mb-readout" class="rounded-2xl bg-amber-50 border-2 border-amber-300 p-3.5 text-center space-y-1">
+          <!-- Dual .lang-en / .lang-vn readout rendered by JS -->
+        </div>
+
+        <div id="mb-buttons" class="grid grid-cols-4 gap-1.5">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 8 VISUAL SVG BILINGUAL VOCABULARY CARDS WITH AUDIO    -->
+    <!-- ===================================================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-indigo-100 shadow-md space-y-4">
+      <div>
+        <h2 class="font-display text-2xl font-bold text-slate-900">
+          <span class="lang-en block">📖 Key Bilingual Vocabulary (Tap to Listen!)</span>
+          <span class="lang-vn block text-indigo-700 text-lg">📖 Từ Vựng Song Ngữ Trọng Tâm (Chạm để Nghe!)</span>
+        </h2>
+      </div>
+      <div id="portal-vocab-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 3-TIER DINNER TABLE TALKS (BILINGUAL EN/VN)           -->
+    <!-- ===================================================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-emerald-200 shadow-md space-y-4">
+      <div>
+        <h2 class="font-display text-2xl font-bold text-slate-900">
+          <span class="lang-en block">🍽️ 3-Tier Dinner Table Talks (5 Minutes Together)</span>
+          <span class="lang-vn block text-emerald-700 text-lg">🍽️ 3 Cấp Độ Trò Chuyện Bữa Tối Cùng Con</span>
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Tier 1 -->
+        <div class="rounded-2xl bg-emerald-50 border-2 border-emerald-200 p-4 space-y-2">
+          <span class="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-xs font-extrabold">
+            <span class="lang-en">Tier 1 • Warm-Up</span>
+            <span class="lang-vn">Cấp 1 • Khởi động</span>
+          </span>
+          <p class="text-sm font-bold text-slate-800">
+            <span class="lang-en block">"If 0.1 minute is 6 seconds, how many seconds is 0.4 minute? What about 0.7 minute?"</span>
+            <span class="lang-vn block mt-1 text-emerald-900">"Nếu 0.1 phút bằng 6 giây, thì 0.4 phút bằng bao nhiêu giây? Còn 0.7 phút thì sao?"</span>
+          </p>
+          <p class="text-xs font-semibold text-emerald-800">
+            <span class="lang-en block">Answer: 24 s (4 × 6) and 42 s (7 × 6).</span>
+            <span class="lang-vn block">Đáp án: 24 giây (4 × 6) và 42 giây (7 × 6).</span>
+          </p>
+        </div>
+
+        <!-- Tier 2 -->
+        <div class="rounded-2xl bg-amber-50 border-2 border-amber-200 p-4 space-y-2">
+          <span class="px-2.5 py-1 rounded-full bg-amber-600 text-white text-xs font-extrabold">
+            <span class="lang-en">Tier 2 • Everyday Challenge</span>
+            <span class="lang-vn">Cấp 2 • Thử thách thực tế</span>
+          </span>
+          <p class="text-sm font-bold text-slate-800">
+            <span class="lang-en block">"Our microwave heats soup for 1 min 30 s. How would a stopwatch app write that as a decimal minute?"</span>
+            <span class="lang-vn block mt-1 text-amber-900">"Lò vi sóng hâm nóng súp trong 1 phút 30 giây. Ứng dụng bấm giờ sẽ viết số phút thập phân là bao nhiêu?"</span>
+          </p>
+          <p class="text-xs font-semibold text-amber-800">
+            <span class="lang-en block">Answer: 1.5 min (30 ÷ 60 = 0.5 — NOT 1.30 min!).</span>
+            <span class="lang-vn block">Đáp án: 1.5 phút (30 ÷ 60 = 0.5 — KHÔNG phải 1.30 phút!).</span>
+          </p>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="rounded-2xl bg-purple-50 border-2 border-purple-200 p-4 space-y-2">
+          <span class="px-2.5 py-1 rounded-full bg-purple-600 text-white text-xs font-extrabold">
+            <span class="lang-en">Tier 3 • Master Debate</span>
+            <span class="lang-vn">Cấp 3 • Tranh luận chuyên sâu</span>
+          </span>
+          <p class="text-sm font-bold text-slate-800">
+            <span class="lang-en block">"Why is a 2 h 15 min flight written as 2.25 h instead of 2.15 h? Can you convince me?"</span>
+            <span class="lang-vn block mt-1 text-purple-900">"Tại sao chuyến bay dài 2 giờ 15 phút lại viết là 2.25 giờ thay vì 2.15 giờ? Con hãy giải thích thuyết phục bố mẹ nhé!"</span>
+          </p>
+          <p class="text-xs font-semibold text-purple-800">
+            <span class="lang-en block">Look for: 15 out of 60 minutes is 1/4 = 0.25, not 15 out of 100!</span>
+            <span class="lang-vn block">Gợi ý: 15 trong tổng số 60 phút là 1/4 = 0.25, không phải 15/100!</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- GAMIFIED 4-QUESTION HOME CHECK QUIZ WITH CONFETTI     -->
+    <!-- ===================================================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 border-4 border-indigo-300 shadow-xl space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">
+            <span class="lang-en block">🎯 3-Minute Home Check Quiz (4 Questions)</span>
+            <span class="lang-vn block text-indigo-700 text-xl">🎯 Kiểm Tra Nhanh 3 Phút Tại Nhà (4 Câu Hỏi)</span>
+          </h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="quiz-score-pill" class="px-4 py-1.5 rounded-full bg-slate-900 text-white font-display text-lg font-bold">0 / 4</span>
+          <button onclick="resetQuiz()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs">
+            <span class="lang-en">↺ Try Again</span>
+            <span class="lang-vn">↺ Làm lại</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="quiz-container" class="space-y-4">
+        <!-- Populated by JS -->
+      </div>
+
+      <div id="quiz-celebration" class="hidden rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-5 text-center space-y-1 shadow-lg">
+        <div class="font-display text-2xl sm:text-3xl font-bold">
+          <span class="lang-en block">🎉 Brilliant Work! 4 / 4 Base-60 Master!</span>
+          <span class="lang-vn block">🎉 Xuất Sắc! Con Đạt 4 / 4 — Bậc Thầy Hệ Cơ Số 60!</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* ============================================================
+       LANGUAGE MODE SWITCHER (ALWAYS CANCELS SPEECH!)
+    ============================================================ */
+    function setLang(mode) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.body.classList.remove('mode-both', 'mode-en', 'mode-vn');
+      document.body.classList.add(`mode-${mode}`);
+      ['both', 'en', 'vn'].forEach(m => {
+        const b = document.getElementById(`btn-${m}`);
+        b.className = m === mode
+          ? 'px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold bg-indigo-600 text-white shadow transition'
+          : 'px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold text-slate-700 hover:bg-white transition';
+      });
+    }
+
+    function speakText(text, langCode) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = langCode;
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    /* ============================================================
+       CONFETTI ENGINE
+    ============================================================ */
+    const confCanvas = document.getElementById('confetti-canvas');
+    const confCtx = confCanvas.getContext('2d');
+    let confParts = [];
+    let confRaf = null;
+
+    function launchConfetti() {
+      confCanvas.width = window.innerWidth;
+      confCanvas.height = window.innerHeight;
+      const cols = ['#4f46e5', '#06b6d4', '#10b981', '#f59e0b', '#ec4899'];
+      for (let i = 0; i < 80; i++) {
+        confParts.push({
+          x: window.innerWidth * (0.2 + Math.random() * 0.6),
+          y: window.innerHeight * 0.35,
+          vx: (Math.random() - 0.5) * 13,
+          vy: -Math.random() * 11 - 3,
+          sz: Math.random() * 7 + 5,
+          col: cols[Math.floor(Math.random() * cols.length)],
+          rot: Math.random() * 360,
+          vrot: (Math.random() - 0.5) * 12,
+          life: 1
+        });
+      }
+      if (!confRaf) stepConfetti();
+    }
+
+    function stepConfetti() {
+      confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+      confParts.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.vy += 0.34; p.rot += p.vrot; p.life -= 0.014;
+        confCtx.save();
+        confCtx.translate(p.x, p.y);
+        confCtx.rotate((p.rot * Math.PI) / 180);
+        confCtx.globalAlpha = Math.max(0, p.life);
+        confCtx.fillStyle = p.col;
+        confCtx.fillRect(-p.sz / 2, -p.sz / 2, p.sz, p.sz * 0.6);
+        confCtx.restore();
+      });
+      confParts = confParts.filter(p => p.life > 0);
+      if (confParts.length > 0) confRaf = requestAnimationFrame(stepConfetti);
+      else { confRaf = null; confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height); }
+    }
+
+    /* ============================================================
+       MODEL A: INTERACTIVE TWO-WAY STOPWATCH
+    ============================================================ */
+    let maMode = 'forward';
+    let maUnit = 'h';
+
+    function cleanDec(n) { return Number(n.toFixed(2)).toString(); }
+
+    function setModelAMode(mode) {
+      maMode = mode;
+      document.getElementById('ma-ctrl-fwd').classList.toggle('hidden', mode !== 'forward');
+      document.getElementById('ma-ctrl-rev').classList.toggle('hidden', mode !== 'reverse');
+      document.getElementById('ma-fwd-btn').className = mode === 'forward'
+        ? 'py-2 rounded-lg text-xs font-extrabold bg-indigo-600 text-white shadow transition'
+        : 'py-2 rounded-lg text-xs font-extrabold text-slate-700 transition';
+      document.getElementById('ma-rev-btn').className = mode === 'reverse'
+        ? 'py-2 rounded-lg text-xs font-extrabold bg-amber-500 text-slate-950 shadow transition'
+        : 'py-2 rounded-lg text-xs font-extrabold text-slate-700 transition';
+      renderModelA();
+    }
+
+    function setMAUnit(u) {
+      maUnit = u;
+      document.getElementById('ma-u-h').className = u === 'h'
+        ? 'px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-bold'
+        : 'px-2.5 py-1 rounded-lg bg-slate-200 text-slate-700 font-bold';
+      document.getElementById('ma-u-min').className = u === 'min'
+        ? 'px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-bold'
+        : 'px-2.5 py-1 rounded-lg bg-slate-200 text-slate-700 font-bold';
+      renderModelA();
+    }
+
+    function setMAPreset(mode, a, b, u) {
+      if (mode === 'forward') {
+        document.getElementById('ma-fw-slider').value = a;
+        document.getElementById('ma-fd-slider').value = b;
+        setModelAMode('forward');
+      } else {
+        document.getElementById('ma-rw-slider').value = a;
+        document.getElementById('ma-rs-slider').value = b;
+        setMAUnit(u || 'h');
+        setModelAMode('reverse');
+      }
+    }
+
+    function drawStopwatchSVG(svgEl, frac, badgeTxt, col) {
+      const r = 72, cx = 100, cy = 104;
+      const cl = Math.max(0, Math.min(0.9999, frac));
+      const ang = cl * 2 * Math.PI - Math.PI / 2;
+      const x = cx + r * Math.cos(ang);
+      const y = cy + r * Math.sin(ang);
+      const la = cl > 0.5 ? 1 : 0;
+      const wedge = cl > 0 ? `<path d="M ${cx} ${cy} L ${cx} ${cy - r} A ${r} ${r} 0 ${la} 1 ${x.toFixed(1)} ${y.toFixed(1)} Z" fill="${col}" fill-opacity="0.28"/>` : '';
+      svgEl.innerHTML = `
+        <rect x="86" y="10" width="28" height="10" rx="4" fill="${col}"/>
+        <circle cx="${cx}" cy="${cy}" r="78" fill="#ffffff" stroke="${col}" stroke-width="5"/>
+        ${wedge}
+        <line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${col}" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="${cx}" cy="${cy}" r="5.5" fill="#0f172a"/>
+        <text x="${cx}" y="44" text-anchor="middle" font-size="11" font-weight="800" fill="#475569">60</text>
+        <text x="160" y="108" text-anchor="middle" font-size="11" font-weight="800" fill="#475569">15</text>
+        <text x="${cx}" y="170" text-anchor="middle" font-size="11" font-weight="800" fill="#475569">30</text>
+        <text x="40" y="108" text-anchor="middle" font-size="11" font-weight="800" fill="#475569">45</text>
+        <rect x="62" y="120" width="76" height="24" rx="8" fill="#0f172a"/>
+        <text x="${cx}" y="136" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">${badgeTxt}</text>
+      `;
+    }
+
+    function renderModelA() {
+      const trap = document.getElementById('ma-trap');
+      if (maMode === 'forward') {
+        const w = parseInt(document.getElementById('ma-fw-slider').value, 10);
+        const dp = parseInt(document.getElementById('ma-fd-slider').value, 10);
+        const dec = dp / 100;
+        const secs = Math.round(dec * 60);
+        document.getElementById('ma-fw-val').textContent = w;
+        document.getElementById('ma-fd-val').textContent = cleanDec(dec);
+        const decStr = cleanDec(w + dec);
+        const mixedEn = w === 0 ? `${secs} s` : `${w} min ${secs} s`;
+        const mixedVn = w === 0 ? `${secs} giây` : `${w} phút ${secs} giây`;
+        document.getElementById('ma-equation-main').innerHTML = `
+          <span class="lang-en block">${decStr} min = ${mixedEn}</span>
+          <span class="lang-vn block text-xl text-indigo-800">${decStr} phút = ${mixedVn}</span>
+        `;
+        document.getElementById('ma-step-text').innerHTML = `
+          <span class="lang-en block">Keep ${w} min • Multiply decimal: ${cleanDec(dec)} × 60 = ${secs} s</span>
+          <span class="lang-vn block text-slate-600">Giữ nguyên ${w} phút • Nhân phần thập phân: ${cleanDec(dec)} × 60 = ${secs} giây</span>
+        `;
+        drawStopwatchSVG(document.getElementById('ma-svg'), dec, `${secs} s`, '#4f46e5');
+        if (dp > 0) {
+          trap.classList.remove('hidden');
+          trap.innerHTML = `
+            <span class="lang-en block">⚠️ Base-60 Check: ${decStr} min is ${mixedEn} — NEVER ${w} min ${dp} s!</span>
+            <span class="lang-vn block">⚠️ Tránh bẫy hệ 10: ${decStr} phút là ${mixedVn} — KHÔNG phải ${w} phút ${dp} giây!</span>
+          `;
+        } else trap.classList.add('hidden');
+      } else {
+        const w = parseInt(document.getElementById('ma-rw-slider').value, 10);
+        const s = parseInt(document.getElementById('ma-rs-slider').value, 10);
+        const dec = s / 60;
+        const tot = cleanDec(w + dec);
+        document.getElementById('ma-rw-val').textContent = w;
+        document.getElementById('ma-rs-val').textContent = s;
+        const bEn = maUnit === 'h' ? 'h' : 'min';
+        const sEn = maUnit === 'h' ? 'min' : 's';
+        const bVn = maUnit === 'h' ? 'giờ' : 'phút';
+        const sVn = maUnit === 'h' ? 'phút' : 'giây';
+        document.getElementById('ma-equation-main').innerHTML = `
+          <span class="lang-en block">${w} ${bEn} ${s} ${sEn} = ${tot} ${bEn}</span>
+          <span class="lang-vn block text-xl text-amber-800">${w} ${bVn} ${s} ${sVn} = ${tot} ${bVn}</span>
+        `;
+        document.getElementById('ma-step-text').innerHTML = `
+          <span class="lang-en block">Keep ${w} ${bEn} • Divide by 60: ${s} ÷ 60 = ${cleanDec(dec)} ${bEn}</span>
+          <span class="lang-vn block text-slate-600">Giữ nguyên ${w} ${bVn} • Chia cho 60: ${s} ÷ 60 = ${cleanDec(dec)} ${bVn}</span>
+        `;
+        drawStopwatchSVG(document.getElementById('ma-svg'), dec, `${s} ${sEn}`, '#d97706');
+        if (s > 0) {
+          const bad = s < 10 ? `${w}.0${s}` : `${w}.${s}`;
+          trap.classList.remove('hidden');
+          trap.innerHTML = `
+            <span class="lang-en block">🚨 Trap Alert: ${w} ${bEn} ${s} ${sEn} = ${tot} ${bEn} — NOT ${bad} ${bEn}!</span>
+            <span class="lang-vn block">🚨 Cảnh báo lỗi sai: ${w} ${bVn} ${s} ${sVn} = ${tot} ${bVn} — KHÔNG phải ${bad} ${bVn}!</span>
+          `;
+        } else trap.classList.add('hidden');
+      }
+    }
+
+    /* ============================================================
+       MODEL B: FRIENDLY-60s REVERSE FRACTION WHEEL
+    ============================================================ */
+    const wheelData = [
+      { v: 6, frac: '1/10', dec: '0.1' },
+      { v: 12, frac: '2/10', dec: '0.2' },
+      { v: 15, frac: '1/4', dec: '0.25' },
+      { v: 18, frac: '3/10', dec: '0.3' },
+      { v: 24, frac: '4/10', dec: '0.4' },
+      { v: 30, frac: '1/2', dec: '0.5' },
+      { v: 36, frac: '6/10', dec: '0.6' },
+      { v: 42, frac: '7/10', dec: '0.7' },
+      { v: 45, frac: '3/4', dec: '0.75' },
+      { v: 48, frac: '8/10', dec: '0.8' },
+      { v: 54, frac: '9/10', dec: '0.9' },
+      { v: 60, frac: '1', dec: '1.0' }
+    ];
+    let mbIdx = 2;
+
+    function renderModelB() {
+      const item = wheelData[mbIdx];
+      const frac = item.v === 60 ? 0.9999 : item.v / 60;
+      const r = 82, cx = 110, cy = 110;
+      const ang = frac * 2 * Math.PI - Math.PI / 2;
+      const x = cx + r * Math.cos(ang), y = cy + r * Math.sin(ang);
+      const la = frac > 0.5 ? 1 : 0;
+      const wedge = item.v === 60
+        ? `<circle cx="110" cy="110" r="82" fill="#f59e0b" fill-opacity="0.35"/>`
+        : `<path d="M 110 110 L 110 28 A 82 82 0 ${la} 1 ${x.toFixed(1)} ${y.toFixed(1)} Z" fill="#f59e0b" fill-opacity="0.38"/>`;
+
+      let nums = '';
+      for (let m = 0; m < 10; m++) {
+        const a = (m / 10) * 2 * Math.PI - Math.PI / 2;
+        nums += `<text x="${(cx + 96 * Math.cos(a)).toFixed(1)}" y="${(cy + 96 * Math.sin(a) + 4).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="800" fill="#64748b">${m === 0 ? '60' : m * 6}</text>`;
+      }
+
+      document.getElementById('mb-wheel-svg').innerHTML = `
+        <circle cx="110" cy="110" r="82" fill="#fffbeb" stroke="#d97706" stroke-width="4"/>
+        ${wedge}
+        ${nums}
+        <line x1="110" y1="110" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#b45309" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="110" cy="110" r="6" fill="#78350f"/>
+        <rect x="52" y="122" width="116" height="28" rx="8" fill="#78350f"/>
+        <text x="110" y="141" text-anchor="middle" font-size="13.5" font-weight="800" fill="#fef3c7">${item.v}/60 = ${item.dec}</text>
+      `;
+
+      document.getElementById('mb-readout').innerHTML = `
+        <div class="font-display text-2xl font-bold text-amber-950">${item.v} ÷ 60 = ${item.frac} = <span class="text-indigo-700">${item.dec}</span></div>
+        <div class="text-xs font-bold text-amber-900">
+          <span class="lang-en block">${item.v} min = ${item.dec} h &nbsp;•&nbsp; ${item.v} s = ${item.dec} min</span>
+          <span class="lang-vn block">${item.v} phút = ${item.dec} giờ &nbsp;•&nbsp; ${item.v} giây = ${item.dec} phút</span>
+        </div>
+      `;
+
+      document.getElementById('mb-buttons').innerHTML = wheelData.map((w, i) => `
+        <button onclick="mbIdx=${i}; renderModelB();" class="py-1.5 rounded-xl text-xs font-extrabold transition ${i === mbIdx ? 'bg-amber-500 text-slate-950 shadow' : 'bg-slate-100 hover:bg-amber-100 text-slate-700'}">
+          ${w.v} ➔ ${w.dec}
+        </button>
+      `).join('');
+    }
+
+    /* ============================================================
+       8 VISUAL SVG BILINGUAL VOCABULARY CARDS
+    ============================================================ */
+    const portalVocab = [
+      {
+        en: 'second (s)', vn: 'giây (s)',
+        defEn: 'A small unit of time. 60 seconds make 1 minute.',
+        defVn: 'Đơn vị thời gian nhỏ. 60 giây bằng 1 phút.',
+        svg: `<svg viewBox="0 0 110 60" class="w-24 h-14 shrink-0"><circle cx="30" cy="30" r="22" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.5"/><line x1="30" y1="30" x2="30" y2="14" stroke="#0f172a" stroke-width="2.5"/><line x1="30" y1="30" x2="45" y2="30" stroke="#dc2626" stroke-width="2"/><text x="82" y="34" text-anchor="middle" font-size="13" font-weight="800" fill="#0369a1">60 s</text></svg>`
+      },
+      {
+        en: 'stopwatch', vn: 'đồng hồ bấm giờ',
+        defEn: 'A timer that measures race durations accurately.',
+        defVn: 'Đồng hồ đo chính xác thời gian trong các cuộc đua.',
+        svg: `<svg viewBox="0 0 110 60" class="w-24 h-14 shrink-0"><rect x="12" y="12" width="86" height="36" rx="8" fill="#0f172a"/><text x="55" y="36" text-anchor="middle" font-size="16" font-weight="800" fill="#38bdf8">03:24</text></svg>`
+      },
+      {
+        en: 'bidirectional conversion', vn: 'chuyển đổi hai chiều',
+        defEn: 'Converting decimal ➔ mixed (× 60) AND mixed ➔ decimal (÷ 60).',
+        defVn: 'Chuyển đổi thập phân ➔ hỗn hợp (× 60) và ngược lại (÷ 60).',
+        svg: `<svg viewBox="0 0 110 60" class="w-24 h-14 shrink-0"><rect x="4" y="14" width="102" height="32" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><text x="55" y="28" text-anchor="middle" font-size="11" font-weight="800" fill="#5b21b6">× 60 ➔</text><text x="55" y="42" text-anchor="middle" font-size="11" font-weight="800" fill="#d97706">⬅ ÷ 60</text></svg>`
+      },
+      {
+        en: 'multiply by 60', vn: 'nhân với 60',
+        defEn: 'Turns a decimal part of a minute or hour into seconds or minutes.',
+        defVn: 'Đổi phần thập phân của phút hoặc giờ thành giây hoặc phút.',
+        svg: `<svg viewBox="0 0 110 60" class="w-24 h-14 shrink-0"><rect x="4" y="14" width="102" height="32" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/><text x="55" y="35" text-anchor="middle" font-size="12" font-weight="800" fill="#166534">0.4 × 60 = 24</text></svg>`
+      },
+      {
+        en: 'divide by 60', vn: 'chia cho 60',
+        defEn: 'Turns minutes into decimal hours, or seconds into decimal minutes.',
+        defVn: 'Đổi số phút sang giờ thập phân, hoặc số giây sang phút thập phân.',
+        svg: `<svg viewBox="0 0 110 60" class="w-24 h-14 shrink-0"><rect x="4" y="14" width="102" height="32" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/><text x="55" y="35" text-anchor="middle" font-size="12" font-weight="800" fill="#92400e">15 ÷ 60 = 0.25</text></svg>`
+      },
+      {
+        en: 'equivalent interval', vn: 'khoảng thời gian tương đương',
+        defEn: 'Two different formats showing the exact same length of time.',
+        defVn: 'Hai cách viết khác nhau biểu thị cùng một khoảng thời gian.',
+        svg: `<svg viewBox="0 0 110 60" class="w-24 h-14 shrink-0"><rect x="4" y="14" width="102" height="32" rx="8" fill="#cffafe" stroke="#0891b2" stroke-width="2"/><text x="55" y="35" text-anchor="middle" font-size="12" font-weight="800" fill="#155e75">0.75 m = 45 s</text></svg>`
+      },
+      {
+        en: 'compare', vn: 'so sánh',
+        defEn: 'Convert both times into the SAME format first to see which is faster.',
+        defVn: 'Đổi cả hai thời gian về CÙNG dạng rồi so sánh xem bên nào nhanh hơn.',
+        svg: `<svg viewBox="0 0 110 60" class="w-24 h-14 shrink-0"><rect x="4" y="14" width="102" height="32" rx="8" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/><text x="55" y="34" text-anchor="middle" font-size="9.5" font-weight="800" fill="#9f1239">2m 42s &lt; 2m 45s</text></svg>`
+      },
+      {
+        en: 'order', vn: 'sắp xếp thứ tự',
+        defEn: 'Place race times from fastest (smallest) to slowest (largest).',
+        defVn: 'Sắp xếp thời gian thi đấu từ nhanh nhất (nhỏ nhất) đến chậm nhất.',
+        svg: `<svg viewBox="0 0 110 60" class="w-24 h-14 shrink-0"><rect x="10" y="30" width="26" height="22" rx="4" fill="#fde047"/><rect x="42" y="20" width="26" height="32" rx="4" fill="#cbd5e1"/><rect x="74" y="10" width="26" height="42" rx="4" fill="#fdba74"/><text x="23" y="45" text-anchor="middle" font-size="10" font-weight="800">1st</text><text x="55" y="40" text-anchor="middle" font-size="10" font-weight="800">2nd</text><text x="87" y="35" text-anchor="middle" font-size="10" font-weight="800">3rd</text></svg>`
+      }
+    ];
+
+    function renderPortalVocab() {
+      document.getElementById('portal-vocab-grid').innerHTML = portalVocab.map((v, i) => `
+        <div class="rounded-2xl bg-slate-50 border-2 border-slate-200 p-4 flex items-center gap-3">
+          ${v.svg}
+          <div class="flex-1 min-w-0 space-y-1">
+            <div class="font-display text-lg font-bold text-slate-900">
+              <span class="lang-en block">${v.en}</span>
+              <span class="lang-vn block text-emerald-700 text-base">${v.vn}</span>
+            </div>
+            <p class="text-xs font-semibold text-slate-600 leading-snug">
+              <span class="lang-en block">${v.defEn}</span>
+              <span class="lang-vn block text-slate-700 mt-0.5">${v.defVn}</span>
+            </p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <button onclick="speakText('${v.en.replace(/'/g, "\\'")}. ${v.defEn.replace(/'/g, "\\'")}', 'en-GB')" class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold">🔊 EN</button>
+              <button onclick="speakText('${v.vn.replace(/'/g, "\\'")}. ${v.defVn.replace(/'/g, "\\'")}', 'vi-VN')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold">🔊 VN</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* ============================================================
+       4-QUESTION HOME CHECK QUIZ (EXACT RESERVED NUMBERS)
+    ============================================================ */
+    const quizData = [
+      {
+        qEn: '1. Convert 3.6 min into minutes and seconds.',
+        qVn: '1. Đổi 3.6 phút sang phút và giây.',
+        opts: [
+          { en: '3 min 6 s', vn: '3 phút 6 giây' },
+          { en: '3 min 36 s', vn: '3 phút 36 giây' },
+          { en: '3 min 60 s', vn: '3 phút 60 giây' }
+        ],
+        correct: 1,
+        fbEn: 'Spot on! Keep 3 min, then 0.6 × 60 = 36 s ➔ 3 min 36 s.',
+        fbVn: 'Chính xác! Giữ nguyên 3 phút, lấy 0.6 × 60 = 36 giây ➔ 3 phút 36 giây.'
+      },
+      {
+        qEn: '2. Convert 1 h 45 min into decimal hours.',
+        qVn: '2. Đổi 1 giờ 45 phút sang giờ thập phân.',
+        opts: [
+          { en: '1.45 h', vn: '1.45 giờ' },
+          { en: '1.75 h', vn: '1.75 giờ' },
+          { en: '1.5 h', vn: '1.5 giờ' }
+        ],
+        correct: 1,
+        fbEn: 'Great trap-busting! 45 ÷ 60 = 3/4 = 0.75, so 1 h 45 min = 1.75 h (NOT 1.45 h!).',
+        fbVn: 'Tuyệt vời! 45 ÷ 60 = 3/4 = 0.75, nên 1 giờ 45 phút = 1.75 giờ (KHÔNG phải 1.45 giờ!).'
+      },
+      {
+        qEn: '3. Convert 5 min 12 s into decimal minutes.',
+        qVn: '3. Đổi 5 phút 12 giây sang phút thập phân.',
+        opts: [
+          { en: '5.2 min', vn: '5.2 phút' },
+          { en: '5.12 min', vn: '5.12 phút' },
+          { en: '5.6 min', vn: '5.6 phút' }
+        ],
+        correct: 0,
+        fbEn: 'Brilliant! 12 ÷ 60 = 2/10 = 0.2, so 5 min 12 s = 5.2 min.',
+        fbVn: 'Rất giỏi! 12 ÷ 60 = 2/10 = 0.2, nên 5 phút 12 giây = 5.2 phút.'
+      },
+      {
+        qEn: '4. Which swimming time is faster: 2.7 min or 2 min 45 s?',
+        qVn: '4. Thời gian bơi nào nhanh hơn: 2.7 phút hay 2 phút 45 giây?',
+        opts: [
+          { en: '2.7 min (faster by 3 s)', vn: '2.7 phút (nhanh hơn 3 giây)' },
+          { en: '2 min 45 s (faster by 25 s)', vn: '2 phút 45 giây (nhanh hơn 25 giây)' },
+          { en: 'Both are equal', vn: 'Hai thời gian bằng nhau' }
+        ],
+        correct: 0,
+        fbEn: 'Champion! 2.7 min = 2 min + (0.7 × 60) s = 2 min 42 s, which is 3 s faster than 2 min 45 s!',
+        fbVn: 'Quá đỉnh! 2.7 phút = 2 phút 42 giây (0.7 × 60 = 42), nhanh hơn 2 phút 45 giây đúng 3 giây!'
+      }
+    ];
+
+    let quizAnswers = [null, null, null, null];
+
+    function renderQuiz() {
+      const box = document.getElementById('quiz-container');
+      box.innerHTML = quizData.map((q, qi) => {
+        const chosen = quizAnswers[qi];
+        const isDone = chosen !== null;
+        const isRight = chosen === q.correct;
+        return `
+          <div class="rounded-2xl border-2 ${isDone ? (isRight ? 'border-emerald-400 bg-emerald-50/60' : 'border-rose-300 bg-rose-50/50') : 'border-slate-200 bg-slate-50'} p-4 space-y-3">
+            <div class="font-display text-lg font-bold text-slate-900">
+              <span class="lang-en block">${q.qEn}</span>
+              <span class="lang-vn block text-indigo-800 text-base">${q.qVn}</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              ${q.opts.map((o, oi) => {
+                let cls = 'bg-white hover:bg-indigo-50 border-slate-300 text-slate-800';
+                if (isDone) {
+                  if (oi === q.correct) cls = 'bg-emerald-600 border-emerald-700 text-white shadow';
+                  else if (oi === chosen) cls = 'bg-rose-600 border-rose-700 text-white';
+                  else cls = 'bg-white/60 border-slate-200 text-slate-400';
+                }
+                return `
+                  <button onclick="pickQuiz(${qi}, ${oi})" class="p-3 rounded-xl border-2 font-bold text-sm transition text-left ${cls}">
+                    <span class="lang-en block">${o.en}</span>
+                    <span class="lang-vn block text-xs opacity-95">${o.vn}</span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+            ${isDone ? `
+              <div class="rounded-xl p-3 text-xs sm:text-sm font-bold ${isRight ? 'bg-emerald-100 text-emerald-950' : 'bg-rose-100 text-rose-950'}">
+                <span class="lang-en block">${isRight ? '✅ ' : '❌ '}${q.fbEn}</span>
+                <span class="lang-vn block mt-0.5">${isRight ? '✅ ' : '❌ '}${q.fbVn}</span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      const score = quizAnswers.reduce((acc, v, idx) => acc + (v === quizData[idx].correct ? 1 : 0), 0);
+      document.getElementById('quiz-score-pill').textContent = `${score} / 4`;
+      document.getElementById('quiz-celebration').classList.toggle('hidden', score < 4);
+    }
+
+    function pickQuiz(qi, oi) {
+      quizAnswers[qi] = oi;
+      renderQuiz();
+      const score = quizAnswers.reduce((acc, v, idx) => acc + (v === quizData[idx].correct ? 1 : 0), 0);
+      if (oi === quizData[qi].correct && score === 4) launchConfetti();
+    }
+
+    function resetQuiz() {
+      quizAnswers = [null, null, null, null];
+      renderQuiz();
+    }
+
+    /* Init */
+    renderModelA();
+    renderModelB();
+    renderPortalVocab();
+    renderQuiz();
+  </script>
+</body>
+</html>

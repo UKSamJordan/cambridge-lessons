@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Portal — Grade 5 Maths · Week 18, Lesson 1: Decimal Hours (EN / VN)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, #eff6ff 0%, #f5f3ff 50%, #fff7ed 100%);
+      color: #0f172a;
+      min-height: 100vh;
+    }
+    .font-display { font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif; }
+
+    /* Bilingual mode visibility */
+    body.mode-en .lang-vn { display: none !important; }
+    body.mode-vn .lang-en { display: none !important; }
+
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    .confetti-piece {
+      position: fixed; top: -15px; width: 10px; height: 10px;
+      z-index: 120; pointer-events: none; border-radius: 2px;
+      animation: confettiFall 2.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="mode-both pb-16">
+
+  <!-- Sticky Top Bilingual Toggle Bar -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-indigo-100 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-display font-bold flex items-center justify-center shadow">
+          60
+        </div>
+        <div>
+          <div class="text-[11px] font-extrabold uppercase tracking-wider text-indigo-600">
+            <span class="lang-en">Grade 5 Maths · Week 18 · Lesson 1</span>
+            <span class="lang-vn">Toán Lớp 5 · Tuần 18 · Bài 1</span>
+          </div>
+          <div class="font-display font-bold text-sm sm:text-base text-slate-900 leading-tight">
+            <span class="lang-en">Parent &amp; Family Learning Portal</span>
+            <span class="lang-vn">Cổng Hỗ Trợ Phụ Huynh &amp; Gia Đình</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sticky EN / VN / Both Toggle -->
+      <div class="flex items-center bg-slate-100 rounded-full p-1 border border-slate-200">
+        <button id="btn-both" onclick="setLangMode('both')" class="px-3 py-1 rounded-full text-xs font-extrabold bg-indigo-600 text-white shadow-sm transition">🇬🇧 + 🇻🇳</button>
+        <button id="btn-en" onclick="setLangMode('en')" class="px-3 py-1 rounded-full text-xs font-extrabold text-slate-700 hover:bg-white transition">🇬🇧 EN</button>
+        <button id="btn-vn" onclick="setLangMode('vn')" class="px-3 py-1 rounded-full text-xs font-extrabold text-slate-700 hover:bg-white transition">🇻🇳 VN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 pt-6 space-y-8">
+
+    <!-- HERO SECTION -->
+    <section class="rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white p-6 sm:p-8 shadow-xl space-y-4">
+      <div class="inline-flex items-center gap-2 bg-white/20 px-3.5 py-1 rounded-full text-xs font-extrabold uppercase">
+        <span>Cambridge Stage 6 · 6Gt.01</span>
+        <span>•</span>
+        <span>Unit 7.2 Time</span>
+      </div>
+      <h1 class="font-display text-2xl sm:text-4xl font-bold leading-tight">
+        <span class="lang-en block">Converting Decimal Hours to Hours &amp; Minutes</span>
+        <span class="lang-vn block text-amber-200 mt-1">Đổi Giờ Thập Phân Sang Giờ Và Phút</span>
+      </h1>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+        <div class="bg-white/15 backdrop-blur rounded-2xl p-4 border border-white/20">
+          <div class="text-xs font-extrabold uppercase text-amber-300 mb-1">
+            <span class="lang-en">What We Learned Today</span>
+            <span class="lang-vn">Nội Dung Học Hôm Nay</span>
+          </div>
+          <p class="lang-en text-sm font-medium text-blue-50">Clocks use <strong>base-60</strong> (1 hour = 60 minutes), NOT base-10! That is why <strong>0.5 hours = 30 minutes</strong> (never 50 minutes) and every <strong>0.1 hour = 6 minutes</strong>.</p>
+          <p class="lang-vn text-sm font-medium text-amber-100 mt-1">Đồng hồ dùng <strong>hệ cơ số 60</strong> (1 giờ = 60 phút), KHÔNG phải hệ cơ số 10! Vì vậy <strong>0,5 giờ = 30 phút</strong> (không bao giờ là 50 phút) và mỗi <strong>0,1 giờ = 6 phút</strong>.</p>
+        </div>
+        <div class="bg-white/15 backdrop-blur rounded-2xl p-4 border border-white/20">
+          <div class="text-xs font-extrabold uppercase text-emerald-300 mb-1">
+            <span class="lang-en">The Golden Two-Box Rule</span>
+            <span class="lang-vn">Quy Tắc Vàng Hai Ô</span>
+          </div>
+          <p class="lang-en text-sm font-medium text-blue-50"><strong>Box 1:</strong> Keep the whole hours untouched.<br><strong>Box 2:</strong> Multiply ONLY the decimal part by <strong>60</strong>.<br><em>Example: 2.4 h = 2 h + (0.4 × 60) = 2 h 24 min.</em></p>
+          <p class="lang-vn text-sm font-medium text-emerald-100 mt-1"><strong>Ô 1:</strong> Giữ nguyên phần giờ nguyên.<br><strong>Ô 2:</strong> Chỉ nhân phần thập phân với <strong>60</strong>.<br><em>Ví dụ: 2,4 giờ = 2 giờ + (0,4 × 60) = 2 giờ 24 phút.</em></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         MODEL A: INTERACTIVE BASE-60 CLOCK & TENTH SLICER (0.0–5.0 h)
+         ========================================================= -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-lg border-2 border-indigo-200 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase"><span class="lang-en">Interactive Model A</span><span class="lang-vn">Mô Hình Tương Tác A</span></span>
+          <h2 class="font-display text-2xl font-bold text-slate-900 mt-1">
+            <span class="lang-en block">🕒 Base-60 Clock &amp; Tenth Slicer (0.0–5.0 h)</span>
+            <span class="lang-vn block text-indigo-700 text-lg">🕒 Đồng Hồ Hệ 60 &amp; Thanh Chia Phần Mười (0,0–5,0 giờ)</span>
+          </h2>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <button onclick="setModelA(0.1)" class="px-3 py-1.5 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 text-xs font-extrabold">0.1 h</button>
+          <button onclick="setModelA(0.25)" class="px-3 py-1.5 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 text-xs font-extrabold">0.25 h</button>
+          <button onclick="setModelA(0.5)" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-extrabold">0.5 h</button>
+          <button onclick="setModelA(1.75)" class="px-3 py-1.5 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 text-xs font-extrabold">1.75 h</button>
+          <button onclick="setModelA(2.4)" class="px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 text-xs font-extrabold">2.4 h</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+        <!-- SVG 60-minute Clock -->
+        <div class="md:col-span-5 flex flex-col items-center">
+          <svg id="portal-clock-svg" viewBox="0 0 250 250" class="w-56 h-56 sm:w-64 sm:h-64 drop-shadow"></svg>
+          <p class="text-xs font-bold text-slate-500 mt-1 text-center">
+            <span class="lang-en block">10 equal wedges · Each 0.1 h = 6 minutes</span>
+            <span class="lang-vn block">10 phần bằng nhau · Mỗi 0,1 giờ = 6 phút</span>
+          </p>
+        </div>
+
+        <!-- Slider, Tenth Bar & Dual Live Readouts -->
+        <div class="md:col-span-7 space-y-4">
+          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+            <div class="flex items-center justify-between mb-2">
+              <label for="model-a-slider" class="text-xs sm:text-sm font-extrabold text-slate-700">
+                <span class="lang-en">Slide Decimal Hours:</span>
+                <span class="lang-vn block text-indigo-700">Kéo chọn số giờ thập phân:</span>
+              </label>
+              <span id="ma-val" class="font-display text-3xl font-bold text-indigo-700">2.40 h</span>
+            </div>
+            <input id="model-a-slider" type="range" min="0" max="5" step="0.05" value="2.4" oninput="updateModelA(this.value)" class="w-full h-3 accent-indigo-600 cursor-pointer">
+            <div class="flex justify-between text-[11px] font-bold text-slate-400 mt-1">
+              <span>0.0 h</span><span>1.0 h</span><span>2.0 h</span><span>3.0 h</span><span>4.0 h</span><span>5.0 h</span>
+            </div>
+          </div>
+
+          <!-- 10-Slice Bar -->
+          <div id="ma-bar" class="grid grid-cols-10 gap-1"></div>
+
+          <!-- Live Result Tiles -->
+          <div class="grid grid-cols-3 gap-2.5 text-center">
+            <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-2.5">
+              <div class="text-[10px] font-extrabold uppercase text-blue-700">
+                <span class="lang-en">Whole Hours</span>
+                <span class="lang-vn block">Giờ nguyên</span>
+              </div>
+              <div id="ma-whole" class="font-display text-2xl font-bold text-blue-900 mt-0.5">2 h</div>
+            </div>
+            <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-2.5">
+              <div class="text-[10px] font-extrabold uppercase text-emerald-700">
+                <span class="lang-en">Decimal × 60</span>
+                <span class="lang-vn block">Thập phân × 60</span>
+              </div>
+              <div id="ma-mins" class="font-display text-2xl font-bold text-emerald-900 mt-0.5">24 min</div>
+            </div>
+            <div class="bg-indigo-600 text-white rounded-2xl p-2.5 shadow">
+              <div class="text-[10px] font-extrabold uppercase text-indigo-200">
+                <span class="lang-en">Mixed Time</span>
+                <span class="lang-vn block">Giờ &amp; Phút</span>
+              </div>
+              <div id="ma-mixed" class="font-display text-2xl font-bold mt-0.5">2 h 24 m</div>
+            </div>
+          </div>
+
+          <!-- Dual Bilingual Live Explanation Readout -->
+          <div class="bg-rose-50 border-2 border-rose-200 rounded-2xl p-3.5 space-y-1">
+            <p id="ma-live-en" class="lang-en text-sm font-bold text-rose-950"></p>
+            <p id="ma-live-vn" class="lang-vn text-sm font-bold text-rose-800"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         MODEL B: INTERACTIVE HANOI FLIGHT ARRIVAL CALCULATOR
+         ========================================================= -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-lg border-2 border-emerald-200 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase"><span class="lang-en">Interactive Model B</span><span class="lang-vn">Mô Hình Tương Tác B</span></span>
+          <h2 class="font-display text-2xl font-bold text-slate-900 mt-1">
+            <span class="lang-en block">✈️ Hanoi Flight Arrival Calculator</span>
+            <span class="lang-vn block text-emerald-700 text-lg">✈️ Máy Tính Giờ Hạ Cánh Chuyến Bay Từ Hà Nội</span>
+          </h2>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <button onclick="setFlightPreset('Hanoi ➔ Hue', '09:30', 1.2)" class="px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 text-xs font-extrabold">Hue (1.2 h)</button>
+          <button onclick="setFlightPreset('Hanoi ➔ Da Nang', '08:15', 1.5)" class="px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 text-xs font-extrabold">Da Nang (1.5 h)</button>
+          <button onclick="setFlightPreset('Hanoi ➔ Ho Chi Minh City', '11:40', 2.2)" class="px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 text-xs font-extrabold">HCMC (2.2 h)</button>
+          <button onclick="setFlightPreset('Hanoi ➔ Phu Quoc', '14:25', 2.5)" class="px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 text-xs font-extrabold">Phu Quoc (2.5 h)</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <!-- Interactive Controls -->
+        <div class="space-y-4">
+          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
+            <div>
+              <div class="flex justify-between text-xs font-extrabold text-slate-700 mb-1">
+                <span><span class="lang-en">Departure Hour:</span> <span class="lang-vn text-emerald-700">Giờ cất cánh:</span></span>
+                <span id="fb-dep-label" class="text-indigo-700 text-sm">09:30</span>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-[11px] font-bold text-slate-500"><span class="lang-en">Hour (05–20)</span><span class="lang-vn">Giờ (05–20)</span></label>
+                  <input id="fb-hour" type="range" min="5" max="20" step="1" value="9" oninput="updateFlightCalc()" class="w-full accent-blue-600 cursor-pointer">
+                </div>
+                <div>
+                  <label class="text-[11px] font-bold text-slate-500"><span class="lang-en">Minute (00–55)</span><span class="lang-vn">Phút (00–55)</span></label>
+                  <input id="fb-min" type="range" min="0" max="55" step="5" value="30" oninput="updateFlightCalc()" class="w-full accent-blue-600 cursor-pointer">
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-200">
+              <div class="flex justify-between text-xs font-extrabold text-slate-700 mb-1">
+                <span><span class="lang-en">Decimal Flight Duration:</span> <span class="lang-vn text-emerald-700">Thời gian bay thập phân:</span></span>
+                <span id="fb-dur-label" class="text-emerald-700 text-base">1.2 h</span>
+              </div>
+              <input id="fb-dur" type="range" min="0.5" max="4.5" step="0.1" value="1.2" oninput="updateFlightCalc()" class="w-full h-3 accent-emerald-600 cursor-pointer">
+              <div class="flex justify-between text-[11px] font-bold text-slate-400">
+                <span>0.5 h</span><span>1.5 h</span><span>2.5 h</span><span>3.5 h</span><span>4.5 h</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dual Bilingual Step Readout -->
+          <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4 space-y-1.5">
+            <p id="fb-live-en" class="lang-en text-sm font-bold text-emerald-950"></p>
+            <p id="fb-live-vn" class="lang-vn text-sm font-bold text-emerald-800"></p>
+          </div>
+        </div>
+
+        <!-- Visual Boarding Pass Card -->
+        <div class="rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-6 shadow-xl border-2 border-indigo-400/40 space-y-4">
+          <div class="flex items-center justify-between border-b border-white/15 pb-3">
+            <div>
+              <div class="text-[10px] font-extrabold uppercase tracking-widest text-amber-300"><span class="lang-en">NOI BAI DEPARTURE PASS</span><span class="lang-vn">THẺ LÊN MÁY BAY NỘI BÀI</span></div>
+              <div id="fb-route" class="font-display text-xl font-bold mt-0.5">Hanoi ➔ Hue</div>
+            </div>
+            <div class="text-3xl">✈️</div>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center items-center py-2">
+            <div class="bg-white/10 rounded-2xl p-3">
+              <div class="text-[10px] font-extrabold uppercase text-sky-300">
+                <span class="lang-en">Depart</span><span class="lang-vn block">Khởi hành</span>
+              </div>
+              <div id="fb-card-dep" class="font-display text-2xl sm:text-3xl font-bold mt-1">09:30</div>
+            </div>
+            <div class="px-1">
+              <div id="fb-card-dec" class="text-xs font-extrabold text-amber-300">+ 1.2 h</div>
+              <div class="text-xl my-0.5">➔</div>
+              <div id="fb-card-mix" class="text-xs font-extrabold text-emerald-300">1 h 12 min</div>
+            </div>
+            <div class="bg-emerald-500/25 border border-emerald-400/50 rounded-2xl p-3">
+              <div class="text-[10px] font-extrabold uppercase text-emerald-200">
+                <span class="lang-en">Arrive</span><span class="lang-vn block">Hạ cánh</span>
+              </div>
+              <div id="fb-card-arr" class="font-display text-2xl sm:text-3xl font-bold text-amber-300 mt-1">10:42</div>
+            </div>
+          </div>
+          <div class="text-center text-xs font-bold text-indigo-200 bg-white/5 rounded-xl py-2">
+            <span class="lang-en">Base-60 check: Minutes wrap into a new hour at 60!</span>
+            <span class="lang-vn block text-amber-200">Kiểm tra hệ 60: Đủ 60 phút sẽ cộng thêm 1 giờ mới!</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         8 VISUAL SVG BILINGUAL VOCABULARY CARDS (EN/VN AUDIO)
+         ========================================================= -->
+    <section class="space-y-4">
+      <div>
+        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold uppercase"><span class="lang-en">Bilingual Vocabulary</span><span class="lang-vn">Từ Vựng Song Ngữ</span></span>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900 mt-1">
+          <span class="lang-en block">📖 8 Key Time Words (Tap to Listen!)</span>
+          <span class="lang-vn block text-indigo-700 text-xl">📖 8 Từ Vựng Quan Trọng Về Thời Gian (Chạm Để Nghe!)</span>
+        </h2>
+      </div>
+      <div id="portal-vocab-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+    </section>
+
+    <!-- =========================================================
+         3-TIER DINNER TABLE TALKS (BILINGUAL EN / VN)
+         ========================================================= -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-lg border-2 border-amber-200 space-y-4">
+      <div>
+        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold uppercase"><span class="lang-en">Family Conversation</span><span class="lang-vn">Trò Chuyện Bữa Tối</span></span>
+        <h2 class="font-display text-2xl font-bold text-slate-900 mt-1">
+          <span class="lang-en block">🍽️ 3-Tier Dinner Table Talks</span>
+          <span class="lang-vn block text-amber-700 text-xl">🍽️ 3 Cấp Độ Câu Hỏi Bàn Ăn Cùng Con</span>
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="rounded-2xl bg-emerald-50 border-2 border-emerald-200 p-4 space-y-2">
+          <div class="inline-block px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-xs font-extrabold"><span class="lang-en">🟢 Tier 1 · Warm-Up</span><span class="lang-vn">🟢 Cấp 1 · Khởi Động</span></div>
+          <p class="lang-en text-sm font-bold text-slate-800">"If a cartoon episode lasts <strong>0.5 hours</strong>, why is it 30 minutes and NOT 50 minutes?"</p>
+          <p class="lang-vn text-sm font-bold text-emerald-900">"Nếu một tập phim hoạt hình dài <strong>0,5 giờ</strong>, tại sao lại là 30 phút chứ KHÔNG phải 50 phút?"</p>
+        </div>
+
+        <div class="rounded-2xl bg-amber-50 border-2 border-amber-200 p-4 space-y-2">
+          <div class="inline-block px-2.5 py-0.5 rounded-full bg-amber-500 text-white text-xs font-extrabold"><span class="lang-en">🟠 Tier 2 · Everyday Maths</span><span class="lang-vn">🟠 Cấp 2 · Toán Đời Sống</span></div>
+          <p class="lang-en text-sm font-bold text-slate-800">"Our car drive to the weekend park says <strong>1.4 hours</strong> on the map. How many hours and minutes is that?"</p>
+          <p class="lang-vn text-sm font-bold text-amber-900">"Bản đồ báo chuyến đi xe cuối tuần mất <strong>1,4 giờ</strong>. Vậy là mấy giờ mấy phút?"</p>
+        </div>
+
+        <div class="rounded-2xl bg-purple-50 border-2 border-purple-200 p-4 space-y-2">
+          <div class="inline-block px-2.5 py-0.5 rounded-full bg-purple-600 text-white text-xs font-extrabold"><span class="lang-en">🟣 Tier 3 · Deep Thinking</span><span class="lang-vn">🟣 Cấp 3 · Tư Duy Sâu</span></div>
+          <p class="lang-en text-sm font-bold text-slate-800">"Why is <strong>0.1 hour = 6 minutes</strong> such a powerful trick for converting tenths like 0.7 h or 0.9 h in your head?"</p>
+          <p class="lang-vn text-sm font-bold text-purple-900">"Vì sao quy tắc <strong>0,1 giờ = 6 phút</strong> lại giúp con tính nhẩm cực nhanh các số như 0,7 giờ hay 0,9 giờ?"</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         GAMIFIED 4-QUESTION HOME CHECK QUIZ WITH CONFETTI
+         ========================================================= -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-xl border-2 border-indigo-300 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase"><span class="lang-en">3-Minute Home Check</span><span class="lang-vn">Kiểm Tra Nhanh 3 Phút</span></span>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900 mt-1">
+            <span class="lang-en block">🎮 Interactive Family Quiz (4 Questions)</span>
+            <span class="lang-vn block text-indigo-700 text-xl">🎮 Trò Chơi Trắc Nghiệm Gia Đình (4 Câu Hỏi)</span>
+          </h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="quiz-score-pill" class="px-4 py-1.5 rounded-full bg-indigo-600 text-white font-display font-bold text-base shadow"><span class="lang-en">Score: 0 / 4</span><span class="lang-vn">Điểm: 0 / 4</span></span>
+          <button onclick="resetQuiz()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-extrabold"><span class="lang-en">↺ Retry</span><span class="lang-vn">↺ Làm lại</span></button>
+        </div>
+      </div>
+
+      <div id="quiz-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+      <div id="quiz-win-banner" class="hidden rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-5 text-center shadow-lg">
+        <div class="font-display text-2xl sm:text-3xl font-bold">
+          <span class="lang-en block">🎉 Brilliant Base-60 Master! 4 / 4 Correct!</span>
+          <span class="lang-vn block text-amber-200 text-xl mt-1">🎉 Xuất Sắc! Bậc Thầy Hệ Cơ Số 60 — Đúng 4 / 4 Câu!</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // =========================================================
+    // STICKY BILINGUAL TOGGLE (cancels speech on switch!)
+    // =========================================================
+    function setLangMode(mode) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.body.classList.remove('mode-both', 'mode-en', 'mode-vn');
+      document.body.classList.add(`mode-${mode}`);
+      ['both', 'en', 'vn'].forEach(m => {
+        const btn = document.getElementById(`btn-${m}`);
+        if (m === mode) {
+          btn.className = 'px-3 py-1 rounded-full text-xs font-extrabold bg-indigo-600 text-white shadow-sm transition';
+        } else {
+          btn.className = 'px-3 py-1 rounded-full text-xs font-extrabold text-slate-700 hover:bg-white transition';
+        }
+      });
+    }
+
+    function speakText(text, lang) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    function launchConfetti(count = 45) {
+      const cols = ['#2563eb', '#16a34a', '#f59e0b', '#e11d48', '#9333ea', '#06b6d4'];
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'confetti-piece';
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.backgroundColor = cols[Math.floor(Math.random() * cols.length)];
+        p.style.animationDelay = (Math.random() * 0.4) + 's';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 2900);
+      }
+    }
+
+    // =========================================================
+    // MODEL A: BASE-60 CLOCK & TENTH SLICER
+    // =========================================================
+    function polar(cx, cy, r, deg) {
+      const rad = (deg - 90) * Math.PI / 180;
+      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+
+    function sectorPath(cx, cy, r, startDeg, endDeg) {
+      if (endDeg - startDeg >= 359.9) {
+        return `M ${cx} ${cy - r} A ${r} ${r} 0 1 1 ${cx - 0.01} ${cy - r} Z`;
+      }
+      const s = polar(cx, cy, r, startDeg);
+      const e = polar(cx, cy, r, endDeg);
+      const large = (endDeg - startDeg) > 180 ? 1 : 0;
+      return `M ${cx} ${cy} L ${s.x.toFixed(1)} ${s.y.toFixed(1)} A ${r} ${r} 0 ${large} 1 ${e.x.toFixed(1)} ${e.y.toFixed(1)} Z`;
+    }
+
+    function setModelA(val) {
+      document.getElementById('model-a-slider').value = val;
+      updateModelA(val);
+    }
+
+    function updateModelA(rawVal) {
+      const val = Math.round(parseFloat(rawVal) * 100) / 100;
+      const wholeH = Math.floor(val + 1e-9);
+      const dec = Math.round((val - wholeH) * 100) / 100;
+      const mins = Math.round(dec * 60);
+
+      document.getElementById('ma-val').textContent = `${val.toFixed(2)} h`;
+      document.getElementById('ma-whole').textContent = `${wholeH} h`;
+      document.getElementById('ma-mins').textContent = `${mins} min`;
+      document.getElementById('ma-mixed').textContent = wholeH > 0 ? `${wholeH} h ${mins} m` : `${mins} min`;
+
+      const decStr = dec.toFixed(2).replace(/^0\./, '').replace(/0$/, '');
+      const trapMin = dec === 0 ? 0 : (decStr.length === 1 ? parseInt(decStr, 10) * 10 : parseInt(decStr, 10));
+
+      if (dec === 0) {
+        document.getElementById('ma-live-en').textContent = `Exact whole hours: ${wholeH}.0 h = ${wholeH} hours 0 minutes (${wholeH * 60} total minutes).`;
+        document.getElementById('ma-live-vn').textContent = `Số giờ chẵn: ${wholeH},0 giờ = ${wholeH} giờ 0 phút (tổng ${wholeH * 60} phút).`;
+      } else {
+        document.getElementById('ma-live-en').textContent = `Base-60 Check: ${val.toFixed(2)} h = ${wholeH} h + (${dec.toFixed(2)} × 60) = ${wholeH} h ${mins} min — NOT ${wholeH} h ${trapMin} min!`;
+        document.getElementById('ma-live-vn').textContent = `Kiểm tra hệ 60: ${val.toFixed(2).replace('.', ',')} giờ = ${wholeH} giờ + (${dec.toFixed(2).replace('.', ',')} × 60) = ${wholeH} giờ ${mins} phút — KHÔNG phải ${wholeH} giờ ${trapMin} phút!`;
+      }
+
+      // Draw SVG clock
+      const cx = 125, cy = 125, r = 92;
+      let svg = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#ffffff" stroke="#1e293b" stroke-width="5"/>`;
+      if (mins > 0) {
+        svg += `<path d="${sectorPath(cx, cy, r - 3, 0, (mins / 60) * 360)}" fill="#10b981" opacity="0.38"/>`;
+      }
+      for (let i = 0; i < 10; i++) {
+        const deg = i * 36;
+        const p = polar(cx, cy, r, deg);
+        svg += `<line x1="${cx}" y1="${cy}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="4,4"/>`;
+        const lbl = polar(cx, cy, r + 16, deg);
+        svg += `<text x="${lbl.x.toFixed(1)}" y="${(lbl.y + 4).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="800" fill="#334155">${i === 0 ? 60 : i * 6}m</text>`;
+      }
+      const hand = polar(cx, cy, r - 14, (mins / 60) * 360);
+      svg += `<line x1="${cx}" y1="${cy}" x2="${hand.x.toFixed(1)}" y2="${hand.y.toFixed(1)}" stroke="#e11d48" stroke-width="5" stroke-linecap="round"/>`;
+      svg += `<circle cx="${cx}" cy="${cy}" r="6" fill="#0f172a"/>`;
+      svg += `<rect x="74" y="146" width="102" height="26" rx="8" fill="#1e1b4b" opacity="0.9"/>`;
+      svg += `<text x="125" y="164" text-anchor="middle" font-size="12.5" font-weight="800" fill="#ffffff"><tspan class="lang-en">${mins} min</tspan><tspan class="lang-vn">${mins} phút</tspan></text>`;
+      document.getElementById('portal-clock-svg').innerHTML = svg;
+
+      // 10-slice bar
+      let bar = '';
+      for (let i = 0; i < 10; i++) {
+        const sM = i * 6, eM = (i + 1) * 6;
+        let cls = 'bg-slate-100 border-slate-200 text-slate-400';
+        let txt = '6m';
+        if (mins >= eM) cls = 'bg-emerald-500 border-emerald-700 text-white';
+        else if (mins > sM) { cls = 'bg-amber-400 border-amber-600 text-slate-950'; txt = `${mins - sM}m`; }
+        bar += `<div class="rounded-lg py-1.5 text-center border text-[11px] font-extrabold ${cls}">${txt}</div>`;
+      }
+      document.getElementById('ma-bar').innerHTML = bar;
+    }
+
+    // =========================================================
+    // MODEL B: HANOI FLIGHT ARRIVAL CALCULATOR
+    // =========================================================
+    function setFlightPreset(route, depStr, dur) {
+      const [h, m] = depStr.split(':').map(Number);
+      document.getElementById('fb-route').textContent = route;
+      document.getElementById('fb-hour').value = h;
+      document.getElementById('fb-min').value = m;
+      document.getElementById('fb-dur').value = dur;
+      updateFlightCalc();
+    }
+
+    function pad2(n) { return String(n).padStart(2, '0'); }
+
+    function updateFlightCalc() {
+      const depH = parseInt(document.getElementById('fb-hour').value, 10);
+      const depM = parseInt(document.getElementById('fb-min').value, 10);
+      const dur = Math.round(parseFloat(document.getElementById('fb-dur').value) * 10) / 10;
+
+      const durH = Math.floor(dur + 1e-9);
+      const dec = Math.round((dur - durH) * 10) / 10;
+      const durM = Math.round(dec * 60);
+
+      const totalDepMins = depH * 60 + depM;
+      const totalArrMins = (totalDepMins + durH * 60 + durM) % (24 * 60);
+      const arrH = Math.floor(totalArrMins / 60);
+      const arrM = totalArrMins % 60;
+
+      const depFmt = `${pad2(depH)}:${pad2(depM)}`;
+      const arrFmt = `${pad2(arrH)}:${pad2(arrM)}`;
+
+      document.getElementById('fb-dep-label').textContent = depFmt;
+      document.getElementById('fb-dur-label').textContent = `${dur.toFixed(1)} h`;
+      document.getElementById('fb-card-dep').textContent = depFmt;
+      document.getElementById('fb-card-dec').textContent = `+ ${dur.toFixed(1)} h`;
+      document.getElementById('fb-card-mix').textContent = `${durH} h ${durM} min`;
+      document.getElementById('fb-card-arr').textContent = arrFmt;
+
+      document.getElementById('fb-live-en').textContent =
+        `Step 1: ${dur.toFixed(1)} h = ${durH} h + (${dec.toFixed(1)} × 60) = ${durH} h ${durM} min. Step 2: ${depFmt} + ${durH} h ${durM} min = ${arrFmt}.`;
+      document.getElementById('fb-live-vn').textContent =
+        `Bước 1: ${dur.toFixed(1).replace('.', ',')} giờ = ${durH} giờ + (${dec.toFixed(1).replace('.', ',')} × 60) = ${durH} giờ ${durM} phút. Bước 2: ${depFmt} + ${durH} giờ ${durM} phút = ${arrFmt}.`;
+    }
+
+    // =========================================================
+    // 8 VISUAL SVG BILINGUAL VOCABULARY CARDS
+    // =========================================================
+    const portalVocab = [
+      {
+        en: 'decimal time', vn: 'thời gian thập phân',
+        defEn: 'Time written with a decimal point (e.g. 2.4 h).',
+        defVn: 'Thời gian viết bằng số thập phân (vd: 2,4 giờ).',
+        svg: `<svg viewBox="0 0 180 62" class="w-40 h-14 mx-auto"><rect x="10" y="10" width="66" height="40" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="43" y="36" text-anchor="middle" font-size="16" font-weight="800" fill="#1e3a8a">2.4 h</text><text x="90" y="36" text-anchor="middle" font-size="16" font-weight="800">➔</text><rect x="104" y="10" width="68" height="40" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/><text x="138" y="35" text-anchor="middle" font-size="13" font-weight="800" fill="#14532d">2h 24m</text></svg>`
+      },
+      {
+        en: 'mixed units', vn: 'đơn vị hỗn hợp',
+        defEn: 'Two time units used together (hours and minutes).',
+        defVn: 'Ghép hai đơn vị thời gian lại (giờ và phút).',
+        svg: `<svg viewBox="0 0 180 62" class="w-40 h-14 mx-auto"><rect x="8" y="12" width="70" height="36" rx="8" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/><text x="43" y="35" text-anchor="middle" font-size="14" font-weight="800" fill="#312e81">1 hour</text><text x="90" y="36" text-anchor="middle" font-size="16" font-weight="800">+</text><rect x="102" y="12" width="70" height="36" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/><text x="137" y="35" text-anchor="middle" font-size="14" font-weight="800" fill="#78350f">45 min</text></svg>`
+      },
+      {
+        en: 'base-60', vn: 'hệ cơ số 60',
+        defEn: 'Clocks count in 60s: 1 hour = 60 minutes.',
+        defVn: 'Đồng hồ đếm theo nhóm 60: 1 giờ = 60 phút.',
+        svg: `<svg viewBox="0 0 180 62" class="w-40 h-14 mx-auto"><circle cx="42" cy="31" r="24" fill="#ffe4e6" stroke="#e11d48" stroke-width="2.5"/><text x="42" y="36" text-anchor="middle" font-size="12" font-weight="800" fill="#881337">60m</text><text x="124" y="28" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">1 h = 60 min</text><text x="124" y="45" text-anchor="middle" font-size="11" font-weight="800" fill="#e11d48">NOT 100!</text></svg>`
+      },
+      {
+        en: 'tenth of an hour', vn: 'một phần mười giờ',
+        defEn: '0.1 hour equals 6 minutes (60 ÷ 10 = 6).',
+        defVn: '0,1 giờ bằng 6 phút (60 ÷ 10 = 6).',
+        svg: `<svg viewBox="0 0 180 62" class="w-40 h-14 mx-auto"><rect x="10" y="18" width="18" height="28" fill="#f59e0b" stroke="#0f172a" stroke-width="1.5"/><rect x="28" y="18" width="142" height="28" fill="#fef3c7" stroke="#0f172a" stroke-width="1.5"/><text x="90" y="13" text-anchor="middle" font-size="11" font-weight="800" fill="#92400e">0.1 h = 6 min</text><text x="98" y="36" text-anchor="middle" font-size="12" font-weight="800" fill="#78350f">10 × 6m = 60m</text></svg>`
+      },
+      {
+        en: 'quarter of an hour', vn: 'một phần tư giờ',
+        defEn: '0.25 hour = 15 minutes; 0.75 hour = 45 minutes.',
+        defVn: '0,25 giờ = 15 phút; 0,75 giờ = 45 phút.',
+        svg: `<svg viewBox="0 0 180 62" class="w-40 h-14 mx-auto"><circle cx="38" cy="31" r="24" fill="#ffffff" stroke="#7c3aed" stroke-width="2.5"/><path d="M38,31 L38,7 A24,24 0 0,1 62,31 Z" fill="#a855f7" opacity="0.55"/><text x="120" y="28" text-anchor="middle" font-size="13" font-weight="800" fill="#581c87">0.25 h = 15m</text><text x="120" y="45" text-anchor="middle" font-size="12" font-weight="700" fill="#6b21a8">0.75 h = 45m</text></svg>`
+      },
+      {
+        en: 'half an hour', vn: 'nửa giờ',
+        defEn: '0.5 hour = 30 minutes (half of 60, never 50!).',
+        defVn: '0,5 giờ = 30 phút (một nửa của 60, không phải 50!).',
+        svg: `<svg viewBox="0 0 180 62" class="w-40 h-14 mx-auto"><circle cx="38" cy="31" r="24" fill="#ffffff" stroke="#059669" stroke-width="2.5"/><path d="M38,31 L38,7 A24,24 0 0,1 38,55 Z" fill="#10b981" opacity="0.45"/><text x="120" y="28" text-anchor="middle" font-size="13" font-weight="800" fill="#065f46">0.5 h = 30m</text><text x="120" y="45" text-anchor="middle" font-size="11" font-weight="800" fill="#dc2626">≠ 50 min</text></svg>`
+      },
+      {
+        en: 'convert', vn: 'đổi đơn vị',
+        defEn: 'Change time into a different form with the same length.',
+        defVn: 'Đổi dạng biểu diễn thời gian nhưng giữ nguyên độ dài.',
+        svg: `<svg viewBox="0 0 180 62" class="w-40 h-14 mx-auto"><text x="90" y="28" text-anchor="middle" font-size="14" font-weight="800" fill="#86198f">1.5 h ⇄ 1 h 30 m</text><text x="90" y="47" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b">Multiply decimal × 60</text></svg>`
+      },
+      {
+        en: 'time interval', vn: 'khoảng thời gian',
+        defEn: 'The total duration from start time to arrival time.',
+        defVn: 'Tổng thời lượng từ lúc bắt đầu đến lúc kết thúc.',
+        svg: `<svg viewBox="0 0 180 62" class="w-40 h-14 mx-auto"><line x1="20" y1="36" x2="160" y2="36" stroke="#0f766e" stroke-width="3"/><circle cx="20" cy="36" r="4" fill="#0f766e"/><circle cx="160" cy="36" r="4" fill="#0f766e"/><text x="90" y="22" text-anchor="middle" font-size="12" font-weight="800" fill="#0d9488">+ 1.2 h (1h 12m)</text><text x="20" y="54" text-anchor="middle" font-size="10" font-weight="800">09:30</text><text x="160" y="54" text-anchor="middle" font-size="10" font-weight="800">10:42</text></svg>`
+      }
+    ];
+
+    function renderPortalVocab() {
+      document.getElementById('portal-vocab-grid').innerHTML = portalVocab.map(v => `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border-2 border-indigo-100 flex flex-col justify-between gap-3">
+          <div class="bg-slate-50 rounded-xl p-2 border border-slate-100">${v.svg}</div>
+          <div>
+            <div class="font-display text-lg font-bold text-slate-900 leading-tight">${v.en}</div>
+            <div class="font-display text-base font-bold text-rose-600">${v.vn}</div>
+            <p class="lang-en text-xs font-medium text-slate-600 mt-1">${v.defEn}</p>
+            <p class="lang-vn text-xs font-medium text-slate-600 mt-0.5">${v.defVn}</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="speakText('${v.en}', 'en-GB')" class="flex-1 py-1.5 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-900 text-xs font-extrabold">🔊 EN</button>
+            <button onclick="speakText('${v.vn}', 'vi-VN')" class="flex-1 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-extrabold">🔊 VN</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // =========================================================
+    // GAMIFIED 4-QUESTION HOME CHECK QUIZ (RESERVED NUMBERS)
+    // =========================================================
+    const quizData = [
+      {
+        qEn: '1. Convert 0.3 hours into minutes.',
+        qVn: '1. Đổi 0,3 giờ sang phút.',
+        options: [
+          { en: '30 minutes', vn: '30 phút' },
+          { en: '18 minutes', vn: '18 phút' },
+          { en: '3 minutes', vn: '3 phút' },
+          { en: '15 minutes', vn: '15 phút' }
+        ],
+        correct: 1,
+        fbEn: 'Correct! Each 0.1 h = 6 min, so 0.3 h = 3 × 6 = 18 minutes.',
+        fbVn: 'Chính xác! Mỗi 0,1 giờ = 6 phút, nên 0,3 giờ = 3 × 6 = 18 phút.'
+      },
+      {
+        qEn: '2. Convert 2.75 hours into hours and minutes.',
+        qVn: '2. Đổi 2,75 giờ sang giờ và phút.',
+        options: [
+          { en: '2 h 75 min', vn: '2 giờ 75 phút' },
+          { en: '3 h 15 min', vn: '3 giờ 15 phút' },
+          { en: '2 h 45 min', vn: '2 giờ 45 phút' },
+          { en: '2 h 30 min', vn: '2 giờ 30 phút' }
+        ],
+        correct: 2,
+        fbEn: 'Spot on! Keep 2 h, and 0.75 h = ¾ of 60 min = 45 minutes.',
+        fbVn: 'Chuẩn luôn! Giữ nguyên 2 giờ, và 0,75 giờ = ¾ của 60 phút = 45 phút.'
+      },
+      {
+        qEn: '3. A car trip takes 1.4 hours. How long is that?',
+        qVn: '3. Một chuyến đi ô tô mất 1,4 giờ. Đó là bao lâu?',
+        options: [
+          { en: '1 h 40 min', vn: '1 giờ 40 phút' },
+          { en: '1 h 4 min', vn: '1 giờ 4 phút' },
+          { en: '1 h 24 min', vn: '1 giờ 24 phút' },
+          { en: '1 h 15 min', vn: '1 giờ 15 phút' }
+        ],
+        correct: 2,
+        fbEn: 'Well done! Keep 1 h, and 0.4 × 60 = 4 × 6 = 24 minutes.',
+        fbVn: 'Giỏi lắm! Giữ nguyên 1 giờ, và 0,4 × 60 = 4 × 6 = 24 phút.'
+      },
+      {
+        qEn: '4. Spot the Error: Nam says "3.5 hours = 3 hours 50 minutes". What is the TRUE time?',
+        qVn: '4. Tìm lỗi sai: Nam nói "3,5 giờ = 3 giờ 50 phút". Thời gian ĐÚNG là bao nhiêu?',
+        options: [
+          { en: '3 h 30 min', vn: '3 giờ 30 phút' },
+          { en: '3 h 50 min', vn: '3 giờ 50 phút' },
+          { en: '3 h 5 min', vn: '3 giờ 5 phút' },
+          { en: '3 h 45 min', vn: '3 giờ 45 phút' }
+        ],
+        correct: 0,
+        fbEn: 'Brilliant! Clocks use base-60, so 0.5 h = half of 60 = 30 min ➔ 3 h 30 min!',
+        fbVn: 'Tuyệt vời! Đồng hồ dùng hệ 60 nên 0,5 giờ = nửa của 60 = 30 phút ➔ 3 giờ 30 phút!'
+      }
+    ];
+
+    let quizAnswered = [false, false, false, false];
+    let quizCorrect = [false, false, false, false];
+
+    function renderQuiz() {
+      document.getElementById('quiz-container').innerHTML = quizData.map((q, qi) => `
+        <div id="q-card-${qi}" class="rounded-2xl bg-slate-50 border-2 border-slate-200 p-4 space-y-3">
+          <div>
+            <p class="lang-en font-display text-lg font-bold text-slate-900">${q.qEn}</p>
+            <p class="lang-vn text-sm font-bold text-indigo-700 mt-0.5">${q.qVn}</p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            ${q.options.map((opt, oi) => `
+              <button id="q-${qi}-opt-${oi}" onclick="answerQuiz(${qi}, ${oi})" class="py-2.5 px-3 rounded-xl bg-white hover:bg-indigo-50 border-2 border-slate-200 text-sm font-extrabold text-slate-800 transition">
+                <span class="lang-en block">${opt.en}</span>
+                <span class="lang-vn block text-xs font-bold opacity-85">${opt.vn}</span>
+              </button>
+            `).join('')}
+          </div>
+          <div id="q-fb-${qi}" class="hidden rounded-xl p-3 text-xs font-bold"></div>
+        </div>
+      `).join('');
+    }
+
+    function answerQuiz(qi, oi) {
+      if (quizAnswered[qi]) return;
+      quizAnswered[qi] = true;
+      const q = quizData[qi];
+      const isRight = oi === q.correct;
+      quizCorrect[qi] = isRight;
+
+      const pickedBtn = document.getElementById(`q-${qi}-opt-${oi}`);
+      const rightBtn = document.getElementById(`q-${qi}-opt-${q.correct}`);
+      const fb = document.getElementById(`q-fb-${qi}`);
+
+      if (isRight) {
+        pickedBtn.className = 'py-2.5 px-3 rounded-xl bg-emerald-600 border-2 border-emerald-700 text-sm font-extrabold text-white shadow';
+        fb.className = 'rounded-xl p-3 text-xs font-bold bg-emerald-100 text-emerald-950 border border-emerald-300';
+        fb.innerHTML = `<span class="lang-en block">✅ ${q.fbEn}</span><span class="lang-vn block mt-0.5">✅ ${q.fbVn}</span>`;
+      } else {
+        pickedBtn.className = 'py-2.5 px-3 rounded-xl bg-rose-600 border-2 border-rose-700 text-sm font-extrabold text-white';
+        rightBtn.className = 'py-2.5 px-3 rounded-xl bg-emerald-600 border-2 border-emerald-700 text-sm font-extrabold text-white';
+        fb.className = 'rounded-xl p-3 text-xs font-bold bg-rose-100 text-rose-950 border border-rose-300';
+        fb.innerHTML = `<span class="lang-en block">❌ Not quite! ${q.fbEn}</span><span class="lang-vn block mt-0.5">❌ Chưa đúng! ${q.fbVn}</span>`;
+      }
+
+      const score = quizCorrect.filter(Boolean).length;
+      document.getElementById('quiz-score-pill').innerHTML = `<span class="lang-en">Score: ${score} / 4</span><span class="lang-vn">Điểm: ${score} / 4</span>`;
+      if (score === 4) {
+        document.getElementById('quiz-win-banner').classList.remove('hidden');
+        launchConfetti(60);
+      }
+    }
+
+    function resetQuiz() {
+      quizAnswered = [false, false, false, false];
+      quizCorrect = [false, false, false, false];
+      document.getElementById('quiz-score-pill').innerHTML = `<span class="lang-en">Score: 0 / 4</span><span class="lang-vn">Điểm: 0 / 4</span>`;
+      document.getElementById('quiz-win-banner').classList.add('hidden');
+      renderQuiz();
+    }
+
+    // INIT
+    updateModelA(2.4);
+    updateFlightCalc();
+    renderPortalVocab();
+    renderQuiz();
+  </script>
+</body>
+</html>

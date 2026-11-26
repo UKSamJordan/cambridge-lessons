@@ -1,0 +1,2059 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 5 Science — Week 18 Lesson 1: Unit 5 Forces Mastery Clinic</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-display: 'Fredoka', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+  }
+  body {
+    font-family: var(--font-body);
+    background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 50%, #f0fdfa 100%);
+    color: #0f172a;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, .font-display { font-family: var(--font-display); }
+
+  /* Auto-hiding Fixed Top Bar */
+  #topHeader {
+    transition: transform 0.3s ease-in-out;
+    z-index: 50;
+  }
+  #topHeader.header-hidden {
+    transform: translateY(-100%);
+  }
+
+  /* 3D Flip Cards for Station 1 Flashback 3 */
+  .flip-card {
+    perspective: 1200px;
+    cursor: pointer;
+  }
+  .flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    transform-style: preserve-3d;
+  }
+  .flip-card.flipped .flip-inner {
+    transform: rotateY(180deg);
+  }
+  .flip-front, .flip-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 1.5rem;
+  }
+  .flip-back {
+    transform: rotateY(180deg);
+  }
+
+  /* Gentle bobbing animation for floating objects */
+  @keyframes gentleBob {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+  }
+  .animate-bob {
+    animation: gentleBob 2.4s ease-in-out infinite;
+  }
+
+  /* Organic water particle drift */
+  @keyframes particleDrift {
+    0%, 100% { transform: translate(0px, 0px); }
+    33% { transform: translate(4px, -3px); }
+    66% { transform: translate(-3px, 3px); }
+  }
+  .water-dot {
+    animation: particleDrift 3.2s ease-in-out infinite;
+  }
+
+  /* Confetti Canvas */
+  #confettiCanvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 90;
+  }
+
+  /* Full Screen I Do mode */
+  .fullscreen-ido {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 65 !important;
+    background: #f8fafc !important;
+    overflow-y: auto !important;
+    padding: 1.5rem !important;
+    border-radius: 0 !important;
+  }
+
+  /* Station tab active styling */
+  .tab-btn {
+    transition: all 0.2s ease;
+  }
+  .tab-btn.active {
+    background: #0f172a;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+    transform: translateY(-1px);
+  }
+</style>
+</head>
+<body class="min-h-screen pb-14">
+
+<canvas id="confettiCanvas"></canvas>
+
+<!-- ========================================================================= -->
+<!-- AUTO-HIDING FIXED TOP HEADER                                              -->
+<!-- ========================================================================= -->
+<header id="topHeader" class="fixed top-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md text-white shadow-xl border-b-4 border-sky-400">
+  <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-3 min-w-0">
+      <div class="w-10 h-10 rounded-xl bg-sky-400 text-slate-950 flex items-center justify-center font-display font-bold text-xl shrink-0 shadow">
+        ⚖️
+      </div>
+      <div class="min-w-0">
+        <div class="text-[11px] uppercase tracking-wider text-sky-300 font-bold leading-tight">
+          Grade 5 Science · Stage 6 (0097) · Week 18 Lesson 1 · Unit 5 Forces Clinic
+        </div>
+        <div class="font-display text-base md:text-lg font-bold truncate">
+          How can we avoid every Forces exam trap? · Master mass, weight, arrows &amp; floating.
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2">
+      <!-- Live Synced Team Scoreboard -->
+      <div class="flex items-center bg-slate-800 rounded-xl px-2.5 py-1 border border-slate-700 gap-2 text-xs font-extrabold">
+        <button onclick="addScore('red', 1)" class="flex items-center gap-1 bg-rose-600 hover:bg-rose-500 px-2 py-1 rounded-lg transition" title="Add point to Team Red">
+          <span>🔴 Red</span>
+          <span id="hdrRed" class="bg-slate-950/50 px-1.5 rounded text-sm">0</span>
+        </button>
+        <button onclick="addScore('blue', 1)" class="flex items-center gap-1 bg-blue-600 hover:bg-blue-500 px-2 py-1 rounded-lg transition" title="Add point to Team Blue">
+          <span>🔵 Blue</span>
+          <span id="hdrBlue" class="bg-slate-950/50 px-1.5 rounded text-sm">0</span>
+        </button>
+      </div>
+
+      <!-- Classroom Utility Buttons -->
+      <button onclick="toggleWhiteboard()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs px-3 py-1.5 rounded-xl transition shadow" title="David's Board (W)">
+        ✏️ Board (W)
+      </button>
+      <button onclick="toggleTeacherDrawer()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs px-3 py-1.5 rounded-xl transition shadow" title="Teacher Prompts (T)">
+        📋 Prompts (T)
+      </button>
+      <button id="muteBtn" onclick="toggleMute()" class="bg-slate-700 hover:bg-slate-600 text-white font-extrabold text-xs px-3 py-1.5 rounded-xl transition" title="Mute Audio (M)">
+        🔊 Sound (M)
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ========================================================================= -->
+<!-- MAIN CONTAINER (pt-24 below fixed header)                                 -->
+<!-- ========================================================================= -->
+<main class="max-w-7xl mx-auto px-4 pt-24 space-y-6">
+
+  <!-- FLEX-WRAP STATION NAVIGATION BAR -->
+  <nav aria-label="Lesson Stations" class="bg-white/90 backdrop-blur rounded-2xl p-2 shadow-md border border-slate-200 flex flex-wrap gap-2 justify-center">
+    <button onclick="goStation(0)" id="tab-0" class="tab-btn active px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200">
+      0. LO &amp; Criteria
+    </button>
+    <button onclick="goStation(1)" id="tab-1" class="tab-btn px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200">
+      1. Flashback 3
+    </button>
+    <button onclick="goStation(2)" id="tab-2" class="tab-btn px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200">
+      2. Vocabulary Modal
+    </button>
+    <button onclick="goStation(3)" id="tab-3" class="tab-btn px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200">
+      3. Visual I Do (Exam Traps)
+    </button>
+    <button onclick="goStation(4)" id="tab-4" class="tab-btn px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200">
+      4. Dual Forces Lab &amp; Graph
+    </button>
+    <button onclick="goStation(5)" id="tab-5" class="tab-btn px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200">
+      5. SC Board Check
+    </button>
+    <button onclick="goStation(6)" id="tab-6" class="tab-btn px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200">
+      6. Quickfire (8 Qs)
+    </button>
+  </nav>
+
+  <!-- ======================================================================= -->
+  <!-- STATION 0: LEARNING OBJECTIVE & SUCCESS CRITERIA                        -->
+  <!-- [SoL: Cognitive Load Management] [SoL: Metacognition]                   -->
+  <!-- ======================================================================= -->
+  <section id="station-0" class="station-panel">
+    <div class="space-y-6">
+      <!-- Clean Hero LO Card -->
+      <div class="bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-900 text-white rounded-3xl p-8 md:p-10 shadow-2xl border-b-8 border-sky-400">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <span class="bg-sky-400 text-slate-950 font-extrabold text-xs uppercase tracking-wider px-4 py-1.5 rounded-full">
+            Unit 5 Forces Mastery Clinic · Topics 5.1–5.3
+          </span>
+          <span class="bg-white/10 text-sky-200 font-bold text-xs px-3 py-1 rounded-full">
+            Cambridge Codes: 6Pf.01 · 6Pf.02 · 6Pf.03 · 6Pf.05
+          </span>
+        </div>
+        <div class="text-sky-300 font-bold uppercase tracking-widest text-sm mb-2">Learning Objective</div>
+        <h1 class="font-display text-4xl md:text-6xl font-bold leading-tight">
+          Master mass, weight, force diagrams and floating.
+        </h1>
+      </div>
+
+      <!-- 3 Explicit "I can..." Success Criteria -->
+      <div class="bg-white rounded-3xl p-6 md:p-7 shadow-lg border-2 border-indigo-100">
+        <h2 class="font-display text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <span>🎯</span> Today&rsquo;s 3 &ldquo;I can&hellip;&rdquo; Success Criteria
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-4">
+            <div class="text-xs font-extrabold uppercase text-indigo-700 mb-1">Criterion 1 · 6Pf.01 &amp; 6Pf.02</div>
+            <p class="font-bold text-slate-900 text-base leading-snug">
+              I can distinguish mass (kg, constant everywhere) from weight (N, changes with gravity) using Earth and Moon examples.
+            </p>
+          </div>
+          <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4">
+            <div class="text-xs font-extrabold uppercase text-sky-700 mb-1">Criterion 2 · 6Pf.03</div>
+            <p class="font-bold text-slate-900 text-base leading-snug">
+              I can draw and interpret accurate force diagrams showing named, sized and opposing force arrows.
+            </p>
+          </div>
+          <div class="bg-teal-50 border-2 border-teal-200 rounded-2xl p-4">
+            <div class="text-xs font-extrabold uppercase text-teal-700 mb-1">Criterion 3 · 6Pf.05</div>
+            <p class="font-bold text-slate-900 text-base leading-snug">
+              I can explain how changing an object&rsquo;s shape increases displaced water and upthrust so it floats.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bite-Sized Must / Should / Could Tiers -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-emerald-50 border-2 border-emerald-400 rounded-3xl p-6 shadow-md">
+          <div class="inline-block bg-emerald-600 text-white font-extrabold text-xs uppercase px-3 py-1 rounded-full mb-3">
+            MUST · Level 1
+          </div>
+          <p class="font-display text-2xl font-bold text-emerald-950 leading-snug">
+            State units for mass (kg) and weight (N) and name key forces.
+          </p>
+        </div>
+        <div class="bg-amber-50 border-2 border-amber-400 rounded-3xl p-6 shadow-md">
+          <div class="inline-block bg-amber-500 text-slate-950 font-extrabold text-xs uppercase px-3 py-1 rounded-full mb-3">
+            SHOULD · Level 2
+          </div>
+          <p class="font-display text-2xl font-bold text-amber-950 leading-snug">
+            Draw balanced or unbalanced arrows and explain Moon weight.
+          </p>
+        </div>
+        <div class="bg-purple-50 border-2 border-purple-400 rounded-3xl p-6 shadow-md">
+          <div class="inline-block bg-purple-600 text-white font-extrabold text-xs uppercase px-3 py-1 rounded-full mb-3">
+            COULD · Level 3
+          </div>
+          <p class="font-display text-2xl font-bold text-purple-950 leading-snug">
+            Interpret floating scatter graphs and spot anomalous results.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================= -->
+  <!-- STATION 1: SPACED FLASHBACK 3 (UNITS 1.1, 2.4, 2.2)                     -->
+  <!-- [SoL: Retrieval Practice] [SoL: Spaced Practice] [SoL: Interleaving]    -->
+  <!-- ======================================================================= -->
+  <section id="station-1" class="station-panel hidden">
+    <div class="space-y-6">
+      <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase px-3 py-1 rounded-full">
+            Spaced Retrieval · 3 Earlier Units
+          </span>
+          <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mt-1">
+            Flashback 3: Mini-Whiteboard Warm-Up
+          </h2>
+          <p class="text-slate-600 font-medium">
+            Write all 3 answers on your mini-whiteboard before clicking each card to flip and check!
+          </p>
+        </div>
+        <button onclick="resetFlashbacks()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition">
+          🔄 Reset All Cards
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Card 1: Unit 1.1 Circulatory System (6Bs.01) -->
+        <div class="flip-card h-[360px]" onclick="flipCard(this)">
+          <div class="flip-inner">
+            <div class="flip-front bg-gradient-to-br from-rose-500 to-red-600 text-white p-6 shadow-xl flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <span class="bg-white/20 text-xs font-extrabold uppercase px-3 py-1 rounded-full">Unit 1.1 · 6Bs.01</span>
+                <span class="text-3xl">❤️</span>
+              </div>
+              <div class="text-center my-auto space-y-3">
+                <div class="text-6xl font-display font-bold">1</div>
+                <p class="text-xl font-bold leading-snug">
+                  Name the job of the <u>heart</u>, <u>arteries</u> and <u>veins</u> in the circulatory system.
+                </p>
+              </div>
+              <div class="text-center text-xs font-bold uppercase tracking-wider bg-black/20 py-2 rounded-xl">
+                Tap Card to Reveal Answer
+              </div>
+            </div>
+            <div class="flip-back bg-white border-4 border-rose-500 p-6 shadow-xl flex flex-col justify-between">
+              <div class="text-xs font-extrabold uppercase text-rose-600">Unit 1.1 Answer · Circulatory System</div>
+              <div class="space-y-2.5 text-slate-800 font-bold text-base">
+                <p>❤️ <span class="text-rose-700">Heart:</span> Muscular organ that pumps blood around the body.</p>
+                <p>🔴 <span class="text-rose-700">Arteries:</span> Carry blood <u>away</u> from the heart.</p>
+                <p>🔵 <span class="text-blue-700">Veins:</span> Carry blood <u>back</u> to the heart.</p>
+              </div>
+              <div class="text-xs font-bold text-slate-500 bg-rose-50 p-2 rounded-xl text-center">
+                Memory Hook: <strong>A</strong>rteries = <strong>A</strong>way!
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Unit 2.4 Chemical Changes (6Cc.04) -->
+        <div class="flip-card h-[360px]" onclick="flipCard(this)">
+          <div class="flip-inner">
+            <div class="flip-front bg-gradient-to-br from-amber-500 to-orange-600 text-white p-6 shadow-xl flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <span class="bg-white/20 text-xs font-extrabold uppercase px-3 py-1 rounded-full">Unit 2.4 · 6Cc.04</span>
+                <span class="text-3xl">🧪</span>
+              </div>
+              <div class="text-center my-auto space-y-3">
+                <div class="text-6xl font-display font-bold">2</div>
+                <p class="text-xl font-bold leading-snug">
+                  Vinegar + bicarbonate of soda ➔ bubbles of gas + water + salt.<br>
+                  Name the <u>reactants</u> and give <u>2 signs</u> of a chemical reaction.
+                </p>
+              </div>
+              <div class="text-center text-xs font-bold uppercase tracking-wider bg-black/20 py-2 rounded-xl">
+                Tap Card to Reveal Answer
+              </div>
+            </div>
+            <div class="flip-back bg-white border-4 border-amber-500 p-6 shadow-xl flex flex-col justify-between">
+              <div class="text-xs font-extrabold uppercase text-amber-700">Unit 2.4 Answer · Chemical Changes</div>
+              <div class="space-y-2.5 text-slate-800 font-bold text-base">
+                <p>⚗️ <span class="text-amber-700">Reactants:</span> Vinegar and bicarbonate of soda (starting substances).</p>
+                <p>🫧 <span class="text-amber-700">Signs:</span> Bubbles of gas (fizzing), new substances formed, temperature drop, irreversible change.</p>
+              </div>
+              <div class="text-xs font-bold text-slate-600 bg-amber-50 p-2 rounded-xl text-center">
+                Checkpoint Tip: Always say &ldquo;bubbles of gas&rdquo; and &ldquo;new substance formed&rdquo;!
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Unit 2.2 Electrical Conductors (6Cp.03) -->
+        <div class="flip-card h-[360px]" onclick="flipCard(this)">
+          <div class="flip-inner">
+            <div class="flip-front bg-gradient-to-br from-teal-500 to-emerald-600 text-white p-6 shadow-xl flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <span class="bg-white/20 text-xs font-extrabold uppercase px-3 py-1 rounded-full">Unit 2.2 · 6Cp.03</span>
+                <span class="text-3xl">🔌</span>
+              </div>
+              <div class="text-center my-auto space-y-3">
+                <div class="text-6xl font-display font-bold">3</div>
+                <p class="text-xl font-bold leading-snug">
+                  Why are plug cables made with a <u>copper wire inside</u> and a <u>plastic cover outside</u>?
+                </p>
+              </div>
+              <div class="text-center text-xs font-bold uppercase tracking-wider bg-black/20 py-2 rounded-xl">
+                Tap Card to Reveal Answer
+              </div>
+            </div>
+            <div class="flip-back bg-white border-4 border-teal-500 p-6 shadow-xl flex flex-col justify-between">
+              <div class="text-xs font-extrabold uppercase text-teal-700">Unit 2.2 Answer · Conductors &amp; Insulators</div>
+              <div class="space-y-2.5 text-slate-800 font-bold text-base">
+                <p>⚡ <span class="text-teal-700">Copper (metal):</span> An electrical <u>conductor</u> that allows electricity to flow easily.</p>
+                <p>🛡️ <span class="text-teal-700">Plastic:</span> An electrical <u>insulator</u> that blocks electricity to protect us from electric shocks.</p>
+              </div>
+              <div class="text-xs font-bold text-slate-600 bg-teal-50 p-2 rounded-xl text-center">
+                Link to Lesson 2: We use metal wires in our Electricity Clinic next!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================= -->
+  <!-- STATION 2: BILINGUAL VOCABULARY MODAL + REAL-WORLD ENGINEERING STRIP    -->
+  <!-- [SoL: Dual Coding] [SoL: Schema Building]                               -->
+  <!-- ======================================================================= -->
+  <section id="station-2" class="station-panel hidden">
+    <div class="space-y-6">
+      <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200">
+        <span class="bg-sky-100 text-sky-800 text-xs font-extrabold uppercase px-3 py-1 rounded-full">
+          Dual-Coded Scientific Vocabulary
+        </span>
+        <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mt-1">
+          Click Any Forces Keyword to Open the Bilingual Visual Modal
+        </h2>
+        <p class="text-slate-600 font-medium mt-1">
+          Listen to both British English and Vietnamese pronunciation, study the force diagram, and practise saying each word aloud.
+        </p>
+
+        <!-- Clickable Vocabulary Grid (English Only Outside Modal!) -->
+        <div id="vocabGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
+          <!-- Populated cleanly by JS -->
+        </div>
+      </div>
+
+      <!-- REAL-WORLD ENGINEERING STRIP (100% ENGLISH ONLY) -->
+      <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white rounded-3xl p-6 shadow-xl border-2 border-sky-400/50">
+        <div class="text-xs font-extrabold uppercase tracking-widest text-sky-300 mb-2">
+          🌍 Real-World Science &amp; Engineering Relevance
+        </div>
+        <h3 class="font-display text-2xl font-bold mb-4">Where Do Engineers Use Unit 5 Forces Every Day?</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-white/10 rounded-2xl p-4 border border-white/15">
+            <div class="text-2xl mb-1">🚀</div>
+            <div class="font-bold text-sky-200 text-base">Lunar Rover Engineers</div>
+            <p class="text-sm text-slate-200 mt-1">
+              Rovers weigh only 1/6 as much on the Moon, so NASA designs lightweight wheels and special springs for lower gravity while keeping the exact same mass of cameras and batteries.
+            </p>
+          </div>
+          <div class="bg-white/10 rounded-2xl p-4 border border-white/15">
+            <div class="text-2xl mb-1">🚢</div>
+            <div class="font-bold text-sky-200 text-base">Hai Phong Cargo Ship Designers</div>
+            <p class="text-sm text-slate-200 mt-1">
+              Massive steel ships carry thousands of tonnes of goods across Vietnam&rsquo;s ports because their wide, hollow hulls displace enormous volumes of seawater, creating huge upthrust.
+            </p>
+          </div>
+          <div class="bg-white/10 rounded-2xl p-4 border border-white/15">
+            <div class="text-2xl mb-1">🪂</div>
+            <div class="font-bold text-sky-200 text-base">Parachute &amp; Aeroplane Safety</div>
+            <p class="text-sm text-slate-200 mt-1">
+              Parachutes open wide to catch air resistance until upward air resistance balances downward weight, allowing a safe, steady landing speed instead of dangerous acceleration.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================= -->
+  <!-- STATION 3: FULL-SCREEN VISUAL I DO — TOP 3 FORCES EXAM TRAPS            -->
+  <!-- [SoL: Worked Examples] [SoL: Misconceptions] [SoL: Dual Coding]         -->
+  <!-- ======================================================================= -->
+  <section id="station-3" class="station-panel hidden">
+    <div id="idoContainer" class="bg-white rounded-3xl p-6 shadow-xl border-2 border-indigo-200 space-y-5">
+      <!-- Header & Controls -->
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+        <div>
+          <span class="bg-rose-100 text-rose-800 text-xs font-extrabold uppercase px-3 py-1 rounded-full">
+            Teacher Model · Worked Exam Clinic
+          </span>
+          <h2 class="font-display text-3xl font-bold text-slate-900 mt-1">
+            Busting the Top 3 Cambridge Forces Exam Traps
+          </h2>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="selectTrap(0)" id="trapBtn-0" class="px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-indigo-600 text-white shadow">
+            Trap 1: Moon Mass vs Weight
+          </button>
+          <button onclick="selectTrap(1)" id="trapBtn-1" class="px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200">
+            Trap 2: Force-Arrow Rules
+          </button>
+          <button onclick="selectTrap(2)" id="trapBtn-2" class="px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200">
+            Trap 3: Hollow Hull Upthrust
+          </button>
+          <button onclick="toggleFullScreenIDo()" id="fsIdoBtn" class="px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-slate-900 text-amber-300 hover:bg-slate-800">
+            ⛶ Full Screen
+          </button>
+          <button onclick="openGiantModal()" class="px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-amber-400 text-slate-950 hover:bg-amber-300">
+            🔎 Giant Rule
+          </button>
+        </div>
+      </div>
+
+      <!-- Main 2-Column Split: Visual Stage + Permanent Steps to Success Sidebar -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Left 8 Cols: Interactive Visual Stage + Anchored Dashboard -->
+        <div class="lg:col-span-8 space-y-4">
+          <div class="bg-gradient-to-b from-slate-900 to-blue-950 rounded-3xl p-5 shadow-inner border-4 border-slate-800">
+            <div class="flex items-center justify-between mb-3">
+              <span id="trapBadge" class="bg-rose-500 text-white text-xs font-extrabold uppercase px-3 py-1 rounded-full">
+                Exam Trap #1 · 6Pf.01 &amp; 6Pf.02
+              </span>
+              <button onclick="triggerTrapAnimation()" class="bg-sky-400 hover:bg-sky-300 text-slate-950 font-extrabold text-xs px-4 py-1.5 rounded-xl shadow transition">
+                ▶ Step / Animate Model
+              </button>
+            </div>
+            <!-- SVG Stage (no dynamic floating text overlays inside animation div!) -->
+            <div id="trapVisualStage" class="bg-white rounded-2xl p-3 flex items-center justify-center min-h-[300px]">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Anchored Dashboard Below Canvas (Strictly Separate!) -->
+          <div id="trapDashboard" class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 space-y-3">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Right 4 Cols: Permanent "Steps to Success & Exam Checklist" Sidebar -->
+        <aside class="lg:col-span-4 bg-amber-50 border-2 border-amber-300 rounded-3xl p-5 space-y-4 shadow-sm">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🛡️</span>
+            <h3 class="font-display text-xl font-bold text-amber-950">Checkpoint Survival Checklist</h3>
+          </div>
+          <ol class="space-y-3 text-sm font-bold text-slate-800">
+            <li class="bg-white p-3 rounded-xl border border-amber-200 flex gap-2.5">
+              <span class="bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs">1</span>
+              <span><strong>Mass = kg = NEVER changes</strong> in space. <strong>Weight = N</strong> = changes with gravity.</span>
+            </li>
+            <li class="bg-white p-3 rounded-xl border border-amber-200 flex gap-2.5">
+              <span class="bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs">2</span>
+              <span><strong>Earth Shortcut:</strong> Weight (N) ≈ Mass (kg) × 10. <strong>Moon:</strong> Divide Earth weight by 6!</span>
+            </li>
+            <li class="bg-white p-3 rounded-xl border border-amber-200 flex gap-2.5">
+              <span class="bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs">3</span>
+              <span><strong>Arrow Rules:</strong> Arrows MUST <u>touch the object</u>, use a ruler, point accurately, and carry a clear force name.</span>
+            </li>
+            <li class="bg-white p-3 rounded-xl border border-amber-200 flex gap-2.5">
+              <span class="bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs">4</span>
+              <span><strong>Floating = Balanced!</strong> Draw Upthrust arrow the <u>exact same length</u> as Weight arrow.</span>
+            </li>
+            <li class="bg-white p-3 rounded-xl border border-amber-200 flex gap-2.5">
+              <span class="bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs">5</span>
+              <span><strong>Shape Magic:</strong> Wide hollow shape ➔ displaces more water ➔ bigger upthrust ➔ floats!</span>
+            </li>
+          </ol>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================= -->
+  <!-- STATION 4: INTERACTIVE DUAL LAB + SCATTER-GRAPH ANOMALY CLINIC          -->
+  <!-- [SoL: CPA Progression] [SoL: Elaborative Interrogation] [SoL: Immediate Feedback] -->
+  <!-- ======================================================================= -->
+  <section id="station-4" class="station-panel hidden">
+    <div class="space-y-6">
+      <!-- Lab Mode Selector -->
+      <div class="bg-white rounded-3xl p-4 shadow-md border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <span class="bg-teal-100 text-teal-800 text-xs font-extrabold uppercase px-3 py-1 rounded-full">
+            Hands-On Virtual Forces Laboratory
+          </span>
+          <h2 class="font-display text-2xl md:text-3xl font-bold text-slate-900 mt-1">
+            Interactive Dual Lab &amp; Scatter-Graph Anomaly Clinic
+          </h2>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="switchLab('gravity')" id="labBtn-gravity" class="px-4 py-2.5 rounded-xl font-extrabold text-sm bg-indigo-600 text-white shadow">
+            🪐 Lab A: Planet Gravity Scale
+          </button>
+          <button onclick="switchLab('arrows')" id="labBtn-arrows" class="px-4 py-2.5 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-700 hover:bg-slate-200">
+            ➡️ Lab B: Force-Arrow Builder
+          </button>
+          <button onclick="switchLab('graph')" id="labBtn-graph" class="px-4 py-2.5 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-700 hover:bg-slate-200">
+            📈 Lab C: Scatter-Graph Clinic
+          </button>
+        </div>
+      </div>
+
+      <!-- LAB A: PLANET GRAVITY SCALE (10–100 kg) -->
+      <div id="lab-gravity" class="bg-white rounded-3xl p-6 shadow-xl border-2 border-indigo-200 space-y-5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Controls -->
+          <div class="lg:col-span-5 space-y-5 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+            <div>
+              <label for="massSlider" class="block font-display text-xl font-bold text-slate-900 mb-1">
+                1. Set Astronaut Mass: <span id="massSliderLabel" class="text-indigo-700">60 kg</span>
+              </label>
+              <input id="massSlider" type="range" min="10" max="100" step="5" value="60" oninput="updateGravityLab()" class="w-full accent-indigo-600 h-3 rounded-lg cursor-pointer">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mt-1">
+                <span>10 kg</span><span>30 kg</span><span>60 kg (Exam Hero)</span><span>100 kg</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="font-display text-xl font-bold text-slate-900 mb-2">2. Teleport to World:</div>
+              <div class="grid grid-cols-2 gap-2.5">
+                <button onclick="setPlanet('earth')" id="pl-earth" class="planet-btn bg-blue-600 text-white font-extrabold py-2.5 px-3 rounded-xl text-sm shadow">🌍 Earth (10 N/kg)</button>
+                <button onclick="setPlanet('moon')" id="pl-moon" class="planet-btn bg-slate-200 text-slate-800 font-extrabold py-2.5 px-3 rounded-xl text-sm hover:bg-slate-300">🌙 Moon (1/6 Earth)</button>
+                <button onclick="setPlanet('mars')" id="pl-mars" class="planet-btn bg-slate-200 text-slate-800 font-extrabold py-2.5 px-3 rounded-xl text-sm hover:bg-slate-300">🔴 Mars (3.7 N/kg)</button>
+                <button onclick="setPlanet('jupiter')" id="pl-jupiter" class="planet-btn bg-slate-200 text-slate-800 font-extrabold py-2.5 px-3 rounded-xl text-sm hover:bg-slate-300">🟠 Jupiter (25 N/kg)</button>
+                <button onclick="setPlanet('space')" id="pl-space" class="planet-btn col-span-2 bg-slate-200 text-slate-800 font-extrabold py-2.5 px-3 rounded-xl text-sm hover:bg-slate-300">🌌 Deep Space (0 N/kg — Zero Gravity)</button>
+              </div>
+            </div>
+
+            <button onclick="toggleMechanism('gravMech')" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold py-3 rounded-xl text-sm shadow transition">
+              💡 Click to Reveal: Why Does Mass Stay Constant?
+            </button>
+            <div id="gravMech" class="hidden bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 text-sm font-bold text-slate-800">
+              Mass counts the total amount of matter (particles) inside the astronaut&rsquo;s body. Teleporting to the Moon or Jupiter does NOT remove or add any body particles — only the strength of the planet&rsquo;s gravitational pull changes!
+            </div>
+          </div>
+
+          <!-- Visual Stage + Separate Anchored Dashboard -->
+          <div class="lg:col-span-7 space-y-4">
+            <div id="gravitySvgWrap" class="rounded-2xl overflow-hidden border-4 border-slate-800 bg-slate-900 p-3 flex items-center justify-center min-h-[290px]">
+              <!-- Rendered by JS -->
+            </div>
+            <!-- Dedicated Dashboard Below Canvas -->
+            <div class="grid grid-cols-3 gap-3">
+              <div class="bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-3 text-center">
+                <div class="text-xs font-extrabold uppercase text-emerald-700">Mass (Constant!)</div>
+                <div id="dashMass" class="font-display text-3xl font-bold text-emerald-950">60 kg</div>
+                <div class="text-[11px] font-bold text-emerald-700">Never changes</div>
+              </div>
+              <div class="bg-rose-50 border-2 border-rose-400 rounded-2xl p-3 text-center">
+                <div class="text-xs font-extrabold uppercase text-rose-700">Weight (Gravity Pull)</div>
+                <div id="dashWeight" class="font-display text-3xl font-bold text-rose-950">600 N</div>
+                <div id="dashPlanetTag" class="text-[11px] font-bold text-rose-700">On Earth</div>
+              </div>
+              <div class="bg-indigo-50 border-2 border-indigo-300 rounded-2xl p-3 text-center">
+                <div class="text-xs font-extrabold uppercase text-indigo-700">Gravity Strength</div>
+                <div id="dashGrav" class="font-display text-2xl font-bold text-indigo-950">10 N/kg</div>
+                <div id="dashCompare" class="text-[11px] font-bold text-indigo-700">1× Earth pull</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LAB B: FORCE-ARROW BALANCE BUILDER -->
+      <div id="lab-arrows" class="hidden bg-white rounded-3xl p-6 shadow-xl border-2 border-sky-200 space-y-5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-5 space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+            <div class="font-display text-xl font-bold text-slate-900">Quick Clinic Scenarios:</div>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="setArrowPreset('raft')" class="bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs py-2.5 px-3 rounded-xl shadow">🪵 Floating Raft (40 N = 40 N)</button>
+              <button onclick="setArrowPreset('anchor')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-2.5 px-3 rounded-xl shadow">⚓ Sinking Anchor (90 N &gt; 25 N)</button>
+              <button onclick="setArrowPreset('cork')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 px-3 rounded-xl shadow">🍾 Rising Cork (55 N &gt; 20 N)</button>
+              <button onclick="setArrowPreset('submarine')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-2.5 px-3 rounded-xl shadow">🚤 Loaded Barge (75 N = 75 N)</button>
+            </div>
+
+            <div class="space-y-3 pt-2 border-t border-slate-200">
+              <div>
+                <label for="upForceSlider" class="flex justify-between font-bold text-sm text-emerald-800">
+                  <span>⬆ Upthrust (Water Push Up)</span>
+                  <span id="upForceVal">40 N</span>
+                </label>
+                <input id="upForceSlider" type="range" min="10" max="100" step="5" value="40" oninput="updateArrowLab()" class="w-full accent-emerald-600 cursor-pointer">
+              </div>
+              <div>
+                <label for="downForceSlider" class="flex justify-between font-bold text-sm text-rose-800">
+                  <span>⬇ Weight (Gravity Pull Down)</span>
+                  <span id="downForceVal">40 N</span>
+                </label>
+                <input id="downForceSlider" type="range" min="10" max="100" step="5" value="40" oninput="updateArrowLab()" class="w-full accent-rose-600 cursor-pointer">
+              </div>
+            </div>
+
+            <button onclick="toggleMechanism('buoyMech')" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold py-2.5 rounded-xl text-sm shadow">
+              💧 Click to Reveal: Water Particle Upthrust Model
+            </button>
+            <div id="buoyMech" class="hidden bg-sky-50 border-2 border-sky-300 rounded-2xl p-4 space-y-2">
+              <div class="text-xs font-extrabold uppercase text-sky-800">Organic Liquid Particle Upthrust</div>
+              <div class="flex flex-wrap gap-1.5 items-end content-end bg-sky-200/70 p-2.5 rounded-xl min-h-[54px]" id="organicParticles">
+                <!-- Organic staggered liquid particles -->
+              </div>
+              <p class="text-xs font-bold text-slate-800">
+                When an object pushes water particles aside (displaced water), those crowded water particles push back upwards against the hull — that upward push is <strong>upthrust</strong>!
+              </p>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 space-y-4">
+            <div id="arrowSvgWrap" class="rounded-2xl border-4 border-sky-900 bg-sky-100 p-3 flex items-center justify-center min-h-[290px]">
+              <!-- Rendered by JS -->
+            </div>
+            <!-- Dedicated Dashboard Below Canvas -->
+            <div class="grid grid-cols-3 gap-3">
+              <div class="bg-slate-900 text-white rounded-2xl p-3 text-center">
+                <div class="text-xs font-bold uppercase text-sky-300">Force State</div>
+                <div id="arrowStateText" class="font-display text-2xl font-bold text-emerald-400">BALANCED</div>
+              </div>
+              <div class="bg-slate-100 border-2 border-slate-300 rounded-2xl p-3 text-center">
+                <div class="text-xs font-bold uppercase text-slate-600">Resultant Force</div>
+                <div id="arrowResultant" class="font-display text-2xl font-bold text-slate-900">0 N</div>
+              </div>
+              <div class="bg-sky-50 border-2 border-sky-300 rounded-2xl p-3 text-center">
+                <div class="text-xs font-bold uppercase text-sky-700">Object Motion</div>
+                <div id="arrowMotion" class="font-display text-xl font-bold text-sky-950">Floats Still</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LAB C: LABELLED CARGO-BOAT SCATTER-GRAPH ANOMALY CLINIC -->
+      <div id="lab-graph" class="hidden bg-white rounded-3xl p-6 shadow-xl border-2 border-purple-200 space-y-5">
+        <div class="bg-purple-50 border-2 border-purple-200 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="text-xs font-extrabold uppercase text-purple-700">How to Read This Scatter Graph</div>
+            <p class="font-bold text-slate-800 text-sm">
+              1. Read across the horizontal X-axis (<strong>Boat Rim Height in cm</strong>). &nbsp;2. Move straight up to each plotted point to read the Y-axis (<strong>Maximum Marbles Held</strong>). &nbsp;3. Tap any point to inspect its exact coordinates and hunt the anomaly!
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="toggleGraphAnomaly()" id="btnCircleAnom" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl shadow">
+              ⭕ Circle Anomaly
+            </button>
+            <button onclick="toggleGraphTrend()" id="btnTrendLine" class="bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl shadow">
+              📏 Show Line of Best Fit
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <!-- Labelled Interactive SVG Scatter Graph -->
+          <div class="lg:col-span-7 bg-white rounded-2xl border-2 border-slate-300 p-4 shadow-inner">
+            <svg id="scatterSvg" viewBox="0 0 540 360" class="w-full h-auto" role="img" aria-label="Scatter graph showing Boat Rim Height in centimetres against Maximum Marbles Held">
+              <!-- Title -->
+              <text x="275" y="24" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="16" font-weight="700" fill="#0f172a">
+                Effect of Clay Boat Rim Height on Maximum Marbles Held
+              </text>
+
+              <!-- Grid lines -->
+              <g stroke="#e2e8f0" stroke-width="1">
+                <line x1="75" y1="265" x2="500" y2="265"/>
+                <line x1="75" y1="225" x2="500" y2="225"/>
+                <line x1="75" y1="185" x2="500" y2="185"/>
+                <line x1="75" y1="145" x2="500" y2="145"/>
+                <line x1="75" y1="105" x2="500" y2="105"/>
+                <line x1="75" y1="65" x2="500" y2="65"/>
+                <line x1="155" y1="50" x2="155" y2="305"/>
+                <line x1="235" y1="50" x2="235" y2="305"/>
+                <line x1="315" y1="50" x2="315" y2="305"/>
+                <line x1="395" y1="50" x2="395" y2="305"/>
+                <line x1="475" y1="50" x2="475" y2="305"/>
+              </g>
+
+              <!-- Axes -->
+              <line x1="75" y1="305" x2="505" y2="305" stroke="#0f172a" stroke-width="2.5"/>
+              <line x1="75" y1="305" x2="75" y2="48" stroke="#0f172a" stroke-width="2.5"/>
+
+              <!-- Y-axis ticks & numbers (0 to 30, 8px per marble: y = 305 - m*8) -->
+              <g font-size="12" font-weight="700" fill="#334155" text-anchor="end">
+                <text x="66" y="309">0</text>
+                <text x="66" y="269">5</text>
+                <text x="66" y="229">10</text>
+                <text x="66" y="189">15</text>
+                <text x="66" y="149">20</text>
+                <text x="66" y="109">25</text>
+                <text x="66" y="69">30</text>
+              </g>
+
+              <!-- X-axis ticks & numbers (1 to 5 cm: x = 75 + cm*80) -->
+              <g font-size="12" font-weight="700" fill="#334155" text-anchor="middle">
+                <text x="75" y="324">0</text>
+                <text x="155" y="324">1</text>
+                <text x="235" y="324">2</text>
+                <text x="315" y="324">3</text>
+                <text x="395" y="324">4</text>
+                <text x="475" y="324">5</text>
+              </g>
+
+              <!-- Axis Labels with Units -->
+              <text x="290" y="349" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">
+                Boat Rim Height (cm)
+              </text>
+              <text x="22" y="180" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a" transform="rotate(-90 22 180)">
+                Maximum Marbles Held (count)
+              </text>
+
+              <!-- Optional Line of Best Fit (ignoring anomaly (4,8): (1,5) to (5,29) -> y = 6x - 1) -->
+              <line id="graphTrendLine" x1="155" y1="265" x2="475" y2="73" stroke="#4f46e5" stroke-width="3" stroke-dasharray="8 6" class="hidden"/>
+              <!-- Predicted point at 4 cm -> 23 marbles: y = 305 - 23*8 = 121 -->
+              <g id="graphPredDot" class="hidden">
+                <circle cx="395" cy="121" r="7" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2.5"/>
+                <text x="408" y="117" font-size="11" font-weight="800" fill="#4338ca">Expected ~23</text>
+              </g>
+
+              <!-- Optional Anomaly Circle around (4, 8) -> cx=395, cy=305-64=241 -->
+              <g id="graphAnomalyRing" class="hidden">
+                <circle cx="395" cy="241" r="20" fill="rgba(225,29,72,0.12)" stroke="#e11d48" stroke-width="3" stroke-dasharray="5 3"/>
+                <text x="395" y="274" text-anchor="middle" font-size="11" font-weight="800" fill="#be123c">ANOMALOUS RESULT!</text>
+              </g>
+
+              <!-- Interactive Data Points: (1,5), (2,11), (3,18), (4,8), (5,29) -->
+              <g id="scatterPoints">
+                <!-- (1, 5): x=155, y=265 -->
+                <circle cx="155" cy="265" r="9" fill="#0284c7" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="inspectPoint(1, 5, false)"/>
+                <!-- (2, 11): x=235, y=217 -->
+                <circle cx="235" cy="217" r="9" fill="#0284c7" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="inspectPoint(2, 11, false)"/>
+                <!-- (3, 18): x=315, y=161 -->
+                <circle cx="315" cy="161" r="9" fill="#0284c7" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="inspectPoint(3, 18, false)"/>
+                <!-- (4, 8): x=395, y=241 (ANOMALY) -->
+                <circle cx="395" cy="241" r="9" fill="#0284c7" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="inspectPoint(4, 8, true)"/>
+                <!-- (5, 29): x=475, y=73 -->
+                <circle cx="475" cy="73" r="9" fill="#0284c7" stroke="#ffffff" stroke-width="2.5" class="cursor-pointer" onclick="inspectPoint(5, 29, false)"/>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Interactive Coordinate Readout & 2-Mark Conclusion Reveal -->
+          <div class="lg:col-span-5 space-y-4">
+            <div class="bg-slate-900 text-white rounded-2xl p-4">
+              <div class="text-xs font-extrabold uppercase text-sky-300">Selected Coordinate Readout</div>
+              <div id="coordReadout" class="font-display text-2xl font-bold mt-1">
+                Tap any blue dot on the graph!
+              </div>
+              <p id="coordNote" class="text-sm text-slate-300 mt-1">
+                Check whether the point fits the upward pattern or sits far away from the trend.
+              </p>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+              <div class="text-xs font-extrabold uppercase text-slate-600 mb-2">Class Clay-Boat Data Table</div>
+              <table class="w-full text-sm text-center border-collapse">
+                <thead>
+                  <tr class="bg-slate-200 text-slate-900">
+                    <th class="p-1.5 border border-slate-300">Rim Height (cm)</th>
+                    <th class="p-1.5 border border-slate-300">1</th>
+                    <th class="p-1.5 border border-slate-300">2</th>
+                    <th class="p-1.5 border border-slate-300">3</th>
+                    <th class="p-1.5 border border-slate-300">4</th>
+                    <th class="p-1.5 border border-slate-300">5</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white font-bold">
+                    <td class="p-1.5 border border-slate-300">Marbles Held</td>
+                    <td class="p-1.5 border border-slate-300">5</td>
+                    <td class="p-1.5 border border-slate-300">11</td>
+                    <td class="p-1.5 border border-slate-300">18</td>
+                    <td class="p-1.5 border border-slate-300 text-rose-700">8 ?</td>
+                    <td class="p-1.5 border border-slate-300">29</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <button onclick="toggleMechanism('graphConclusion')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 rounded-xl text-sm shadow transition">
+              ✅ Reveal Model 2-Mark Checkpoint Conclusion
+            </button>
+            <div id="graphConclusion" class="hidden bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-4 text-sm font-bold text-slate-800 space-y-2">
+              <p><strong>Mark 1 (Pattern):</strong> As the boat&rsquo;s rim height increases, the maximum number of marbles it holds increases (ignoring the anomalous result at 4 cm, 8 marbles).</p>
+              <p><strong>Mark 2 (Scientific Reason):</strong> A taller hollow rim can push aside (displace) a greater volume of water before sinking, which produces a larger upward upthrust force.</p>
+              <p class="text-xs text-rose-700"><strong>Why the anomaly happened?</strong> Water leaked over a tilted side or marbles were dropped off-centre — repeat the 4 cm test to check!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================= -->
+  <!-- STATION 5: DEDICATED SUCCESS CRITERIA WHITEBOARD CHECK (0/3 MET)        -->
+  <!-- [SoL: Metacognition] [SoL: Immediate Feedback] [SoL: Retrieval Practice]-->
+  <!-- ======================================================================= -->
+  <section id="station-5" class="station-panel hidden">
+    <div class="space-y-6">
+      <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white rounded-3xl p-6 shadow-xl flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="bg-emerald-400 text-slate-950 text-xs font-extrabold uppercase px-3 py-1 rounded-full">
+            Individual Mini-Whiteboard Hinge Check
+          </span>
+          <h2 class="font-display text-3xl font-bold mt-1">
+            Success Criteria Check: Prove You Are Assessment-Ready!
+          </h2>
+          <p class="text-sky-200 text-sm font-medium mt-1">
+            Every pupil solves each criterion independently on their mini-whiteboard. Tick each box only once the class hits &ge;85% accuracy!
+          </p>
+        </div>
+        <div class="bg-white/10 border-2 border-emerald-400 rounded-2xl px-6 py-3 text-center">
+          <div class="text-xs uppercase font-extrabold text-emerald-300">Class Readiness</div>
+          <div id="scProgressBadge" class="font-display text-4xl font-bold text-white">0/3 Met</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- SC Check 1 -->
+        <div id="scCard-0" class="bg-white rounded-3xl p-6 shadow-lg border-4 border-slate-200 flex flex-col justify-between gap-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="bg-indigo-100 text-indigo-800 font-extrabold text-xs px-3 py-1 rounded-full">SC 1 · Mass vs Weight</span>
+              <span id="scStatus-0" class="text-xs font-extrabold text-slate-400">NOT YET MET</span>
+            </div>
+            <p class="font-bold text-slate-900 text-lg">
+              A science toolbox has a mass of <span class="text-indigo-700 underline">30 kg</span> on Earth. It is flown to the Moon (gravity = 1/6 of Earth).
+            </p>
+            <p class="text-sm font-bold text-slate-600">
+              On your whiteboard, write:<br>
+              (a) Earth weight &nbsp; (b) Moon mass &nbsp; (c) Moon weight
+            </p>
+          </div>
+          <div class="space-y-2.5">
+            <button onclick="revealScAns(0)" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-900 font-extrabold text-sm py-2.5 rounded-xl">
+              👁️ Reveal Model Answer
+            </button>
+            <div id="scAns-0" class="hidden bg-indigo-50 border border-indigo-300 rounded-xl p-3 text-sm font-bold text-indigo-950">
+              (a) <strong>300 N</strong> (30 × 10)<br>
+              (b) <strong>30 kg</strong> (mass NEVER changes!)<br>
+              (c) <strong>50 N</strong> (300 ÷ 6)
+            </div>
+            <button onclick="toggleScMet(0)" id="scMetBtn-0" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm py-2.5 rounded-xl transition">
+              ☐ Mark SC 1 Met
+            </button>
+          </div>
+        </div>
+
+        <!-- SC Check 2 -->
+        <div id="scCard-1" class="bg-white rounded-3xl p-6 shadow-lg border-4 border-slate-200 flex flex-col justify-between gap-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="bg-sky-100 text-sky-800 font-extrabold text-xs px-3 py-1 rounded-full">SC 2 · Force Diagrams</span>
+              <span id="scStatus-1" class="text-xs font-extrabold text-slate-400">NOT YET MET</span>
+            </div>
+            <p class="font-bold text-slate-900 text-lg">
+              A wooden crate with a weight of <span class="text-sky-700 underline">55 N</span> floats completely still on a calm lake.
+            </p>
+            <p class="text-sm font-bold text-slate-600">
+              On your whiteboard, sketch the crate with <strong>both named, sized force arrows</strong> and state if they are balanced or unbalanced.
+            </p>
+          </div>
+          <div class="space-y-2.5">
+            <button onclick="revealScAns(1)" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-900 font-extrabold text-sm py-2.5 rounded-xl">
+              👁️ Reveal Model Answer
+            </button>
+            <div id="scAns-1" class="hidden bg-sky-50 border border-sky-300 rounded-xl p-3 text-sm font-bold text-sky-950">
+              ⬇ <strong>Weight = 55 N</strong> (touching crate)<br>
+              ⬆ <strong>Upthrust = 55 N</strong> (<u>equal length</u>, touching crate)<br>
+              State: <strong>Balanced forces</strong>.
+            </div>
+            <button onclick="toggleScMet(1)" id="scMetBtn-1" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm py-2.5 rounded-xl transition">
+              ☐ Mark SC 2 Met
+            </button>
+          </div>
+        </div>
+
+        <!-- SC Check 3 -->
+        <div id="scCard-2" class="bg-white rounded-3xl p-6 shadow-lg border-4 border-slate-200 flex flex-col justify-between gap-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="bg-teal-100 text-teal-800 font-extrabold text-xs px-3 py-1 rounded-full">SC 3 · Shape &amp; Upthrust</span>
+              <span id="scStatus-2" class="text-xs font-extrabold text-slate-400">NOT YET MET</span>
+            </div>
+            <p class="font-bold text-slate-900 text-lg">
+              A ball of modelling clay sinks, yet the <u>exact same clay</u> pressed into a wide hollow bowl floats.
+            </p>
+            <p class="text-sm font-bold text-slate-600">
+              Write <strong>one scientific sentence</strong> using the words <em>displaced water</em> and <em>upthrust</em>.
+            </p>
+          </div>
+          <div class="space-y-2.5">
+            <button onclick="revealScAns(2)" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-900 font-extrabold text-sm py-2.5 rounded-xl">
+              👁️ Reveal Model Answer
+            </button>
+            <div id="scAns-2" class="hidden bg-teal-50 border border-teal-300 rounded-xl p-3 text-sm font-bold text-teal-950">
+              The wide hollow bowl pushes aside (<strong>displaces</strong>) more water, which increases the <strong>upthrust</strong> until it equals the clay&rsquo;s weight.
+            </div>
+            <button onclick="toggleScMet(2)" id="scMetBtn-2" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm py-2.5 rounded-xl transition">
+              ☐ Mark SC 3 Met
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================= -->
+  <!-- STATION 6: 8-QUESTION CHECKPOINT QUICKFIRE ENGINE                       -->
+  <!-- [SoL: Automaticity] [SoL: Immediate Feedback] [SoL: Retrieval Practice] -->
+  <!-- ======================================================================= -->
+  <section id="station-6" class="station-panel hidden">
+    <div class="space-y-6">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-slate-200 space-y-5">
+        <!-- Top Row: Progress, Timer, Controls -->
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
+          <div>
+            <span class="bg-rose-100 text-rose-800 text-xs font-extrabold uppercase px-3 py-1 rounded-full">
+              Checkpoint Automaticity Arena · 8 Questions
+            </span>
+            <h2 class="font-display text-3xl font-bold text-slate-900 mt-1">
+              Question <span id="qfIndex">1</span> of 8
+            </h2>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="bg-slate-900 text-white rounded-2xl px-5 py-2 flex items-center gap-3 shadow">
+              <span class="text-xs font-bold uppercase text-sky-300">Timer</span>
+              <span id="qfTimerDisplay" class="font-display text-3xl font-bold text-amber-400">15s</span>
+            </div>
+            <button onclick="startQfTimer(15)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm px-4 py-2.5 rounded-xl shadow">
+              ▶ Start 15s
+            </button>
+            <button onclick="triggerBoardsUp()" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-sm px-4 py-2.5 rounded-xl shadow">
+              📢 BOARDS UP!
+            </button>
+          </div>
+        </div>
+
+        <!-- BOARDS UP ALERT BANNER -->
+        <div id="boardsUpBanner" class="hidden bg-gradient-to-r from-rose-600 via-amber-500 to-rose-600 text-white text-center py-4 rounded-2xl font-display text-4xl font-bold tracking-wider shadow-lg animate-bounce">
+          🙌 BOARDS UP! SHOW YOUR ANSWERS NOW! 🙌
+        </div>
+
+        <!-- Question Card -->
+        <div class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-3xl p-8 text-center space-y-4 min-h-[210px] flex flex-col justify-center">
+          <div id="qfTag" class="inline-block mx-auto bg-sky-400 text-slate-950 font-extrabold text-xs uppercase px-3.5 py-1 rounded-full">
+            Topic 5.1 · Mass &amp; Weight
+          </div>
+          <div id="qfQuestion" class="font-display text-3xl md:text-4xl font-bold leading-snug">
+            Loading question...
+          </div>
+        </div>
+
+        <!-- Answer Box -->
+        <div id="qfAnswerBox" class="hidden bg-emerald-50 border-4 border-emerald-500 rounded-2xl p-6 text-center">
+          <div class="text-xs font-extrabold uppercase text-emerald-700 mb-1">Checkpoint Model Answer</div>
+          <div id="qfAnswer" class="font-display text-3xl font-bold text-emerald-950"></div>
+          <div id="qfExplain" class="text-sm font-bold text-slate-700 mt-1"></div>
+        </div>
+
+        <!-- Controls + Embedded Team Red / Team Blue Scoring -->
+        <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+          <div class="flex gap-2">
+            <button onclick="prevQf()" class="bg-slate-200 hover:bg-slate-300 text-slate-900 font-extrabold px-4 py-3 rounded-xl text-sm">
+              ← Previous
+            </button>
+            <button onclick="revealQfAnswer()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold px-6 py-3 rounded-xl text-sm shadow">
+              👁️ Reveal Answer
+            </button>
+            <button onclick="nextQf()" class="bg-slate-900 hover:bg-slate-800 text-white font-extrabold px-5 py-3 rounded-xl text-sm">
+              Next Question →
+            </button>
+          </div>
+
+          <!-- Synced Team Score Buttons -->
+          <div class="flex flex-wrap items-center gap-3 bg-slate-100 p-2.5 rounded-2xl border border-slate-200">
+            <button onclick="addScore('red', 1)" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold px-4 py-2 rounded-xl text-sm shadow">
+              +1 🔴 Team Red (<span id="qfRed">0</span>)
+            </button>
+            <button onclick="addScore('blue', 1)" class="bg-blue-600 hover:bg-blue-500 text-white font-extrabold px-4 py-2 rounded-xl text-sm shadow">
+              +1 🔵 Team Blue (<span id="qfBlue">0</span>)
+            </button>
+            <button onclick="launchConfetti()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold px-3.5 py-2 rounded-xl text-sm shadow">
+              🎉 Celebrate!
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ========================================================================= -->
+<!-- BILINGUAL VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION IN SMARTBOARD)      -->
+<!-- ========================================================================= -->
+<div id="vocabModal" class="hidden fixed inset-0 z-[70] bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border-4 border-sky-400 space-y-5 relative max-h-[92vh] overflow-y-auto">
+    <button onclick="closeVocabModal()" class="absolute top-4 right-4 bg-slate-200 hover:bg-slate-300 text-slate-900 font-extrabold w-10 h-10 rounded-full text-lg">✕</button>
+    <div class="space-y-1 pr-10">
+      <div class="text-xs font-extrabold uppercase tracking-wider text-sky-600">Bilingual Scientific Vocabulary Card</div>
+      <h3 id="vmEn" class="font-display text-4xl font-bold text-slate-900"></h3>
+      <div id="vmVn" class="font-display text-2xl font-bold text-indigo-700"></div>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <button onclick="speakVocab('en-GB')" class="bg-blue-600 hover:bg-blue-500 text-white font-extrabold px-4 py-2.5 rounded-xl text-sm shadow">
+        🔊 Listen (British English)
+      </button>
+      <button onclick="speakVocab('vi-VN')" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold px-4 py-2.5 rounded-xl text-sm shadow">
+        🔊 Nghe (Tiếng Việt)
+      </button>
+    </div>
+
+    <div id="vmSvg" class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 flex items-center justify-center min-h-[170px]"></div>
+
+    <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4">
+      <div class="text-xs font-extrabold uppercase text-sky-800 mb-1">Primary Scientific Meaning</div>
+      <p id="vmDef" class="font-bold text-slate-800 text-base leading-relaxed"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================================================= -->
+<!-- GIANT PROJECTION MODAL (STATION 3)                                        -->
+<!-- ========================================================================= -->
+<div id="giantModal" class="hidden fixed inset-0 z-[72] bg-slate-950/95 text-white flex items-center justify-center p-6">
+  <div class="max-w-5xl w-full text-center space-y-6">
+    <div id="giantTag" class="inline-block bg-amber-400 text-slate-950 font-extrabold text-sm uppercase px-4 py-1.5 rounded-full">
+      Golden Checkpoint Rule
+    </div>
+    <div id="giantText" class="font-display text-5xl md:text-6xl font-bold leading-tight"></div>
+    <button onclick="closeGiantModal()" class="bg-white text-slate-950 font-extrabold px-8 py-3.5 rounded-2xl text-lg shadow-xl">
+      Close Giant View (Esc)
+    </button>
+  </div>
+</div>
+
+<!-- ========================================================================= -->
+<!-- TEACHER PROMPT DRAWER (SHORTCUT: T, z-[75])                               -->
+<!-- ========================================================================= -->
+<aside id="teacherDrawer" class="hidden fixed top-0 right-0 h-full w-full max-w-md bg-slate-900 text-white shadow-2xl z-[75] border-l-4 border-amber-400 p-6 overflow-y-auto">
+  <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
+    <h3 class="font-display text-2xl font-bold text-amber-400">📋 Teacher Prompt Drawer</h3>
+    <button onclick="toggleTeacherDrawer()" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg font-bold">✕ Close (T)</button>
+  </div>
+  <div class="space-y-4 text-sm">
+    <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700">
+      <div class="font-extrabold text-sky-300 uppercase text-xs mb-1">70-Minute Pacing Map</div>
+      <ul class="space-y-1 text-slate-200">
+        <li>• 0–8 min: Station 0 LO/SC + Station 1 Flashback 3</li>
+        <li>• 8–15 min: Station 2 Bilingual Vocab + Engineering Strip</li>
+        <li>• 15–29 min: Station 3 Full-Screen Visual I Do (3 Exam Traps)</li>
+        <li>• 29–44 min: Station 4 Dual Lab + Scatter-Graph Clinic</li>
+        <li>• 44–58 min: Independent Worksheet 1 (20 marks) + Peer Check</li>
+        <li>• 58–70 min: Station 5 SC Board Check + Station 6 Quickfire</li>
+      </ul>
+    </div>
+    <div class="bg-rose-950/70 p-4 rounded-2xl border border-rose-500/50">
+      <div class="font-extrabold text-rose-300 uppercase text-xs mb-1">Red-Flag Hinge Check</div>
+      <p class="text-slate-200">
+        Watch for pupils saying &ldquo;mass gets smaller on the Moon&rdquo;, drawing floating upthrust arrows shorter than weight arrows, or confusing kg with N.
+      </p>
+    </div>
+    <div class="bg-emerald-950/70 p-4 rounded-2xl border border-emerald-500/50">
+      <div class="font-extrabold text-emerald-300 uppercase text-xs mb-1">Teacher Support Table Intervention</div>
+      <p class="text-slate-200">
+        Pull stuck learners to the support table with two cards: <strong>MASS = stuff inside me = kg = NEVER changes</strong> vs <strong>WEIGHT = gravity&rsquo;s pull = N = changes on Moon</strong>. Check equal floating arrows with a centimetre ruler.
+      </p>
+    </div>
+    <div class="bg-amber-950/70 p-4 rounded-2xl border border-amber-500/50">
+      <div class="font-extrabold text-amber-300 uppercase text-xs mb-1">Whole-Class Backup Pivot (&gt;30% Stuck)</div>
+      <p class="text-slate-200">
+        Pause for a 3-minute <strong>Human Force-Arrow Freeze</strong>: pupils stand and use both arms to show equal balanced arrows (floating raft) vs one long arm + one short arm (sinking iron anchor).
+      </p>
+    </div>
+    <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 text-xs text-slate-300">
+      <strong>Keyboard Shortcuts:</strong> <code>←</code> / <code>→</code> switch stations · <code>W</code> David&rsquo;s Board · <code>T</code> Teacher Prompts · <code>M</code> Mute · <code>Esc</code> close modals.
+    </div>
+  </div>
+</aside>
+
+<!-- ========================================================================= -->
+<!-- DAVID'S BOARD (DPR-SAFE WHITEBOARD OVERLAY, SHORTCUT: W)                  -->
+<!-- ========================================================================= -->
+<div id="whiteboardModal" class="hidden fixed inset-0 z-[80] bg-slate-900/95 flex flex-col p-4">
+  <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-800 text-white px-4 py-2.5 rounded-t-2xl border-b border-slate-700">
+    <div class="font-display font-bold text-lg text-emerald-400">✏️ David&rsquo;s Board — Force-Arrow Sketchpad</div>
+    <div class="flex flex-wrap items-center gap-2">
+      <button onclick="setPenColour('#0f172a')" class="w-7 h-7 rounded-full bg-slate-900 border-2 border-white" title="Black"></button>
+      <button onclick="setPenColour('#dc2626')" class="w-7 h-7 rounded-full bg-red-600 border-2 border-white" title="Red (Weight)"></button>
+      <button onclick="setPenColour('#059669')" class="w-7 h-7 rounded-full bg-emerald-600 border-2 border-white" title="Green (Upthrust)"></button>
+      <button onclick="setPenColour('#2563eb')" class="w-7 h-7 rounded-full bg-blue-600 border-2 border-white" title="Blue"></button>
+      <button onclick="clearWhiteboard()" class="bg-amber-400 text-slate-950 font-extrabold text-xs px-3 py-1.5 rounded-lg">Clear</button>
+      <button onclick="toggleWhiteboard()" class="bg-rose-600 text-white font-extrabold text-xs px-3 py-1.5 rounded-lg">✕ Close (W)</button>
+    </div>
+  </div>
+  <div class="flex-1 bg-white rounded-b-2xl overflow-hidden relative">
+    <canvas id="wbCanvas" class="w-full h-full touch-none cursor-crosshair"></canvas>
+  </div>
+</div>
+
+<!-- ========================================================================= -->
+<!-- APPLICATION SCRIPT                                                        -->
+<!-- ========================================================================= -->
+<script>
+/* ----------------- GLOBAL STATE & OFFLINE WEB AUDIO ----------------- */
+let currentStation = 0;
+const totalStations = 7;
+let isMuted = false;
+let scoreRed = 0;
+let scoreBlue = 0;
+let audioCtx = null;
+
+function playTone(freq, dur, type = 'sine', gainVal = 0.12) {
+  if (isMuted) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + dur);
+  } catch (e) {}
+}
+
+function playSuccessChime() {
+  playTone(523.25, 0.14, 'triangle', 0.14);
+  setTimeout(() => playTone(659.25, 0.16, 'triangle', 0.14), 100);
+  setTimeout(() => playTone(783.99, 0.24, 'triangle', 0.14), 200);
+}
+
+function playBoardsUpAlert() {
+  playTone(880, 0.15, 'square', 0.1);
+  setTimeout(() => playTone(880, 0.15, 'square', 0.1), 170);
+  setTimeout(() => playTone(1174.66, 0.35, 'triangle', 0.14), 340);
+}
+
+function toggleMute() {
+  isMuted = !isMuted;
+  const btn = document.getElementById('muteBtn');
+  btn.textContent = isMuted ? '🔇 Muted (M)' : '🔊 Sound (M)';
+  btn.classList.toggle('bg-rose-600', isMuted);
+  btn.classList.toggle('bg-slate-700', !isMuted);
+}
+
+/* ----------------- AUTO-HIDING FIXED HEADER ----------------- */
+let lastScrollY = window.scrollY;
+window.addEventListener('scroll', () => {
+  const hdr = document.getElementById('topHeader');
+  const cur = window.scrollY;
+  if (cur > lastScrollY && cur > 60) {
+    hdr.classList.add('header-hidden');
+  } else {
+    hdr.classList.remove('header-hidden');
+  }
+  lastScrollY = cur;
+}, { passive: true });
+
+/* ----------------- STATION NAVIGATION ----------------- */
+function goStation(idx) {
+  if (idx < 0 || idx >= totalStations) return;
+  currentStation = idx;
+  document.querySelectorAll('.station-panel').forEach((sec, i) => {
+    sec.classList.toggle('hidden', i !== idx);
+  });
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+  playTone(440 + idx * 40, 0.08, 'sine', 0.06);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ----------------- SYNCED TEAM SCOREBOARD & CONFETTI ----------------- */
+function addScore(team, pts) {
+  if (team === 'red') scoreRed += pts;
+  if (team === 'blue') scoreBlue += pts;
+  document.getElementById('hdrRed').textContent = scoreRed;
+  document.getElementById('hdrBlue').textContent = scoreBlue;
+  document.getElementById('qfRed').textContent = scoreRed;
+  document.getElementById('qfBlue').textContent = scoreBlue;
+  playSuccessChime();
+  launchConfetti();
+}
+
+function launchConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const pieces = [];
+  const palette = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'];
+  for (let i = 0; i < 85; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 140,
+      w: 7 + Math.random() * 6,
+      h: 10 + Math.random() * 8,
+      vx: (Math.random() - 0.5) * 6,
+      vy: 3 + Math.random() * 5,
+      rot: Math.random() * 360,
+      vr: (Math.random() - 0.5) * 12,
+      col: palette[i % palette.length]
+    });
+  }
+  let frames = 0;
+  function tick() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.col;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    frames++;
+    if (frames < 110) requestAnimationFrame(tick);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  tick();
+}
+
+/* ----------------- STATION 1: FLASHBACK 3 ----------------- */
+function flipCard(el) {
+  el.classList.toggle('flipped');
+  playTone(540, 0.09, 'triangle', 0.08);
+}
+function resetFlashbacks() {
+  document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
+}
+
+/* ----------------- STATION 2: BILINGUAL VOCABULARY MODAL ----------------- */
+const vocabItems = [
+  {
+    en: 'mass (kg)',
+    vn: 'khối lượng (kg)',
+    def: 'The amount of matter (stuff) inside an object. Measured in kilograms (kg) or grams (g). Mass NEVER changes when you travel to another planet.',
+    svg: `<svg viewBox="0 0 260 130" class="w-64 h-32"><rect x="20" y="95" width="220" height="16" rx="4" fill="#cbd5e1"/><polygon points="130,68 115,95 145,95" fill="#475569"/><line x1="60" y1="68" x2="200" y2="68" stroke="#0f172a" stroke-width="5"/><rect x="45" y="34" width="38" height="32" rx="6" fill="#4f46e5"/><text x="64" y="55" text-anchor="middle" fill="#fff" font-size="13" font-weight="800">5 kg</text><rect x="177" y="34" width="38" height="32" rx="6" fill="#4f46e5"/><text x="196" y="55" text-anchor="middle" fill="#fff" font-size="13" font-weight="800">5 kg</text><text x="130" y="22" text-anchor="middle" fill="#0f172a" font-size="12" font-weight="800">Same matter everywhere!</text></svg>`
+  },
+  {
+    en: 'weight (N)',
+    vn: 'trọng lượng (N)',
+    def: 'The downward pull of gravity on an object. Weight is a force measured in newtons (N) using a forcemeter, and it changes when gravity changes.',
+    svg: `<svg viewBox="0 0 260 130" class="w-64 h-32"><rect x="105" y="16" width="50" height="36" rx="8" fill="#0284c7"/><text x="130" y="39" text-anchor="middle" fill="#fff" font-size="13" font-weight="800">60 kg</text><line x1="130" y1="52" x2="130" y2="108" stroke="#e11d48" stroke-width="6"/><polygon points="130,122 119,102 141,102" fill="#e11d48"/><text x="196" y="92" text-anchor="middle" fill="#be123c" font-size="14" font-weight="800">Weight = 600 N</text></svg>`
+  },
+  {
+    en: 'gravity',
+    vn: 'trọng lực',
+    def: 'An invisible pulling force that pulls all objects towards the centre of a planet or moon. Bigger planets have stronger gravity.',
+    svg: `<svg viewBox="0 0 260 130" class="w-64 h-32"><circle cx="130" cy="86" r="36" fill="#2563eb"/><circle cx="122" cy="76" r="10" fill="#22c55e"/><circle cx="144" cy="92" r="8" fill="#22c55e"/><circle cx="130" cy="18" r="9" fill="#ef4444"/><line x1="130" y1="28" x2="130" y2="46" stroke="#f59e0b" stroke-width="4"/><polygon points="130,52 123,41 137,41" fill="#f59e0b"/><text x="198" y="35" fill="#0f172a" font-size="12" font-weight="800">Pulls to centre</text></svg>`
+  },
+  {
+    en: 'forcemeter',
+    vn: 'lực kế',
+    def: 'A scientific instrument with a spring and numbered scale used to measure force or weight accurately in newtons (N). Also called a newtonmeter.',
+    svg: `<svg viewBox="0 0 260 130" class="w-64 h-32"><rect x="112" y="10" width="36" height="82" rx="8" fill="#fef3c7" stroke="#0f172a" stroke-width="3"/><line x1="118" y1="28" x2="132" y2="28" stroke="#0f172a" stroke-width="2"/><line x1="118" y1="45" x2="132" y2="45" stroke="#0f172a" stroke-width="2"/><line x1="118" y1="62" x2="132" y2="62" stroke="#0f172a" stroke-width="2"/><line x1="118" y1="78" x2="132" y2="78" stroke="#e11d48" stroke-width="3"/><path d="M130 92 L130 105 Q138 113 130 119" fill="none" stroke="#0f172a" stroke-width="3"/><text x="194" y="65" fill="#0f172a" font-size="13" font-weight="800">Scale in N</text></svg>`
+  },
+  {
+    en: 'balanced forces',
+    vn: 'các lực cân bằng',
+    def: 'Opposing forces that are equal in size and act in opposite directions. Balanced forces keep a still object still, or a moving object moving at a steady speed.',
+    svg: `<svg viewBox="0 0 260 130" class="w-64 h-32"><rect x="102" y="45" width="56" height="40" rx="8" fill="#334155"/><line x1="102" y1="65" x2="36" y2="65" stroke="#0284c7" stroke-width="5"/><polygon points="24,65 40,56 40,74" fill="#0284c7"/><line x1="158" y1="65" x2="224" y2="65" stroke="#0284c7" stroke-width="5"/><polygon points="236,65 220,56 220,74" fill="#0284c7"/><text x="62" y="48" text-anchor="middle" fill="#0369a1" font-size="12" font-weight="800">40 N</text><text x="198" y="48" text-anchor="middle" fill="#0369a1" font-size="12" font-weight="800">40 N</text><text x="130" y="112" text-anchor="middle" fill="#059669" font-size="13" font-weight="800">Equal arrows = Balanced!</text></svg>`
+  },
+  {
+    en: 'unbalanced forces',
+    vn: 'các lực không cân bằng',
+    def: 'Opposing forces of different sizes. Unbalanced forces make an object speed up (accelerate), slow down, sink, rise, or change direction.',
+    svg: `<svg viewBox="0 0 260 130" class="w-64 h-32"><rect x="92" y="45" width="52" height="40" rx="8" fill="#334155"/><line x1="92" y1="65" x2="54" y2="65" stroke="#64748b" stroke-width="5"/><polygon points="42,65 56,57 56,73" fill="#64748b"/><line x1="144" y1="65" x2="228" y2="65" stroke="#e11d48" stroke-width="6"/><polygon points="244,65 224,54 224,76" fill="#e11d48"/><text x="68" y="48" text-anchor="middle" fill="#475569" font-size="12" font-weight="800">25 N</text><text x="195" y="48" text-anchor="middle" fill="#be123c" font-size="12" font-weight="800">90 N</text><text x="130" y="112" text-anchor="middle" fill="#be123c" font-size="13" font-weight="800">Longer arrow wins!</text></svg>`
+  },
+  {
+    en: 'upthrust',
+    vn: 'lực đẩy lên của nước',
+    def: 'The upward pushing force that water (or any liquid) exerts on an object placed in it. An object floats when upthrust equals weight.',
+    svg: `<svg viewBox="0 0 260 130" class="w-64 h-32"><rect x="20" y="62" width="220" height="58" rx="8" fill="#bae6fd"/><rect x="92" y="44" width="76" height="32" rx="6" fill="#d97706"/><line x1="130" y1="44" x2="130" y2="12" stroke="#059669" stroke-width="6"/><polygon points="130,4 120,18 140,18" fill="#059669"/><text x="195" y="26" fill="#047857" font-size="13" font-weight="800">Upthrust ⬆</text></svg>`
+  },
+  {
+    en: 'displaced water',
+    vn: 'lượng nước bị chiếm chỗ',
+    def: 'The water pushed aside by an object placed into a container or sea. A wide hollow hull displaces more water, giving bigger upthrust.',
+    svg: `<svg viewBox="0 0 260 130" class="w-64 h-32"><rect x="35" y="25" width="190" height="90" fill="none" stroke="#0f172a" stroke-width="3"/><rect x="37" y="65" width="186" height="48" fill="#7dd3fc"/><path d="M85 45 L175 45 L162 82 L98 82 Z" fill="#f59e0b" stroke="#0f172a" stroke-width="2.5"/><line x1="37" y1="78" x2="223" y2="78" stroke="#0369a1" stroke-dasharray="5 4" stroke-width="2"/><text x="130" y="104" text-anchor="middle" fill="#0c4a6e" font-size="12" font-weight="800">Water pushed aside = Bigger upthrust</text></svg>`
+  },
+  {
+    en: 'anomalous result',
+    vn: 'kết quả bất thường',
+    def: 'A measurement that does not fit the pattern of the other results in an investigation. Circle it on a graph and repeat that test to check.',
+    svg: `<svg viewBox="0 0 260 130" class="w-64 h-32"><line x1="35" y1="110" x2="235" y2="110" stroke="#0f172a" stroke-width="2.5"/><line x1="35" y1="110" x2="35" y2="18" stroke="#0f172a" stroke-width="2.5"/><line x1="55" y1="95" x2="215" y2="25" stroke="#4f46e5" stroke-dasharray="5 4" stroke-width="2.5"/><circle cx="65" cy="90" r="6" fill="#0284c7"/><circle cx="110" cy="70" r="6" fill="#0284c7"/><circle cx="155" cy="52" r="6" fill="#0284c7"/><circle cx="185" cy="92" r="6" fill="#e11d48"/><circle cx="185" cy="92" r="14" fill="none" stroke="#e11d48" stroke-width="2.5" stroke-dasharray="4 3"/><circle cx="215" cy="26" r="6" fill="#0284c7"/></svg>`
+  }
+];
+
+let activeVocabIndex = 0;
+
+function buildVocabGrid() {
+  const grid = document.getElementById('vocabGrid');
+  grid.innerHTML = vocabItems.map((item, i) => `
+    <button onclick="openVocabModal(${i})" class="text-left bg-slate-50 hover:bg-sky-50 border-2 border-slate-200 hover:border-sky-400 rounded-2xl p-4 transition shadow-sm flex items-center justify-between gap-3 group">
+      <div>
+        <div class="text-xs font-extrabold uppercase text-sky-600">Keyword ${i + 1}</div>
+        <div class="font-display text-2xl font-bold text-slate-900 group-hover:text-sky-900">${item.en}</div>
+      </div>
+      <span class="bg-sky-100 text-sky-800 font-extrabold text-xs px-3 py-1.5 rounded-xl shrink-0">Open 🔍</span>
+    </button>
+  `).join('');
+}
+
+function openVocabModal(i) {
+  activeVocabIndex = i;
+  const v = vocabItems[i];
+  document.getElementById('vmEn').textContent = v.en;
+  document.getElementById('vmVn').textContent = v.vn;
+  document.getElementById('vmDef').textContent = v.def;
+  document.getElementById('vmSvg').innerHTML = v.svg;
+  document.getElementById('vocabModal').classList.remove('hidden');
+  playTone(580, 0.08, 'sine', 0.08);
+}
+
+function closeVocabModal() {
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  document.getElementById('vocabModal').classList.add('hidden');
+}
+
+function speakVocab(lang) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const v = vocabItems[activeVocabIndex];
+  const text = lang === 'vi-VN' ? v.vn : v.en.replace('(kg)', 'kilograms').replace('(N)', 'newtons');
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang;
+  u.rate = 0.92;
+  window.speechSynthesis.speak(u);
+}
+
+/* ----------------- STATION 3: FULL-SCREEN VISUAL I DO (TOP 3 EXAM TRAPS) ----------------- */
+let currentTrap = 0;
+let trapStep = 0;
+
+const trapsData = [
+  {
+    badge: 'Exam Trap #1 · Mass vs Weight Across Worlds (6Pf.01 & 6Pf.02)',
+    giant: 'MASS (kg) NEVER CHANGES IN SPACE! Only WEIGHT (N) changes with gravity!',
+    steps: [
+      {
+        title: 'Common Exam Mistake ❌',
+        desc: 'Pupils write: "On the Moon, the 60 kg astronaut has a mass of 10 kg." WRONG! You did not chop off the astronaut’s legs!',
+        svg: `<svg viewBox="0 0 600 260" class="w-full max-w-2xl h-auto">
+          <rect x="10" y="10" width="180" height="240" rx="18" fill="#dbeafe" stroke="#2563eb" stroke-width="3"/>
+          <text x="100" y="38" text-anchor="middle" font-size="16" font-weight="800" fill="#1e3a8a">🌍 EARTH</text>
+          <circle cx="100" cy="86" r="22" fill="#f8fafc" stroke="#0f172a" stroke-width="3"/>
+          <rect x="86" y="76" width="28" height="14" rx="6" fill="#38bdf8"/>
+          <rect x="82" y="110" width="36" height="44" rx="8" fill="#e2e8f0" stroke="#0f172a" stroke-width="3"/>
+          <text x="100" y="182" text-anchor="middle" font-size="15" font-weight="800" fill="#065f46">Mass = 60 kg</text>
+          <text x="100" y="206" text-anchor="middle" font-size="15" font-weight="800" fill="#be123c">Weight = 600 N</text>
+
+          <rect x="210" y="10" width="180" height="240" rx="18" fill="#f1f5f9" stroke="#64748b" stroke-width="3"/>
+          <text x="300" y="38" text-anchor="middle" font-size="16" font-weight="800" fill="#334155">🌙 MOON (1/6 g)</text>
+          <circle cx="300" cy="86" r="22" fill="#f8fafc" stroke="#0f172a" stroke-width="3"/>
+          <rect x="286" y="76" width="28" height="14" rx="6" fill="#38bdf8"/>
+          <rect x="282" y="110" width="36" height="44" rx="8" fill="#e2e8f0" stroke="#0f172a" stroke-width="3"/>
+          <text x="300" y="182" text-anchor="middle" font-size="15" font-weight="800" fill="#065f46">Mass = ???</text>
+          <text x="300" y="206" text-anchor="middle" font-size="15" font-weight="800" fill="#be123c">Weight = ???</text>
+
+          <rect x="410" y="10" width="180" height="240" rx="18" fill="#ffedd5" stroke="#ea580c" stroke-width="3"/>
+          <text x="500" y="38" text-anchor="middle" font-size="16" font-weight="800" fill="#9a3412">🟠 JUPITER (2.5× g)</text>
+          <circle cx="500" cy="86" r="22" fill="#f8fafc" stroke="#0f172a" stroke-width="3"/>
+          <rect x="486" y="76" width="28" height="14" rx="6" fill="#38bdf8"/>
+          <rect x="482" y="110" width="36" height="44" rx="8" fill="#e2e8f0" stroke="#0f172a" stroke-width="3"/>
+          <text x="500" y="182" text-anchor="middle" font-size="15" font-weight="800" fill="#065f46">Mass = ???</text>
+          <text x="500" y="206" text-anchor="middle" font-size="15" font-weight="800" fill="#be123c">Weight = ???</text>
+        </svg>`
+      },
+      {
+        title: 'Busted Trap ✅ — Exact Checkpoint Values Revealed!',
+        desc: 'Mass stays 60 kg on Earth, Moon, AND Jupiter! Weight changes because gravity changes: Earth = 600 N, Moon = 100 N (600 ÷ 6), Jupiter = 1500 N (60 × 25).',
+        svg: `<svg viewBox="0 0 600 260" class="w-full max-w-2xl h-auto">
+          <rect x="10" y="10" width="180" height="240" rx="18" fill="#dbeafe" stroke="#2563eb" stroke-width="3"/>
+          <text x="100" y="36" text-anchor="middle" font-size="15" font-weight="800" fill="#1e3a8a">🌍 EARTH (10 N/kg)</text>
+          <circle cx="100" cy="78" r="18" fill="#fff" stroke="#0f172a" stroke-width="2.5"/>
+          <rect x="86" y="98" width="28" height="34" rx="6" fill="#cbd5e1" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="100" y1="132" x2="100" y2="178" stroke="#e11d48" stroke-width="5"/><polygon points="100,188 92,174 108,174" fill="#e11d48"/>
+          <rect x="26" y="196" width="148" height="22" rx="6" fill="#059669"/><text x="100" y="212" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">Mass = 60 kg</text>
+          <text x="100" y="238" text-anchor="middle" font-size="15" font-weight="800" fill="#be123c">Weight = 600 N</text>
+
+          <rect x="210" y="10" width="180" height="240" rx="18" fill="#f1f5f9" stroke="#64748b" stroke-width="3"/>
+          <text x="300" y="36" text-anchor="middle" font-size="15" font-weight="800" fill="#334155">🌙 MOON (1/6 Earth)</text>
+          <circle cx="300" cy="78" r="18" fill="#fff" stroke="#0f172a" stroke-width="2.5"/>
+          <rect x="286" y="98" width="28" height="34" rx="6" fill="#cbd5e1" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="300" y1="132" x2="300" y2="150" stroke="#e11d48" stroke-width="5"/><polygon points="300,160 292,146 308,146" fill="#e11d48"/>
+          <rect x="226" y="196" width="148" height="22" rx="6" fill="#059669"/><text x="300" y="212" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">Mass = 60 kg</text>
+          <text x="300" y="238" text-anchor="middle" font-size="15" font-weight="800" fill="#be123c">Weight = 100 N</text>
+
+          <rect x="410" y="10" width="180" height="240" rx="18" fill="#ffedd5" stroke="#ea580c" stroke-width="3"/>
+          <text x="500" y="36" text-anchor="middle" font-size="15" font-weight="800" fill="#9a3412">🟠 JUPITER (25 N/kg)</text>
+          <circle cx="500" cy="78" r="18" fill="#fff" stroke="#0f172a" stroke-width="2.5"/>
+          <rect x="486" y="98" width="28" height="34" rx="6" fill="#cbd5e1" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="500" y1="132" x2="500" y2="185" stroke="#e11d48" stroke-width="7"/><polygon points="500,196 490,180 510,180" fill="#e11d48"/>
+          <rect x="426" y="196" width="148" height="22" rx="6" fill="#059669"/><text x="500" y="212" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">Mass = 60 kg</text>
+          <text x="500" y="238" text-anchor="middle" font-size="15" font-weight="800" fill="#be123c">Weight = 1500 N</text>
+        </svg>`
+      }
+    ]
+  },
+  {
+    badge: 'Exam Trap #2 · Force-Arrow Rules (6Pf.03)',
+    giant: 'ARROWS MUST TOUCH THE OBJECT! Floating = Equal Lengths! Sinking = Longer Downward Arrow!',
+    steps: [
+      {
+        title: 'Spot the 2 Force Diagrams: Raft vs Anchor',
+        desc: 'Left: A wooden raft floats still (Weight = 40 N). Right: An iron anchor sinks fast (Weight = 90 N, Upthrust = 25 N). How long must each arrow be?',
+        svg: `<svg viewBox="0 0 600 260" class="w-full max-w-2xl h-auto">
+          <rect x="15" y="120" width="265" height="125" rx="12" fill="#bae6fd"/>
+          <rect x="92" y="104" width="110" height="30" rx="6" fill="#b45309" stroke="#0f172a" stroke-width="2.5"/>
+          <text x="147" y="124" text-anchor="middle" fill="#fff" font-size="13" font-weight="800">Wooden Raft</text>
+          <text x="147" y="40" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="800">FLOATING STILL</text>
+          <text x="147" y="64" text-anchor="middle" fill="#0369a1" font-size="13" font-weight="700">Weight = 40 N · Upthrust = ???</text>
+
+          <rect x="320" y="120" width="265" height="125" rx="12" fill="#bae6fd"/>
+          <rect x="422" y="148" width="60" height="36" rx="8" fill="#334155" stroke="#0f172a" stroke-width="2.5"/>
+          <text x="452" y="170" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">Anchor</text>
+          <text x="452" y="40" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="800">SINKING FAST</text>
+          <text x="452" y="64" text-anchor="middle" fill="#be123c" font-size="13" font-weight="700">Weight = 90 N · Upthrust = 25 N</text>
+        </svg>`
+      },
+      {
+        title: 'Busted Trap ✅ — Touching, Named, Proportional Arrows!',
+        desc: 'Raft: Upthrust 40 N = Weight 40 N (equal lengths, balanced, floats!). Anchor: Weight 90 N > Upthrust 25 N (unbalanced by 65 N downwards, so it sinks!).',
+        svg: `<svg viewBox="0 0 600 260" class="w-full max-w-2xl h-auto">
+          <!-- Floating Raft 40 N = 40 N -->
+          <rect x="15" y="120" width="265" height="125" rx="12" fill="#bae6fd"/>
+          <rect x="92" y="106" width="110" height="28" rx="6" fill="#b45309" stroke="#0f172a" stroke-width="2.5"/>
+          <text x="147" y="125" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">Wooden Raft</text>
+          <line x1="147" y1="106" x2="147" y2="48" stroke="#059669" stroke-width="6"/><polygon points="147,36 138,52 156,52" fill="#059669"/>
+          <line x1="147" y1="134" x2="147" y2="192" stroke="#e11d48" stroke-width="6"/><polygon points="147,204 138,188 156,188" fill="#e11d48"/>
+          <text x="218" y="68" text-anchor="middle" fill="#047857" font-size="13" font-weight="800">Upthrust 40 N</text>
+          <text x="218" y="190" text-anchor="middle" fill="#be123c" font-size="13" font-weight="800">Weight 40 N</text>
+          <text x="147" y="232" text-anchor="middle" fill="#065f46" font-size="13" font-weight="800">BALANCED (40 N = 40 N)</text>
+
+          <!-- Sinking Anchor 90 N > 25 N -->
+          <rect x="320" y="120" width="265" height="125" rx="12" fill="#bae6fd"/>
+          <rect x="422" y="128" width="60" height="32" rx="8" fill="#334155" stroke="#0f172a" stroke-width="2.5"/>
+          <text x="452" y="149" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">Anchor</text>
+          <line x1="452" y1="128" x2="452" y2="100" stroke="#059669" stroke-width="5"/><polygon points="452,90 444,104 460,104" fill="#059669"/>
+          <line x1="452" y1="160" x2="452" y2="226" stroke="#e11d48" stroke-width="7"/><polygon points="452,238 442,222 462,222" fill="#e11d48"/>
+          <text x="524" y="106" text-anchor="middle" fill="#047857" font-size="13" font-weight="800">Upthrust 25 N</text>
+          <text x="524" y="206" text-anchor="middle" fill="#be123c" font-size="13" font-weight="800">Weight 90 N</text>
+          <text x="452" y="34" text-anchor="middle" fill="#be123c" font-size="13" font-weight="800">UNBALANCED (90 N &gt; 25 N)</text>
+        </svg>`
+      }
+    ]
+  },
+  {
+    badge: 'Exam Trap #3 · Shape, Displaced Water & Upthrust (6Pf.05)',
+    giant: 'HOLLOW SHAPE ➔ MORE DISPLACED WATER ➔ BIGGER UPTHRUST ➔ FLOATS!',
+    steps: [
+      {
+        title: 'Why Does a Steel Marble Sink While a Heavy Steel Ship Floats?',
+        desc: 'Both are made of the exact same dense metal — steel! Why does the solid lump sink immediately while the giant ship floats?',
+        svg: `<svg viewBox="0 0 600 260" class="w-full max-w-2xl h-auto">
+          <rect x="20" y="95" width="250" height="145" rx="12" fill="#bae6fd" stroke="#0284c7" stroke-width="2"/>
+          <circle cx="145" cy="210" r="22" fill="#475569" stroke="#0f172a" stroke-width="3"/>
+          <text x="145" y="45" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Solid Steel Ball (200 g)</text>
+          <text x="145" y="72" text-anchor="middle" font-size="13" font-weight="700" fill="#be123c">Sinks to bottom!</text>
+
+          <rect x="330" y="95" width="250" height="145" rx="12" fill="#bae6fd" stroke="#0284c7" stroke-width="2"/>
+          <path d="M375 88 L535 88 L515 142 L395 142 Z" fill="#475569" stroke="#0f172a" stroke-width="3"/>
+          <text x="455" y="122" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">Hollow Steel Bowl</text>
+          <text x="455" y="45" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Hollow Steel Ship (200 g)</text>
+          <text x="455" y="72" text-anchor="middle" font-size="13" font-weight="700" fill="#059669">Floats on the surface!</text>
+        </svg>`
+      },
+      {
+        title: 'Busted Trap ✅ — Displaced Water Controls Upthrust!',
+        desc: 'A solid ball pushes aside only a tiny splash of water (tiny upthrust < weight). A wide hollow hull pushes aside a HUGE volume of water, creating massive upthrust that balances its weight!',
+        svg: `<svg viewBox="0 0 600 260" class="w-full max-w-2xl h-auto">
+          <rect x="20" y="95" width="250" height="145" rx="12" fill="#bae6fd" stroke="#0284c7" stroke-width="2"/>
+          <circle cx="145" cy="186" r="20" fill="#475569" stroke="#0f172a" stroke-width="3"/>
+          <line x1="145" y1="166" x2="145" y2="144" stroke="#059669" stroke-width="4"/><polygon points="145,136 139,147 151,147" fill="#059669"/>
+          <line x1="145" y1="206" x2="145" y2="232" stroke="#e11d48" stroke-width="6"/><polygon points="145,240 137,228 153,228" fill="#e11d48"/>
+          <text x="145" y="40" text-anchor="middle" font-size="14" font-weight="800" fill="#be123c">Small displaced water</text>
+          <text x="145" y="62" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">➔ Tiny Upthrust &lt; Weight</text>
+
+          <rect x="330" y="95" width="250" height="145" rx="12" fill="#bae6fd" stroke="#0284c7" stroke-width="2"/>
+          <path d="M375 90 L535 90 L515 145 L395 145 Z" fill="#475569" stroke="#0f172a" stroke-width="3"/>
+          <text x="455" y="122" text-anchor="middle" font-size="11" font-weight="800" fill="#fde047">Air inside hollow hull!</text>
+          <line x1="455" y1="90" x2="455" y2="42" stroke="#059669" stroke-width="6"/><polygon points="455,30 446,45 464,45" fill="#059669"/>
+          <line x1="455" y1="145" x2="455" y2="193" stroke="#e11d48" stroke-width="6"/><polygon points="455,205 446,190 464,190" fill="#e11d48"/>
+          <text x="530" y="62" text-anchor="middle" font-size="12" font-weight="800" fill="#047857">Huge Upthrust</text>
+          <text x="455" y="230" text-anchor="middle" font-size="13" font-weight="800" fill="#065f46">Big displaced water ➔ Upthrust = Weight</text>
+        </svg>`
+      }
+    ]
+  }
+];
+
+function selectTrap(idx) {
+  currentTrap = idx;
+  trapStep = 0;
+  [0, 1, 2].forEach(i => {
+    const b = document.getElementById('trapBtn-' + i);
+    b.className = i === idx
+      ? 'px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-indigo-600 text-white shadow'
+      : 'px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200';
+  });
+  renderTrap();
+}
+
+function triggerTrapAnimation() {
+  trapStep = (trapStep + 1) % trapsData[currentTrap].steps.length;
+  renderTrap();
+  playSuccessChime();
+}
+
+function renderTrap() {
+  const t = trapsData[currentTrap];
+  const s = t.steps[trapStep];
+  document.getElementById('trapBadge').textContent = t.badge;
+  document.getElementById('trapVisualStage').innerHTML = s.svg;
+  document.getElementById('trapDashboard').innerHTML = `
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h3 class="font-display text-2xl font-bold text-slate-900">${s.title}</h3>
+      <span class="bg-indigo-100 text-indigo-800 text-xs font-extrabold px-3 py-1 rounded-full">Step ${trapStep + 1} of ${t.steps.length}</span>
+    </div>
+    <p class="text-slate-700 font-bold text-base leading-relaxed">${s.desc}</p>
+  `;
+}
+
+function toggleFullScreenIDo() {
+  const c = document.getElementById('idoContainer');
+  const active = c.classList.toggle('fullscreen-ido');
+  document.getElementById('fsIdoBtn').textContent = active ? '✕ Exit Full Screen' : '⛶ Full Screen';
+}
+
+function openGiantModal() {
+  document.getElementById('giantText').textContent = trapsData[currentTrap].giant;
+  document.getElementById('giantModal').classList.remove('hidden');
+}
+function closeGiantModal() {
+  document.getElementById('giantModal').classList.add('hidden');
+}
+
+/* ----------------- STATION 4: DUAL LAB & SCATTER GRAPH ----------------- */
+function switchLab(name) {
+  ['gravity', 'arrows', 'graph'].forEach(k => {
+    document.getElementById('lab-' + k).classList.toggle('hidden', k !== name);
+    const b = document.getElementById('labBtn-' + k);
+    b.className = k === name
+      ? 'px-4 py-2.5 rounded-xl font-extrabold text-sm bg-indigo-600 text-white shadow'
+      : 'px-4 py-2.5 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-700 hover:bg-slate-200';
+  });
+}
+
+let activePlanet = 'earth';
+const planets = {
+  earth:   { name: 'Earth',      g: 10,     gLabel: '10 N/kg',    cmp: '1× Earth pull',   sky: '#0c4a6e', ground: '#15803d' },
+  moon:    { name: 'Moon',       g: 10 / 6, gLabel: '1.67 N/kg',  cmp: '1/6 Earth pull',  sky: '#0f172a', ground: '#64748b' },
+  mars:    { name: 'Mars',       g: 3.7,    gLabel: '3.7 N/kg',   cmp: '0.37× Earth pull',sky: '#451a03', ground: '#c2410c' },
+  jupiter: { name: 'Jupiter',    g: 25,     gLabel: '25 N/kg',    cmp: '2.5× Earth pull', sky: '#431407', ground: '#d97706' },
+  space:   { name: 'Deep Space', g: 0,      gLabel: '0 N/kg',     cmp: 'Zero gravity',    sky: '#020617', ground: '#0f172a' }
+};
+
+function setPlanet(key) {
+  activePlanet = key;
+  Object.keys(planets).forEach(k => {
+    const btn = document.getElementById('pl-' + k);
+    btn.className = k === key
+      ? (k === 'space' ? 'planet-btn col-span-2 bg-blue-600 text-white font-extrabold py-2.5 px-3 rounded-xl text-sm shadow' : 'planet-btn bg-blue-600 text-white font-extrabold py-2.5 px-3 rounded-xl text-sm shadow')
+      : (k === 'space' ? 'planet-btn col-span-2 bg-slate-200 text-slate-800 font-extrabold py-2.5 px-3 rounded-xl text-sm hover:bg-slate-300' : 'planet-btn bg-slate-200 text-slate-800 font-extrabold py-2.5 px-3 rounded-xl text-sm hover:bg-slate-300');
+  });
+  updateGravityLab();
+  playTone(500, 0.08, 'sine', 0.07);
+}
+
+function updateGravityLab() {
+  const mass = parseInt(document.getElementById('massSlider').value, 10);
+  const p = planets[activePlanet];
+  const rawW = mass * p.g;
+  const weight = Math.round(rawW);
+
+  document.getElementById('massSliderLabel').textContent = mass + ' kg';
+  document.getElementById('dashMass').textContent = mass + ' kg';
+  document.getElementById('dashWeight').textContent = weight + ' N';
+  document.getElementById('dashPlanetTag').textContent = 'On ' + p.name;
+  document.getElementById('dashGrav').textContent = p.gLabel;
+  document.getElementById('dashCompare').textContent = p.cmp;
+
+  // Scale weight arrow proportionally (max 95px)
+  const arrowLen = weight === 0 ? 0 : Math.min(96, Math.max(18, Math.round((weight / 2500) * 96 + 16)));
+  const floatOffset = activePlanet === 'space' ? -28 : (activePlanet === 'moon' ? -8 : 0);
+
+  document.getElementById('gravitySvgWrap').innerHTML = `
+    <svg viewBox="0 0 520 260" class="w-full h-auto">
+      <rect x="0" y="0" width="520" height="260" rx="14" fill="${p.sky}"/>
+      <circle cx="65" cy="45" r="2" fill="#fff"/><circle cx="145" cy="30" r="2.5" fill="#fde047"/>
+      <circle cx="440" cy="42" r="2" fill="#fff"/><circle cx="385" cy="68" r="1.8" fill="#fff"/>
+      ${activePlanet !== 'space' ? `<rect x="0" y="212" width="520" height="48" fill="${p.ground}"/>` : ''}
+
+      <!-- Newton Scale Platform -->
+      ${activePlanet !== 'space' ? `<rect x="195" y="196" width="130" height="22" rx="6" fill="#e2e8f0" stroke="#0f172a" stroke-width="3"/>
+      <text x="260" y="211" text-anchor="middle" font-size="11" font-weight="800" fill="#0f172a">NEWTON SCALE</text>` : ''}
+
+      <!-- Astronaut -->
+      <g transform="translate(0, ${floatOffset})">
+        <circle cx="260" cy="78" r="24" fill="#f8fafc" stroke="#0f172a" stroke-width="3"/>
+        <rect x="244" y="68" width="32" height="16" rx="7" fill="#38bdf8"/>
+        <rect x="236" y="104" width="48" height="58" rx="10" fill="#e2e8f0" stroke="#0f172a" stroke-width="3"/>
+        <rect x="242" y="162" width="14" height="32" rx="5" fill="#cbd5e1" stroke="#0f172a" stroke-width="2.5"/>
+        <rect x="264" y="162" width="14" height="32" rx="5" fill="#cbd5e1" stroke="#0f172a" stroke-width="2.5"/>
+        <rect x="244" y="122" width="32" height="20" rx="5" fill="#059669"/>
+        <text x="260" y="136" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">${mass} kg</text>
+      </g>
+
+      <!-- Gravity Weight Arrow -->
+      ${arrowLen > 0 ? `
+        <line x1="340" y1="108" x2="340" y2="${108 + arrowLen}" stroke="#f43f5e" stroke-width="7"/>
+        <polygon points="340,${120 + arrowLen} 330,${104 + arrowLen} 350,${104 + arrowLen}" fill="#f43f5e"/>
+        <text x="362" y="${116 + Math.round(arrowLen / 2)}" font-size="15" font-weight="800" fill="#fda4af">Weight: ${weight} N</text>
+      ` : `<text x="345" y="136" font-size="15" font-weight="800" fill="#94a3b8">No Gravity Pull (0 N)</text>`}
+
+      <text x="24" y="34" font-size="15" font-weight="800" fill="#bae6fd">World: ${p.name}</text>
+    </svg>
+  `;
+}
+
+function setArrowPreset(type) {
+  const up = document.getElementById('upForceSlider');
+  const dn = document.getElementById('downForceSlider');
+  if (type === 'raft')      { up.value = 40; dn.value = 40; }
+  if (type === 'anchor')    { up.value = 25; dn.value = 90; }
+  if (type === 'cork')      { up.value = 55; dn.value = 20; }
+  if (type === 'submarine') { up.value = 75; dn.value = 75; }
+  updateArrowLab();
+  playTone(520, 0.08, 'triangle', 0.08);
+}
+
+function updateArrowLab() {
+  const up = parseInt(document.getElementById('upForceSlider').value, 10);
+  const dn = parseInt(document.getElementById('downForceSlider').value, 10);
+  document.getElementById('upForceVal').textContent = up + ' N';
+  document.getElementById('downForceVal').textContent = dn + ' N';
+
+  const diff = up - dn;
+  const stateEl = document.getElementById('arrowStateText');
+  const resEl = document.getElementById('arrowResultant');
+  const motEl = document.getElementById('arrowMotion');
+
+  let boxY = 112;
+  let objClass = 'animate-bob';
+  if (diff === 0) {
+    stateEl.textContent = 'BALANCED';
+    stateEl.className = 'font-display text-2xl font-bold text-emerald-400';
+    resEl.textContent = '0 N';
+    motEl.textContent = 'Floats Still';
+    boxY = 104;
+  } else if (diff < 0) {
+    stateEl.textContent = 'UNBALANCED';
+    stateEl.className = 'font-display text-2xl font-bold text-rose-400';
+    resEl.textContent = Math.abs(diff) + ' N Down';
+    motEl.textContent = 'Sinks Downwards';
+    boxY = 148;
+    objClass = '';
+  } else {
+    stateEl.textContent = 'UNBALANCED';
+    stateEl.className = 'font-display text-2xl font-bold text-amber-400';
+    resEl.textContent = diff + ' N Up';
+    motEl.textContent = 'Rises Upwards';
+    boxY = 82;
+  }
+
+  const upLen = Math.round(up * 0.62);
+  const dnLen = Math.round(dn * 0.62);
+
+  document.getElementById('arrowSvgWrap').innerHTML = `
+    <svg viewBox="0 0 520 270" class="w-full h-auto">
+      <rect x="0" y="0" width="520" height="120" fill="#e0f2fe"/>
+      <rect x="0" y="120" width="520" height="150" fill="#7dd3fc"/>
+      <line x1="0" y1="120" x2="520" y2="120" stroke="#0284c7" stroke-width="3" stroke-dasharray="10 6"/>
+      <text x="16" y="140" font-size="12" font-weight="800" fill="#0369a1">Water Surface</text>
+
+      <g class="${objClass}">
+        <!-- Object -->
+        <rect x="200" y="${boxY}" width="120" height="36" rx="8" fill="#b45309" stroke="#0f172a" stroke-width="3"/>
+        <text x="260" y="${boxY + 23}" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">Test Object</text>
+
+        <!-- Upthrust Arrow touching top -->
+        <line x1="260" y1="${boxY}" x2="260" y2="${boxY - upLen}" stroke="#059669" stroke-width="7"/>
+        <polygon points="260,${boxY - upLen - 12} 250,${boxY - upLen + 2} 270,${boxY - upLen + 2}" fill="#059669"/>
+        <text x="335" y="${Math.max(22, boxY - Math.round(upLen / 2))}" font-size="14" font-weight="800" fill="#047857">Upthrust: ${up} N</text>
+
+        <!-- Weight Arrow touching bottom -->
+        <line x1="260" y1="${boxY + 36}" x2="260" y2="${boxY + 36 + dnLen}" stroke="#e11d48" stroke-width="7"/>
+        <polygon points="260,${boxY + 36 + dnLen + 12} 250,${boxY + 36 + dnLen - 2} 270,${boxY + 36 + dnLen - 2}" fill="#e11d48"/>
+        <text x="335" y="${Math.min(258, boxY + 40 + Math.round(dnLen / 2))}" font-size="14" font-weight="800" fill="#be123c">Weight: ${dn} N</text>
+      </g>
+    </svg>
+  `;
+}
+
+function buildOrganicParticles() {
+  const el = document.getElementById('organicParticles');
+  let html = '';
+  for (let i = 0; i < 24; i++) {
+    const delay = (i * 0.17).toFixed(2);
+    const dur = (2.2 + (i % 4) * 0.45).toFixed(2);
+    html += `<span class="water-dot inline-block w-3.5 h-3.5 rounded-full bg-sky-600 border border-white shadow-sm" style="animation-delay:${delay}s; animation-duration:${dur}s;"></span>`;
+  }
+  el.innerHTML = html;
+}
+
+function toggleMechanism(id) {
+  document.getElementById(id).classList.toggle('hidden');
+  playTone(540, 0.08, 'sine', 0.07);
+}
+
+/* Scatter Graph Interactions */
+function inspectPoint(cm, marbles, isAnom) {
+  document.getElementById('coordReadout').textContent = `Rim Height = ${cm} cm  ➔  ${marbles} Marbles Held`;
+  document.getElementById('coordNote').textContent = isAnom
+    ? '🚨 RED FLAG! This point drops far below the upward trend (expected ~23 marbles). It is an ANOMALOUS RESULT — repeat this test!'
+    : '✅ Fits the smooth upward pattern: taller rim height displaces more water and holds more marbles.';
+  playTone(isAnom ? 260 : 620, 0.12, 'triangle', 0.09);
+}
+
+function toggleGraphAnomaly() {
+  document.getElementById('graphAnomalyRing').classList.toggle('hidden');
+  playTone(340, 0.12, 'square', 0.07);
+}
+
+function toggleGraphTrend() {
+  document.getElementById('graphTrendLine').classList.toggle('hidden');
+  document.getElementById('graphPredDot').classList.toggle('hidden');
+  playSuccessChime();
+}
+
+/* ----------------- STATION 5: SC WHITEBOARD CHECK (0/3 MET) ----------------- */
+const scMet = [false, false, false];
+
+function revealScAns(i) {
+  document.getElementById('scAns-' + i).classList.toggle('hidden');
+  playTone(520, 0.08, 'sine', 0.07);
+}
+
+function toggleScMet(i) {
+  scMet[i] = !scMet[i];
+  const card = document.getElementById('scCard-' + i);
+  const status = document.getElementById('scStatus-' + i);
+  const btn = document.getElementById('scMetBtn-' + i);
+  if (scMet[i]) {
+    card.classList.remove('border-slate-200');
+    card.classList.add('border-emerald-500');
+    status.textContent = '✅ MET!';
+    status.className = 'text-xs font-extrabold text-emerald-600';
+    btn.textContent = '☑ SC ' + (i + 1) + ' Met';
+    playSuccessChime();
+  } else {
+    card.classList.add('border-slate-200');
+    card.classList.remove('border-emerald-500');
+    status.textContent = 'NOT YET MET';
+    status.className = 'text-xs font-extrabold text-slate-400';
+    btn.textContent = '☐ Mark SC ' + (i + 1) + ' Met';
+  }
+  const metCount = scMet.filter(Boolean).length;
+  document.getElementById('scProgressBadge').textContent = metCount + '/3 Met';
+  if (metCount === 3) launchConfetti();
+}
+
+/* ----------------- STATION 6: 8-QUESTION QUICKFIRE ENGINE ----------------- */
+const quickfireQs = [
+  {
+    tag: 'Topic 5.1 · Mass & Weight Units',
+    q: 'What are the correct scientific units for MASS and for WEIGHT?',
+    a: 'Mass = kilograms (kg)  |  Weight = newtons (N)',
+    e: 'Mass measures matter in kg; weight is a force measured in N with a forcemeter.'
+  },
+  {
+    tag: 'Topic 5.1 · Earth to Moon Calculation',
+    q: 'A rescue dog has a mass of 24 kg on Earth. What is its weight on Earth (10 N/kg) and on the Moon (1/6 Earth)?',
+    a: 'Earth Weight = 240 N  |  Moon Weight = 40 N',
+    e: '24 × 10 = 240 N on Earth; 240 ÷ 6 = 40 N on the Moon.'
+  },
+  {
+    tag: 'Topic 5.1 · Constant Mass Trap',
+    q: 'An 18 kg meteorite is carried to Jupiter where gravity is 2.5 times stronger. What is its MASS on Jupiter?',
+    a: '18 kg (UNCHANGED!)',
+    e: 'Mass never changes anywhere in the universe — only weight increases!'
+  },
+  {
+    tag: 'Topic 5.2 · Force Diagrams',
+    q: 'A hovercraft floats still with a downward weight of 75 N. Describe the upward force arrow.',
+    a: 'Upward force = 75 N, EXACT SAME LENGTH, touching the hovercraft.',
+    e: 'Balanced forces must have equal-length opposing arrows.'
+  },
+  {
+    tag: 'Topic 5.2 · Unbalanced Resultant Force',
+    q: 'A jet-ski pushes forward with 120 N while water resistance pulls back with 45 N. What is the resultant force and motion?',
+    a: '75 N forward — the jet-ski speeds up (accelerates) forwards!',
+    e: '120 N − 45 N = 75 N unbalanced force forwards.'
+  },
+  {
+    tag: 'Topic 5.3 · Sinking Forces',
+    q: 'A pebble has a weight of 65 N and experiences 20 N of upthrust in water. Does it float or sink, and why?',
+    a: 'It SINKS because Weight (65 N) is greater than Upthrust (20 N).',
+    e: 'The forces are unbalanced with 45 N acting downwards.'
+  },
+  {
+    tag: 'Topic 5.3 · Shape & Displaced Water',
+    q: 'Why can a wide flat-bottomed foil boat hold more cargo than a narrow foil boat of the same mass?',
+    a: 'The wide hull displaces MORE water, producing GREATER upthrust.',
+    e: 'More displaced water always means bigger upward upthrust.'
+  },
+  {
+    tag: 'TWS · Scatter Graph Anomalies',
+    q: 'Boat depths 1, 2, 3, 4 cm held 7, 3, 19, 25 washers. Which result is anomalous, and what should the scientist do?',
+    a: '2 cm ➔ 3 washers is anomalous! Repeat the 2 cm test.',
+    e: '3 drops sharply below the upward pattern (expected ~13 washers).'
+  }
+];
+
+let qfIdx = 0;
+let qfInterval = null;
+let qfTime = 15;
+
+function renderQf() {
+  const item = quickfireQs[qfIdx];
+  document.getElementById('qfIndex').textContent = qfIdx + 1;
+  document.getElementById('qfTag').textContent = item.tag;
+  document.getElementById('qfQuestion').textContent = item.q;
+  document.getElementById('qfAnswer').textContent = item.a;
+  document.getElementById('qfExplain').textContent = item.e;
+  document.getElementById('qfAnswerBox').classList.add('hidden');
+  document.getElementById('boardsUpBanner').classList.add('hidden');
+  clearInterval(qfInterval);
+  document.getElementById('qfTimerDisplay').textContent = '15s';
+}
+
+function startQfTimer(sec) {
+  clearInterval(qfInterval);
+  qfTime = sec;
+  document.getElementById('boardsUpBanner').classList.add('hidden');
+  document.getElementById('qfTimerDisplay').textContent = qfTime + 's';
+  qfInterval = setInterval(() => {
+    qfTime--;
+    document.getElementById('qfTimerDisplay').textContent = qfTime + 's';
+    if (qfTime <= 3 && qfTime > 0) playTone(660, 0.08, 'sine', 0.08);
+    if (qfTime <= 0) {
+      clearInterval(qfInterval);
+      triggerBoardsUp();
+    }
+  }, 1000);
+}
+
+function triggerBoardsUp() {
+  clearInterval(qfInterval);
+  document.getElementById('boardsUpBanner').classList.remove('hidden');
+  playBoardsUpAlert();
+}
+
+function revealQfAnswer() {
+  document.getElementById('qfAnswerBox').classList.remove('hidden');
+  playSuccessChime();
+}
+
+function nextQf() {
+  qfIdx = (qfIdx + 1) % quickfireQs.length;
+  renderQf();
+}
+function prevQf() {
+  qfIdx = (qfIdx - 1 + quickfireQs.length) % quickfireQs.length;
+  renderQf();
+}
+
+/* ----------------- TEACHER DRAWER & DAVID'S BOARD (DPR-SAFE) ----------------- */
+function toggleTeacherDrawer() {
+  document.getElementById('teacherDrawer').classList.toggle('hidden');
+}
+
+let wbOpen = false;
+let wbDrawing = false;
+let wbColour = '#0f172a';
+let wbCtx = null;
+
+function toggleWhiteboard() {
+  wbOpen = !wbOpen;
+  const modal = document.getElementById('whiteboardModal');
+  modal.classList.toggle('hidden', !wbOpen);
+  if (wbOpen) requestAnimationFrame(resizeWhiteboard);
+}
+
+function resizeWhiteboard() {
+  const canvas = document.getElementById('wbCanvas');
+  const rect = canvas.parentElement.getBoundingClientRect();
+  if (rect.width <= 0 || rect.height <= 0) return;
+  const dpr = window.devicePixelRatio || 1;
+  const targetW = Math.round(rect.width * dpr);
+  const targetH = Math.round(rect.height * dpr);
+  if (canvas.width === targetW && canvas.height === targetH && wbCtx) return;
+  let backup = null;
+  if (canvas.width > 0 && canvas.height > 0 && wbCtx) {
+    backup = document.createElement('canvas');
+    backup.width = canvas.width;
+    backup.height = canvas.height;
+    backup.getContext('2d').drawImage(canvas, 0, 0);
+  }
+  canvas.width = targetW;
+  canvas.height = targetH;
+  wbCtx = canvas.getContext('2d');
+  wbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  wbCtx.lineCap = 'round';
+  wbCtx.lineJoin = 'round';
+  wbCtx.lineWidth = 4;
+  if (backup) {
+    wbCtx.save();
+    wbCtx.setTransform(1, 0, 0, 1, 0, 0);
+    wbCtx.drawImage(backup, 0, 0, canvas.width, canvas.height);
+    wbCtx.restore();
+  }
+}
+
+window.addEventListener('resize', () => {
+  if (wbOpen) resizeWhiteboard();
+});
+
+function setPenColour(col) { wbColour = col; }
+
+function clearWhiteboard() {
+  if (!wbCtx) return;
+  const canvas = document.getElementById('wbCanvas');
+  wbCtx.save();
+  wbCtx.setTransform(1, 0, 0, 1, 0, 0);
+  wbCtx.clearRect(0, 0, canvas.width, canvas.height);
+  wbCtx.restore();
+}
+
+(function bindWhiteboardEvents() {
+  const canvas = document.getElementById('wbCanvas');
+  function getPos(e) {
+    const r = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: clientX - r.left, y: clientY - r.top };
+  }
+  canvas.addEventListener('pointerdown', e => {
+    if (!wbCtx) resizeWhiteboard();
+    wbDrawing = true;
+    const p = getPos(e);
+    wbCtx.strokeStyle = wbColour;
+    wbCtx.beginPath();
+    wbCtx.moveTo(p.x, p.y);
+  });
+  canvas.addEventListener('pointermove', e => {
+    if (!wbDrawing) return;
+    const p = getPos(e);
+    wbCtx.lineTo(p.x, p.y);
+    wbCtx.stroke();
+  });
+  window.addEventListener('pointerup', () => { wbDrawing = false; });
+})();
+
+/* ----------------- GUARDED KEYBOARD SHORTCUTS ----------------- */
+function isAnyModalOpen() {
+  return !document.getElementById('vocabModal').classList.contains('hidden') ||
+         !document.getElementById('giantModal').classList.contains('hidden') ||
+         !document.getElementById('whiteboardModal').classList.contains('hidden') ||
+         !document.getElementById('teacherDrawer').classList.contains('hidden');
+}
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeVocabModal();
+    closeGiantModal();
+    if (wbOpen) toggleWhiteboard();
+    document.getElementById('teacherDrawer').classList.add('hidden');
+    const fs = document.querySelector('.fullscreen-ido');
+    if (fs) fs.classList.remove('fullscreen-ido');
+    return;
+  }
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key.toLowerCase() === 'w') { toggleWhiteboard(); return; }
+  if (e.key.toLowerCase() === 't') { toggleTeacherDrawer(); return; }
+  if (e.key.toLowerCase() === 'm') { toggleMute(); return; }
+  if (isAnyModalOpen()) return;
+  if (e.key === 'ArrowRight') goStation(currentStation + 1);
+  if (e.key === 'ArrowLeft') goStation(currentStation - 1);
+});
+
+/* ----------------- INITIALISE ----------------- */
+buildVocabGrid();
+renderTrap();
+updateGravityLab();
+updateArrowLab();
+buildOrganicParticles();
+renderQf();
+</script>
+</body>
+</html>

@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grade 4 Science — Week 18, Lesson 1: Organs of the Human Digestive System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap');
+
+    :root {
+      --teal-dark: #0f766e;
+      --teal-mid: #14b8a6;
+      --amber-pop: #f59e0b;
+      --coral-pop: #f43f5e;
+      --indigo-pop: #4f46e5;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(160deg, #f0fdfa 0%, #ecfeff 50%, #fffbeb 100%);
+      color: #0f172a;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    /* Auto-hiding fixed header */
+    #top-header {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    #top-header.header-hidden {
+      transform: translateY(-110%);
+    }
+
+    /* Station tabs */
+    .station-tab {
+      transition: all 0.2s ease;
+    }
+    .station-tab.active {
+      background: linear-gradient(135deg, #0f766e, #0d9488);
+      color: #ffffff;
+      box-shadow: 0 6px 16px rgba(15, 118, 110, 0.32);
+      transform: translateY(-1px);
+    }
+
+    /* 3D Flip Cards for Station 1 Flashback 3 */
+    .flip-perspective {
+      perspective: 1200px;
+    }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Animated food bolus & organ pulse */
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.45)); }
+      50% { filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.95)); }
+    }
+    .organ-active {
+      animation: pulseGlow 1.3s ease-in-out infinite;
+    }
+
+    @keyframes floatParticle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-7px) rotate(8deg); }
+    }
+    .organic-particle {
+      animation-name: floatParticle;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-in-out;
+    }
+
+    @keyframes boardsUpPop {
+      0% { transform: scale(0.7); opacity: 0; }
+      60% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .boards-up-anim {
+      animation: boardsUpPop 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #e2e8f0; }
+    ::-webkit-scrollbar-thumb { background: #0d9488; border-radius: 999px; }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Confetti Canvas (Topmost non-blocking layer) -->
+  <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-[90]"></canvas>
+
+  <!-- AUTO-HIDING FIXED TOP HEADER -->
+  <header id="top-header" class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b-2 border-teal-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+      <!-- Left: Brand + Enquiry + LO -->
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-600 to-emerald-500 text-white font-display font-bold text-lg flex items-center justify-center shadow">
+          4.1
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-xs font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">Grade 4 Science • Stage 5 (0097)</span>
+            <span class="text-xs font-bold text-slate-500 hidden sm:inline">Enquiry: Where does our food go inside the body?</span>
+          </div>
+          <p class="font-display text-sm sm:text-base font-bold text-slate-900 truncate">LO: Name the 6 digestive organs and their functions.</p>
+        </div>
+      </div>
+
+      <!-- Right: Team Scores + Tools -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- Team Red Score -->
+        <div class="flex items-center gap-1 bg-rose-50 border border-rose-200 rounded-xl px-2 py-1">
+          <span class="text-xs font-extrabold text-rose-700">RED</span>
+          <button onclick="changeTeamScore('red', -1)" class="w-6 h-6 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold text-sm leading-none" title="Subtract 1 from Team Red">−</button>
+          <span id="header-red-score" class="w-6 text-center font-display font-bold text-rose-700 text-base">0</span>
+          <button onclick="changeTeamScore('red', 1)" class="w-6 h-6 rounded-lg bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm leading-none" title="Add 1 to Team Red">+</button>
+        </div>
+
+        <!-- Team Blue Score -->
+        <div class="flex items-center gap-1 bg-sky-50 border border-sky-200 rounded-xl px-2 py-1">
+          <span class="text-xs font-extrabold text-sky-700">BLUE</span>
+          <button onclick="changeTeamScore('blue', -1)" class="w-6 h-6 rounded-lg bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold text-sm leading-none" title="Subtract 1 from Team Blue">−</button>
+          <span id="header-blue-score" class="w-6 text-center font-display font-bold text-sky-700 text-base">0</span>
+          <button onclick="changeTeamScore('blue', 1)" class="w-6 h-6 rounded-lg bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm leading-none" title="Add 1 to Team Blue">+</button>
+        </div>
+
+        <!-- Utility Buttons -->
+        <button id="mute-btn" onclick="toggleMute()" class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1" title="Mute / Unmute Sound (M)">
+          <span id="mute-icon">🔊</span><span class="hidden md:inline">Sound (M)</span>
+        </button>
+        <button onclick="openWhiteboard()" class="px-2.5 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs flex items-center gap-1 border border-amber-300" title="Open David's Board Whiteboard (W)">
+          ✏️ <span>David's Board (W)</span>
+        </button>
+        <button onclick="toggleTeacherDrawer()" class="px-2.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-1 shadow-sm" title="Open Teacher Prompt Drawer (T)">
+          📋 <span class="hidden sm:inline">Teacher (T)</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="pt-24 pb-12 px-3 sm:px-6 max-w-7xl mx-auto">
+
+    <!-- STATION NAVIGATION BAR (flex-wrap so tabs never squash) -->
+    <nav aria-label="Lesson Stations" class="bg-white/90 border border-teal-100 rounded-2xl p-2 shadow-sm mb-6 flex flex-wrap items-center justify-center gap-2">
+      <button onclick="switchStation(0)" data-station="0" class="station-tab active px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-teal-50">
+        0. LO &amp; Criteria
+      </button>
+      <button onclick="switchStation(1)" data-station="1" class="station-tab px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-teal-50">
+        1. Flashback 3
+      </button>
+      <button onclick="switchStation(2)" data-station="2" class="station-tab px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-teal-50">
+        2. Vocabulary
+      </button>
+      <button onclick="switchStation(3)" data-station="3" class="station-tab px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-teal-50">
+        3. I Do: Banh Mi Journey
+      </button>
+      <button onclick="switchStation(4)" data-station="4" class="station-tab px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-teal-50">
+        4. Dual Lab: Mouth &amp; Organs
+      </button>
+      <button onclick="switchStation(5)" data-station="5" class="station-tab px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-teal-50">
+        5. Whiteboard Check
+      </button>
+      <button onclick="switchStation(6)" data-station="6" class="station-tab px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-teal-50">
+        6. Quickfire
+      </button>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- STATION 0: LO & SUCCESS CRITERIA                             -->
+    <!-- [SoL: Cognitive Load Management] [SoL: Metacognition]        -->
+    <!-- ============================================================ -->
+    <section id="station-0" class="station-section">
+      <div class="space-y-6">
+        <!-- Hero LO Banner -->
+        <div class="bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
+          <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="space-y-3 max-w-3xl">
+              <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur px-3.5 py-1 rounded-full text-xs font-extrabold tracking-wide uppercase">
+                <span>Unit 4: The Digestive System</span>
+                <span>•</span>
+                <span>5Bs.04 • 5TWSm.02 • 5TWSc.06 • 5TWSp.05</span>
+              </div>
+              <h1 class="font-display text-3xl sm:text-5xl font-bold leading-tight">
+                Name the 6 digestive organs and their functions.
+              </h1>
+              <p class="text-teal-50 text-lg sm:text-xl font-semibold">
+                Big Enquiry Question: What happens to a bite of lunch from the moment we chew it?
+              </p>
+            </div>
+            <!-- Compact visual emblem -->
+            <div class="bg-white/15 rounded-3xl p-4 border border-white/25 flex-shrink-0">
+              <svg viewBox="0 0 120 120" class="w-28 h-28" aria-label="Digestive Pathway Emblem">
+                <circle cx="60" cy="60" r="54" fill="rgba(255,255,255,0.12)" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="6 4"/>
+                <path d="M52 22 C60 16, 72 22, 68 32 L64 48 C82 52, 84 70, 62 72 C46 73, 46 86, 62 86 C74 86, 74 96, 60 100" fill="none" stroke="#fde047" stroke-width="7" stroke-linecap="round"/>
+                <circle cx="52" cy="22" r="5" fill="#ffffff"/>
+                <circle cx="66" cy="59" r="7" fill="#fb7185"/>
+                <circle cx="60" cy="100" r="5" fill="#34d399"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Clear "I can..." Success Criteria -->
+        <div class="bg-white rounded-3xl border-2 border-teal-100 p-6 shadow-md">
+          <h2 class="font-display text-2xl font-bold text-teal-900 mb-4 flex items-center gap-2">
+            <span>🎯</span> Today's 3 "I Can..." Success Criteria
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="rounded-2xl bg-teal-50 border-2 border-teal-200 p-5">
+              <div class="w-9 h-9 rounded-full bg-teal-600 text-white font-display font-bold flex items-center justify-center mb-3">1</div>
+              <p class="font-bold text-slate-800 text-base leading-snug">
+                I can name and label the 6 main organs of the human digestive system in the exact order food travels.
+              </p>
+            </div>
+            <div class="rounded-2xl bg-amber-50 border-2 border-amber-200 p-5">
+              <div class="w-9 h-9 rounded-full bg-amber-500 text-white font-display font-bold flex items-center justify-center mb-3">2</div>
+              <p class="font-bold text-slate-800 text-base leading-snug">
+                I can describe the main job of each organ, including how teeth and saliva start digestion in the mouth.
+              </p>
+            </div>
+            <div class="rounded-2xl bg-rose-50 border-2 border-rose-200 p-5">
+              <div class="w-9 h-9 rounded-full bg-rose-500 text-white font-display font-bold flex items-center justify-center mb-3">3</div>
+              <p class="font-bold text-slate-800 text-base leading-snug">
+                I can identify hygiene and safety risks (allergies, choking, handwashing) before investigating digestion.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Must / Should / Could Tiers -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="bg-emerald-50 border-2 border-emerald-300 rounded-3xl p-6 shadow-sm">
+            <span class="inline-block px-3 py-1 rounded-full bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-wider mb-3">Must • Level 1</span>
+            <p class="font-display text-xl font-bold text-emerald-950">
+              Name and order the 6 human digestive organs on a diagram.
+            </p>
+          </div>
+          <div class="bg-sky-50 border-2 border-sky-300 rounded-3xl p-6 shadow-sm">
+            <span class="inline-block px-3 py-1 rounded-full bg-sky-600 text-white font-extrabold text-xs uppercase tracking-wider mb-3">Should • Level 2</span>
+            <p class="font-display text-xl font-bold text-sky-950">
+              Match each organ (mouth to anus) to its clear scientific job.
+            </p>
+          </div>
+          <div class="bg-purple-50 border-2 border-purple-300 rounded-3xl p-6 shadow-sm">
+            <span class="inline-block px-3 py-1 rounded-full bg-purple-600 text-white font-extrabold text-xs uppercase tracking-wider mb-3">Could • Level 3</span>
+            <p class="font-display text-xl font-bold text-purple-950">
+              Explain why digestion must happen before nutrients enter the blood.
+            </p>
+          </div>
+        </div>
+
+        <div class="text-right">
+          <button onclick="switchStation(1)" class="px-6 py-3 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-display font-bold text-lg shadow-lg transition">
+            Start Station 1: Flashback 3 ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 1: SPACED FLASHBACK 3 (Units 2.4, 3.3, 1.2)          -->
+    <!-- [SoL: Retrieval Practice] [SoL: Spaced Practice] [SoL: Interleaving] -->
+    <!-- ============================================================ -->
+    <section id="station-1" class="station-section hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl border-2 border-amber-200 p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700 bg-amber-100 px-3 py-1 rounded-full">Spaced Retrieval • 3 Earlier Units</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Flashback 3: Mini-Whiteboard Warm-Up!</h2>
+            <p class="text-slate-600 font-semibold text-sm">Write your answers on your mini-whiteboard first, then click each card to flip and check.</p>
+          </div>
+          <button onclick="resetFlashbacks()" class="px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-sm border border-amber-300">
+            🔄 Reset All Cards
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 2.4 Sound Pitch (5Ps.03) -->
+          <div class="flip-perspective h-[360px]">
+            <div id="fb-card-1" onclick="toggleFlip('fb-card-1')" class="flip-card cursor-pointer w-full h-full">
+              <div class="flip-inner">
+                <!-- Front -->
+                <div class="flip-face bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-3xl p-6 shadow-xl flex flex-col justify-between border-4 border-indigo-200">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Unit 2.4 • Sound Pitch</span>
+                    <span class="text-4xl">🎸</span>
+                  </div>
+                  <div class="my-auto text-center space-y-3">
+                    <div class="font-display text-5xl font-bold text-amber-300">Q1</div>
+                    <p class="text-xl font-bold leading-snug">
+                      A musician shortens a vibrating guitar string. How do the <span class="underline decoration-amber-300">vibrations</span> and <span class="underline decoration-amber-300">pitch</span> change?
+                    </p>
+                  </div>
+                  <div class="text-center text-xs font-extrabold uppercase tracking-widest text-indigo-100 bg-black/15 rounded-xl py-2">
+                    Tap card to reveal answer
+                  </div>
+                </div>
+                <!-- Back -->
+                <div class="flip-face flip-back bg-white rounded-3xl p-6 shadow-xl flex flex-col justify-between border-4 border-indigo-500">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase">Answer • 5Ps.03</span>
+                    <span class="text-3xl">✅</span>
+                  </div>
+                  <div class="my-auto text-center space-y-3">
+                    <p class="font-display text-3xl font-bold text-indigo-700">Faster vibrations ➔ Higher pitch!</p>
+                    <p class="text-slate-700 font-bold text-base">
+                      A shorter string (or shorter air column) vibrates faster, producing a higher-pitched sound.
+                    </p>
+                  </div>
+                  <div class="text-center text-xs font-bold text-slate-400">Tap again to flip back</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 3.3 Evaporation & Condensation (5Cc.01) -->
+          <div class="flip-perspective h-[360px]">
+            <div id="fb-card-2" onclick="toggleFlip('fb-card-2')" class="flip-card cursor-pointer w-full h-full">
+              <div class="flip-inner">
+                <!-- Front -->
+                <div class="flip-face bg-gradient-to-br from-sky-600 to-cyan-600 text-white rounded-3xl p-6 shadow-xl flex flex-col justify-between border-4 border-sky-200">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Unit 3.3 • States of Water</span>
+                    <span class="text-4xl">🧊</span>
+                  </div>
+                  <div class="my-auto text-center space-y-3">
+                    <div class="font-display text-5xl font-bold text-amber-300">Q2</div>
+                    <p class="text-xl font-bold leading-snug">
+                      A cold glass of iced tea sits on a warm table. Why do liquid <span class="underline decoration-amber-300">water droplets</span> form on the outside?
+                    </p>
+                  </div>
+                  <div class="text-center text-xs font-extrabold uppercase tracking-widest text-sky-100 bg-black/15 rounded-xl py-2">
+                    Tap card to reveal answer
+                  </div>
+                </div>
+                <!-- Back -->
+                <div class="flip-face flip-back bg-white rounded-3xl p-6 shadow-xl flex flex-col justify-between border-4 border-sky-500">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-extrabold uppercase">Answer • 5Cc.01</span>
+                    <span class="text-3xl">✅</span>
+                  </div>
+                  <div class="my-auto text-center space-y-3">
+                    <p class="font-display text-3xl font-bold text-sky-700">Condensation!</p>
+                    <p class="text-slate-700 font-bold text-base">
+                      Warm invisible water vapour in the air cools down on the cold glass and condenses into liquid water droplets.
+                    </p>
+                  </div>
+                  <div class="text-center text-xs font-bold text-slate-400">Tap again to flip back</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 1.2 Pollination & Seeds (5Bp.03) -->
+          <div class="flip-perspective h-[360px]">
+            <div id="fb-card-3" onclick="toggleFlip('fb-card-3')" class="flip-card cursor-pointer w-full h-full">
+              <div class="flip-inner">
+                <!-- Front -->
+                <div class="flip-face bg-gradient-to-br from-emerald-600 to-teal-600 text-white rounded-3xl p-6 shadow-xl flex flex-col justify-between border-4 border-emerald-200">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Unit 1.2 • Plants</span>
+                    <span class="text-4xl">🐝</span>
+                  </div>
+                  <div class="my-auto text-center space-y-3">
+                    <div class="font-display text-5xl font-bold text-amber-300">Q3</div>
+                    <p class="text-xl font-bold leading-snug">
+                      How do bees help <span class="underline decoration-amber-300">pollination</span>, and why do plants spread their <span class="underline decoration-amber-300">seeds</span> far away?
+                    </p>
+                  </div>
+                  <div class="text-center text-xs font-extrabold uppercase tracking-widest text-emerald-100 bg-black/15 rounded-xl py-2">
+                    Tap card to reveal answer
+                  </div>
+                </div>
+                <!-- Back -->
+                <div class="flip-face flip-back bg-white rounded-3xl p-6 shadow-xl flex flex-col justify-between border-4 border-emerald-500">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase">Answer • 5Bp.03</span>
+                    <span class="text-3xl">✅</span>
+                  </div>
+                  <div class="my-auto text-center space-y-3">
+                    <p class="font-display text-2xl font-bold text-emerald-700">Pollen transfer &amp; less crowding!</p>
+                    <p class="text-slate-700 font-bold text-base">
+                      Bees carry pollen between flowers so seeds can form. Seed dispersal gives new seedlings space, light and water to grow.
+                    </p>
+                  </div>
+                  <div class="text-center text-xs font-bold text-slate-400">Tap again to flip back</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 2: VOCABULARY (8 TERMS + MODAL + REAL-WORLD STRIP)   -->
+    <!-- [SoL: Dual Coding] [SoL: Schema Building]                    -->
+    <!-- NOTE: Main station UI is 100% British English; ONLY the      -->
+    <!-- popped-up Vocabulary Modal contains Vietnamese translations. -->
+    <!-- ============================================================ -->
+    <section id="station-2" class="station-section hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl border-2 border-teal-200 p-6 shadow-sm flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-teal-800 bg-teal-100 px-3 py-1 rounded-full">Key Scientific Vocabulary • 8 Pacing-Guide Terms</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Tap Any Word Card to Open Visual &amp; Audio Explorer</h2>
+            <p class="text-slate-600 font-semibold text-sm">Watch closely for the British spelling of <strong class="text-rose-600">oesophagus</strong> (starts with <strong>oe-</strong>!).</p>
+          </div>
+          <div class="px-4 py-2 rounded-2xl bg-rose-50 border-2 border-rose-200 text-rose-800 font-bold text-sm">
+            🇬🇧 Spelling Spotlight: <u>oe</u>sophagus
+          </div>
+        </div>
+
+        <!-- 8 Clickable Vocabulary Cards (English Only on Grid) -->
+        <div id="vocab-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+
+        <!-- Real-World Body Health Strip (Strictly 100% English ONLY) -->
+        <div class="bg-gradient-to-r from-emerald-700 to-teal-700 text-white rounded-3xl p-6 shadow-lg">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <span class="text-xs font-extrabold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full">Real-World Body Health Link</span>
+              <h3 class="font-display text-2xl font-bold">Why Does Your Body Need Digestion Every Single Day?</h3>
+              <p class="text-emerald-50 text-sm sm:text-base font-semibold max-w-4xl">
+                A whole piece of bread or apple is far too big to pass into your bloodstream! Your digestive system breaks food into tiny dissolved nutrients that travel in your blood to every muscle and organ, giving you energy to run, think, play football and grow taller.
+              </p>
+            </div>
+            <div class="flex-shrink-0 bg-white/15 rounded-2xl px-4 py-3 text-center border border-white/25">
+              <div class="text-3xl">⚡</div>
+              <div class="font-display font-bold text-sm">Food ➔ Tiny Nutrients</div>
+              <div class="text-xs text-emerald-100">Energy for Every Cell</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 3: FULL-SCREEN VISUAL I DO — FOLLOW THE BANH MI      -->
+    <!-- [SoL: Worked Examples] [SoL: Dual Coding] [SoL: Misconceptions] -->
+    <!-- ============================================================ -->
+    <section id="station-3" class="station-section hidden">
+      <div class="space-y-5">
+        <!-- Top Control Bar -->
+        <div class="bg-white rounded-3xl border-2 border-teal-200 p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Full-Screen Visual I Do • 5Bs.04 &amp; 5TWSm.02</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900 mt-0.5">Follow the Banh Mi: 6-Organ Animated Body Journey</h2>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="play-journey-btn" onclick="playFullJourney()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow">
+              ▶️ Play Full Journey
+            </button>
+            <button onclick="openMythModal()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm shadow">
+              🚨 Bust the Stomach Myth!
+            </button>
+            <button onclick="openGiantProjection()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow">
+              🔍 Giant Projection
+            </button>
+          </div>
+        </div>
+
+        <!-- 6-Step Journey Selector Buttons -->
+        <div id="journey-step-bar" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2"></div>
+
+        <!-- Main Visual Canvas + Permanent Sidebar (Canvas & Dashboard Strictly Separated) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          <!-- Left: Animated Human Digestive System SVG Canvas (5 cols) -->
+          <div class="lg:col-span-5 bg-white rounded-3xl border-2 border-teal-200 p-4 shadow-md flex flex-col items-center justify-center">
+            <svg id="journey-svg" viewBox="0 0 320 460" class="w-full max-w-[330px] h-auto" aria-label="Animated Human Digestive System">
+              <!-- Soft Human Head & Torso Silhouette -->
+              <path d="M160 16 C188 16, 208 38, 208 66 C208 86, 198 102, 184 110 L184 126 C228 134, 266 154, 274 206 L280 398 C280 416, 262 426, 240 426 L210 426 L204 452 L116 452 L110 426 L80 426 C58 426, 40 416, 40 398 L46 206 C54 154, 92 134, 136 126 L136 110 C122 102, 112 86, 112 66 C112 38, 132 16, 160 16 Z" fill="#f8fafc" stroke="#94a3b8" stroke-width="3"/>
+
+              <!-- 1. MOUTH -->
+              <g id="svg-organ-1" class="cursor-pointer" onclick="selectJourneyStep(1)">
+                <ellipse cx="148" cy="84" rx="22" ry="13" fill="#fda4af" stroke="#be123c" stroke-width="2.5"/>
+                <rect x="136" y="75" width="24" height="5" rx="2" fill="#ffffff" stroke="#be123c" stroke-width="1"/>
+                <rect x="136" y="88" width="24" height="5" rx="2" fill="#ffffff" stroke="#be123c" stroke-width="1"/>
+                <circle cx="132" cy="84" r="3" fill="#38bdf8"/>
+                <text x="110" y="88" text-anchor="end" font-family="Nunito" font-size="12" font-weight="800" fill="#be123c">1. Mouth</text>
+                <line x1="115" y1="84" x2="126" y2="84" stroke="#be123c" stroke-width="2"/>
+              </g>
+
+              <!-- 2. OESOPHAGUS -->
+              <g id="svg-organ-2" class="cursor-pointer" onclick="selectJourneyStep(2)">
+                <path d="M162 94 L162 192" stroke="#fb923c" stroke-width="14" stroke-linecap="round"/>
+                <path d="M162 94 L162 192" stroke="#c2410c" stroke-width="2.5" stroke-dasharray="6 6" fill="none"/>
+                <text x="202" y="148" font-family="Nunito" font-size="12" font-weight="800" fill="#c2410c">2. Oesophagus</text>
+                <line x1="170" y1="144" x2="198" y2="144" stroke="#c2410c" stroke-width="2"/>
+              </g>
+
+              <!-- 3. STOMACH -->
+              <g id="svg-organ-3" class="cursor-pointer" onclick="selectJourneyStep(3)">
+                <path d="M162 190 C192 186, 224 206, 218 238 C212 266, 174 274, 152 256 C140 246, 146 226, 158 214 Z" fill="#f43f5e" stroke="#881337" stroke-width="3"/>
+                <path d="M166 238 Q186 228 206 238 Q196 258 164 252 Z" fill="#fde047" opacity="0.65"/>
+                <text x="84" y="232" text-anchor="end" font-family="Nunito" font-size="12" font-weight="800" fill="#881337">3. Stomach</text>
+                <line x1="88" y1="228" x2="148" y2="228" stroke="#881337" stroke-width="2"/>
+              </g>
+
+              <!-- 5. LARGE INTESTINE (drawn behind small intestine frame) -->
+              <g id="svg-organ-5" class="cursor-pointer" onclick="selectJourneyStep(5)">
+                <path d="M110 368 L110 290 C110 274, 124 268, 160 268 C196 268, 210 274, 210 290 L210 358 C210 374, 194 382, 162 384 L162 414" fill="none" stroke="#14b8a6" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M110 368 L110 290 C110 274, 124 268, 160 268 C196 268, 210 274, 210 290 L210 358 C210 374, 194 382, 162 384 L162 414" fill="none" stroke="#0f766e" stroke-width="2.5" stroke-dasharray="10 8" stroke-linecap="round"/>
+                <text x="228" y="302" font-family="Nunito" font-size="11.5" font-weight="800" fill="#0f766e">5. Large</text>
+                <text x="228" y="316" font-family="Nunito" font-size="11.5" font-weight="800" fill="#0f766e">intestine</text>
+                <line x1="218" y1="304" x2="225" y2="304" stroke="#0f766e" stroke-width="2"/>
+              </g>
+
+              <!-- 4. SMALL INTESTINE (coiled tube in centre) -->
+              <g id="svg-organ-4" class="cursor-pointer" onclick="selectJourneyStep(4)">
+                <path d="M148 264 C132 282, 186 286, 186 300 C186 314, 132 312, 132 326 C132 340, 188 338, 188 352 C188 364, 134 364, 122 368" fill="none" stroke="#fbbf24" stroke-width="13" stroke-linecap="round"/>
+                <path d="M148 264 C132 282, 186 286, 186 300 C186 314, 132 312, 132 326 C132 340, 188 338, 188 352 C188 364, 134 364, 122 368" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round"/>
+                <text x="12" y="330" font-family="Nunito" font-size="11.5" font-weight="800" fill="#b45309">4. Small</text>
+                <text x="12" y="344" font-family="Nunito" font-size="11.5" font-weight="800" fill="#b45309">intestine</text>
+                <line x1="65" y1="332" x2="128" y2="332" stroke="#b45309" stroke-width="2"/>
+              </g>
+
+              <!-- 6. ANUS -->
+              <g id="svg-organ-6" class="cursor-pointer" onclick="selectJourneyStep(6)">
+                <ellipse cx="162" cy="422" rx="14" ry="8" fill="#6366f1" stroke="#312e81" stroke-width="2.5"/>
+                <text x="206" y="426" font-family="Nunito" font-size="12" font-weight="800" fill="#312e81">6. Anus</text>
+                <line x1="176" y1="422" x2="202" y2="422" stroke="#312e81" stroke-width="2"/>
+              </g>
+
+              <!-- Animated Banh Mi Bolus Marker -->
+              <g id="food-bolus" transform="translate(148, 84)" style="transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);">
+                <circle r="13" fill="#fef08a" stroke="#b45309" stroke-width="3"/>
+                <text x="0" y="5" text-anchor="middle" font-size="13">🥖</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Middle: Dedicated Live Readout Dashboard (4 cols — cleanly outside SVG) -->
+          <div class="lg:col-span-4 bg-white rounded-3xl border-2 border-amber-200 p-6 shadow-md flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span id="journey-stage-pill" class="px-3.5 py-1 rounded-full bg-rose-100 text-rose-800 font-extrabold text-xs uppercase">Stage 1 of 6</span>
+                <span id="journey-emoji" class="text-4xl">🥖</span>
+              </div>
+              <h3 id="journey-organ-name" class="font-display text-3xl font-bold text-slate-900">1. Mouth (Teeth &amp; Saliva)</h3>
+              <div id="journey-action-box" class="rounded-2xl bg-amber-50 border-2 border-amber-200 p-4">
+                <div class="text-xs font-extrabold uppercase text-amber-800 mb-1">What Happens to the Banh Mi Here?</div>
+                <p id="journey-job-text" class="text-slate-800 font-bold text-base leading-relaxed">
+                  Digestion starts right here! Teeth chop and grind the crispy banh mi into tiny pieces. Saliva makes the food soft and slippery and begins breaking down starch.
+                </p>
+              </div>
+              <div class="rounded-2xl bg-teal-50 border border-teal-200 p-4">
+                <div class="text-xs font-extrabold uppercase text-teal-800 mb-1">Food Texture Check</div>
+                <p id="journey-texture-text" class="text-teal-950 font-bold text-sm">
+                  Crunchy bread pieces ➔ Soft, wet, mushy ball ready to swallow.
+                </p>
+              </div>
+              <div id="journey-myth-note" class="rounded-2xl bg-rose-50 border border-rose-200 p-3.5 text-rose-900 font-bold text-sm">
+                💡 Key Fact: Digestion starts in the MOUTH — not in the stomach!
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between gap-2 pt-4 mt-4 border-t border-slate-100">
+              <button onclick="stepJourney(-1)" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm">◀ Previous</button>
+              <button onclick="stepJourney(1)" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm">Next Organ ▶</button>
+            </div>
+          </div>
+
+          <!-- Right: Permanent "Steps to Success & Safety" Sidebar (3 cols) -->
+          <aside class="lg:col-span-3 bg-gradient-to-b from-slate-900 to-teal-950 text-white rounded-3xl p-5 shadow-md flex flex-col justify-between">
+            <div class="space-y-4">
+              <h3 class="font-display text-xl font-bold text-amber-300 flex items-center gap-2">
+                <span>🧭</span> Steps to Success
+              </h3>
+              <ol class="space-y-2.5 text-sm font-bold text-slate-100">
+                <li class="flex gap-2"><span class="text-amber-300">1.</span><span>Trace food strictly in order: <strong>Mouth ➔ Oesophagus ➔ Stomach ➔ Small Intestine ➔ Large Intestine ➔ Anus</strong>.</span></li>
+                <li class="flex gap-2"><span class="text-amber-300">2.</span><span>Remember: <strong>Stomach</strong> churns with acid — it does <strong>NOT</strong> absorb nutrients!</span></li>
+                <li class="flex gap-2"><span class="text-amber-300">3.</span><span>Memory anchor: <strong>S</strong>mall = <strong>S</strong>uper nutrients into blood; <strong>L</strong>arge = <strong>L</strong>iquid water back into body.</span></li>
+                <li class="flex gap-2"><span class="text-amber-300">4.</span><span>Always use British spelling: <strong>oesophagus</strong>.</span></li>
+              </ol>
+            </div>
+            <div class="mt-4 pt-4 border-t border-white/15 space-y-2">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-rose-300">🛡️ Practical Safety Rule</div>
+              <p class="text-xs text-teal-100 font-semibold leading-relaxed">
+                Before any food-tasting science activity: wash hands with soap, check allergies first, and chew slowly without talking or running!
+              </p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 4: INTERACTIVE DUAL LAB                              -->
+    <!-- [SoL: CPA Progression] [SoL: Elaborative Interrogation] [SoL: Immediate Feedback] -->
+    <!-- ============================================================ -->
+    <section id="station-4" class="station-section hidden">
+      <div class="space-y-5">
+        <!-- Dual Lab Sub-Tab Switcher -->
+        <div class="bg-white rounded-3xl border-2 border-teal-200 p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider bg-teal-100 text-teal-800 px-3 py-1 rounded-full">Interactive Dual Lab • 5TWSc.06 • 5TWSp.05 • 5Bs.04</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900 mt-0.5">Mouth-Digestion Safety Simulator &amp; 6-Organ Builder</h2>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button id="lab-tab-a" onclick="switchLabTab('a')" class="px-4 py-2.5 rounded-xl font-bold text-sm bg-teal-600 text-white shadow">
+              🧪 Lab A: Mouth &amp; Safety Simulator
+            </button>
+            <button id="lab-tab-b" onclick="switchLabTab('b')" class="px-4 py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-slate-700 hover:bg-teal-50">
+              🧩 Lab B: 6-Organ Builder
+            </button>
+          </div>
+        </div>
+
+        <!-- LAB A: VIRTUAL MOUTH-DIGESTION & HYGIENE/RISK SAFETY SIMULATOR -->
+        <div id="lab-panel-a" class="space-y-5">
+          <!-- Safety Risk Gate (5TWSc.06 / 5TWSp.05) -->
+          <div id="safety-gate-box" class="bg-amber-50 border-2 border-amber-300 rounded-3xl p-5 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div>
+                <h3 class="font-display text-xl font-bold text-amber-950">🛡️ Step 1: Pass the Hygiene &amp; Safety Risk Check to Unlock the Virtual Cracker Lab!</h3>
+                <p class="text-sm font-semibold text-amber-900">Tap each safety rule to explain how we minimise risk before investigating digestion in the mouth.</p>
+              </div>
+              <span id="safety-status-badge" class="px-3.5 py-1.5 rounded-full bg-rose-100 text-rose-800 font-extrabold text-xs uppercase">🔒 0 / 3 Risks Checked</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <button id="risk-btn-1" onclick="toggleRiskCheck(1)" class="text-left p-4 rounded-2xl bg-white border-2 border-amber-200 hover:border-teal-400 transition">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-extrabold text-sm text-rose-700">Risk 1: Germs on Hands</span>
+                  <span id="risk-icon-1" class="text-xl">⬜</span>
+                </div>
+                <p class="text-xs font-bold text-slate-700">Minimise risk: Wash hands thoroughly with soap and clean water before touching any food.</p>
+              </button>
+              <button id="risk-btn-2" onclick="toggleRiskCheck(2)" class="text-left p-4 rounded-2xl bg-white border-2 border-amber-200 hover:border-teal-400 transition">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-extrabold text-sm text-rose-700">Risk 2: Food Allergies</span>
+                  <span id="risk-icon-2" class="text-xl">⬜</span>
+                </div>
+                <p class="text-xs font-bold text-slate-700">Minimise risk: Check all pupil allergy records and food labels before anyone tastes anything.</p>
+              </button>
+              <button id="risk-btn-3" onclick="toggleRiskCheck(3)" class="text-left p-4 rounded-2xl bg-white border-2 border-amber-200 hover:border-teal-400 transition">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-extrabold text-sm text-rose-700">Risk 3: Choking Hazard</span>
+                  <span id="risk-icon-3" class="text-xl">⬜</span>
+                </div>
+                <p class="text-xs font-bold text-slate-700">Minimise risk: Sit down calmly, take one small bite, chew slowly, and never talk or run while eating.</p>
+              </button>
+            </div>
+          </div>
+
+          <!-- Virtual Cracker Chew & Saliva Simulator (Unlocked after 3 checks) -->
+          <div id="mouth-sim-wrapper" class="opacity-50 pointer-events-none transition duration-300 space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              <!-- Controls + Organic Cracker Particle Visual (6 cols) -->
+              <div class="lg:col-span-6 bg-white rounded-3xl border-2 border-teal-200 p-5 shadow-md space-y-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="font-display text-xl font-bold text-teal-900">🍪 Step 2: Virtual Cracker Chew &amp; Saliva Lab</h3>
+                  <span id="sim-lock-label" class="text-xs font-extrabold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">Complete Safety Check Above</span>
+                </div>
+
+                <!-- Independent Variable 1: Chewing Time Slider -->
+                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                  <div class="flex justify-between items-center mb-2">
+                    <label for="chew-slider" class="font-extrabold text-sm text-slate-800">Teeth Chewing Time (seconds)</label>
+                    <span id="chew-time-val" class="font-display text-xl font-bold text-teal-700">0 s</span>
+                  </div>
+                  <input id="chew-slider" type="range" min="0" max="40" step="10" value="0" oninput="updateMouthSim()" class="w-full accent-teal-600 cursor-pointer h-3" />
+                  <div class="flex justify-between text-xs font-bold text-slate-500 mt-1">
+                    <span>0 s (Whole)</span><span>10 s</span><span>20 s</span><span>30 s</span><span>40 s (Fine mush)</span>
+                  </div>
+                </div>
+
+                <!-- Independent Variable 2: Saliva Toggle -->
+                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                  <div class="font-extrabold text-sm text-slate-800 mb-2">Saliva Level in Mouth</div>
+                  <div class="grid grid-cols-3 gap-2">
+                    <button id="saliva-dry" onclick="setSalivaMode('dry')" class="py-2 px-2 rounded-xl text-xs font-extrabold border-2 border-slate-200 bg-white text-slate-700">Dry Mouth</button>
+                    <button id="saliva-normal" onclick="setSalivaMode('normal')" class="py-2 px-2 rounded-xl text-xs font-extrabold border-2 border-sky-500 bg-sky-50 text-sky-800">Normal Saliva 💧</button>
+                    <button id="saliva-rich" onclick="setSalivaMode('rich')" class="py-2 px-2 rounded-xl text-xs font-extrabold border-2 border-slate-200 bg-white text-slate-700">Extra Saliva 💧💧</button>
+                  </div>
+                </div>
+
+                <!-- Organic Particle Mouth Container (flex-wrap, align-content: flex-end, staggered delays) -->
+                <div class="rounded-2xl border-4 border-rose-300 bg-rose-50/70 p-4">
+                  <div class="text-xs font-extrabold uppercase tracking-wider text-rose-800 mb-2">Inside the Mouth — Cracker Breakdown Model</div>
+                  <div id="cracker-chamber" class="h-36 rounded-xl bg-rose-100/80 border-2 border-rose-200 p-3 flex flex-wrap items-end content-end justify-center gap-2 overflow-hidden"></div>
+                </div>
+
+                <!-- Dedicated Live Dashboard Readout BELOW canvas -->
+                <div class="grid grid-cols-3 gap-2 text-center">
+                  <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5">
+                    <div class="text-[11px] font-extrabold uppercase text-amber-800">Piece Size</div>
+                    <div id="readout-size" class="font-display text-lg font-bold text-slate-900">20 mm</div>
+                  </div>
+                  <div class="bg-sky-50 border border-sky-200 rounded-xl p-2.5">
+                    <div class="text-[11px] font-extrabold uppercase text-sky-800">Swallow Ease</div>
+                    <div id="readout-swallow" class="font-display text-lg font-bold text-rose-700">Too Large!</div>
+                  </div>
+                  <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+                    <div class="text-[11px] font-extrabold uppercase text-emerald-800">Taste Clue</div>
+                    <div id="readout-taste" class="font-display text-sm font-bold text-emerald-800 mt-0.5">Plain cracker</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Labelled Scientific Graph (NO Naked Graphs! Title, X/Y units, How to Read, Click Readout) (6 cols) -->
+              <div class="lg:col-span-6 bg-white rounded-3xl border-2 border-sky-200 p-5 shadow-md flex flex-col justify-between space-y-3">
+                <div>
+                  <h3 class="font-display text-xl font-bold text-sky-950">📊 Scientific Graph: Average Cracker Piece Size vs Chewing Time</h3>
+                  <p class="text-xs font-bold text-sky-800 bg-sky-50 border border-sky-200 rounded-xl px-3 py-2 mt-2">
+                    <strong>How to Read This Graph:</strong> Follow the X-axis (horizontal) to pick a chewing time in seconds, then go straight up to the point and read the Y-axis (vertical) for average piece size in millimetres (mm). Tap any dot for exact coordinates!
+                  </p>
+                </div>
+
+                <svg id="chew-graph-svg" viewBox="0 0 420 245" class="w-full h-auto bg-slate-50 rounded-2xl border border-slate-200 p-1" aria-label="Graph of Cracker Piece Size vs Chewing Time">
+                  <!-- Grid lines -->
+                  <line x1="65" y1="30" x2="390" y2="30" stroke="#cbd5e1" stroke-dasharray="4 4"/>
+                  <line x1="65" y1="70" x2="390" y2="70" stroke="#cbd5e1" stroke-dasharray="4 4"/>
+                  <line x1="65" y1="110" x2="390" y2="110" stroke="#cbd5e1" stroke-dasharray="4 4"/>
+                  <line x1="65" y1="150" x2="390" y2="150" stroke="#cbd5e1" stroke-dasharray="4 4"/>
+                  <line x1="65" y1="190" x2="390" y2="190" stroke="#0f172a" stroke-width="2.5"/>
+                  <line x1="65" y1="25" x2="65" y2="190" stroke="#0f172a" stroke-width="2.5"/>
+
+                  <!-- Y-axis ticks & labels -->
+                  <text x="56" y="34" text-anchor="end" font-size="11" font-weight="700" fill="#334155">20</text>
+                  <text x="56" y="74" text-anchor="end" font-size="11" font-weight="700" fill="#334155">15</text>
+                  <text x="56" y="114" text-anchor="end" font-size="11" font-weight="700" fill="#334155">10</text>
+                  <text x="56" y="154" text-anchor="end" font-size="11" font-weight="700" fill="#334155">5</text>
+                  <text x="56" y="194" text-anchor="end" font-size="11" font-weight="700" fill="#334155">0</text>
+                  <text x="18" y="112" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0f172a" transform="rotate(-90 18 112)">Piece Size (mm)</text>
+
+                  <!-- X-axis ticks & labels -->
+                  <text x="75" y="208" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">0</text>
+                  <text x="150" y="208" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">10</text>
+                  <text x="225" y="208" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">20</text>
+                  <text x="300" y="208" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">30</text>
+                  <text x="375" y="208" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">40</text>
+                  <text x="225" y="232" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">Chewing Time (seconds)</text>
+
+                  <!-- Data Polyline: (0,20)->(75,30), (10,12)->(150,94), (20,6)->(225,142), (30,3)->(300,166), (40,1)->(375,182) -->
+                  <polyline points="75,30 150,94 225,142 300,166 375,182" fill="none" stroke="#0d9488" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+                  <!-- Interactive Data Points -->
+                  <circle id="pt-0" cx="75" cy="30" r="8" fill="#f59e0b" stroke="#0f172a" stroke-width="2" class="cursor-pointer" onclick="inspectGraphPoint(0, 20)"/>
+                  <circle id="pt-10" cx="150" cy="94" r="7" fill="#14b8a6" stroke="#0f172a" stroke-width="2" class="cursor-pointer" onclick="inspectGraphPoint(10, 12)"/>
+                  <circle id="pt-20" cx="225" cy="142" r="7" fill="#14b8a6" stroke="#0f172a" stroke-width="2" class="cursor-pointer" onclick="inspectGraphPoint(20, 6)"/>
+                  <circle id="pt-30" cx="300" cy="166" r="7" fill="#14b8a6" stroke="#0f172a" stroke-width="2" class="cursor-pointer" onclick="inspectGraphPoint(30, 3)"/>
+                  <circle id="pt-40" cx="375" cy="182" r="7" fill="#14b8a6" stroke="#0f172a" stroke-width="2" class="cursor-pointer" onclick="inspectGraphPoint(40, 1)"/>
+                </svg>
+
+                <!-- Dedicated Graph Coordinate Readout Box -->
+                <div id="graph-readout" class="rounded-2xl bg-teal-50 border-2 border-teal-200 px-4 py-2.5 font-bold text-sm text-teal-950">
+                  📍 Active Point: <strong>0 seconds</strong> ➔ Average cracker piece size = <strong>20 mm</strong> (whole piece — not yet chewed).
+                </div>
+              </div>
+            </div>
+
+            <!-- Click-to-Reveal Mechanism Explainer (Cleanly Anchored Below Simulator) -->
+            <div class="bg-white rounded-3xl border-2 border-indigo-200 p-5 shadow-sm">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h3 class="font-display text-xl font-bold text-indigo-950">🔬 Scientific Mechanism Explainer: Why Do Teeth &amp; Saliva Work Together?</h3>
+                  <p class="text-sm font-semibold text-slate-600">Discuss with your partner first, then click to reveal the science!</p>
+                </div>
+                <button id="reveal-mech-btn" onclick="toggleMechanism()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow">
+                  👀 Reveal Explanation
+                </button>
+              </div>
+              <div id="mechanism-body" class="hidden mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-indigo-100">
+                <div class="rounded-2xl bg-indigo-50 p-4 border border-indigo-200">
+                  <div class="font-display font-bold text-indigo-900 text-lg mb-1">1. Teeth Break Food Down</div>
+                  <p class="text-sm font-bold text-slate-700">Chewing cuts and grinds large solid bites into much smaller pieces so they are safe to swallow and easier to digest.</p>
+                </div>
+                <div class="rounded-2xl bg-sky-50 p-4 border border-sky-200">
+                  <div class="font-display font-bold text-sky-900 text-lg mb-1">2. Saliva Softens &amp; Starts Digestion</div>
+                  <p class="text-sm font-bold text-slate-700">Saliva wets dry food so it slides easily down the oesophagus AND starts breaking starch in bread or crackers into slightly sweeter sugars!</p>
+                </div>
+                <div class="rounded-2xl bg-emerald-50 p-4 border border-emerald-200">
+                  <div class="font-display font-bold text-emerald-900 text-lg mb-1">3. Ready for Absorption Later</div>
+                  <p class="text-sm font-bold text-slate-700">Only tiny dissolved nutrients can pass through the wall of the small intestine into the blood — chewing starts that vital job!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LAB B: INTERACTIVE 6-ORGAN BUILDER -->
+        <div id="lab-panel-b" class="hidden space-y-5">
+          <div class="bg-white rounded-3xl border-2 border-teal-200 p-6 shadow-md space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h3 class="font-display text-2xl font-bold text-teal-950">🧩 Interactive 6-Organ Builder</h3>
+                <p class="text-sm font-semibold text-slate-600">Step 1: Tap an organ chip below. Step 2: Tap the matching numbered slot (1 to 6) in the exact order food travels!</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="builder-score-pill" class="px-3.5 py-1.5 rounded-full bg-teal-100 text-teal-900 font-extrabold text-sm">Placed: 0 / 6</span>
+                <button onclick="resetOrganBuilder()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm">🔄 Reset</button>
+              </div>
+            </div>
+
+            <!-- Organ Chip Tray (Shuffled) -->
+            <div id="organ-chips-tray" class="flex flex-wrap gap-2.5 p-3.5 bg-amber-50 rounded-2xl border-2 border-amber-200"></div>
+
+            <!-- 6 Ordered Pathway Slots with Function Clues -->
+            <div id="organ-slots-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+            <div id="builder-feedback" class="rounded-2xl bg-slate-50 border border-slate-200 px-4 py-3 font-bold text-sm text-slate-700">
+              👆 Tap any organ chip from the yellow tray, then tap the matching numbered job card!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 5: DEDICATED SUCCESS CRITERIA WHITEBOARD CHECK       -->
+    <!-- [SoL: Metacognition] [SoL: Immediate Feedback]               -->
+    <!-- ============================================================ -->
+    <section id="station-5" class="station-section hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl border-2 border-teal-200 p-6 shadow-sm flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Hinge Assessment • Mini-Whiteboards Up!</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Success Criteria Whiteboard Check</h2>
+            <p class="text-slate-600 font-semibold text-sm">Check every "I can..." criterion on mini-whiteboards before launching the Quickfire battle.</p>
+          </div>
+          <!-- 0/3 Met Progress Tracker -->
+          <div class="min-w-[230px] bg-slate-50 border-2 border-slate-200 rounded-2xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <span class="text-xs font-extrabold uppercase text-slate-600">Class Mastery</span>
+              <span id="sc-met-label" class="font-display font-bold text-lg text-teal-700">0/3 Met</span>
+            </div>
+            <div class="w-full h-3.5 bg-slate-200 rounded-full overflow-hidden">
+              <div id="sc-met-bar" class="h-full bg-gradient-to-r from-teal-500 to-emerald-500 transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <!-- SC Check 1 -->
+          <div class="bg-white rounded-3xl border-2 border-teal-200 p-6 shadow-md flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-800 font-extrabold text-xs">SC 1 • Order of Organs</span>
+                <span id="sc-badge-1" class="text-2xl">⭕</span>
+              </div>
+              <p class="text-xs font-bold text-slate-500">I can name and label the 6 main organs in the exact order food travels.</p>
+              <div class="rounded-2xl bg-teal-50 border border-teal-200 p-4 font-display text-lg font-bold text-teal-950">
+                Whiteboard Prompt: Write all 6 digestive organs in order from #1 to #6. Check your British spelling of #2!
+              </div>
+              <div id="sc-ans-1" class="hidden rounded-2xl bg-emerald-50 border-2 border-emerald-300 p-3.5 text-sm font-bold text-emerald-950">
+                ✅ 1. Mouth ➔ 2. Oesophagus ➔ 3. Stomach ➔ 4. Small intestine ➔ 5. Large intestine ➔ 6. Anus
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="toggleScAnswer(1)" class="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-xs text-slate-800">Reveal Model</button>
+              <button id="sc-met-btn-1" onclick="toggleScMet(1)" class="flex-1 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 font-bold text-xs text-white">Mark Met ✓</button>
+            </div>
+          </div>
+
+          <!-- SC Check 2 -->
+          <div class="bg-white rounded-3xl border-2 border-amber-200 p-6 shadow-md flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-extrabold text-xs">SC 2 • Organ Functions</span>
+                <span id="sc-badge-2" class="text-2xl">⭕</span>
+              </div>
+              <p class="text-xs font-bold text-slate-500">I can describe the main job of each organ, including teeth and saliva.</p>
+              <div class="rounded-2xl bg-amber-50 border border-amber-200 p-4 font-display text-lg font-bold text-amber-950">
+                Whiteboard Prompt: Write the organ that (A) absorbs nutrients into the blood, and (B) absorbs water.
+              </div>
+              <div id="sc-ans-2" class="hidden rounded-2xl bg-emerald-50 border-2 border-emerald-300 p-3.5 text-sm font-bold text-emerald-950">
+                ✅ (A) Small intestine absorbs nutrients into the blood.<br/>(B) Large intestine absorbs water. (Not the stomach!)
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="toggleScAnswer(2)" class="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-xs text-slate-800">Reveal Model</button>
+              <button id="sc-met-btn-2" onclick="toggleScMet(2)" class="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 font-bold text-xs text-white">Mark Met ✓</button>
+            </div>
+          </div>
+
+          <!-- SC Check 3 -->
+          <div class="bg-white rounded-3xl border-2 border-rose-200 p-6 shadow-md flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-extrabold text-xs">SC 3 • Hygiene &amp; Safety</span>
+                <span id="sc-badge-3" class="text-2xl">⭕</span>
+              </div>
+              <p class="text-xs font-bold text-slate-500">I can identify hygiene and safety risks before investigating digestion.</p>
+              <div class="rounded-2xl bg-rose-50 border border-rose-200 p-4 font-display text-lg font-bold text-rose-950">
+                Whiteboard Prompt: Write TWO safety rules our class must follow before tasting a cracker in Science.
+              </div>
+              <div id="sc-ans-3" class="hidden rounded-2xl bg-emerald-50 border-2 border-emerald-300 p-3.5 text-sm font-bold text-emerald-950">
+                ✅ Any two: Wash hands with soap, check food allergies first, sit calmly and chew slowly so nobody chokes!
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="toggleScAnswer(3)" class="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-xs text-slate-800">Reveal Model</button>
+              <button id="sc-met-btn-3" onclick="toggleScMet(3)" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 font-bold text-xs text-white">Mark Met ✓</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 6: 8-QUESTION DIGESTIVE ORGANS QUICKFIRE             -->
+    <!-- [SoL: Automaticity] [SoL: Retrieval Practice] [SoL: Immediate Feedback] -->
+    <!-- ============================================================ -->
+    <section id="station-6" class="station-section hidden">
+      <div class="space-y-5">
+        <div class="bg-gradient-to-r from-indigo-700 via-purple-700 to-rose-600 text-white rounded-3xl p-6 shadow-xl flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full">Team Red vs Team Blue • 8 Questions</span>
+            <h2 class="font-display text-3xl font-bold mt-1">⚡ Digestive Organs Quickfire Challenge!</h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="bg-white/15 backdrop-blur rounded-2xl px-4 py-2 text-center border border-white/25">
+              <div class="text-[11px] font-extrabold uppercase text-rose-200">Team Red</div>
+              <div id="qf-red-score" class="font-display text-3xl font-bold">0</div>
+            </div>
+            <div class="bg-white/15 backdrop-blur rounded-2xl px-4 py-2 text-center border border-white/25">
+              <div class="text-[11px] font-extrabold uppercase text-sky-200">Team Blue</div>
+              <div id="qf-blue-score" class="font-display text-3xl font-bold">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Arena Card -->
+        <div class="bg-white rounded-3xl border-2 border-indigo-200 p-6 sm:p-8 shadow-lg space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <span id="qf-counter" class="px-4 py-1.5 rounded-full bg-indigo-100 text-indigo-900 font-extrabold text-sm">Question 1 of 8</span>
+            <div class="flex items-center gap-3">
+              <div id="qf-timer-display" class="font-display text-3xl font-bold px-4 py-1 rounded-2xl bg-amber-100 text-amber-900 border-2 border-amber-300">15s</div>
+              <button onclick="startQfTimer()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow">⏱️ Start 15s Timer</button>
+              <button onclick="resetQfTimer()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm">↺</button>
+            </div>
+          </div>
+
+          <!-- BOARDS UP Banner -->
+          <div id="boards-up-banner" class="hidden rounded-2xl bg-rose-600 text-white text-center py-4 font-display text-4xl sm:text-5xl font-bold tracking-wider shadow-lg">
+            📢 BOARDS UP! 📢
+          </div>
+
+          <!-- Question Text -->
+          <div class="rounded-3xl bg-slate-50 border-2 border-slate-200 p-6 sm:p-8 text-center">
+            <p id="qf-question-text" class="font-display text-2xl sm:text-4xl font-bold text-slate-900 leading-snug"></p>
+          </div>
+
+          <!-- Reveal Answer Area -->
+          <div id="qf-answer-box" class="hidden rounded-3xl bg-emerald-50 border-2 border-emerald-400 p-6 text-center space-y-1">
+            <div class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">Correct Scientific Answer</div>
+            <p id="qf-answer-text" class="font-display text-2xl sm:text-3xl font-bold text-emerald-900"></p>
+            <p id="qf-explain-text" class="text-sm sm:text-base font-bold text-emerald-800"></p>
+          </div>
+
+          <!-- Controls & Team Award Row -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100">
+            <div class="flex flex-wrap gap-2">
+              <button onclick="prevQf()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm">◀ Prev</button>
+              <button onclick="revealQfAnswer()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow">👀 Reveal Answer</button>
+              <button onclick="nextQf()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow">Next ▶</button>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <button onclick="awardTeam('red')" class="px-4 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow">🔴 +1 Team Red</button>
+              <button onclick="awardTeam('blue')" class="px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm shadow">🔵 +1 Team Blue</button>
+              <button onclick="celebrateWinner()" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow">🏆 Celebrate!</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- STATION 2 VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION)       -->
+  <!-- ============================================================ -->
+  <div id="vocab-modal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-[65] hidden items-center justify-center p-4" onclick="if(event.target===this) closeVocabModal()">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border-4 border-teal-400 space-y-5 relative max-h-[92vh] overflow-y-auto">
+      <button onclick="closeVocabModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-700 font-extrabold text-xl">✕</button>
+
+      <div class="flex flex-col sm:flex-row items-center gap-5">
+        <div id="vm-svg-wrap" class="w-36 h-36 rounded-2xl bg-teal-50 border-2 border-teal-200 flex items-center justify-center flex-shrink-0 p-2"></div>
+        <div class="space-y-2 text-center sm:text-left">
+          <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-800 font-extrabold text-xs uppercase">Bilingual Vocabulary Explorer</span>
+          <h3 id="vm-en" class="font-display text-4xl font-bold text-slate-900"></h3>
+          <p id="vm-vn" class="font-display text-2xl font-bold text-rose-600"></p>
+          <div class="flex flex-wrap justify-center sm:justify-start gap-2 pt-1">
+            <button onclick="speakVocab('en')" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow">🔊 Listen English (en-GB)</button>
+            <button onclick="speakVocab('vn')" class="px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow">🔊 Nghe Tiếng Việt (vi-VN)</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+          <div class="text-xs font-extrabold uppercase text-teal-700 mb-1">Primary Scientific Meaning (English)</div>
+          <p id="vm-def-en" class="font-bold text-slate-800 text-base"></p>
+        </div>
+        <div class="rounded-2xl bg-rose-50 border border-rose-200 p-4">
+          <div class="text-xs font-extrabold uppercase text-rose-700 mb-1">Giải thích ngắn gọn (Tiếng Việt)</div>
+          <p id="vm-def-vn" class="font-bold text-slate-800 text-base"></p>
+        </div>
+        <div id="vm-tip" class="rounded-2xl bg-amber-50 border border-amber-200 p-3.5 font-bold text-sm text-amber-950"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- STOMACH MYTH-BUSTER MODAL                                    -->
+  <!-- ============================================================ -->
+  <div id="myth-modal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-[65] hidden items-center justify-center p-4" onclick="if(event.target===this) closeMythModal()">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border-4 border-rose-400 space-y-5 relative">
+      <button onclick="closeMythModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-rose-100 text-slate-700 font-extrabold text-xl">✕</button>
+      <div class="inline-block px-3.5 py-1 rounded-full bg-rose-100 text-rose-800 font-extrabold text-xs uppercase">🚨 #1 Science Misconception Alert</div>
+      <h3 class="font-display text-3xl font-bold text-slate-900">Myth: "The stomach absorbs all our nutrients!"</h3>
+      <div class="rounded-2xl bg-rose-50 border-2 border-rose-300 p-4">
+        <div class="font-display text-xl font-bold text-rose-700">❌ FALSE!</div>
+        <p class="font-bold text-slate-800 mt-1">
+          The <strong>stomach</strong> churns food and mixes it with acid to break it into a thick liquid — it does <strong>NOT</strong> absorb nutrients into the blood!
+        </p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="rounded-2xl bg-amber-50 border-2 border-amber-300 p-4">
+          <div class="font-display text-lg font-bold text-amber-900">✅ Small Intestine</div>
+          <p class="text-sm font-bold text-slate-700 mt-1">Absorbs tiny dissolved <strong>nutrients into the blood</strong>! (<strong>S</strong>mall = <strong>S</strong>uper nutrients)</p>
+        </div>
+        <div class="rounded-2xl bg-teal-50 border-2 border-teal-300 p-4">
+          <div class="font-display text-lg font-bold text-teal-900">✅ Large Intestine</div>
+          <p class="text-sm font-bold text-slate-700 mt-1">Absorbs <strong>water</strong> back into the body so solid waste forms! (<strong>L</strong>arge = <strong>L</strong>iquid water)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- GIANT PROJECTION MODAL (STATION 3)                           -->
+  <!-- ============================================================ -->
+  <div id="giant-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-[65] hidden items-center justify-center p-4" onclick="if(event.target===this) closeGiantProjection()">
+    <div class="bg-white rounded-3xl max-w-5xl w-full p-8 sm:p-10 shadow-2xl border-4 border-indigo-500 text-center space-y-6 relative">
+      <button onclick="closeGiantProjection()" class="absolute top-4 right-4 w-11 h-11 rounded-full bg-slate-100 hover:bg-rose-100 text-slate-700 font-extrabold text-xl">✕</button>
+      <div id="giant-stage-tag" class="inline-block px-4 py-1.5 rounded-full bg-indigo-100 text-indigo-800 font-extrabold text-sm uppercase"></div>
+      <h3 id="giant-title" class="font-display text-5xl sm:text-6xl font-bold text-slate-900"></h3>
+      <p id="giant-desc" class="text-2xl sm:text-3xl font-bold text-teal-900 leading-snug max-w-4xl mx-auto"></p>
+      <div class="flex justify-center gap-4 pt-3">
+        <button onclick="stepJourney(-1); syncGiantProjection();" class="px-6 py-3 rounded-2xl bg-slate-200 hover:bg-slate-300 font-display font-bold text-xl">◀ Previous Organ</button>
+        <button onclick="stepJourney(1); syncGiantProjection();" class="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-display font-bold text-xl">Next Organ ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- DAVID'S BOARD (DPR-SAFE INK-PRESERVING WHITEBOARD, KEY: W)   -->
+  <!-- ============================================================ -->
+  <div id="whiteboard-modal" class="fixed inset-0 bg-slate-950/85 z-[70] hidden flex-col p-3 sm:p-5">
+    <div class="bg-white rounded-3xl flex flex-col flex-1 overflow-hidden shadow-2xl border-4 border-amber-400">
+      <div class="bg-slate-900 text-white px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">✏️</span>
+          <span class="font-display font-bold text-lg text-amber-300">David's Board — Interactive Science Sketchpad</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="setWbColor('#0f172a')" class="w-7 h-7 rounded-full bg-slate-900 border-2 border-white" title="Black Pen"></button>
+          <button onclick="setWbColor('#e11d48')" class="w-7 h-7 rounded-full bg-rose-600 border-2 border-white" title="Red Pen"></button>
+          <button onclick="setWbColor('#0284c7')" class="w-7 h-7 rounded-full bg-sky-600 border-2 border-white" title="Blue Pen"></button>
+          <button onclick="setWbColor('#059669')" class="w-7 h-7 rounded-full bg-emerald-600 border-2 border-white" title="Green Pen"></button>
+          <button onclick="setWbEraser()" class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold">Eraser</button>
+          <button onclick="toggleWbGuide()" id="wb-guide-btn" class="px-3 py-1 rounded-lg bg-teal-600 hover:bg-teal-500 text-xs font-bold">Body Guide: OFF</button>
+          <button onclick="clearWhiteboard()" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-xs font-bold">Clear</button>
+          <button onclick="closeWhiteboard()" class="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs font-extrabold">Close (Esc)</button>
+        </div>
+      </div>
+      <div id="wb-canvas-wrap" class="relative flex-1 bg-white overflow-hidden">
+        <!-- Optional Body Pathway Guide Layer -->
+        <svg id="wb-body-guide" viewBox="0 0 800 500" class="hidden absolute inset-0 w-full h-full pointer-events-none opacity-25">
+          <path d="M400 30 C440 30, 465 60, 465 95 C465 120, 450 135, 430 145 L430 165 C510 175, 555 210, 565 280 L570 465 L230 465 L235 280 C245 210, 290 175, 370 165 L370 145 C350 135, 335 120, 335 95 C335 60, 360 30, 400 30 Z" fill="none" stroke="#0f766e" stroke-width="5" stroke-dasharray="10 8"/>
+          <text x="60" y="70" font-family="Fredoka" font-size="22" fill="#0f766e">S = Small = Super nutrients</text>
+          <text x="60" y="110" font-family="Fredoka" font-size="22" fill="#0284c7">L = Large = Liquid water</text>
+        </svg>
+        <canvas id="wb-canvas" class="absolute inset-0 w-full h-full touch-none cursor-crosshair"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TEACHER PROMPT DRAWER (KEY: T, z-[75])                       -->
+  <!-- ============================================================ -->
+  <div id="teacher-drawer" class="fixed inset-y-0 right-0 w-full max-w-md bg-slate-900 text-white shadow-2xl z-[75] transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="p-5 border-b border-slate-700 flex items-center justify-between">
+      <div>
+        <div class="text-xs font-extrabold uppercase tracking-wider text-amber-300">70-Minute Lesson Guide</div>
+        <h3 class="font-display text-2xl font-bold">Teacher Prompt Drawer</h3>
+      </div>
+      <button onclick="toggleTeacherDrawer()" class="w-10 h-10 rounded-full bg-slate-800 hover:bg-rose-600 font-bold text-lg">✕</button>
+    </div>
+    <div class="p-5 overflow-y-auto space-y-5 text-sm">
+      <div class="rounded-2xl bg-slate-800 p-4 border border-slate-700 space-y-2">
+        <div class="font-extrabold text-teal-300 uppercase text-xs">⏱️ 70-Minute Pacing</div>
+        <ul class="space-y-1.5 text-slate-200 font-semibold">
+          <li>• <strong>Station 0 &amp; 1 (8 mins):</strong> LO, 3 SCs &amp; Spaced Flashback 3 (Units 2.4, 3.3, 1.2).</li>
+          <li>• <strong>Station 2 (8 mins):</strong> 8 bilingual vocab cards + British spelling of <em>oesophagus</em>.</li>
+          <li>• <strong>Station 3 (14 mins):</strong> Animated Banh Mi journey through all 6 organs + Bust Stomach Myth!</li>
+          <li>• <strong>Station 4 (14 mins):</strong> Hygiene/Risk gate + Virtual Cracker Simulator + 6-Organ Builder.</li>
+          <li>• <strong>Worksheet 1 (14 mins):</strong> Independent B&amp;W diagram, target dots, sequencing &amp; Minh's myth.</li>
+          <li>• <strong>Station 5 &amp; 6 (12 mins):</strong> 0/3 Met Whiteboard Check + 8-Q Quickfire Battle.</li>
+        </ul>
+      </div>
+
+      <div class="rounded-2xl bg-rose-950/70 p-4 border border-rose-700 space-y-2">
+        <div class="font-extrabold text-rose-300 uppercase text-xs">🚨 Red-Flag Hinge Check</div>
+        <p class="text-rose-100 font-semibold">
+          Watch for pupils who: (1) think the stomach absorbs nutrients into the blood, (2) swap small intestine and large intestine, or (3) think food simply drops down the oesophagus by gravity alone.
+        </p>
+      </div>
+
+      <div class="rounded-2xl bg-amber-950/60 p-4 border border-amber-700 space-y-2">
+        <div class="font-extrabold text-amber-300 uppercase text-xs">🛠️ Teacher Support Table</div>
+        <p class="text-amber-100 font-semibold">
+          Use a 6-card colour-coded 'Body Relay' strip: pupils lay out Mouth ➔ Oesophagus ➔ Stomach ➔ Small Intestine ('NUTRIENTS into blood') ➔ Large Intestine ('WATER back into body') ➔ Anus and chant one 3-word action per organ.
+        </p>
+      </div>
+
+      <div class="rounded-2xl bg-indigo-950/70 p-4 border border-indigo-700 space-y-2">
+        <div class="font-extrabold text-indigo-300 uppercase text-xs">🔄 Whole-Class Backup Pivot (&gt;30% Stuck)</div>
+        <p class="text-indigo-100 font-semibold">
+          Press <strong>W</strong> to open David's Board, switch on the Body Guide, and anchor: <strong>S = Small = Super nutrients</strong> and <strong>L = Large = Liquid water</strong>. Run 3 rapid whiteboard checks before moving on.
+        </p>
+      </div>
+
+      <div class="rounded-2xl bg-slate-800 p-4 border border-slate-700 space-y-1 text-xs text-slate-300">
+        <div class="font-extrabold text-slate-100 uppercase">⌨️ Keyboard Shortcuts</div>
+        <p><strong>← / →</strong> Switch Stations | <strong>W</strong> David's Board | <strong>T</strong> Teacher Drawer | <strong>M</strong> Mute Audio | <strong>Esc</strong> Close Open Modal</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- INTERACTIVE JAVASCRIPT ENGINE                                -->
+  <!-- ============================================================ -->
+  <script>
+    // ------------------------------------------------------------
+    // 1. STATE & AUDIO ENGINE (Offline Web Audio API + Mute M)
+    // ------------------------------------------------------------
+    let currentStation = 0;
+    const totalStations = 7;
+    let isMuted = false;
+    let scores = { red: 0, blue: 0 };
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) audioCtx = new Ctx();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playTone(freq, duration = 0.14, type = 'sine', vol = 0.12) {
+      if (isMuted) return;
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(vol, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playChime(kind) {
+      if (kind === 'good') {
+        playTone(523.25, 0.12, 'triangle', 0.14);
+        setTimeout(() => playTone(659.25, 0.14, 'triangle', 0.14), 90);
+        setTimeout(() => playTone(783.99, 0.22, 'triangle', 0.15), 180);
+      } else if (kind === 'bad') {
+        playTone(220, 0.18, 'sawtooth', 0.09);
+        setTimeout(() => playTone(185, 0.22, 'sawtooth', 0.09), 130);
+      } else if (kind === 'tick') {
+        playTone(700, 0.05, 'square', 0.05);
+      } else if (kind === 'boardsup') {
+        playTone(587.33, 0.15, 'triangle', 0.16);
+        setTimeout(() => playTone(880, 0.32, 'triangle', 0.18), 140);
+      } else {
+        playTone(440, 0.08, 'sine', 0.08);
+      }
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('mute-icon').textContent = isMuted ? '🔇' : '🔊';
+      if (!isMuted) playTone(520, 0.1);
+    }
+
+    // ------------------------------------------------------------
+    // 2. AUTO-HIDING HEADER ON SCROLL
+    // ------------------------------------------------------------
+    let lastScrollY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('top-header');
+      const currentScroll = window.scrollY;
+      if (currentScroll > lastScrollY && currentScroll > 60) {
+        header.classList.add('header-hidden');
+      } else {
+        header.classList.remove('header-hidden');
+      }
+      lastScrollY = currentScroll;
+    }, { passive: true });
+
+    // ------------------------------------------------------------
+    // 3. STATION NAVIGATION
+    // ------------------------------------------------------------
+    function switchStation(idx) {
+      if (idx < 0 || idx >= totalStations) return;
+      currentStation = idx;
+      document.querySelectorAll('.station-section').forEach((sec, i) => {
+        sec.classList.toggle('hidden', i !== idx);
+      });
+      document.querySelectorAll('.station-tab').forEach(btn => {
+        const s = Number(btn.getAttribute('data-station'));
+        btn.classList.toggle('active', s === idx);
+      });
+      playTone(480 + idx * 30, 0.08);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ------------------------------------------------------------
+    // 4. TEAM SCOREBOARD & CONFETTI
+    // ------------------------------------------------------------
+    function changeTeamScore(team, delta) {
+      scores[team] = Math.max(0, scores[team] + delta);
+      document.getElementById('header-red-score').textContent = scores.red;
+      document.getElementById('header-blue-score').textContent = scores.blue;
+      document.getElementById('qf-red-score').textContent = scores.red;
+      document.getElementById('qf-blue-score').textContent = scores.blue;
+      playTone(delta > 0 ? 660 : 300, 0.1);
+    }
+
+    function awardTeam(team) {
+      changeTeamScore(team, 1);
+      playChime('good');
+    }
+
+    function launchConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const palette = ['#0d9488', '#f59e0b', '#f43f5e', '#3b82f6', '#10b981', '#8b5cf6'];
+      const pieces = Array.from({ length: 130 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 200,
+        w: 7 + Math.random() * 7,
+        h: 10 + Math.random() * 8,
+        vx: (Math.random() - 0.5) * 6,
+        vy: 3 + Math.random() * 5,
+        rot: Math.random() * Math.PI * 2,
+        vr: (Math.random() - 0.5) * 0.2,
+        c: palette[Math.floor(Math.random() * palette.length)]
+      }));
+      let frame = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = p.c;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        });
+        frame++;
+        if (frame < 130) requestAnimationFrame(draw);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      draw();
+    }
+
+    function celebrateWinner() {
+      playChime('good');
+      launchConfetti();
+    }
+
+    // ------------------------------------------------------------
+    // 5. STATION 1: FLASHBACK 3 FLIP CARDS
+    // ------------------------------------------------------------
+    function toggleFlip(id) {
+      document.getElementById(id).classList.toggle('flipped');
+      playTone(540, 0.08, 'triangle');
+    }
+    function resetFlashbacks() {
+      ['fb-card-1', 'fb-card-2', 'fb-card-3'].forEach(id => {
+        document.getElementById(id).classList.remove('flipped');
+      });
+      playTone(400, 0.08);
+    }
+
+    // ------------------------------------------------------------
+    // 6. STATION 2: BILINGUAL VOCABULARY MODAL (SOLE VN EXCEPTION)
+    // ------------------------------------------------------------
+    const vocabItems = [
+      {
+        en: 'digestion',
+        vn: 'Sự tiêu hóa',
+        defEn: 'The process of breaking food down into tiny dissolved nutrients that the body can absorb and use.',
+        defVn: 'Quá trình phân giải thức ăn thành các chất dinh dưỡng siêu nhỏ để cơ thể hấp thụ và sử dụng.',
+        tip: '💡 Clue: Digestion starts in your MOUTH as soon as you chew!',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><rect x="12" y="34" width="24" height="32" rx="6" fill="#f59e0b" stroke="#92400e" stroke-width="3"/><path d="M40 50 L56 50" stroke="#0f766e" stroke-width="4" stroke-linecap="round"/><polygon points="56,43 66,50 56,57" fill="#0f766e"/><circle cx="78" cy="36" r="7" fill="#10b981"/><circle cx="88" cy="52" r="6" fill="#f59e0b"/><circle cx="75" cy="64" r="6" fill="#0ea5e9"/></svg>`
+      },
+      {
+        en: 'digestive system',
+        vn: 'Hệ tiêu hóa',
+        defEn: 'The group of organs that work together to break down food, absorb nutrients and water, and remove waste.',
+        defVn: 'Nhóm các cơ quan phối hợp cùng nhau để tiêu hóa thức ăn, hấp thụ chất dinh dưỡng, nước và thải chất bã.',
+        tip: '💡 6 Stage 5 organs: Mouth ➔ Oesophagus ➔ Stomach ➔ Small intestine ➔ Large intestine ➔ Anus.',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="18" r="9" fill="#fda4af" stroke="#be123c" stroke-width="2.5"/><line x1="50" y1="27" x2="50" y2="44" stroke="#fb923c" stroke-width="6"/><path d="M50 44 C66 44, 68 58, 52 60 C44 60, 44 50, 50 44 Z" fill="#f43f5e"/><rect x="34" y="64" width="32" height="22" rx="8" fill="none" stroke="#14b8a6" stroke-width="6"/><path d="M42 70 C58 70, 42 79, 58 79" fill="none" stroke="#f59e0b" stroke-width="4"/><circle cx="50" cy="92" r="4" fill="#4f46e5"/></svg>`
+      },
+      {
+        en: 'saliva',
+        vn: 'Nước bọt',
+        defEn: 'The watery liquid made in the mouth that softens food for swallowing and begins breaking down starch.',
+        defVn: 'Chất lỏng trong miệng giúp làm mềm thức ăn để dễ nuốt và bắt đầu phân giải tinh bột.',
+        tip: '💡 Think of biting a dry cracker: saliva makes it moist and smooth!',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M50 14 C68 42, 76 58, 76 68 C76 82, 64 90, 50 90 C36 90, 24 82, 24 68 C24 58, 32 42, 50 14 Z" fill="#38bdf8" stroke="#0369a1" stroke-width="3.5"/><path d="M38 64 C38 74, 45 78, 50 78" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/></svg>`
+      },
+      {
+        en: 'oesophagus',
+        vn: 'Thực quản',
+        defEn: 'The muscular tube that squeezes swallowed food from the mouth down into the stomach.',
+        defVn: 'Ống cơ bóp đẩy thức ăn đã nuốt từ miệng đi xuống dạ dày.',
+        tip: '🇬🇧 British spelling alert: Always starts with OE (oe-so-pha-gus)! Muscles squeeze food even upside down!',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><rect x="38" y="10" width="24" height="80" rx="12" fill="#fed7aa" stroke="#c2410c" stroke-width="3.5"/><circle cx="50" cy="46" r="9" fill="#f59e0b" stroke="#92400e" stroke-width="2"/><path d="M50 60 L50 78 M43 71 L50 78 L57 71" fill="none" stroke="#c2410c" stroke-width="3.5" stroke-linecap="round"/></svg>`
+      },
+      {
+        en: 'stomach',
+        vn: 'Dạ dày',
+        defEn: 'The stretchy muscular bag that churns food and mixes it with acid to break it into a thick liquid.',
+        defVn: 'Túi cơ co giãn giúp nhào trộn thức ăn với axit để nghiền thành hỗn hợp lỏng sệt.',
+        tip: '🚨 Myth-buster: The stomach churns food with acid — it does NOT absorb nutrients into the blood!',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M46 16 L46 34 C74 34, 84 54, 76 74 C68 90, 36 92, 26 76 C18 64, 30 50, 38 44" fill="#fb7185" stroke="#9f1239" stroke-width="3.5" stroke-linecap="round"/><path d="M32 68 Q52 60 72 70 Q62 84 36 80 Z" fill="#fde047" opacity="0.8"/></svg>`
+      },
+      {
+        en: 'small intestine',
+        vn: 'Ruột non',
+        defEn: 'The long, narrow coiled tube where digestion finishes and tiny nutrients are absorbed into the blood.',
+        defVn: 'Ống dài, nhỏ và xoắn lại, nơi quá trình tiêu hóa hoàn tất và các chất dinh dưỡng được hấp thụ vào máu.',
+        tip: '💡 Memory anchor: S = Small = Super nutrients absorbed into the blood!',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 24 C80 24, 80 42, 22 42 C22 58, 78 58, 78 72 C78 84, 24 84, 24 84" fill="none" stroke="#fbbf24" stroke-width="12" stroke-linecap="round"/><path d="M22 24 C80 24, 80 42, 22 42 C22 58, 78 58, 78 72 C78 84, 24 84, 24 84" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round"/><circle cx="84" cy="24" r="4" fill="#ef4444"/><circle cx="16" cy="58" r="4" fill="#ef4444"/></svg>`
+      },
+      {
+        en: 'large intestine',
+        vn: 'Ruột già',
+        defEn: 'The wider tube that absorbs remaining water back into the body, leaving solid undigested waste.',
+        defVn: 'Ống rộng hơn giúp hấp thụ phần nước còn lại vào cơ thể, tạo thành chất thải rắn.',
+        tip: '💡 Memory anchor: L = Large = Liquid water absorbed back into the body!',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 82 L22 30 C22 20, 32 18, 50 18 C68 18, 78 20, 78 30 L78 72 C78 82, 66 84, 50 84 L50 92" fill="none" stroke="#14b8a6" stroke-width="15" stroke-linecap="round"/><circle cx="12" cy="48" r="4" fill="#38bdf8"/><circle cx="88" cy="48" r="4" fill="#38bdf8"/></svg>`
+      },
+      {
+        en: 'anus',
+        vn: 'Hậu môn',
+        defEn: 'The opening at the very end of the digestive system where solid undigested waste leaves the body.',
+        defVn: 'Lỗ mở ở cuối hệ tiêu hóa nơi chất thải rắn không tiêu hóa được rời khỏi cơ thể.',
+        tip: '💡 Stage 6 of 6: The final exit of the one-way digestive tube.',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M50 16 L50 56" stroke="#14b8a6" stroke-width="16" stroke-linecap="round"/><ellipse cx="50" cy="68" rx="18" ry="10" fill="#6366f1" stroke="#312e81" stroke-width="3"/><path d="M50 76 L50 92 M42 85 L50 92 L58 85" fill="none" stroke="#312e81" stroke-width="3.5" stroke-linecap="round"/></svg>`
+      }
+    ];
+
+    let activeVocabIndex = 0;
+
+    function renderVocabGrid() {
+      const grid = document.getElementById('vocab-grid');
+      grid.innerHTML = vocabItems.map((v, i) => `
+        <button onclick="openVocabModal(${i})" class="group bg-white hover:bg-teal-50 rounded-3xl border-2 border-teal-200 hover:border-teal-500 p-5 shadow-sm hover:shadow-md transition text-left flex flex-col items-center text-center gap-3">
+          <div class="w-20 h-20 rounded-2xl bg-slate-50 border border-slate-200 p-2 group-hover:scale-105 transition">${v.svg}</div>
+          <div>
+            <div class="font-display text-xl font-bold text-slate-900 capitalize">${v.en}</div>
+            <div class="text-xs font-extrabold text-teal-700 mt-1">Tap for Visual + Audio 🔊</div>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(idx) {
+      activeVocabIndex = idx;
+      const v = vocabItems[idx];
+      document.getElementById('vm-svg-wrap').innerHTML = v.svg;
+      document.getElementById('vm-en').textContent = v.en;
+      document.getElementById('vm-vn').textContent = v.vn;
+      document.getElementById('vm-def-en').textContent = v.defEn;
+      document.getElementById('vm-def-vn').textContent = v.defVn;
+      document.getElementById('vm-tip').textContent = v.tip;
+      const modal = document.getElementById('vocab-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      playTone(580, 0.08);
+    }
+
+    function closeVocabModal() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      const modal = document.getElementById('vocab-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function speakVocab(lang) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const v = vocabItems[activeVocabIndex];
+      const u = new SpeechSynthesisUtterance(lang === 'en' ? `${v.en}. ${v.defEn}` : `${v.vn}. ${v.defVn}`);
+      u.lang = lang === 'en' ? 'en-GB' : 'vi-VN';
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    // ------------------------------------------------------------
+    // 7. STATION 3: FOLLOW THE BANH MI (6-ORGAN ANIMATED I DO)
+    // ------------------------------------------------------------
+    const journeySteps = [
+      {
+        step: 1, name: '1. Mouth (Teeth & Saliva)', short: '1. Mouth', emoji: '🥖', x: 148, y: 84,
+        job: 'Digestion starts right here! Teeth chop and grind the crispy banh mi into tiny pieces. Saliva makes the food soft and slippery and begins breaking down starch.',
+        texture: 'Crunchy bread bite ➔ Soft, moist, mashed ball ready to swallow.',
+        myth: '💡 Key Fact: Digestion starts in the MOUTH — not in the stomach!'
+      },
+      {
+        step: 2, name: '2. Oesophagus', short: '2. Oesophagus', emoji: '⬇️', x: 162, y: 144,
+        job: 'This muscular tube squeezes the chewed banh mi down from the mouth to the stomach like toothpaste squeezed from a tube!',
+        texture: 'Soft ball of chewed bread moving smoothly downwards.',
+        myth: '🚀 Space Fact: Because muscles squeeze the food, astronauts can even swallow upside down!'
+      },
+      {
+        step: 3, name: '3. Stomach', short: '3. Stomach', emoji: '🌀', x: 184, y: 234,
+        job: 'Strong muscular walls churn the banh mi and mix it with stomach acid to kill many germs and break food into a thick soupy liquid.',
+        texture: 'Mashed food ➔ Thick, acidic soupy liquid.',
+        myth: '🚨 Myth-Buster: The stomach churns food with acid — it does NOT absorb nutrients into the blood!'
+      },
+      {
+        step: 4, name: '4. Small Intestine', short: '4. Small Intestine', emoji: '✨', x: 160, y: 318,
+        job: 'Digestion finishes inside this long coiled tube. Tiny dissolved nutrients pass through its walls directly into the blood to travel around the body!',
+        texture: 'Thin watery soup packed with dissolved nutrients entering the blood.',
+        myth: '⭐ Memory Anchor: S = Small intestine = Super nutrients into the blood!'
+      },
+      {
+        step: 5, name: '5. Large Intestine', short: '5. Large Intestine', emoji: '💧', x: 206, y: 310,
+        job: 'Remaining water is absorbed back into the body from the leftover undigested parts of the banh mi, turning the leftovers into solid waste.',
+        texture: 'Watery leftovers ➔ Firmer solid undigested waste.',
+        myth: '💧 Memory Anchor: L = Large intestine = Liquid water absorbed back into the body!'
+      },
+      {
+        step: 6, name: '6. Anus', short: '6. Anus', emoji: '🚪', x: 162, y: 422,
+        job: 'The muscular opening at the end of the digestive system pushes solid undigested waste safely out of the body.',
+        texture: 'Solid undigested waste leaves the body.',
+        myth: '✅ Journey Complete: One-way trip from Mouth to Anus!'
+      }
+    ];
+
+    let activeJourneyStep = 1;
+    let journeyTimer = null;
+
+    function renderJourneyButtons() {
+      const bar = document.getElementById('journey-step-bar');
+      bar.innerHTML = journeySteps.map(s => `
+        <button id="j-btn-${s.step}" onclick="selectJourneyStep(${s.step})" class="py-2.5 px-2 rounded-2xl font-bold text-xs sm:text-sm border-2 transition ${s.step === activeJourneyStep ? 'bg-teal-600 text-white border-teal-700 shadow' : 'bg-white text-slate-700 border-teal-200 hover:bg-teal-50'}">
+          ${s.short}
+        </button>
+      `).join('');
+    }
+
+    function selectJourneyStep(stepNum) {
+      activeJourneyStep = stepNum;
+      const s = journeySteps[stepNum - 1];
+      renderJourneyButtons();
+      document.getElementById('journey-stage-pill').textContent = `Stage ${s.step} of 6`;
+      document.getElementById('journey-emoji').textContent = s.emoji;
+      document.getElementById('journey-organ-name').textContent = s.name;
+      document.getElementById('journey-job-text').textContent = s.job;
+      document.getElementById('journey-texture-text').textContent = s.texture;
+      document.getElementById('journey-myth-note').textContent = s.myth;
+
+      // Move animated banh mi marker
+      const bolus = document.getElementById('food-bolus');
+      bolus.setAttribute('transform', `translate(${s.x}, ${s.y})`);
+
+      // Highlight active organ SVG group
+      for (let i = 1; i <= 6; i++) {
+        const g = document.getElementById(`svg-organ-${i}`);
+        if (g) g.classList.toggle('organ-active', i === stepNum);
+      }
+      playTone(420 + stepNum * 55, 0.1, 'triangle');
+    }
+
+    function stepJourney(delta) {
+      let next = activeJourneyStep + delta;
+      if (next < 1) next = 6;
+      if (next > 6) next = 1;
+      selectJourneyStep(next);
+    }
+
+    function playFullJourney() {
+      if (journeyTimer) {
+        clearInterval(journeyTimer);
+        journeyTimer = null;
+        document.getElementById('play-journey-btn').textContent = '▶️ Play Full Journey';
+        return;
+      }
+      selectJourneyStep(1);
+      document.getElementById('play-journey-btn').textContent = '⏹️ Stop Journey';
+      let current = 1;
+      journeyTimer = setInterval(() => {
+        current++;
+        if (current > 6) {
+          clearInterval(journeyTimer);
+          journeyTimer = null;
+          document.getElementById('play-journey-btn').textContent = '▶️ Play Full Journey';
+          playChime('good');
+          return;
+        }
+        selectJourneyStep(current);
+      }, 2200);
+    }
+
+    function openMythModal() {
+      const m = document.getElementById('myth-modal');
+      m.classList.remove('hidden'); m.classList.add('flex');
+      playChime('boardsup');
+    }
+    function closeMythModal() {
+      const m = document.getElementById('myth-modal');
+      m.classList.add('hidden'); m.classList.remove('flex');
+    }
+
+    function openGiantProjection() {
+      syncGiantProjection();
+      const m = document.getElementById('giant-modal');
+      m.classList.remove('hidden'); m.classList.add('flex');
+    }
+    function syncGiantProjection() {
+      const s = journeySteps[activeJourneyStep - 1];
+      document.getElementById('giant-stage-tag').textContent = `Stage ${s.step} of 6 • Follow the Banh Mi`;
+      document.getElementById('giant-title').textContent = `${s.emoji} ${s.name}`;
+      document.getElementById('giant-desc').textContent = s.job;
+    }
+    function closeGiantProjection() {
+      const m = document.getElementById('giant-modal');
+      m.classList.add('hidden'); m.classList.remove('flex');
+    }
+
+    // ------------------------------------------------------------
+    // 8. STATION 4: DUAL LAB (MOUTH SIMULATOR + 6-ORGAN BUILDER)
+    // ------------------------------------------------------------
+    function switchLabTab(tab) {
+      const isA = tab === 'a';
+      document.getElementById('lab-panel-a').classList.toggle('hidden', !isA);
+      document.getElementById('lab-panel-b').classList.toggle('hidden', isA);
+      document.getElementById('lab-tab-a').className = isA
+        ? 'px-4 py-2.5 rounded-xl font-bold text-sm bg-teal-600 text-white shadow'
+        : 'px-4 py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-slate-700 hover:bg-teal-50';
+      document.getElementById('lab-tab-b').className = !isA
+        ? 'px-4 py-2.5 rounded-xl font-bold text-sm bg-teal-600 text-white shadow'
+        : 'px-4 py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-slate-700 hover:bg-teal-50';
+      playTone(500, 0.08);
+    }
+
+    // Lab A: Safety Gate
+    const riskChecked = { 1: false, 2: false, 3: false };
+    function toggleRiskCheck(num) {
+      riskChecked[num] = !riskChecked[num];
+      document.getElementById(`risk-icon-${num}`).textContent = riskChecked[num] ? '✅' : '⬜';
+      document.getElementById(`risk-btn-${num}`).classList.toggle('border-emerald-500', riskChecked[num]);
+      document.getElementById(`risk-btn-${num}`).classList.toggle('bg-emerald-50', riskChecked[num]);
+
+      const count = Object.values(riskChecked).filter(Boolean).length;
+      const badge = document.getElementById('safety-status-badge');
+      const sim = document.getElementById('mouth-sim-wrapper');
+      const lockLbl = document.getElementById('sim-lock-label');
+
+      if (count === 3) {
+        badge.textContent = '✅ 3 / 3 Risks Checked — Lab Unlocked!';
+        badge.className = 'px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs uppercase';
+        sim.classList.remove('opacity-50', 'pointer-events-none');
+        lockLbl.textContent = '🔓 Safe to Investigate!';
+        lockLbl.className = 'text-xs font-extrabold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800';
+        playChime('good');
+      } else {
+        badge.textContent = `🔒 ${count} / 3 Risks Checked`;
+        badge.className = 'px-3.5 py-1.5 rounded-full bg-rose-100 text-rose-800 font-extrabold text-xs uppercase';
+        sim.classList.add('opacity-50', 'pointer-events-none');
+        lockLbl.textContent = 'Complete Safety Check Above';
+        lockLbl.className = 'text-xs font-extrabold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600';
+        playTone(460, 0.08);
+      }
+    }
+
+    // Lab A: Virtual Cracker Simulator
+    let salivaMode = 'normal';
+    const chewData = { 0: 20, 10: 12, 20: 6, 30: 3, 40: 1 };
+
+    function setSalivaMode(mode) {
+      salivaMode = mode;
+      ['dry', 'normal', 'rich'].forEach(m => {
+        const btn = document.getElementById(`saliva-${m}`);
+        btn.className = m === mode
+          ? 'py-2 px-2 rounded-xl text-xs font-extrabold border-2 border-sky-500 bg-sky-50 text-sky-800'
+          : 'py-2 px-2 rounded-xl text-xs font-extrabold border-2 border-slate-200 bg-white text-slate-700';
+      });
+      updateMouthSim();
+      playTone(540, 0.07);
+    }
+
+    function updateMouthSim() {
+      const secs = Number(document.getElementById('chew-slider').value);
+      const sizeMm = chewData[secs];
+      document.getElementById('chew-time-val').textContent = `${secs} s`;
+      document.getElementById('readout-size').textContent = `${sizeMm} mm`;
+
+      // Swallow ease & taste
+      const swallowEl = document.getElementById('readout-swallow');
+      const tasteEl = document.getElementById('readout-taste');
+      if (secs === 0) {
+        swallowEl.textContent = 'Too Large!';
+        swallowEl.className = 'font-display text-lg font-bold text-rose-700';
+        tasteEl.textContent = 'Dry plain cracker';
+      } else if (salivaMode === 'dry') {
+        swallowEl.textContent = 'Too Dry & Scratchy';
+        swallowEl.className = 'font-display text-base font-bold text-amber-700';
+        tasteEl.textContent = 'Plain (no saliva)';
+      } else if (secs >= 30) {
+        swallowEl.textContent = 'Smooth & Safe!';
+        swallowEl.className = 'font-display text-lg font-bold text-emerald-700';
+        tasteEl.textContent = 'Slightly sweeter!';
+      } else {
+        swallowEl.textContent = 'Getting Softer';
+        swallowEl.className = 'font-display text-lg font-bold text-sky-700';
+        tasteEl.textContent = 'Softening starch';
+      }
+
+      // Render organic particles (flex-wrap, align-content: flex-end, staggered delays)
+      const chamber = document.getElementById('cracker-chamber');
+      const countMap = { 0: 1, 10: 5, 20: 12, 30: 22, 40: 36 };
+      const pxMap = { 0: 76, 10: 36, 20: 22, 30: 15, 40: 10 };
+      const pieces = countMap[secs];
+      const px = pxMap[secs];
+      const dropletCount = salivaMode === 'dry' ? 0 : salivaMode === 'normal' ? 6 : 14;
+
+      let html = '';
+      for (let i = 0; i < pieces; i++) {
+        const delay = ((i * 0.17) % 1.4).toFixed(2);
+        const dur = (1.6 + ((i * 0.23) % 1.1)).toFixed(2);
+        const bg = salivaMode === 'dry' ? '#d97706' : '#f59e0b';
+        html += `<div class="organic-particle rounded-md border border-amber-800/50" style="width:${px}px;height:${Math.max(10, Math.round(px * 0.72))}px;background:${bg};animation-delay:${delay}s;animation-duration:${dur}s;"></div>`;
+      }
+      for (let d = 0; d < dropletCount; d++) {
+        const delay = ((d * 0.21) % 1.2).toFixed(2);
+        const dur = (1.5 + ((d * 0.19) % 1.0)).toFixed(2);
+        html += `<div class="organic-particle rounded-full bg-sky-400/85 border border-sky-600" style="width:9px;height:9px;animation-delay:${delay}s;animation-duration:${dur}s;"></div>`;
+      }
+      chamber.innerHTML = html;
+
+      inspectGraphPoint(secs, sizeMm, true);
+    }
+
+    function inspectGraphPoint(secs, mm, silent = false) {
+      [0, 10, 20, 30, 40].forEach(t => {
+        const dot = document.getElementById(`pt-${t}`);
+        if (!dot) return;
+        dot.setAttribute('fill', t === secs ? '#f59e0b' : '#14b8a6');
+        dot.setAttribute('r', t === secs ? '9' : '7');
+      });
+      const notes = {
+        0: 'whole piece — not yet chewed',
+        10: 'broken into chunky pieces by teeth',
+        20: 'smaller pieces softening with saliva',
+        30: 'fine mush — safe and easy to swallow',
+        40: 'tiny dissolved paste ready for the oesophagus'
+      };
+      document.getElementById('graph-readout').innerHTML =
+        `📍 Active Point: <strong>${secs} seconds</strong> ➔ Average cracker piece size = <strong>${mm} mm</strong> (${notes[secs]}).`;
+      if (!silent) {
+        document.getElementById('chew-slider').value = secs;
+        updateMouthSim();
+        playTone(500 + secs * 5, 0.08);
+      }
+    }
+
+    function toggleMechanism() {
+      const body = document.getElementById('mechanism-body');
+      const btn = document.getElementById('reveal-mech-btn');
+      const hidden = body.classList.toggle('hidden');
+      btn.textContent = hidden ? '👀 Reveal Explanation' : '🙈 Hide Explanation';
+      playTone(hidden ? 400 : 620, 0.1);
+    }
+
+    // Lab B: 6-Organ Builder
+    const builderTargets = [
+      { slot: 1, organ: 'Mouth', clue: 'Teeth chew food into small pieces and saliva softens it.' },
+      { slot: 2, organ: 'Oesophagus', clue: 'Muscular tube that squeezes food down to the stomach.' },
+      { slot: 3, organ: 'Stomach', clue: 'Churns food and mixes it with acid into a thick liquid.' },
+      { slot: 4, organ: 'Small intestine', clue: 'Absorbs tiny dissolved nutrients directly into the blood.' },
+      { slot: 5, organ: 'Large intestine', clue: 'Absorbs remaining water back into the body.' },
+      { slot: 6, organ: 'Anus', clue: 'Pushes solid undigested waste out of the body.' }
+    ];
+    const shuffledChips = ['Stomach', 'Large intestine', 'Mouth', 'Anus', 'Oesophagus', 'Small intestine'];
+    let selectedChip = null;
+    let placedSlots = {};
+
+    function renderOrganBuilder() {
+      const tray = document.getElementById('organ-chips-tray');
+      tray.innerHTML = shuffledChips.map(name => {
+        const used = Object.values(placedSlots).includes(name);
+        const active = selectedChip === name;
+        return `
+          <button onclick="selectBuilderChip('${name}')" ${used ? 'disabled' : ''} class="px-4 py-2.5 rounded-xl font-display font-bold text-base border-2 transition ${
+            used ? 'bg-slate-200 text-slate-400 border-slate-300 line-through cursor-not-allowed'
+            : active ? 'bg-teal-600 text-white border-teal-800 shadow-md scale-105'
+            : 'bg-white text-slate-900 border-amber-400 hover:bg-amber-100'
+          }">${name}</button>
+        `;
+      }).join('');
+
+      const grid = document.getElementById('organ-slots-grid');
+      grid.innerHTML = builderTargets.map(t => {
+        const placed = placedSlots[t.slot];
+        return `
+          <button onclick="placeChipInSlot(${t.slot})" class="text-left p-4 rounded-2xl border-2 transition ${
+            placed ? 'bg-emerald-50 border-emerald-500' : 'bg-slate-50 border-dashed border-slate-300 hover:border-teal-500 hover:bg-teal-50'
+          }">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="px-2.5 py-0.5 rounded-full bg-teal-700 text-white font-extrabold text-xs">Order #${t.slot}</span>
+              <span class="font-display font-bold text-base ${placed ? 'text-emerald-700' : 'text-slate-400'}">${placed ? '✅ ' + placed : 'Tap to Place'}</span>
+            </div>
+            <p class="text-xs sm:text-sm font-bold text-slate-700">${t.clue}</p>
+          </button>
+        `;
+      }).join('');
+
+      const count = Object.keys(placedSlots).length;
+      document.getElementById('builder-score-pill').textContent = `Placed: ${count} / 6`;
+    }
+
+    function selectBuilderChip(name) {
+      selectedChip = name;
+      renderOrganBuilder();
+      document.getElementById('builder-feedback').innerHTML = `Selected <strong>${name}</strong> — now tap the numbered job card where it belongs!`;
+      playTone(520, 0.07);
+    }
+
+    function placeChipInSlot(slotNum) {
+      if (placedSlots[slotNum]) return;
+      if (!selectedChip) {
+        document.getElementById('builder-feedback').textContent = '👆 First tap an organ chip in the yellow tray above!';
+        playTone(280, 0.1);
+        return;
+      }
+      const target = builderTargets.find(t => t.slot === slotNum);
+      if (target.organ === selectedChip) {
+        placedSlots[slotNum] = selectedChip;
+        selectedChip = null;
+        renderOrganBuilder();
+        playChime('good');
+        const done = Object.keys(placedSlots).length;
+        if (done === 6) {
+          document.getElementById('builder-feedback').innerHTML = '🎉 <strong>Brilliant!</strong> All 6 Cambridge digestive organs are in exact order from Mouth to Anus!';
+          launchConfetti();
+        } else {
+          document.getElementById('builder-feedback').innerHTML = `✅ Correct! <strong>${target.organ}</strong> is Organ #${slotNum}. Pick the next organ chip!`;
+        }
+      } else {
+        playChime('bad');
+        let extraHint = '';
+        if (selectedChip === 'Stomach' && slotNum === 4) {
+          extraHint = ' Remember: the stomach churns food with acid — it does NOT absorb nutrients!';
+        } else if (selectedChip === 'Large intestine' && slotNum === 4) {
+          extraHint = ' Careful! Small = Super nutrients; Large = Liquid water!';
+        }
+        document.getElementById('builder-feedback').innerHTML = `❌ Not quite — <strong>${selectedChip}</strong> does not match Order #${slotNum}.${extraHint}`;
+      }
+    }
+
+    function resetOrganBuilder() {
+      selectedChip = null;
+      placedSlots = {};
+      renderOrganBuilder();
+      document.getElementById('builder-feedback').textContent = '👆 Tap any organ chip from the yellow tray, then tap the matching numbered job card!';
+      playTone(400, 0.08);
+    }
+
+    // ------------------------------------------------------------
+    // 9. STATION 5: SUCCESS CRITERIA WHITEBOARD CHECK (0/3 Met)
+    // ------------------------------------------------------------
+    const scMet = { 1: false, 2: false, 3: false };
+    function toggleScAnswer(n) {
+      document.getElementById(`sc-ans-${n}`).classList.toggle('hidden');
+      playTone(540, 0.08);
+    }
+    function toggleScMet(n) {
+      scMet[n] = !scMet[n];
+      document.getElementById(`sc-badge-${n}`).textContent = scMet[n] ? '✅' : '⭕';
+      document.getElementById(`sc-met-btn-${n}`).textContent = scMet[n] ? 'Met! ✓' : 'Mark Met ✓';
+      const total = Object.values(scMet).filter(Boolean).length;
+      document.getElementById('sc-met-label').textContent = `${total}/3 Met`;
+      document.getElementById('sc-met-bar').style.width = `${Math.round((total / 3) * 100)}%`;
+      if (total === 3) {
+        playChime('good');
+        launchConfetti();
+      } else {
+        playTone(scMet[n] ? 620 : 360, 0.09);
+      }
+    }
+
+    // ------------------------------------------------------------
+    // 10. STATION 6: 8-Q DIGESTIVE ORGANS QUICKFIRE ENGINE
+    // ------------------------------------------------------------
+    const qfQuestions = [
+      {
+        q: '1. In which organ does digestion FIRST begin?',
+        a: 'The Mouth',
+        e: 'Teeth chew food into smaller pieces and saliva softens it and starts breaking down starch.'
+      },
+      {
+        q: '2. Write the exact British spelling of the muscular tube between the mouth and stomach.',
+        a: 'Oesophagus',
+        e: 'British English always begins with oe-: o-e-s-o-p-h-a-g-u-s!'
+      },
+      {
+        q: '3. True or False: The stomach absorbs most nutrients into the blood.',
+        a: 'FALSE!',
+        e: 'The stomach churns food and mixes it with acid. The small intestine absorbs nutrients into the blood!'
+      },
+      {
+        q: '4. Which organ absorbs tiny dissolved nutrients into the blood?',
+        a: 'The Small Intestine',
+        e: 'Memory anchor: S = Small intestine = Super nutrients into the blood!'
+      },
+      {
+        q: '5. Which organ absorbs remaining water back into the body?',
+        a: 'The Large Intestine',
+        e: 'Memory anchor: L = Large intestine = Liquid water back into the body!'
+      },
+      {
+        q: '6. Name the two helpers inside the mouth that start breaking down a bite of bread.',
+        a: 'Teeth and Saliva',
+        e: 'Teeth chop/grind food into small pieces; saliva wets food and begins breaking down starch.'
+      },
+      {
+        q: '7. Which organ is the final exit where solid undigested waste leaves the body?',
+        a: 'The Anus',
+        e: 'Organ #6 of 6 in the human digestive system.'
+      },
+      {
+        q: '8. Name ONE hygiene or safety risk to check before tasting food in a science investigation.',
+        a: 'Germs on hands / Food allergies / Choking',
+        e: 'Minimise risks by washing hands with soap, checking allergies first, and chewing slowly while seated.'
+      }
+    ];
+
+    let qfIdx = 0;
+    let qfInterval = null;
+    let qfSeconds = 15;
+
+    function renderQf() {
+      const item = qfQuestions[qfIdx];
+      document.getElementById('qf-counter').textContent = `Question ${qfIdx + 1} of ${qfQuestions.length}`;
+      document.getElementById('qf-question-text').textContent = item.q;
+      document.getElementById('qf-answer-text').textContent = item.a;
+      document.getElementById('qf-explain-text').textContent = item.e;
+      document.getElementById('qf-answer-box').classList.add('hidden');
+      document.getElementById('boards-up-banner').classList.add('hidden');
+      resetQfTimer();
+    }
+
+    function startQfTimer() {
+      if (qfInterval) clearInterval(qfInterval);
+      document.getElementById('boards-up-banner').classList.add('hidden');
+      if (qfSeconds <= 0) qfSeconds = 15;
+      document.getElementById('qf-timer-display').textContent = `${qfSeconds}s`;
+      qfInterval = setInterval(() => {
+        qfSeconds--;
+        document.getElementById('qf-timer-display').textContent = `${qfSeconds}s`;
+        if (qfSeconds > 0 && qfSeconds <= 5) playChime('tick');
+        if (qfSeconds <= 0) {
+          clearInterval(qfInterval);
+          qfInterval = null;
+          const b = document.getElementById('boards-up-banner');
+          b.classList.remove('hidden');
+          b.classList.add('boards-up-anim');
+          playChime('boardsup');
+        }
+      }, 1000);
+    }
+
+    function resetQfTimer() {
+      if (qfInterval) clearInterval(qfInterval);
+      qfInterval = null;
+      qfSeconds = 15;
+      document.getElementById('qf-timer-display').textContent = '15s';
+      document.getElementById('boards-up-banner').classList.add('hidden');
+    }
+
+    function revealQfAnswer() {
+      document.getElementById('qf-answer-box').classList.remove('hidden');
+      playChime('good');
+    }
+
+    function nextQf() {
+      qfIdx = (qfIdx + 1) % qfQuestions.length;
+      renderQf();
+    }
+
+    function prevQf() {
+      qfIdx = (qfIdx - 1 + qfQuestions.length) % qfQuestions.length;
+      renderQf();
+    }
+
+    // ------------------------------------------------------------
+    // 11. DAVID'S BOARD (DPR-SAFE INK-PRESERVING WHITEBOARD)
+    // ------------------------------------------------------------
+    let wbDrawing = false;
+    let wbColor = '#0f172a';
+    let wbSize = 4;
+    let wbEraser = false;
+    let wbStrokes = []; // Stored in normalised 0..1 coordinates so resize NEVER wipes ink!
+    let currentStroke = null;
+
+    function openWhiteboard() {
+      const m = document.getElementById('whiteboard-modal');
+      m.classList.remove('hidden'); m.classList.add('flex');
+      resizeWhiteboard();
+    }
+    function closeWhiteboard() {
+      const m = document.getElementById('whiteboard-modal');
+      m.classList.add('hidden'); m.classList.remove('flex');
+    }
+    function setWbColor(c) { wbColor = c; wbEraser = false; wbSize = 4; }
+    function setWbEraser() { wbEraser = true; wbSize = 22; }
+    function clearWhiteboard() { wbStrokes = []; redrawWhiteboard(); }
+    function toggleWbGuide() {
+      const g = document.getElementById('wb-body-guide');
+      const hidden = g.classList.toggle('hidden');
+      document.getElementById('wb-guide-btn').textContent = hidden ? 'Body Guide: OFF' : 'Body Guide: ON';
+    }
+
+    function resizeWhiteboard() {
+      const wrap = document.getElementById('wb-canvas-wrap');
+      const canvas = document.getElementById('wb-canvas');
+      if (!wrap || !canvas || wrap.clientWidth === 0) return;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(wrap.clientWidth * dpr);
+      canvas.height = Math.floor(wrap.clientHeight * dpr);
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      redrawWhiteboard();
+    }
+
+    function redrawWhiteboard() {
+      const wrap = document.getElementById('wb-canvas-wrap');
+      const canvas = document.getElementById('wb-canvas');
+      if (!wrap || !canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = wrap.clientWidth;
+      const h = wrap.clientHeight;
+      ctx.clearRect(0, 0, w, h);
+      wbStrokes.forEach(st => {
+        if (st.pts.length < 2) return;
+        ctx.beginPath();
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = st.size;
+        ctx.globalCompositeOperation = st.eraser ? 'destination-out' : 'source-over';
+        ctx.strokeStyle = st.eraser ? 'rgba(0,0,0,1)' : st.color;
+        ctx.moveTo(st.pts[0].x * w, st.pts[0].y * h);
+        for (let i = 1; i < st.pts.length; i++) {
+          ctx.lineTo(st.pts[i].x * w, st.pts[i].y * h);
+        }
+        ctx.stroke();
+      });
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    function initWhiteboardEvents() {
+      const canvas = document.getElementById('wb-canvas');
+      const wrap = document.getElementById('wb-canvas-wrap');
+      function getNormPos(e) {
+        const r = canvas.getBoundingClientRect();
+        return { x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height };
+      }
+      canvas.addEventListener('pointerdown', e => {
+        wbDrawing = true;
+        canvas.setPointerCapture(e.pointerId);
+        currentStroke = { color: wbColor, size: wbSize, eraser: wbEraser, pts: [getNormPos(e)] };
+        wbStrokes.push(currentStroke);
+      });
+      canvas.addEventListener('pointermove', e => {
+        if (!wbDrawing || !currentStroke) return;
+        currentStroke.pts.push(getNormPos(e));
+        redrawWhiteboard();
+      });
+      const endDraw = () => { wbDrawing = false; currentStroke = null; };
+      canvas.addEventListener('pointerup', endDraw);
+      canvas.addEventListener('pointercancel', endDraw);
+      window.addEventListener('resize', () => {
+        if (!document.getElementById('whiteboard-modal').classList.contains('hidden')) {
+          resizeWhiteboard();
+        }
+      });
+    }
+
+    // ------------------------------------------------------------
+    // 12. TEACHER DRAWER (T) & GUARDED KEYBOARD SHORTCUTS
+    // ------------------------------------------------------------
+    let teacherOpen = false;
+    function toggleTeacherDrawer() {
+      teacherOpen = !teacherOpen;
+      document.getElementById('teacher-drawer').classList.toggle('translate-x-full', !teacherOpen);
+    }
+
+    function anyModalOpen() {
+      return (
+        !document.getElementById('vocab-modal').classList.contains('hidden') ||
+        !document.getElementById('myth-modal').classList.contains('hidden') ||
+        !document.getElementById('giant-modal').classList.contains('hidden') ||
+        !document.getElementById('whiteboard-modal').classList.contains('hidden') ||
+        teacherOpen
+      );
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'Escape') {
+        closeVocabModal();
+        closeMythModal();
+        closeGiantProjection();
+        closeWhiteboard();
+        if (teacherOpen) toggleTeacherDrawer();
+        return;
+      }
+      if (e.key === 'm' || e.key === 'M') { toggleMute(); return; }
+      if (e.key === 't' || e.key === 'T') { toggleTeacherDrawer(); return; }
+      if (e.key === 'w' || e.key === 'W') {
+        const wb = document.getElementById('whiteboard-modal');
+        if (wb.classList.contains('hidden')) openWhiteboard(); else closeWhiteboard();
+        return;
+      }
+      if (anyModalOpen()) return;
+      if (e.key === 'ArrowRight') switchStation(Math.min(totalStations - 1, currentStation + 1));
+      if (e.key === 'ArrowLeft') switchStation(Math.max(0, currentStation - 1));
+    });
+
+    // ------------------------------------------------------------
+    // 13. INITIALISE APP
+    // ------------------------------------------------------------
+    renderVocabGrid();
+    renderJourneyButtons();
+    selectJourneyStep(1);
+    updateMouthSim();
+    renderOrganBuilder();
+    renderQf();
+    initWhiteboardEvents();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grade 5 Maths — Week 18, Lesson 1: Decimal Hours to Hours and Minutes (6Gt.01)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #eef2ff 50%, #fdf4ff 100%);
+      color: #0f172a;
+      min-height: 100vh;
+    }
+    .font-display { font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif; }
+    #top-header {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    .header-hidden { transform: translateY(-100%); }
+
+    /* Station tabs */
+    .station-tab {
+      transition: all 0.2s ease;
+    }
+    .station-tab.active {
+      background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+      color: #ffffff;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28);
+      transform: translateY(-1px);
+    }
+
+    /* 3D Flip Cards */
+    .flip-scene { perspective: 1200px; height: 350px; cursor: pointer; }
+    .flip-card {
+      width: 100%; height: 100%; position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .flip-card.is-flipped { transform: rotateY(180deg); }
+    .flip-face {
+      position: absolute; inset: 0;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      border-radius: 1.5rem;
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: 1.5rem;
+    }
+    .flip-back { transform: rotateY(180deg); }
+
+    /* Full Screen I Do Stage */
+    #ido-stage-wrapper.fullscreen-ido {
+      position: fixed; inset: 0; z-index: 60;
+      background: #ffffff;
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      border-radius: 0 !important;
+    }
+
+    /* David's Board 32px grid */
+    #whiteboard-canvas {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.28) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.28) 1px, transparent 1px);
+      background-size: 32px 32px;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    /* Confetti animation */
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    .confetti-piece {
+      position: fixed; top: -15px; width: 11px; height: 11px;
+      z-index: 120; pointer-events: none; border-radius: 2px;
+      animation: confettiFall 2.4s ease-out forwards;
+    }
+
+    /* Pulse for BOARDS UP */
+    @keyframes boardsUpPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+    .boards-up-anim { animation: boardsUpPulse 0.6s ease-in-out infinite; }
+  </style>
+</head>
+<body class="pb-16">
+
+  <!-- Auto-Hiding Fixed Top Header -->
+  <header id="top-header" class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-indigo-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-display font-bold flex items-center justify-center text-lg shadow">
+          60
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">Grade 5 Maths · 6Gt.01</span>
+            <span class="text-xs font-semibold text-slate-500 hidden sm:inline">Week 18 · Lesson 1</span>
+          </div>
+          <h1 class="font-display font-bold text-base sm:text-lg text-slate-900 leading-tight">Convert decimal hours into hours and minutes.</h1>
+        </div>
+      </div>
+
+      <div class="flex items-center flex-wrap gap-2">
+        <!-- Team Red vs Team Blue Live Scoreboard -->
+        <div class="flex items-center bg-slate-100 rounded-full p-1 border border-slate-200 shadow-inner">
+          <button onclick="addTeamPoint('red', 1)" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition" title="Add 1 point to Team Red">
+            <span>Red</span>
+            <span id="score-red" class="bg-white/25 px-1.5 py-0.5 rounded-full min-w-[22px] text-center">0</span>
+          </button>
+          <span class="px-1.5 text-[10px] font-black text-slate-400">VS</span>
+          <button onclick="addTeamPoint('blue', 1)" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition" title="Add 1 point to Team Blue">
+            <span>Blue</span>
+            <span id="score-blue" class="bg-white/25 px-1.5 py-0.5 rounded-full min-w-[22px] text-center">0</span>
+          </button>
+          <button onclick="resetScores()" class="ml-1 px-2 py-1 text-[11px] font-bold text-slate-500 hover:text-slate-800" title="Reset Scores">↺</button>
+        </div>
+
+        <button onclick="openWhiteboard()" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold shadow-sm flex items-center gap-1.5 transition" title="Open David's Board (W)">
+          <span>✏️ David's Board</span>
+          <kbd class="bg-black/20 px-1.5 py-0.5 rounded text-[10px]">W</kbd>
+        </button>
+
+        <button onclick="toggleTeacherDrawer()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-extrabold shadow-sm flex items-center gap-1.5 transition" title="Toggle Teacher Prompt Drawer (T)">
+          <span>📋 Teacher</span>
+          <kbd class="bg-white/20 px-1.5 py-0.5 rounded text-[10px]">T</kbd>
+        </button>
+
+        <button id="mute-btn" onclick="toggleMute()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold border border-slate-200 transition" title="Toggle Sound (M)">
+          🔊 <span class="hidden sm:inline">Sound</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="max-w-7xl mx-auto px-4 pt-24">
+
+    <!-- Flex-Wrap Station Navigation Bar -->
+    <nav aria-label="Lesson Stations" class="bg-white/90 backdrop-blur rounded-2xl p-2 shadow-sm border border-indigo-100 mb-6 flex flex-wrap gap-2 justify-center">
+      <button data-station="0" onclick="goToStation(0)" class="station-tab active px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-indigo-50">0. 🎯 LO &amp; Criteria</button>
+      <button data-station="1" onclick="goToStation(1)" class="station-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-indigo-50">1. ⚡ Flashback 3</button>
+      <button data-station="2" onclick="goToStation(2)" class="station-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-indigo-50">2. 📖 Vocabulary</button>
+      <button data-station="3" onclick="goToStation(3)" class="station-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-indigo-50">3. 🕒 I Do &amp; Clock Lab</button>
+      <button data-station="4" onclick="goToStation(4)" class="station-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-indigo-50">4. ✍️ You Do Board</button>
+      <button data-station="5" onclick="goToStation(5)" class="station-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-indigo-50">5. 🧠 Reasoning Lab</button>
+      <button data-station="6" onclick="goToStation(6)" class="station-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-indigo-50">6. ✅ SC Check</button>
+      <button data-station="7" onclick="goToStation(7)" class="station-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-indigo-50">7. 🏆 Quickfire</button>
+    </nav>
+
+    <!-- =========================================================
+         STATION 0: LO & SUCCESS CRITERIA
+         ========================================================= -->
+    <section id="station-0" class="station-panel">
+      <div class="space-y-6">
+        <!-- Hero Banner -->
+        <div class="rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 p-8 text-white shadow-xl relative overflow-hidden">
+          <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="space-y-3">
+              <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur px-4 py-1.5 rounded-full text-xs font-extrabold tracking-wider uppercase">
+                <span>Unit 7.2 Time</span>
+                <span>•</span>
+                <span>Cambridge 6Gt.01</span>
+                <span>•</span>
+                <span>Base-60 vs Base-10</span>
+              </div>
+              <h2 class="font-display text-3xl sm:text-5xl font-bold leading-tight">
+                Convert decimal hours into hours and minutes.
+              </h2>
+              <p class="text-blue-100 text-base sm:text-lg max-w-2xl font-medium">
+                Today we discover why <strong class="text-amber-300">0.5 hours = 30 minutes</strong> (never 50 minutes!) and master converting decimal time using a 60-minute clock.
+              </p>
+            </div>
+            <!-- Decorative Clock Badge SVG -->
+            <div class="bg-white/15 backdrop-blur-md p-4 rounded-3xl border border-white/25 shrink-0">
+              <svg viewBox="0 0 150 150" class="w-32 h-32">
+                <circle cx="75" cy="75" r="64" fill="#ffffff" stroke="#1e1b4b" stroke-width="5"/>
+                <path d="M75,75 L75,11 A64,64 0 0,1 75,139 Z" fill="#f59e0b" opacity="0.35"/>
+                <line x1="75" y1="11" x2="75" y2="23" stroke="#1e1b4b" stroke-width="4" stroke-linecap="round"/>
+                <line x1="139" y1="75" x2="127" y2="75" stroke="#1e1b4b" stroke-width="4" stroke-linecap="round"/>
+                <line x1="75" y1="139" x2="75" y2="127" stroke="#1e1b4b" stroke-width="4" stroke-linecap="round"/>
+                <line x1="11" y1="75" x2="23" y2="75" stroke="#1e1b4b" stroke-width="4" stroke-linecap="round"/>
+                <line x1="75" y1="75" x2="75" y2="120" stroke="#dc2626" stroke-width="5" stroke-linecap="round"/>
+                <circle cx="75" cy="75" r="6" fill="#1e1b4b"/>
+                <text x="75" y="53" text-anchor="middle" font-size="16" font-weight="800" fill="#1e1b4b">0.5 h</text>
+                <text x="75" y="106" text-anchor="middle" font-size="14" font-weight="800" fill="#b45309">= 30 min</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exact 3 "I can..." Success Criteria -->
+        <div class="bg-white rounded-3xl p-6 shadow-md border border-indigo-100">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-display text-xl font-bold text-slate-900">🎯 Today's 3 "I Can..." Success Criteria</h3>
+            <span class="text-xs font-extrabold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">We will check all 3 in Station 6!</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="rounded-2xl bg-sky-50 border-2 border-sky-200 p-4 flex items-start gap-3">
+              <div class="w-8 h-8 rounded-full bg-sky-600 text-white font-display font-bold flex items-center justify-center shrink-0">1</div>
+              <p class="text-sm sm:text-base font-bold text-slate-800">I can explain why 0.5 hours equals 30 minutes rather than 50 minutes using a base-60 clock model.</p>
+            </div>
+            <div class="rounded-2xl bg-indigo-50 border-2 border-indigo-200 p-4 flex items-start gap-3">
+              <div class="w-8 h-8 rounded-full bg-indigo-600 text-white font-display font-bold flex items-center justify-center shrink-0">2</div>
+              <p class="text-sm sm:text-base font-bold text-slate-800">I can convert decimal hours (tenths, halves and quarters) into hours and minutes by multiplying the decimal part by 60.</p>
+            </div>
+            <div class="rounded-2xl bg-fuchsia-50 border-2 border-fuchsia-200 p-4 flex items-start gap-3">
+              <div class="w-8 h-8 rounded-full bg-fuchsia-600 text-white font-display font-bold flex items-center justify-center shrink-0">3</div>
+              <p class="text-sm sm:text-base font-bold text-slate-800">I can spot and correct common decimal-time errors in everyday timetable problems.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Must / Should / Could Tiers -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="rounded-3xl bg-emerald-50 border-2 border-emerald-300 p-6 shadow-sm">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-600 text-white text-xs font-extrabold uppercase mb-3">
+              🟢 Must · Level 1
+            </div>
+            <p class="font-display text-xl font-bold text-emerald-950">Convert 0.5, 0.25 and 0.75 hours into minutes.</p>
+            <p class="mt-2 text-sm text-emerald-800 font-medium">Benchmark halves and quarters of 60 minutes.</p>
+          </div>
+          <div class="rounded-3xl bg-amber-50 border-2 border-amber-300 p-6 shadow-sm">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500 text-white text-xs font-extrabold uppercase mb-3">
+              🟠 Should · Level 2
+            </div>
+            <p class="font-display text-xl font-bold text-amber-950">Convert any 1-decimal-place hour (e.g. 2.4 h) into hours and minutes.</p>
+            <p class="mt-2 text-sm text-amber-900 font-medium">Use 0.1 h = 6 min or multiply the decimal part by 60.</p>
+          </div>
+          <div class="rounded-3xl bg-purple-50 border-2 border-purple-300 p-6 shadow-sm">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-600 text-white text-xs font-extrabold uppercase mb-3">
+              🟣 Could · Level 3
+            </div>
+            <p class="font-display text-xl font-bold text-purple-950">Solve multi-step journey problems mixing decimal hours and clock times.</p>
+            <p class="mt-2 text-sm text-purple-900 font-medium">Convert hundredths (e.g. 3.15 h) and find arrival times.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         STATION 1: SPACED FLASHBACK 3
+         ========================================================= -->
+    <section id="station-1" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-indigo-100 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Spaced &amp; Interleaved Retrieval</span>
+            <h2 class="font-display text-3xl font-bold text-slate-900">⚡ Flashback 3 — Remember Earlier Units!</h2>
+            <p class="text-slate-600 font-medium">Solve all 3 on your mini-whiteboard first, then tap each card to flip and check.</p>
+          </div>
+          <button onclick="resetFlashbacks()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition">
+            ↺ Flip All Back
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 7.1 Right-Angled Triangles -->
+          <div class="flip-scene" onclick="flipCard(this)">
+            <div class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-xl">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Unit 7.1 · 6Gg.03</span>
+                  <span class="text-xs font-bold opacity-90">Tap to Reveal ↻</span>
+                </div>
+                <div class="text-center my-auto space-y-2">
+                  <p class="text-sm font-bold uppercase tracking-wide text-sky-100">Find the Area</p>
+                  <svg viewBox="0 0 220 120" class="w-48 h-28 mx-auto">
+                    <polygon points="35,100 185,100 35,20" fill="rgba(255,255,255,0.22)" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"/>
+                    <rect x="35" y="84" width="16" height="16" fill="none" stroke="#fde047" stroke-width="3"/>
+                    <text x="110" y="116" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="800">12 cm</text>
+                    <text x="17" y="64" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="800">7 cm</text>
+                    <text x="132" y="50" text-anchor="middle" fill="#fde047" font-size="14" font-weight="800">13.9 cm</text>
+                  </svg>
+                  <p class="text-xs font-semibold text-sky-100">Watch out for the distractor side!</p>
+                </div>
+                <div class="text-center text-xs font-bold bg-black/15 rounded-xl py-2">Right-Angled Triangle Area</div>
+              </div>
+              <div class="flip-face flip-back bg-white border-4 border-sky-500 text-slate-900 shadow-xl">
+                <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-extrabold uppercase w-fit">Answer · Unit 7.1</span>
+                <div class="text-center my-auto space-y-3">
+                  <div class="font-display text-6xl font-bold text-sky-600">42 cm²</div>
+                  <p class="text-base font-bold text-slate-700">½ × 12 cm × 7 cm = 42 cm²</p>
+                  <p class="text-sm text-slate-500 font-medium">Ignore the sloping side (13.9 cm) — only use the two sides meeting at the right angle!</p>
+                </div>
+                <div class="text-center text-xs font-bold text-sky-700">Tap to flip back</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 6 Percentages -->
+          <div class="flip-scene" onclick="flipCard(this)">
+            <div class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-xl">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Unit 6 · 6Nf.07</span>
+                  <span class="text-xs font-bold opacity-90">Tap to Reveal ↻</span>
+                </div>
+                <div class="text-center my-auto space-y-4">
+                  <p class="text-sm font-bold uppercase tracking-wide text-emerald-100">Mental Percentages</p>
+                  <div class="font-display text-5xl font-bold">15% of 80</div>
+                  <div class="font-display text-4xl font-bold text-amber-200">35% of 200</div>
+                </div>
+                <div class="text-center text-xs font-bold bg-black/15 rounded-xl py-2">Tip: Find 10% and 5% first!</div>
+              </div>
+              <div class="flip-face flip-back bg-white border-4 border-emerald-500 text-slate-900 shadow-xl">
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase w-fit">Answer · Unit 6</span>
+                <div class="text-center my-auto space-y-4">
+                  <div>
+                    <div class="font-display text-5xl font-bold text-emerald-600">12 &amp; 70</div>
+                  </div>
+                  <div class="text-left bg-emerald-50 rounded-xl p-3 text-sm font-bold text-slate-700 space-y-1">
+                    <p>• 15% of 80: 10% = 8, 5% = 4 ➔ 8 + 4 = <strong>12</strong></p>
+                    <p>• 35% of 200: 10% = 20, 30% = 60, 5% = 10 ➔ <strong>70</strong></p>
+                  </div>
+                </div>
+                <div class="text-center text-xs font-bold text-emerald-700">Tap to flip back</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 1 Place Value -->
+          <div class="flip-scene" onclick="flipCard(this)">
+            <div class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-xl">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Unit 1 · 6Np.04</span>
+                  <span class="text-xs font-bold opacity-90">Tap to Reveal ↻</span>
+                </div>
+                <div class="text-center my-auto space-y-3">
+                  <p class="text-sm font-bold uppercase tracking-wide text-purple-100">Round this Decimal</p>
+                  <div class="font-display text-7xl font-bold">14.68</div>
+                  <p class="text-base font-bold text-amber-200">1) Nearest tenth &nbsp;|&nbsp; 2) Nearest whole</p>
+                </div>
+                <div class="text-center text-xs font-bold bg-black/15 rounded-xl py-2">Rounding Decimals</div>
+              </div>
+              <div class="flip-face flip-back bg-white border-4 border-violet-500 text-slate-900 shadow-xl">
+                <span class="px-3 py-1 rounded-full bg-violet-100 text-violet-800 text-xs font-extrabold uppercase w-fit">Answer · Unit 1</span>
+                <div class="text-center my-auto space-y-3">
+                  <div class="font-display text-5xl font-bold text-violet-600">14.7 &amp; 15</div>
+                  <div class="text-left bg-violet-50 rounded-xl p-3 text-sm font-bold text-slate-700 space-y-1">
+                    <p>• Nearest tenth: 8 hundredths rounds up ➔ <strong>14.7</strong></p>
+                    <p>• Nearest whole: 6 tenths rounds up ➔ <strong>15</strong></p>
+                  </div>
+                </div>
+                <div class="text-center text-xs font-bold text-violet-700">Tap to flip back</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         STATION 2: VOCABULARY (SOLE VIETNAMESE EXCEPTION IN MODAL) + REAL-LIFE STRIP
+         ========================================================= -->
+    <section id="station-2" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-indigo-100 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Key Mathematical Language</span>
+            <h2 class="font-display text-3xl font-bold text-slate-900">📖 Time Vocabulary Bank</h2>
+            <p class="text-slate-600 font-medium">Tap any word tile to open the bilingual dictionary modal, hear pronunciation, and see a visual clock model.</p>
+          </div>
+          <span class="px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold">🔊 Audio + Visual Models inside</span>
+        </div>
+
+        <!-- Vocab Grid (English-only tiles on main board) -->
+        <div id="vocab-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4"></div>
+
+        <!-- Bottom of Station 2: Real-Life Relevance Strip (100% English ONLY!) -->
+        <div class="rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 shadow-xl">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl">🌍</span>
+            <div>
+              <h3 class="font-display text-xl sm:text-2xl font-bold">Why Does This Matter in Real Life?</h3>
+              <p class="text-indigo-200 text-sm">Where do real people see decimal hours every single day?</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/15">
+              <div class="text-2xl mb-2">✈️</div>
+              <h4 class="font-display font-bold text-lg text-amber-300">Flight Trackers &amp; Pilots</h4>
+              <p class="text-sm text-slate-100 mt-1">Booking apps at Noi Bai Airport show flight times like <strong>1.5 h</strong> or <strong>2.4 h</strong>. Travellers convert them to hours and minutes to plan airport pick-ups!</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/15">
+              <div class="text-2xl mb-2">⏱️</div>
+              <h4 class="font-display font-bold text-lg text-emerald-300">Sports Stopwatches &amp; Apps</h4>
+              <p class="text-sm text-slate-100 mt-1">Cycling and running apps display total training time as <strong>1.25 h</strong> or <strong>0.75 h</strong> so coaches can calculate average speed easily.</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/15">
+              <div class="text-2xl mb-2">💼</div>
+              <h4 class="font-display font-bold text-lg text-sky-300">Work &amp; Tutor Timesheets</h4>
+              <p class="text-sm text-slate-100 mt-1">Businesses pay staff by decimal hours (e.g. <strong>7.5 h</strong> a day). Knowing <strong>0.5 h = 30 min</strong> stops costly payroll mistakes!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         STATION 3: FULL-SCREEN VISUAL I DO + BASE-60 CLOCK-FACE LAB
+         ========================================================= -->
+    <section id="station-3" class="station-panel hidden">
+      <div class="space-y-6">
+
+        <!-- Full-Screen Visual I Do Stage -->
+        <div id="ido-stage-wrapper" class="bg-white rounded-3xl p-6 shadow-lg border-2 border-indigo-200">
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600">Explicit Visual Modelling (CPA)</span>
+              <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">🕒 I Do: Base-60 Clock vs Base-10 Trap</h2>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="toggleStepsPill()" class="px-3.5 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-extrabold transition">
+                📝 Steps Checklist
+              </button>
+              <button id="fullscreen-ido-btn" onclick="toggleFullScreenIDo()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold shadow transition">
+                ⛶ Full Screen I Do
+              </button>
+            </div>
+          </div>
+
+          <!-- Collapsible Steps Checklist Pill Bar -->
+          <div id="steps-pill-bar" class="hidden mt-4 bg-amber-50 border-2 border-amber-200 rounded-2xl p-3 flex flex-wrap items-center justify-around gap-2 text-xs sm:text-sm font-bold text-amber-950">
+            <span class="bg-white px-3 py-1.5 rounded-xl border border-amber-200">1️⃣ Keep the whole hours untouched</span>
+            <span>➔</span>
+            <span class="bg-white px-3 py-1.5 rounded-xl border border-amber-200">2️⃣ Take ONLY the decimal part</span>
+            <span>➔</span>
+            <span class="bg-white px-3 py-1.5 rounded-xl border border-amber-200">3️⃣ Multiply decimal part × 60 (each 0.1 h = 6 min)</span>
+            <span>➔</span>
+            <span class="bg-white px-3 py-1.5 rounded-xl border border-amber-200">4️⃣ Combine: Hours + Minutes</span>
+          </div>
+
+          <!-- Example Selector Tabs -->
+          <div class="flex flex-wrap gap-2 mt-4">
+            <button onclick="selectIDoExample(0)" id="ido-tab-0" class="ido-tab px-4 py-2 rounded-xl text-sm font-extrabold bg-blue-600 text-white shadow">1. Why 0.5 h = 30 min</button>
+            <button onclick="selectIDoExample(1)" id="ido-tab-1" class="ido-tab px-4 py-2 rounded-xl text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200">2. Tenths: 0.1 h = 6 min</button>
+            <button onclick="selectIDoExample(2)" id="ido-tab-2" class="ido-tab px-4 py-2 rounded-xl text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200">3. Split: 2.4 h</button>
+            <button onclick="selectIDoExample(3)" id="ido-tab-3" class="ido-tab px-4 py-2 rounded-xl text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200">4. Quarters: 1.75 h</button>
+          </div>
+
+          <!-- Animated Visual Stage Content -->
+          <div id="ido-visual-stage" class="mt-5 rounded-3xl bg-gradient-to-br from-slate-50 to-indigo-50/70 border border-indigo-100 p-6 min-h-[340px]"></div>
+
+          <!-- Step-by-step Reveal Controls -->
+          <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <button onclick="prevIDoStep()" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm">← Previous Step</button>
+              <button onclick="nextIDoStep()" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow">Next Step →</button>
+            </div>
+            <span id="ido-step-badge" class="text-sm font-extrabold text-indigo-700 bg-indigo-100 px-4 py-1.5 rounded-full">Step 1 of 3</span>
+          </div>
+        </div>
+
+        <!-- Interactive Base-60 Clock-Face & Tenth-Bar Converter Lab -->
+        <div class="bg-white rounded-3xl p-6 shadow-lg border-2 border-emerald-200">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-600">Hands-On CPA Interactive Lab</span>
+              <h3 class="font-display text-2xl font-bold text-slate-900">🎛️ Base-60 Clock-Face &amp; Tenth-Bar Converter Lab</h3>
+              <p class="text-sm text-slate-600 font-medium">Drag the slider or tap a preset to watch 10 equal tenth-hour slices (6 minutes each) fill the 60-minute clock!</p>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              <button onclick="setLabHours(0.1)" class="px-3 py-1.5 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 text-xs font-extrabold">0.1 h</button>
+              <button onclick="setLabHours(0.25)" class="px-3 py-1.5 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 text-xs font-extrabold">0.25 h</button>
+              <button onclick="setLabHours(0.5)" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-extrabold">0.5 h</button>
+              <button onclick="setLabHours(0.75)" class="px-3 py-1.5 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 text-xs font-extrabold">0.75 h</button>
+              <button onclick="setLabHours(1.75)" class="px-3 py-1.5 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 text-xs font-extrabold">1.75 h</button>
+              <button onclick="setLabHours(2.4)" class="px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 text-xs font-extrabold">2.4 h</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <!-- Left: SVG 60-Minute Clock with 10 Tenth Wedges -->
+            <div class="lg:col-span-5 flex flex-col items-center">
+              <svg id="lab-clock-svg" viewBox="0 0 260 260" class="w-64 h-64 drop-shadow-md"></svg>
+              <p class="text-xs font-bold text-slate-500 mt-2">Each dashed wedge = 0.1 hour = 6 minutes</p>
+            </div>
+
+            <!-- Right: Controls + Tenth Bar + Live Split Readout -->
+            <div class="lg:col-span-7 space-y-4">
+              <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <div class="flex items-center justify-between mb-2">
+                  <label for="lab-slider" class="text-sm font-extrabold text-slate-700">Decimal Hours Slider:</label>
+                  <span id="lab-decimal-badge" class="font-display text-3xl font-bold text-indigo-700">2.40 h</span>
+                </div>
+                <input id="lab-slider" type="range" min="0" max="5" step="0.05" value="2.4" oninput="updateClockLab(this.value)" class="w-full h-3 accent-indigo-600 cursor-pointer">
+                <div class="flex justify-between text-[11px] font-bold text-slate-400 mt-1">
+                  <span>0.0 h</span><span>1.0 h</span><span>2.0 h</span><span>3.0 h</span><span>4.0 h</span><span>5.0 h</span>
+                </div>
+              </div>
+
+              <!-- Visual 10-Tenth Bar of 60 Minutes -->
+              <div class="bg-white rounded-2xl p-4 border-2 border-indigo-100">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-extrabold uppercase text-indigo-700">Decimal Part on a 60-Minute Bar (10 × 6 min)</span>
+                  <span id="lab-part-label" class="text-xs font-extrabold text-emerald-700">0.40 h = 24 min</span>
+                </div>
+                <div id="lab-tenth-bar" class="grid grid-cols-10 gap-1"></div>
+              </div>
+
+              <!-- Two-Box Split Live Equation -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-3">
+                  <div class="text-[11px] font-extrabold uppercase text-blue-700">Box 1: Whole Hours</div>
+                  <div id="lab-whole-out" class="font-display text-3xl font-bold text-blue-900 mt-1">2 h</div>
+                </div>
+                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-3">
+                  <div class="text-[11px] font-extrabold uppercase text-emerald-700">Box 2: Decimal × 60</div>
+                  <div id="lab-min-calc" class="text-xs font-bold text-emerald-800 mt-0.5">0.4 × 60</div>
+                  <div id="lab-min-out" class="font-display text-3xl font-bold text-emerald-900">24 min</div>
+                </div>
+                <div class="bg-indigo-600 text-white rounded-2xl p-3 shadow">
+                  <div class="text-[11px] font-extrabold uppercase text-indigo-200">Mixed Units</div>
+                  <div id="lab-final-out" class="font-display text-3xl font-bold mt-1">2 h 24 min</div>
+                </div>
+              </div>
+
+              <!-- Base-10 Trap Alert -->
+              <div id="lab-trap-box" class="bg-rose-50 border-2 border-rose-200 rounded-2xl p-3 text-sm font-bold text-rose-900 flex items-center gap-3">
+                <span class="text-xl">⚠️</span>
+                <span id="lab-trap-text">Trap Watch: 2.4 h is NOT 2 h 40 min! Because 1 hour = 60 min (base-60), 0.4 × 60 = 24 min.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick We Do 2-Question Hinge Check -->
+          <div class="mt-6 bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <h4 class="font-display text-lg font-bold text-indigo-950">🚦 We Do Hinge Check (Mini-Whiteboards!)</h4>
+              <span class="text-xs font-extrabold text-indigo-700">Check before starting You Do</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="bg-white rounded-xl p-3.5 border border-indigo-200 flex items-center justify-between gap-3">
+                <div>
+                  <span class="text-xs font-extrabold text-slate-400">Hinge Q1</span>
+                  <p class="font-display text-xl font-bold text-slate-900">Convert 0.8 hours to minutes.</p>
+                </div>
+                <button onclick="revealHinge('hinge-1')" class="px-3.5 py-2 rounded-xl bg-indigo-600 text-white text-xs font-extrabold shrink-0">Reveal</button>
+              </div>
+              <div class="bg-white rounded-xl p-3.5 border border-indigo-200 flex items-center justify-between gap-3">
+                <div>
+                  <span class="text-xs font-extrabold text-slate-400">Hinge Q2</span>
+                  <p class="font-display text-xl font-bold text-slate-900">Convert 4.5 hours to hours and minutes.</p>
+                </div>
+                <button onclick="revealHinge('hinge-2')" class="px-3.5 py-2 rounded-xl bg-indigo-600 text-white text-xs font-extrabold shrink-0">Reveal</button>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+              <div id="hinge-1" class="hidden bg-emerald-100 text-emerald-950 rounded-xl px-4 py-2 text-sm font-extrabold">✅ 0.8 × 60 = 48 minutes (8 × 6 min = 48 min — NOT 80 min!)</div>
+              <div id="hinge-2" class="hidden bg-emerald-100 text-emerald-950 rounded-xl px-4 py-2 text-sm font-extrabold">✅ 4 h + 0.5 × 60 = 4 hours 30 minutes (NOT 4 h 50 min!)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         STATION 4: YOU DO PRACTICE (ALL-TIERS SIDE-BY-SIDE BOARD VIEW)
+         ========================================================= -->
+    <section id="station-4" class="station-panel hidden">
+      <div class="space-y-5">
+        <div class="bg-white rounded-3xl p-5 shadow-sm border border-indigo-100 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Independent &amp; Differentiated Practice</span>
+            <h2 class="font-display text-3xl font-bold text-slate-900">✍️ You Do — All-Tiers Board View</h2>
+            <p class="text-sm text-slate-600 font-medium">Choose your starting tier and climb higher! Tap any card to open <strong>Giant Projection Mode</strong>.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="filterYouDo('all')" id="yd-filter-all" class="yd-filter px-3.5 py-2 rounded-xl bg-slate-900 text-white text-xs font-extrabold">All Tiers (9)</button>
+            <button onclick="filterYouDo('must')" id="yd-filter-must" class="yd-filter px-3.5 py-2 rounded-xl bg-emerald-100 text-emerald-900 text-xs font-extrabold">🟢 Must</button>
+            <button onclick="filterYouDo('should')" id="yd-filter-should" class="yd-filter px-3.5 py-2 rounded-xl bg-amber-100 text-amber-900 text-xs font-extrabold">🟠 Should</button>
+            <button onclick="filterYouDo('could')" id="yd-filter-could" class="yd-filter px-3.5 py-2 rounded-xl bg-purple-100 text-purple-900 text-xs font-extrabold">🟣 Could</button>
+            <button onclick="toggleAllYouDoAnswers()" id="yd-reveal-all-btn" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold">👁️ Show All Answers</button>
+          </div>
+        </div>
+
+        <!-- 3 Columns Side-by-Side -->
+        <div id="youdo-board-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-5"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         STATION 5: REASONING & JUSTIFICATION LAB (TWM)
+         ========================================================= -->
+    <section id="station-5" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-indigo-100">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-fuchsia-600">Thinking and Working Mathematically (TWM)</span>
+          <h2 class="font-display text-3xl font-bold text-slate-900">🧠 Reasoning &amp; Justification Lab</h2>
+          <p class="text-slate-600 font-medium">Don't just say True or False — <strong>prove it</strong> using base-60 reasoning!</p>
+        </div>
+
+        <!-- Part A: True or False Matrix (4 mixed cards) -->
+        <div>
+          <h3 class="font-display text-xl font-bold text-slate-900 mb-3">Part A — True or False? (Tap each card to reveal the proof)</h3>
+          <div id="tf-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+
+        <!-- Part B: Spot the Mistake + Always/Sometimes/Never -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Spot the Mistake -->
+          <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-rose-200 space-y-4">
+            <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-extrabold uppercase">Part B1 · Who Is Correct?</span>
+            <h3 class="font-display text-2xl font-bold text-slate-900">A school film lasts 1.3 hours.</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="rounded-2xl bg-sky-50 border-2 border-sky-200 p-4">
+                <div class="font-display font-bold text-sky-900 text-lg">👧 Linh says:</div>
+                <p class="text-slate-800 font-bold mt-1">"1.3 hours is 1 hour 30 minutes because .3 means 30."</p>
+              </div>
+              <div class="rounded-2xl bg-amber-50 border-2 border-amber-200 p-4">
+                <div class="font-display font-bold text-amber-900 text-lg">👦 Nam says:</div>
+                <p class="text-slate-800 font-bold mt-1">"1.3 hours is 1 hour 18 minutes because 0.1 h = 6 min and 3 × 6 = 18."</p>
+              </div>
+            </div>
+            <button onclick="toggleReveal('spot-proof')" class="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm transition">Reveal Proof</button>
+            <div id="spot-proof" class="hidden rounded-2xl bg-emerald-50 border-2 border-emerald-300 p-4 text-sm font-bold text-emerald-950">
+              ✅ <strong>Nam is correct!</strong> Linh used base-10 (100 minutes in an hour), but time uses <strong>base-60</strong>. Since 0.1 h = 6 min, 0.3 h = 3 × 6 = <strong>18 minutes</strong>. So 1.3 h = <strong>1 hour 18 minutes</strong>.
+            </div>
+          </div>
+
+          <!-- Always, Sometimes or Never True -->
+          <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-indigo-200 space-y-4">
+            <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase">Part B2 · Always, Sometimes, or Never?</span>
+            <h3 class="font-display text-2xl font-bold text-slate-900">"When you convert any 1-decimal-place hour into hours and minutes, the number of minutes is a multiple of 6."</h3>
+            <p class="text-sm text-slate-600 font-medium">Test 3 examples (such as 0.1 h, 0.7 h, 2.4 h) before deciding!</p>
+            <button onclick="toggleReveal('asn-proof')" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm transition">Reveal Mathematical Proof</button>
+            <div id="asn-proof" class="hidden rounded-2xl bg-emerald-50 border-2 border-emerald-300 p-4 text-sm font-bold text-emerald-950">
+              ✅ <strong>ALWAYS TRUE!</strong> Every tenth of an hour is <strong>6 minutes</strong> (60 ÷ 10 = 6). Multiplying any whole number of tenths (1 to 9) by 6 always produces a multiple of 6: 6, 12, 18, 24, 30, 36, 42, 48, 54 minutes!
+            </div>
+          </div>
+        </div>
+
+        <!-- EAL Sentence Stems Box (English Only) -->
+        <div class="bg-gradient-to-r from-indigo-50 to-sky-50 border-2 border-indigo-200 rounded-3xl p-5">
+          <h4 class="font-display text-lg font-bold text-indigo-950 mb-2">💬 Reasoning Sentence Stems (Speak Like a Mathematician)</h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm font-bold text-slate-800">
+            <div class="bg-white rounded-xl p-3 border border-indigo-100">"I disagree with ___ because time uses <strong>base-60</strong>, not base-10..."</div>
+            <div class="bg-white rounded-xl p-3 border border-indigo-100">"Since 0.1 hour equals <strong>6 minutes</strong>, ___ tenths equals ___ × 6 = ___ minutes."</div>
+            <div class="bg-white rounded-xl p-3 border border-indigo-100">"I kept the whole hours (___ h) and multiplied only the decimal part (___ × 60)."</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         STATION 6: SUCCESS CRITERIA WHITEBOARD CHECK (AfL GATE)
+         ========================================================= -->
+    <section id="station-6" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-emerald-200">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-600">Assessment for Learning · Whiteboard Gate</span>
+              <h2 class="font-display text-3xl font-bold text-slate-900">✅ Success Criteria Whiteboard Check</h2>
+              <p class="text-slate-600 font-medium">Check every pupil's mini-whiteboard against today's 3 "I can..." Success Criteria before launching Quickfire!</p>
+            </div>
+            <div class="text-right">
+              <div id="sc-counter-text" class="font-display text-2xl font-bold text-emerald-700">0 / 3 Met</div>
+              <div class="w-48 h-3.5 bg-slate-200 rounded-full overflow-hidden mt-1">
+                <div id="sc-progress-bar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-300" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <!-- SC 1 Check -->
+            <div id="sc-card-1" class="rounded-2xl bg-sky-50 border-2 border-sky-200 p-5 flex flex-col justify-between gap-4">
+              <div class="space-y-2">
+                <span class="px-2.5 py-1 rounded-full bg-sky-600 text-white text-[11px] font-extrabold uppercase">SC 1 · Base-60 Model</span>
+                <p class="text-xs font-bold text-sky-900">I can explain why 0.5 h = 30 min rather than 50 min.</p>
+                <div class="bg-white rounded-xl p-4 border border-sky-200">
+                  <p class="font-display text-lg font-bold text-slate-900">Fill the gaps on your whiteboard:</p>
+                  <p class="text-base font-extrabold text-indigo-700 mt-1">"0.5 h is ___ of 60 min = ___ min, NOT 50 min."</p>
+                </div>
+                <div id="sc-ans-1" class="hidden bg-emerald-100 rounded-xl p-3 text-sm font-extrabold text-emerald-950">
+                  ✅ "0.5 h is <strong>half</strong> of 60 min = <strong>30</strong> min, NOT 50 min (hours are base-60!)."
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="toggleReveal('sc-ans-1')" class="flex-1 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-extrabold">Reveal</button>
+                <button id="sc-btn-1" onclick="toggleSCMet(1)" class="flex-1 py-2 rounded-xl bg-white border-2 border-slate-300 text-slate-700 text-xs font-extrabold">☐ Tick as Met</button>
+              </div>
+            </div>
+
+            <!-- SC 2 Check -->
+            <div id="sc-card-2" class="rounded-2xl bg-indigo-50 border-2 border-indigo-200 p-5 flex flex-col justify-between gap-4">
+              <div class="space-y-2">
+                <span class="px-2.5 py-1 rounded-full bg-indigo-600 text-white text-[11px] font-extrabold uppercase">SC 2 · Convert Decimal Hours</span>
+                <p class="text-xs font-bold text-indigo-900">I can convert tenths, halves and quarters by multiplying by 60.</p>
+                <div class="bg-white rounded-xl p-4 border border-indigo-200">
+                  <p class="font-display text-lg font-bold text-slate-900">Convert BOTH on your board:</p>
+                  <p class="text-lg font-extrabold text-indigo-700 mt-1">a) 0.45 h &nbsp;&nbsp;|&nbsp;&nbsp; b) 6.25 h</p>
+                </div>
+                <div id="sc-ans-2" class="hidden bg-emerald-100 rounded-xl p-3 text-sm font-extrabold text-emerald-950">
+                  ✅ a) 0.45 × 60 = <strong>27 min</strong><br>✅ b) 6 h + 0.25 × 60 = <strong>6 h 15 min</strong>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="toggleReveal('sc-ans-2')" class="flex-1 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold">Reveal</button>
+                <button id="sc-btn-2" onclick="toggleSCMet(2)" class="flex-1 py-2 rounded-xl bg-white border-2 border-slate-300 text-slate-700 text-xs font-extrabold">☐ Tick as Met</button>
+              </div>
+            </div>
+
+            <!-- SC 3 Check -->
+            <div id="sc-card-3" class="rounded-2xl bg-fuchsia-50 border-2 border-fuchsia-200 p-5 flex flex-col justify-between gap-4">
+              <div class="space-y-2">
+                <span class="px-2.5 py-1 rounded-full bg-fuchsia-600 text-white text-[11px] font-extrabold uppercase">SC 3 · Spot &amp; Correct Error</span>
+                <p class="text-xs font-bold text-fuchsia-900">I can spot and correct decimal-time timetable errors.</p>
+                <div class="bg-white rounded-xl p-4 border border-fuchsia-200">
+                  <p class="font-display text-lg font-bold text-slate-900">A coach trip takes 3.35 hours.</p>
+                  <p class="text-sm font-extrabold text-rose-700 mt-1">Timetable says "3 h 35 min". Fix the error!</p>
+                </div>
+                <div id="sc-ans-3" class="hidden bg-emerald-100 rounded-xl p-3 text-sm font-extrabold text-emerald-950">
+                  ✅ 0.35 × 60 = <strong>21 min</strong> (0.3 h = 18 min + 0.05 h = 3 min).<br>Correct time: <strong>3 hours 21 minutes</strong>!
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="toggleReveal('sc-ans-3')" class="flex-1 py-2 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-700 text-white text-xs font-extrabold">Reveal</button>
+                <button id="sc-btn-3" onclick="toggleSCMet(3)" class="flex-1 py-2 rounded-xl bg-white border-2 border-slate-300 text-slate-700 text-xs font-extrabold">☐ Tick as Met</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="sc-complete-banner" class="hidden mt-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-5 flex flex-wrap items-center justify-between gap-4 shadow-lg">
+            <div>
+              <h3 class="font-display text-2xl font-bold">🎉 All 3 Success Criteria Met!</h3>
+              <p class="text-emerald-100 font-medium">Class is ready for the 10-question Base-60 Quickfire Challenge!</p>
+            </div>
+            <button onclick="goToStation(7)" class="px-6 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-display font-bold text-lg shadow">
+              🏆 Launch Quickfire →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         STATION 7: 10-QUESTION QUICKFIRE ENGINE
+         ========================================================= -->
+    <section id="station-7" class="station-panel hidden">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-2 border-indigo-200 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-600">Automaticity Finale · 15-Second Countdown</span>
+            <h2 class="font-display text-3xl font-bold text-slate-900">🏆 Decimal Hours Quickfire!</h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <span id="qf-progress" class="px-4 py-1.5 rounded-full bg-indigo-100 text-indigo-800 font-extrabold text-sm">Question 1 / 10</span>
+            <div id="qf-timer-pill" class="px-5 py-1.5 rounded-full bg-slate-900 text-white font-display font-bold text-xl min-w-[82px] text-center">15s</div>
+          </div>
+        </div>
+
+        <!-- Question Display Stage -->
+        <div class="rounded-3xl bg-gradient-to-br from-indigo-600 via-blue-600 to-violet-700 text-white p-8 text-center shadow-lg min-h-[260px] flex flex-col items-center justify-center relative">
+          <div id="qf-boards-up" class="hidden boards-up-anim mb-3 px-6 py-2 rounded-full bg-amber-400 text-slate-950 font-display font-bold text-2xl shadow-lg">
+            🚨 BOARDS UP! 🚨
+          </div>
+          <p class="text-indigo-200 text-sm font-extrabold uppercase tracking-wider mb-2">Convert into Hours and Minutes</p>
+          <div id="qf-question" class="font-display text-5xl sm:text-7xl font-bold tracking-tight">0.2 hours</div>
+
+          <div id="qf-answer-box" class="hidden mt-6 bg-white text-slate-900 rounded-2xl px-8 py-4 shadow-xl border-4 border-emerald-400">
+            <div id="qf-answer" class="font-display text-4xl sm:text-5xl font-bold text-emerald-700">12 minutes</div>
+            <div id="qf-method" class="text-sm sm:text-base font-bold text-slate-600 mt-1">0.2 × 60 = 12 min (2 × 6 min)</div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="startQFTimer()" class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow">▶ Start 15s Timer</button>
+            <button onclick="revealQFAnswer()" class="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm shadow">👁️ Reveal Answer</button>
+            <button onclick="prevQF()" class="px-4 py-3 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm">← Prev</button>
+            <button onclick="nextQF()" class="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-sm shadow">Next Q →</button>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="awardQFTeam('red')" class="px-4 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow">+1 Team Red 🔴</button>
+            <button onclick="awardQFTeam('blue')" class="px-4 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow">+1 Team Blue 🔵</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       STATION 2 BILINGUAL VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION)
+       ========================================================= -->
+  <div id="vocab-modal" class="hidden fixed inset-0 z-[80] bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border-2 border-indigo-200 relative max-h-[92vh] overflow-y-auto">
+      <button onclick="closeVocabModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-lg">✕</button>
+      <div class="space-y-5">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase">Bilingual Vocabulary · EN / VN</span>
+          <h3 id="vm-en" class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mt-2">decimal time</h3>
+          <p id="vm-vn" class="font-display text-2xl font-bold text-rose-600 mt-1">thời gian thập phân</p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <button onclick="speakVocab('en')" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow flex items-center gap-2">
+            <span>🔊 Listen (UK English)</span>
+          </button>
+          <button onclick="speakVocab('vn')" class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow flex items-center gap-2">
+            <span>🔊 Nghe (Tiếng Việt)</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4">
+            <div class="text-xs font-extrabold uppercase text-blue-700 mb-1">English Meaning</div>
+            <p id="vm-def-en" class="text-sm font-bold text-slate-800"></p>
+          </div>
+          <div class="bg-rose-50 border border-rose-200 rounded-2xl p-4">
+            <div class="text-xs font-extrabold uppercase text-rose-700 mb-1">Nghĩa Tiếng Việt</div>
+            <p id="vm-def-vn" class="text-sm font-bold text-slate-800"></p>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col items-center">
+          <div class="text-xs font-extrabold uppercase text-slate-500 mb-2">Visual Mathematical Model</div>
+          <div id="vm-svg" class="w-full flex justify-center"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       STATION 4 GIANT PROJECTION MODE MODAL
+       ========================================================= -->
+  <div id="youdo-modal" class="hidden fixed inset-0 z-[80] bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-8 shadow-2xl border-4 border-indigo-400 relative text-center space-y-6">
+      <button onclick="closeYouDoModal()" class="absolute top-4 right-4 w-11 h-11 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xl">✕</button>
+      <span id="ym-tier" class="inline-block px-4 py-1.5 rounded-full text-sm font-extrabold uppercase"></span>
+      <div id="ym-prompt" class="font-display text-4xl sm:text-6xl font-bold text-slate-900 leading-tight py-4"></div>
+      <div id="ym-answer" class="hidden rounded-2xl bg-emerald-50 border-2 border-emerald-400 p-5">
+        <div id="ym-ans-main" class="font-display text-4xl sm:text-5xl font-bold text-emerald-700"></div>
+        <div id="ym-ans-work" class="text-lg font-bold text-slate-700 mt-2"></div>
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100">
+        <button onclick="stepYouDoModal(-1)" class="px-5 py-3 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-900 font-extrabold">← Previous</button>
+        <button onclick="toggleYouDoModalAns()" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold shadow">👁️ Toggle Answer</button>
+        <button onclick="stepYouDoModal(1)" class="px-5 py-3 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-900 font-extrabold">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       DAVID'S BOARD FULL-SCREEN WHITEBOARD (W)
+       ========================================================= -->
+  <div id="whiteboard-modal" class="hidden fixed inset-0 z-[90] bg-slate-900 flex flex-col">
+    <div class="bg-slate-900 text-white px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 border-b border-slate-700">
+      <div class="flex items-center gap-3">
+        <span class="font-display font-bold text-lg text-amber-400">✏️ David's Board</span>
+        <div class="flex items-center gap-1.5">
+          <button onclick="setPenColour('#0f172a')" class="w-7 h-7 rounded-full bg-slate-950 border-2 border-white" title="Black"></button>
+          <button onclick="setPenColour('#2563eb')" class="w-7 h-7 rounded-full bg-blue-600 border-2 border-white" title="Blue"></button>
+          <button onclick="setPenColour('#dc2626')" class="w-7 h-7 rounded-full bg-red-600 border-2 border-white" title="Red"></button>
+          <button onclick="setPenColour('#16a34a')" class="w-7 h-7 rounded-full bg-green-600 border-2 border-white" title="Green"></button>
+          <button onclick="setPenColour('#9333ea')" class="w-7 h-7 rounded-full bg-purple-600 border-2 border-white" title="Purple"></button>
+        </div>
+        <div class="flex items-center gap-1 ml-2">
+          <button onclick="setPenSize(3)" class="px-2.5 py-1 rounded bg-slate-700 hover:bg-slate-600 text-xs font-bold">Thin</button>
+          <button onclick="setPenSize(6)" class="px-2.5 py-1 rounded bg-slate-700 hover:bg-slate-600 text-xs font-bold">Med</button>
+          <button onclick="setPenSize(12)" class="px-2.5 py-1 rounded bg-slate-700 hover:bg-slate-600 text-xs font-bold">Thick</button>
+          <button onclick="setEraser()" class="px-2.5 py-1 rounded bg-amber-500 text-slate-950 text-xs font-extrabold">Eraser</button>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="clearWhiteboard()" class="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-xs font-extrabold">Clear Board</button>
+        <button onclick="closeWhiteboard()" class="px-3.5 py-1.5 rounded-lg bg-white text-slate-900 text-xs font-extrabold">Close (Esc)</button>
+      </div>
+    </div>
+    <div id="whiteboard-container" class="flex-1 relative overflow-hidden bg-white">
+      <canvas id="whiteboard-canvas" class="w-full h-full block"></canvas>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       TEACHER PROMPT DRAWER (T) — z-[75]
+       ========================================================= -->
+  <aside id="teacher-drawer" class="hidden fixed top-0 right-0 bottom-0 w-full max-w-md bg-slate-900 text-white z-[75] shadow-2xl border-l border-slate-700 flex flex-col">
+    <div class="p-5 border-b border-slate-700 flex items-center justify-between">
+      <div>
+        <span class="text-xs font-extrabold uppercase text-amber-400">Hidden Teacher Notes</span>
+        <h3 class="font-display text-xl font-bold">Lesson 1 Coaching Drawer</h3>
+      </div>
+      <button onclick="toggleTeacherDrawer()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-white font-bold">✕</button>
+    </div>
+    <div class="p-5 overflow-y-auto space-y-5 text-sm">
+      <div class="bg-slate-800 rounded-2xl p-4 space-y-2">
+        <h4 class="font-bold text-rose-400 uppercase text-xs">🚨 Red-Flag Misconceptions</h4>
+        <ul class="list-disc pl-4 space-y-1 text-slate-200">
+          <li>Writing <strong>0.5 h = 50 min</strong> or <strong>1.3 h = 1 h 30 min</strong> (confusing base-10 with base-60).</li>
+          <li>Multiplying the <em>whole hours</em> by 60 as well as the decimal part.</li>
+          <li>Writing <strong>5.1 h = 5 h 1 min</strong> instead of <strong>5 h 6 min</strong>.</li>
+        </ul>
+      </div>
+      <div class="bg-slate-800 rounded-2xl p-4 space-y-2">
+        <h4 class="font-bold text-amber-400 uppercase text-xs">🪑 Teacher Support Table (4–6 Pupils)</h4>
+        <p class="text-slate-200">Use a paper clock marked in <strong>6-minute jumps</strong> (0.1 = 6, 0.2 = 12, 0.3 = 18 ... 0.9 = 54) and a <strong>Two-Box Split Mat</strong>: Box 1 keeps whole hours untouched; Box 2 multiplies only the decimal tenths by 6.</p>
+      </div>
+      <div class="bg-slate-800 rounded-2xl p-4 space-y-2">
+        <h4 class="font-bold text-sky-400 uppercase text-xs">🔄 Whole-Class Backup Pivot (&gt;30% Stuck)</h4>
+        <p class="text-slate-200">Pause before Station 4, open <strong>David's Board (W)</strong>, build the <strong>0.1 h = 6 min ladder</strong> together (0.1 to 0.9), and choral-chant 4 whiteboard conversions before starting You Do.</p>
+      </div>
+      <div class="bg-slate-800 rounded-2xl p-4 space-y-2">
+        <h4 class="font-bold text-emerald-400 uppercase text-xs">⌨️ Keyboard Shortcuts</h4>
+        <p class="text-slate-300"><strong>← / →</strong> Switch Stations · <strong>W</strong> David's Board · <strong>T</strong> Teacher Drawer · <strong>M</strong> Mute · <strong>Esc</strong> Close Modals</p>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    // =========================================================
+    // STATE & AUDIO ENGINE (Offline Web Audio API)
+    // =========================================================
+    let currentStation = 0;
+    let isMuted = false;
+    let scoreRed = 0, scoreBlue = 0;
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playTone(freq, duration = 0.14, type = 'sine', vol = 0.12) {
+      if (isMuted) return;
+      try {
+        const ctx = getAudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(vol, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playChime() {
+      playTone(523.25, 0.12, 'triangle', 0.12);
+      setTimeout(() => playTone(659.25, 0.16, 'triangle', 0.12), 90);
+      setTimeout(() => playTone(783.99, 0.22, 'triangle', 0.12), 180);
+    }
+
+    function playBuzzer() {
+      playTone(220, 0.25, 'sawtooth', 0.12);
+      setTimeout(() => playTone(180, 0.35, 'sawtooth', 0.12), 200);
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('mute-btn').innerHTML = isMuted ? '🔇 <span class="hidden sm:inline">Muted</span>' : '🔊 <span class="hidden sm:inline">Sound</span>';
+    }
+
+    function launchConfetti(count = 42) {
+      const colours = ['#2563eb', '#16a34a', '#f59e0b', '#e11d48', '#9333ea', '#06b6d4'];
+      for (let i = 0; i < count; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.backgroundColor = colours[Math.floor(Math.random() * colours.length)];
+        piece.style.animationDelay = (Math.random() * 0.45) + 's';
+        piece.style.width = (8 + Math.random() * 6) + 'px';
+        piece.style.height = (8 + Math.random() * 6) + 'px';
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 2900);
+      }
+    }
+
+    // =========================================================
+    // AUTO-HIDING HEADER & STATION NAVIGATION
+    // =========================================================
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const curr = window.scrollY;
+      const hdr = document.getElementById('top-header');
+      if (curr > lastScroll && curr > 60) {
+        hdr.classList.add('header-hidden');
+      } else {
+        hdr.classList.remove('header-hidden');
+      }
+      lastScroll = curr;
+    });
+
+    function goToStation(idx) {
+      if (idx < 0 || idx > 7) return;
+      currentStation = idx;
+      document.querySelectorAll('.station-panel').forEach((el, i) => {
+        el.classList.toggle('hidden', i !== idx);
+      });
+      document.querySelectorAll('.station-tab').forEach((btn, i) => {
+        btn.classList.toggle('active', i === idx);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      playTone(440 + idx * 35, 0.08, 'sine', 0.06);
+    }
+
+    function addTeamPoint(team, pts) {
+      if (team === 'red') {
+        scoreRed += pts;
+        document.getElementById('score-red').textContent = scoreRed;
+      } else {
+        scoreBlue += pts;
+        document.getElementById('score-blue').textContent = scoreBlue;
+      }
+      playChime();
+      launchConfetti(28);
+    }
+
+    function resetScores() {
+      scoreRed = 0; scoreBlue = 0;
+      document.getElementById('score-red').textContent = '0';
+      document.getElementById('score-blue').textContent = '0';
+    }
+
+    // =========================================================
+    // STATION 1: FLASHBACK 3
+    // =========================================================
+    function flipCard(scene) {
+      scene.querySelector('.flip-card').classList.toggle('is-flipped');
+      playTone(580, 0.09, 'triangle', 0.08);
+    }
+    function resetFlashbacks() {
+      document.querySelectorAll('#station-1 .flip-card').forEach(c => c.classList.remove('is-flipped'));
+    }
+
+    // =========================================================
+    // STATION 2: VOCABULARY BANK + BILINGUAL MODAL (SOLE VN EXCEPTION)
+    // =========================================================
+    const vocabItems = [
+      {
+        en: 'decimal time', vn: 'thời gian thập phân', badge: 'Core Term', colour: 'from-blue-500 to-indigo-600',
+        defEn: 'Time written using a decimal point, such as 1.5 hours or 2.4 hours.',
+        defVn: 'Thời gian được viết bằng số thập phân, ví dụ 1,5 giờ hoặc 2,4 giờ.',
+        svg: `<svg viewBox="0 0 240 80" class="w-60 h-20"><rect x="10" y="15" width="95" height="50" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/><text x="57" y="47" text-anchor="middle" font-size="22" font-weight="800" fill="#1e3a8a">2.4 h</text><text x="122" y="46" text-anchor="middle" font-size="20" font-weight="800" fill="#64748b">➔</text><rect x="140" y="15" width="92" height="50" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/><text x="186" y="47" text-anchor="middle" font-size="18" font-weight="800" fill="#14532d">2 h 24 m</text></svg>`
+      },
+      {
+        en: 'mixed units', vn: 'đơn vị hỗn hợp', badge: 'Core Term', colour: 'from-emerald-500 to-teal-600',
+        defEn: 'Writing a duration using two different units together, such as hours and minutes (2 h 24 min).',
+        defVn: 'Viết khoảng thời gian bằng hai đơn vị khác nhau ghép lại, ví dụ giờ và phút (2 giờ 24 phút).',
+        svg: `<svg viewBox="0 0 240 80" class="w-60 h-20"><rect x="15" y="18" width="95" height="44" rx="10" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2.5"/><text x="62" y="46" text-anchor="middle" font-size="18" font-weight="800" fill="#312e81">2 hours</text><text x="122" y="46" text-anchor="middle" font-size="22" font-weight="800" fill="#475569">+</text><rect x="135" y="18" width="95" height="44" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/><text x="182" y="46" text-anchor="middle" font-size="18" font-weight="800" fill="#78350f">24 min</text></svg>`
+      },
+      {
+        en: 'base-60', vn: 'hệ cơ số 60', badge: 'Big Idea', colour: 'from-rose-500 to-pink-600',
+        defEn: 'A counting system built on groups of 60. Clocks use base-60 because 1 hour = 60 minutes.',
+        defVn: 'Hệ thống đếm dựa trên nhóm 60. Đồng hồ dùng hệ cơ số 60 vì 1 giờ = 60 phút.',
+        svg: `<svg viewBox="0 0 240 85" class="w-60 h-20"><circle cx="55" cy="42" r="32" fill="#ffe4e6" stroke="#e11d48" stroke-width="3"/><text x="55" y="48" text-anchor="middle" font-size="16" font-weight="800" fill="#881337">60 min</text><text x="165" y="34" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">1 hour = 60 min</text><text x="165" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#e11d48">NOT 100 min!</text></svg>`
+      },
+      {
+        en: 'tenth of an hour', vn: 'một phần mười giờ', badge: 'Key Fact', colour: 'from-amber-500 to-orange-600',
+        defEn: '0.1 hour equals 6 minutes because 60 minutes ÷ 10 = 6 minutes.',
+        defVn: '0,1 giờ bằng 6 phút vì 60 phút ÷ 10 = 6 phút.',
+        svg: `<svg viewBox="0 0 240 80" class="w-60 h-20"><rect x="10" y="22" width="22" height="36" fill="#f59e0b" stroke="#0f172a" stroke-width="1.5"/><rect x="32" y="22" width="198" height="36" fill="#fef3c7" stroke="#0f172a" stroke-width="1.5"/><text x="120" y="15" text-anchor="middle" font-size="12" font-weight="800" fill="#92400e">0.1 h = 6 min (1 tenth)</text><text x="120" y="45" text-anchor="middle" font-size="14" font-weight="800" fill="#78350f">10 × 6 min = 60 min</text></svg>`
+      },
+      {
+        en: 'quarter of an hour', vn: 'một phần tư giờ', badge: 'Benchmark', colour: 'from-violet-500 to-purple-600',
+        defEn: '0.25 hour equals 15 minutes because 60 minutes ÷ 4 = 15 minutes.',
+        defVn: '0,25 giờ bằng 15 phút vì 60 phút ÷ 4 = 15 phút.',
+        svg: `<svg viewBox="0 0 240 84" class="w-60 h-20"><circle cx="48" cy="42" r="32" fill="#ffffff" stroke="#6d28d9" stroke-width="3"/><path d="M48,42 L48,10 A32,32 0 0,1 80,42 Z" fill="#a855f7" opacity="0.55"/><text x="160" y="38" text-anchor="middle" font-size="15" font-weight="800" fill="#581c87">0.25 h = 15 min</text><text x="160" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#6b21a8">0.75 h = 45 min</text></svg>`
+      },
+      {
+        en: 'hour (h)', vn: 'giờ', badge: 'Unit', colour: 'from-cyan-500 to-sky-600',
+        defEn: 'A standard unit of time equal to 60 minutes (one full turn of the minute hand).',
+        defVn: 'Đơn vị đo thời gian chuẩn bằng 60 phút (một vòng quay đầy đủ của kim phút).',
+        svg: `<svg viewBox="0 0 220 80" class="w-56 h-20"><circle cx="48" cy="40" r="30" fill="#e0f2fe" stroke="#0284c7" stroke-width="3"/><line x1="48" y1="40" x2="48" y2="16" stroke="#0369a1" stroke-width="4" stroke-linecap="round"/><text x="145" y="45" text-anchor="middle" font-size="19" font-weight="800" fill="#0c4a6e">1.0 h = 60 min</text></svg>`
+      },
+      {
+        en: 'minute (min)', vn: 'phút', badge: 'Unit', colour: 'from-sky-500 to-blue-600',
+        defEn: 'A unit of time equal to 60 seconds; there are 60 minutes in 1 hour.',
+        defVn: 'Đơn vị đo thời gian bằng 60 giây; có 60 phút trong 1 giờ.',
+        svg: `<svg viewBox="0 0 220 80" class="w-56 h-20"><rect x="20" y="18" width="180" height="44" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/><text x="110" y="46" text-anchor="middle" font-size="17" font-weight="800" fill="#1d4ed8">1 min = 60 seconds</text></svg>`
+      },
+      {
+        en: 'convert', vn: 'đổi đơn vị', badge: 'Action', colour: 'from-fuchsia-500 to-purple-600',
+        defEn: 'To change a measurement from one unit or form to another without changing the amount of time.',
+        defVn: 'Chuyển đổi số đo từ đơn vị hoặc dạng này sang dạng khác mà không làm thay đổi khoảng thời gian.',
+        svg: `<svg viewBox="0 0 240 80" class="w-60 h-20"><text x="120" y="34" text-anchor="middle" font-size="18" font-weight="800" fill="#86198f">1.75 h  ⇄  1 h 45 min</text><text x="120" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">Same duration, different form</text></svg>`
+      },
+      {
+        en: 'time interval', vn: 'khoảng thời gian', badge: 'Core Term', colour: 'from-teal-500 to-emerald-600',
+        defEn: 'The length of time from the start of an event to its end (also called duration).',
+        defVn: 'Độ dài thời gian tính từ lúc bắt đầu đến lúc kết thúc một sự kiện (thời lượng).',
+        svg: `<svg viewBox="0 0 240 80" class="w-60 h-20"><line x1="25" y1="48" x2="215" y2="48" stroke="#0f766e" stroke-width="4"/><circle cx="25" cy="48" r="6" fill="#0f766e"/><circle cx="215" cy="48" r="6" fill="#0f766e"/><text x="25" y="70" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">09:30</text><text x="215" y="70" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">10:42</text><text x="120" y="32" text-anchor="middle" font-size="15" font-weight="800" fill="#0d9488">+ 1.2 h (1 h 12 min)</text></svg>`
+      }
+    ];
+
+    let activeVocabIndex = 0;
+
+    function renderVocabGrid() {
+      const grid = document.getElementById('vocab-grid');
+      grid.innerHTML = vocabItems.map((item, i) => `
+        <button onclick="openVocabModal(${i})" class="text-left rounded-2xl bg-gradient-to-br ${item.colour} text-white p-5 shadow-md hover:shadow-xl hover:-translate-y-1 transition flex flex-col justify-between min-h-[120px]">
+          <span class="px-2.5 py-0.5 rounded-full bg-white/20 text-[11px] font-extrabold uppercase w-fit">${item.badge}</span>
+          <div>
+            <div class="font-display text-2xl font-bold leading-tight">${item.en}</div>
+            <div class="text-xs font-bold text-white/85 mt-1">Tap for Audio &amp; Model ➔</div>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(idx) {
+      activeVocabIndex = idx;
+      const item = vocabItems[idx];
+      document.getElementById('vm-en').textContent = item.en;
+      document.getElementById('vm-vn').textContent = item.vn;
+      document.getElementById('vm-def-en').textContent = item.defEn;
+      document.getElementById('vm-def-vn').textContent = item.defVn;
+      document.getElementById('vm-svg').innerHTML = item.svg;
+      document.getElementById('vocab-modal').classList.remove('hidden');
+      playTone(540, 0.08, 'sine', 0.08);
+    }
+
+    function closeVocabModal() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('vocab-modal').classList.add('hidden');
+    }
+
+    function speakVocab(lang) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const item = vocabItems[activeVocabIndex];
+      const utter = new SpeechSynthesisUtterance(lang === 'en' ? item.en : item.vn);
+      utter.lang = lang === 'en' ? 'en-GB' : 'vi-VN';
+      utter.rate = 0.92;
+      window.speechSynthesis.speak(utter);
+    }
+
+    // =========================================================
+    // STATION 3: VISUAL I DO STAGE (4 WORKED EXAMPLES)
+    // =========================================================
+    let idoExample = 0;
+    let idoStep = 1;
+
+    const idoExamples = [
+      {
+        title: 'Why 0.5 hours = 30 minutes (NEVER 50 minutes!)',
+        steps: [
+          {
+            badge: 'Step 1: Compare Base-10 vs Base-60',
+            html: `
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <div class="bg-rose-50 border-2 border-rose-300 rounded-2xl p-5 text-center">
+                  <div class="text-xs font-extrabold uppercase text-rose-700 mb-2">❌ Base-10 (Metres, Dollars)</div>
+                  <div class="font-display text-3xl font-bold text-rose-900">1 metre = 100 cm</div>
+                  <div class="mt-3 h-10 bg-white rounded-xl border-2 border-rose-300 overflow-hidden flex">
+                    <div class="w-1/2 bg-rose-500 text-white font-extrabold flex items-center justify-center text-sm">0.5 m = 50 cm</div>
+                    <div class="w-1/2 text-rose-400 font-bold flex items-center justify-center text-sm">50 cm</div>
+                  </div>
+                </div>
+                <div class="bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-5 text-center">
+                  <div class="text-xs font-extrabold uppercase text-emerald-700 mb-2">✅ Base-60 (Clocks &amp; Hours)</div>
+                  <div class="font-display text-3xl font-bold text-emerald-900">1 hour = 60 min</div>
+                  <div class="mt-3 h-10 bg-white rounded-xl border-2 border-emerald-400 overflow-hidden flex">
+                    <div class="w-1/2 bg-emerald-600 text-white font-extrabold flex items-center justify-center text-sm">0.5 h = 30 min</div>
+                    <div class="w-1/2 text-emerald-600 font-bold flex items-center justify-center text-sm">30 min</div>
+                  </div>
+                </div>
+              </div>`
+          },
+          {
+            badge: 'Step 2: See Half of the 60-Minute Clock',
+            html: `
+              <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+                <svg viewBox="0 0 200 200" class="w-52 h-52">
+                  <circle cx="100" cy="100" r="88" fill="#ffffff" stroke="#0f172a" stroke-width="5"/>
+                  <path d="M100,100 L100,12 A88,88 0 0,1 100,188 Z" fill="#10b981" opacity="0.35"/>
+                  <line x1="100" y1="12" x2="100" y2="188" stroke="#047857" stroke-width="3" stroke-dasharray="5,4"/>
+                  <text x="100" y="34" text-anchor="middle" font-size="16" font-weight="800" fill="#0f172a">60</text>
+                  <text x="172" y="106" text-anchor="middle" font-size="16" font-weight="800" fill="#0f172a">15</text>
+                  <text x="100" y="178" text-anchor="middle" font-size="16" font-weight="800" fill="#0f172a">30</text>
+                  <text x="28" y="106" text-anchor="middle" font-size="16" font-weight="800" fill="#0f172a">45</text>
+                  <text x="138" y="106" text-anchor="middle" font-size="22" font-weight="800" fill="#065f46">0.5 h</text>
+                </svg>
+                <div class="space-y-3 text-left max-w-md">
+                  <div class="font-display text-4xl font-bold text-slate-900">0.5 h = ½ of 60 min</div>
+                  <div class="font-display text-4xl font-bold text-emerald-700">= 30 minutes</div>
+                  <div class="inline-block bg-rose-100 text-rose-800 px-4 py-2 rounded-xl font-extrabold text-base">🚫 0.5 h ≠ 50 minutes!</div>
+                </div>
+              </div>`
+          },
+          {
+            badge: 'Step 3: Golden Rule',
+            html: `
+              <div class="text-center space-y-4 py-4">
+                <div class="inline-block px-5 py-2 rounded-full bg-indigo-100 text-indigo-800 font-extrabold text-sm">GOLDEN FORMULA FOR HOURS ➔ MINUTES</div>
+                <div class="font-display text-4xl sm:text-5xl font-bold text-slate-900">Decimal part × 60 = Minutes</div>
+                <div class="font-display text-3xl font-bold text-emerald-600">0.5 × 60 = 30 minutes</div>
+              </div>`
+          }
+        ]
+      },
+      {
+        title: 'Slicing 60 Minutes into 10 Equal Tenths (0.1 h = 6 min)',
+        steps: [
+          {
+            badge: 'Step 1: Divide 60 Minutes by 10',
+            html: `
+              <div class="text-center space-y-4">
+                <div class="font-display text-4xl sm:text-5xl font-bold text-slate-900">1 hour = 60 minutes</div>
+                <div class="font-display text-4xl sm:text-5xl font-bold text-blue-600">60 ÷ 10 = 6 minutes</div>
+                <div class="grid grid-cols-10 gap-1.5 max-w-3xl mx-auto pt-2">
+                  ${Array.from({length: 10}, (_, i) => `
+                    <div class="rounded-xl p-2 text-center border-2 ${i === 0 ? 'bg-amber-400 border-amber-600 text-slate-950 scale-105 shadow' : 'bg-white border-indigo-200 text-indigo-900'}">
+                      <div class="text-[11px] font-extrabold">0.1 h</div>
+                      <div class="font-display text-lg font-bold">6m</div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>`
+          },
+          {
+            badge: 'Step 2: Build the 0.1 h = 6 min Mental Ladder',
+            html: `
+              <div class="grid grid-cols-3 sm:grid-cols-5 gap-3 max-w-4xl mx-auto text-center">
+                ${[1,2,3,4,5,6,7,8,9].map(n => `
+                  <div class="bg-white rounded-2xl p-3 border-2 ${n === 5 ? 'border-amber-400 bg-amber-50' : 'border-indigo-200'} shadow-sm">
+                    <div class="font-display text-2xl font-bold text-indigo-700">0.${n} h</div>
+                    <div class="text-xs font-bold text-slate-400">${n} × 6 min</div>
+                    <div class="font-display text-xl font-bold text-emerald-700">${n * 6} min</div>
+                  </div>
+                `).join('')}
+                <div class="bg-indigo-600 text-white rounded-2xl p-3 shadow">
+                  <div class="font-display text-2xl font-bold">1.0 h</div>
+                  <div class="text-xs font-bold text-indigo-200">10 × 6 min</div>
+                  <div class="font-display text-xl font-bold">60 min</div>
+                </div>
+              </div>`
+          },
+          {
+            badge: 'Step 3: Instant Mental Shortcut',
+            html: `
+              <div class="text-center space-y-4 py-4">
+                <div class="font-display text-4xl sm:text-5xl font-bold text-amber-600">0.1 h = 6 min</div>
+                <p class="text-xl font-bold text-slate-700 max-w-2xl mx-auto">To convert any tenth of an hour, just multiply the tenths digit by <strong class="text-indigo-700">6</strong>!</p>
+                <div class="inline-flex flex-wrap justify-center gap-4 text-lg font-extrabold">
+                  <span class="bg-white px-4 py-2 rounded-xl border-2 border-indigo-200">0.1 h ➔ 6 min</span>
+                  <span class="bg-white px-4 py-2 rounded-xl border-2 border-indigo-200">0.4 h ➔ 4 × 6 = 24 min</span>
+                  <span class="bg-white px-4 py-2 rounded-xl border-2 border-indigo-200">0.5 h ➔ 5 × 6 = 30 min</span>
+                </div>
+              </div>`
+          }
+        ]
+      },
+      {
+        title: 'Two-Box Split Method: Convert 2.4 hours',
+        steps: [
+          {
+            badge: 'Step 1: Split Whole Hours and Decimal Part',
+            html: `
+              <div class="text-center space-y-5">
+                <div class="font-display text-6xl font-bold text-slate-900">2.4 hours</div>
+                <div class="flex flex-wrap items-center justify-center gap-6">
+                  <div class="bg-blue-100 border-4 border-blue-500 rounded-3xl px-8 py-5">
+                    <div class="text-xs font-extrabold uppercase text-blue-700">Box 1 · Whole Hours</div>
+                    <div class="font-display text-5xl font-bold text-blue-900 mt-1">2 h</div>
+                    <div class="text-xs font-bold text-blue-800 mt-1">Keep untouched!</div>
+                  </div>
+                  <div class="font-display text-4xl font-bold text-slate-400">+</div>
+                  <div class="bg-amber-100 border-4 border-amber-500 rounded-3xl px-8 py-5">
+                    <div class="text-xs font-extrabold uppercase text-amber-800">Box 2 · Decimal Part</div>
+                    <div class="font-display text-5xl font-bold text-amber-900 mt-1">0.4 h</div>
+                    <div class="text-xs font-bold text-amber-800 mt-1">Convert to minutes!</div>
+                  </div>
+                </div>
+              </div>`
+          },
+          {
+            badge: 'Step 2: Multiply ONLY the Decimal Part by 60',
+            html: `
+              <div class="text-center space-y-4">
+                <div class="font-display text-3xl font-bold text-amber-700">0.4 h = 4 tenths of an hour</div>
+                <div class="grid grid-cols-10 gap-1.5 max-w-2xl mx-auto">
+                  ${Array.from({length: 10}, (_, i) => `
+                    <div class="rounded-lg py-2 text-center font-extrabold text-sm border-2 ${i < 4 ? 'bg-emerald-500 border-emerald-700 text-white' : 'bg-white border-slate-200 text-slate-400'}">6m</div>
+                  `).join('')}
+                </div>
+                <div class="font-display text-4xl font-bold text-emerald-700">0.4 × 60 = 4 × 6 = 24 minutes</div>
+              </div>`
+          },
+          {
+            badge: 'Step 3: Combine Box 1 + Box 2',
+            html: `
+              <div class="text-center space-y-4 py-4">
+                <div class="font-display text-5xl sm:text-6xl font-bold text-indigo-700">2.4 h = 2 hours 24 minutes</div>
+                <div class="inline-block bg-rose-100 text-rose-800 px-5 py-2 rounded-xl font-extrabold text-base">Check: 2 h 24 min is less than 2 h 30 min (2.5 h) — makes sense! ✅</div>
+              </div>`
+          }
+        ]
+      },
+      {
+        title: 'Benchmarks & Quarters: Convert 1.75 hours',
+        steps: [
+          {
+            badge: 'Step 1: Split 1.75 hours into Two Boxes',
+            html: `
+              <div class="text-center space-y-5">
+                <div class="font-display text-6xl font-bold text-slate-900">1.75 hours</div>
+                <div class="flex flex-wrap items-center justify-center gap-6">
+                  <div class="bg-blue-100 border-4 border-blue-500 rounded-3xl px-8 py-5">
+                    <div class="text-xs font-extrabold uppercase text-blue-700">Whole Hours</div>
+                    <div class="font-display text-5xl font-bold text-blue-900">1 h</div>
+                  </div>
+                  <div class="font-display text-4xl font-bold text-slate-400">+</div>
+                  <div class="bg-purple-100 border-4 border-purple-500 rounded-3xl px-8 py-5">
+                    <div class="text-xs font-extrabold uppercase text-purple-700">Decimal Part</div>
+                    <div class="font-display text-5xl font-bold text-purple-900">0.75 h</div>
+                  </div>
+                </div>
+              </div>`
+          },
+          {
+            badge: 'Step 2: Recognise 0.75 as Three Quarters (¾)',
+            html: `
+              <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+                <svg viewBox="0 0 200 200" class="w-48 h-48">
+                  <circle cx="100" cy="100" r="86" fill="#ffffff" stroke="#0f172a" stroke-width="5"/>
+                  <path d="M100,100 L100,14 A86,86 0 1,1 14,100 Z" fill="#9333ea" opacity="0.35"/>
+                  <line x1="100" y1="14" x2="100" y2="186" stroke="#6b21a8" stroke-width="2.5" stroke-dasharray="4,4"/>
+                  <line x1="14" y1="100" x2="186" y2="100" stroke="#6b21a8" stroke-width="2.5" stroke-dasharray="4,4"/>
+                  <text x="135" y="65" text-anchor="middle" font-size="16" font-weight="800" fill="#581c87">15m</text>
+                  <text x="135" y="145" text-anchor="middle" font-size="16" font-weight="800" fill="#581c87">15m</text>
+                  <text x="65" y="145" text-anchor="middle" font-size="16" font-weight="800" fill="#581c87">15m</text>
+                </svg>
+                <div class="space-y-2 text-left">
+                  <div class="font-display text-3xl font-bold text-purple-800">0.25 h = ¼ of 60 = 15 min</div>
+                  <div class="font-display text-3xl font-bold text-purple-900">0.75 h = ¾ of 60 = 3 × 15 = 45 min</div>
+                  <div class="text-sm font-bold text-slate-600">(Or: 0.7 h = 42 min + 0.05 h = 3 min ➔ 45 min!)</div>
+                </div>
+              </div>`
+          },
+          {
+            badge: 'Step 3: Final Mixed-Units Answer',
+            html: `
+              <div class="text-center space-y-4 py-4">
+                <div class="font-display text-5xl sm:text-6xl font-bold text-purple-700">1.75 h = 1 hour 45 minutes</div>
+                <div class="inline-block bg-rose-100 text-rose-800 px-5 py-2 rounded-xl font-extrabold text-base">🚫 Never write "1 h 75 min"! Minutes reset at 60.</div>
+              </div>`
+          }
+        ]
+      }
+    ];
+
+    function renderIDoStage() {
+      const ex = idoExamples[idoExample];
+      const stepObj = ex.steps[idoStep - 1];
+      document.getElementById('ido-visual-stage').innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-5">
+          <h3 class="font-display text-xl sm:text-2xl font-bold text-indigo-950">${ex.title}</h3>
+          <span class="px-3.5 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-extrabold">${stepObj.badge}</span>
+        </div>
+        ${stepObj.html}
+      `;
+      document.getElementById('ido-step-badge').textContent = `Step ${idoStep} of ${ex.steps.length}`;
+      document.querySelectorAll('.ido-tab').forEach((btn, i) => {
+        if (i === idoExample) {
+          btn.className = 'ido-tab px-4 py-2 rounded-xl text-sm font-extrabold bg-blue-600 text-white shadow';
+        } else {
+          btn.className = 'ido-tab px-4 py-2 rounded-xl text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200';
+        }
+      });
+    }
+
+    function selectIDoExample(idx) {
+      idoExample = idx;
+      idoStep = 1;
+      renderIDoStage();
+      playTone(500, 0.08, 'sine', 0.07);
+    }
+    function nextIDoStep() {
+      const max = idoExamples[idoExample].steps.length;
+      if (idoStep < max) { idoStep++; renderIDoStage(); playTone(620, 0.09, 'triangle', 0.08); }
+    }
+    function prevIDoStep() {
+      if (idoStep > 1) { idoStep--; renderIDoStage(); playTone(420, 0.08, 'triangle', 0.07); }
+    }
+    function toggleStepsPill() {
+      document.getElementById('steps-pill-bar').classList.toggle('hidden');
+    }
+    function toggleFullScreenIDo() {
+      const wrap = document.getElementById('ido-stage-wrapper');
+      const isFs = wrap.classList.toggle('fullscreen-ido');
+      document.getElementById('fullscreen-ido-btn').textContent = isFs ? '✕ Exit Full Screen' : '⛶ Full Screen I Do';
+    }
+    function revealHinge(id) {
+      document.getElementById(id).classList.remove('hidden');
+      playChime();
+    }
+
+    // =========================================================
+    // STATION 3 INTERACTIVE BASE-60 CLOCK-FACE & TENTH-BAR LAB
+    // =========================================================
+    function setLabHours(val) {
+      document.getElementById('lab-slider').value = val;
+      updateClockLab(val);
+      playTone(560, 0.07, 'sine', 0.07);
+    }
+
+    function polarToCartesian(cx, cy, r, angleDeg) {
+      const rad = (angleDeg - 90) * Math.PI / 180;
+      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+
+    function wedgePath(cx, cy, r, startDeg, endDeg) {
+      if (endDeg - startDeg >= 359.9) {
+        return `M ${cx} ${cy - r} A ${r} ${r} 0 1 1 ${cx - 0.01} ${cy - r} Z`;
+      }
+      const start = polarToCartesian(cx, cy, r, startDeg);
+      const end = polarToCartesian(cx, cy, r, endDeg);
+      const largeArc = (endDeg - startDeg) > 180 ? 1 : 0;
+      return `M ${cx} ${cy} L ${start.x.toFixed(1)} ${start.y.toFixed(1)} A ${r} ${r} 0 ${largeArc} 1 ${end.x.toFixed(1)} ${end.y.toFixed(1)} Z`;
+    }
+
+    function updateClockLab(rawVal) {
+      const val = Math.round(parseFloat(rawVal) * 100) / 100;
+      const wholeH = Math.floor(val + 1e-9);
+      const decPart = Math.round((val - wholeH) * 100) / 100;
+      const mins = Math.round(decPart * 60);
+
+      document.getElementById('lab-decimal-badge').textContent = `${val.toFixed(2)} h`;
+      document.getElementById('lab-part-label').textContent = `${decPart.toFixed(2)} h = ${mins} min`;
+      document.getElementById('lab-whole-out').textContent = `${wholeH} h`;
+      document.getElementById('lab-min-calc').textContent = `${decPart.toFixed(2)} × 60`;
+      document.getElementById('lab-min-out').textContent = `${mins} min`;
+      document.getElementById('lab-final-out').textContent = wholeH > 0 ? `${wholeH} h ${mins} min` : `${mins} min`;
+
+      // Trap alert copy
+      const decStr = decPart.toFixed(2).replace(/^0\./, '').replace(/0$/, '');
+      const trapNum = decPart === 0 ? 0 : (decStr.length === 1 ? parseInt(decStr, 10) * 10 : parseInt(decStr, 10));
+      if (decPart === 0) {
+        document.getElementById('lab-trap-text').textContent = `Exact whole hour! ${wholeH}.0 h = ${wholeH} hours 0 minutes (${wholeH * 60} total minutes).`;
+      } else {
+        document.getElementById('lab-trap-text').textContent = `Trap Watch: ${val.toFixed(2).replace(/0$/, '')} h is NOT ${wholeH} h ${trapNum} min! In base-60, ${decPart.toFixed(2)} × 60 = ${mins} min.`;
+      }
+
+      // Draw SVG 60-minute clock sliced into 10 tenths
+      const cx = 130, cy = 130, r = 98;
+      let svg = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#ffffff" stroke="#1e293b" stroke-width="5"/>`;
+      if (mins > 0) {
+        const sweep = (mins / 60) * 360;
+        svg += `<path d="${wedgePath(cx, cy, r - 3, 0, sweep)}" fill="#10b981" opacity="0.35"/>`;
+      }
+      // 10 tenth dividers (every 36 degrees = 6 minutes)
+      for (let i = 0; i < 10; i++) {
+        const deg = i * 36;
+        const p = polarToCartesian(cx, cy, r, deg);
+        svg += `<line x1="${cx}" y1="${cy}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="4,4"/>`;
+        const lbl = polarToCartesian(cx, cy, r + 17, deg);
+        const minLbl = i === 0 ? '60' : String(i * 6);
+        svg += `<text x="${lbl.x.toFixed(1)}" y="${(lbl.y + 4).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="800" fill="#334155">${minLbl}m</text>`;
+      }
+      // Minute hand
+      const handAngle = (mins / 60) * 360;
+      const handTip = polarToCartesian(cx, cy, r - 14, handAngle);
+      svg += `<line x1="${cx}" y1="${cy}" x2="${handTip.x.toFixed(1)}" y2="${handTip.y.toFixed(1)}" stroke="#dc2626" stroke-width="5" stroke-linecap="round"/>`;
+      svg += `<circle cx="${cx}" cy="${cy}" r="7" fill="#0f172a"/>`;
+      svg += `<rect x="82" y="152" width="96" height="28" rx="8" fill="#1e1b4b" opacity="0.9"/>`;
+      svg += `<text x="130" y="171" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">${mins} min</text>`;
+      document.getElementById('lab-clock-svg').innerHTML = svg;
+
+      // Render 10-tenth bar
+      const bar = document.getElementById('lab-tenth-bar');
+      let barHtml = '';
+      for (let i = 0; i < 10; i++) {
+        const startMin = i * 6;
+        const endMin = (i + 1) * 6;
+        let cls = 'bg-slate-100 border-slate-200 text-slate-400';
+        let label = '6m';
+        if (mins >= endMin) {
+          cls = 'bg-emerald-500 border-emerald-700 text-white shadow-sm';
+        } else if (mins > startMin) {
+          cls = 'bg-amber-400 border-amber-600 text-slate-950';
+          label = `${mins - startMin}m`;
+        }
+        barHtml += `<div class="rounded-lg py-2 text-center border-2 text-xs font-extrabold ${cls}"><div>0.1</div><div>${label}</div></div>`;
+      }
+      bar.innerHTML = barHtml;
+    }
+
+    // =========================================================
+    // STATION 4: YOU DO 9 RESERVED CHALLENGES + GIANT PROJECTION
+    // =========================================================
+    const youDoCards = [
+      // Must
+      { tier: 'must', label: '🟢 Must 1', prompt: 'Convert 0.25 hours to minutes.', answer: '15 minutes', work: '0.25 h = ¼ of 60 min = 15 min (0.25 × 60 = 15).' },
+      { tier: 'must', label: '🟢 Must 2', prompt: 'Convert 1.5 hours to hours and minutes.', answer: '1 hour 30 minutes', work: 'Keep 1 h. 0.5 × 60 = 30 min ➔ 1 h 30 min.' },
+      { tier: 'must', label: '🟢 Must 3', prompt: 'Convert 3.75 hours to hours and minutes.', answer: '3 hours 45 minutes', work: 'Keep 3 h. 0.75 h = ¾ of 60 = 45 min ➔ 3 h 45 min.' },
+      // Should
+      { tier: 'should', label: '🟠 Should 1', prompt: 'Convert 2.3 hours to hours and minutes.', answer: '2 hours 18 minutes', work: 'Keep 2 h. 0.3 × 60 = 3 × 6 = 18 min ➔ 2 h 18 min.' },
+      { tier: 'should', label: '🟠 Should 2', prompt: 'Convert 4.6 hours to hours and minutes.', answer: '4 hours 36 minutes', work: 'Keep 4 h. 0.6 × 60 = 6 × 6 = 36 min ➔ 4 h 36 min.' },
+      { tier: 'should', label: '🟠 Should 3', prompt: 'Convert 1.9 hours to hours and minutes.', answer: '1 hour 54 minutes', work: 'Keep 1 h. 0.9 × 60 = 9 × 6 = 54 min ➔ 1 h 54 min.' },
+      // Could
+      { tier: 'could', label: '🟣 Could 1', prompt: 'Convert 3.15 hours to hours and minutes.', answer: '3 hours 9 minutes', work: 'Keep 3 h. 0.1 h = 6 min and 0.05 h = 3 min ➔ 6 + 3 = 9 min.' },
+      { tier: 'could', label: '🟣 Could 2', prompt: 'Convert 5.85 hours to hours and minutes.', answer: '5 hours 51 minutes', work: 'Keep 5 h. 0.8 h = 48 min and 0.05 h = 3 min ➔ 48 + 3 = 51 min.' },
+      { tier: 'could', label: '🟣 Could 3', prompt: 'A Hanoi–Hue flight lasts 1.2 hours and departs at 09:30. What time does it arrive?', answer: '10:42', work: '1.2 h = 1 h 12 min (0.2 × 60 = 12). 09:30 + 1 h 12 min = 10:42.' }
+    ];
+
+    let ydFilter = 'all';
+    let ydShowAllAns = false;
+    let activeYouDoIdx = 0;
+
+    function renderYouDoBoard() {
+      const grid = document.getElementById('youdo-board-grid');
+      const tiers = [
+        { key: 'must', title: '🟢 Must · Level 1', bg: 'bg-emerald-50 border-emerald-300', hdr: 'bg-emerald-600 text-white' },
+        { key: 'should', title: '🟠 Should · Level 2', bg: 'bg-amber-50 border-amber-300', hdr: 'bg-amber-500 text-white' },
+        { key: 'could', title: '🟣 Could · Level 3', bg: 'bg-purple-50 border-purple-300', hdr: 'bg-purple-600 text-white' }
+      ];
+      const visibleTiers = ydFilter === 'all' ? tiers : tiers.filter(t => t.key === ydFilter);
+      grid.className = visibleTiers.length === 1 ? 'grid grid-cols-1 max-w-2xl mx-auto gap-5' : 'grid grid-cols-1 lg:grid-cols-3 gap-5';
+
+      grid.innerHTML = visibleTiers.map(t => {
+        const cards = youDoCards.map((c, idx) => ({ ...c, idx })).filter(c => c.tier === t.key);
+        return `
+          <div class="rounded-3xl border-2 ${t.bg} p-4 space-y-3 shadow-sm">
+            <div class="rounded-2xl ${t.hdr} px-4 py-2.5 font-display font-bold text-lg text-center shadow-sm">${t.title}</div>
+            ${cards.map(c => `
+              <div onclick="openYouDoModal(${c.idx})" class="bg-white rounded-2xl p-4 border-2 border-slate-200 hover:border-indigo-400 hover:shadow-md cursor-pointer transition space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-extrabold text-slate-500">${c.label}</span>
+                  <span class="text-[11px] font-bold text-indigo-600">⛶ Project</span>
+                </div>
+                <p class="font-display text-xl font-bold text-slate-900">${c.prompt}</p>
+                ${ydShowAllAns ? `<div class="bg-emerald-50 border border-emerald-300 rounded-xl px-3 py-2 text-sm font-extrabold text-emerald-800">✅ ${c.answer}</div>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterYouDo(tier) {
+      ydFilter = tier;
+      renderYouDoBoard();
+    }
+
+    function toggleAllYouDoAnswers() {
+      ydShowAllAns = !ydShowAllAns;
+      document.getElementById('yd-reveal-all-btn').textContent = ydShowAllAns ? '🙈 Hide All Answers' : '👁️ Show All Answers';
+      renderYouDoBoard();
+    }
+
+    function openYouDoModal(idx) {
+      activeYouDoIdx = idx;
+      const c = youDoCards[idx];
+      const badgeMap = { must: 'bg-emerald-600 text-white', should: 'bg-amber-500 text-white', could: 'bg-purple-600 text-white' };
+      const tierEl = document.getElementById('ym-tier');
+      tierEl.className = `inline-block px-4 py-1.5 rounded-full text-sm font-extrabold uppercase ${badgeMap[c.tier]}`;
+      tierEl.textContent = c.label;
+      document.getElementById('ym-prompt').textContent = c.prompt;
+      document.getElementById('ym-ans-main').textContent = c.answer;
+      document.getElementById('ym-ans-work').textContent = c.work;
+      document.getElementById('ym-answer').classList.add('hidden');
+      document.getElementById('youdo-modal').classList.remove('hidden');
+    }
+
+    function closeYouDoModal() {
+      document.getElementById('youdo-modal').classList.add('hidden');
+    }
+    function toggleYouDoModalAns() {
+      document.getElementById('ym-answer').classList.toggle('hidden');
+      playTone(600, 0.08, 'triangle', 0.08);
+    }
+    function stepYouDoModal(dir) {
+      activeYouDoIdx = (activeYouDoIdx + dir + youDoCards.length) % youDoCards.length;
+      openYouDoModal(activeYouDoIdx);
+    }
+
+    // =========================================================
+    // STATION 5: TRUE / FALSE MATRIX
+    // =========================================================
+    const tfStatements = [
+      { stmt: '1.3 hours = 1 hour 30 minutes', truth: false, proof: 'FALSE! 0.3 × 60 = 18 minutes (3 × 6 = 18), so 1.3 hours = 1 hour 18 minutes.' },
+      { stmt: '0.7 hours = 42 minutes', truth: true, proof: 'TRUE! Each 0.1 h = 6 minutes, so 0.7 h = 7 × 6 = 42 minutes.' },
+      { stmt: '2.65 hours = 2 hours 39 minutes', truth: true, proof: 'TRUE! Keep 2 h. 0.6 h = 36 min and 0.05 h = 3 min ➔ 36 + 3 = 39 minutes.' },
+      { stmt: '4.25 hours = 4 hours 25 minutes', truth: false, proof: 'FALSE! 0.25 h is one quarter of 60 minutes = 15 minutes, so 4.25 h = 4 hours 15 minutes.' }
+    ];
+
+    function renderTFGrid() {
+      document.getElementById('tf-grid').innerHTML = tfStatements.map((item, i) => `
+        <div onclick="toggleReveal('tf-proof-${i}')" class="bg-white rounded-2xl p-5 border-2 border-indigo-200 hover:border-indigo-400 cursor-pointer shadow-sm transition space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold">Claim ${i + 1}</span>
+            <span class="text-xs font-bold text-slate-400">Tap to Reveal Proof</span>
+          </div>
+          <div class="font-display text-2xl font-bold text-slate-900">"${item.stmt}"</div>
+          <div id="tf-proof-${i}" class="hidden rounded-xl p-3.5 text-sm font-extrabold ${item.truth ? 'bg-emerald-100 text-emerald-950 border border-emerald-300' : 'bg-rose-100 text-rose-950 border border-rose-300'}">
+            ${item.truth ? '✅' : '❌'} ${item.proof}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleReveal(id) {
+      document.getElementById(id).classList.toggle('hidden');
+      playTone(540, 0.08, 'triangle', 0.07);
+    }
+
+    // =========================================================
+    // STATION 6: SUCCESS CRITERIA WHITEBOARD CHECK
+    // =========================================================
+    const scMet = { 1: false, 2: false, 3: false };
+    function toggleSCMet(num) {
+      scMet[num] = !scMet[num];
+      const btn = document.getElementById(`sc-btn-${num}`);
+      const card = document.getElementById(`sc-card-${num}`);
+      if (scMet[num]) {
+        btn.textContent = '☑ Met!';
+        btn.className = 'flex-1 py-2 rounded-xl bg-emerald-600 text-white text-xs font-extrabold shadow';
+        card.classList.add('ring-4', 'ring-emerald-300');
+        playChime();
+      } else {
+        btn.textContent = '☐ Tick as Met';
+        btn.className = 'flex-1 py-2 rounded-xl bg-white border-2 border-slate-300 text-slate-700 text-xs font-extrabold';
+        card.classList.remove('ring-4', 'ring-emerald-300');
+      }
+      const count = Object.values(scMet).filter(Boolean).length;
+      document.getElementById('sc-counter-text').textContent = `${count} / 3 Met`;
+      document.getElementById('sc-progress-bar').style.width = `${(count / 3) * 100}%`;
+      const banner = document.getElementById('sc-complete-banner');
+      if (count === 3) {
+        banner.classList.remove('hidden');
+        launchConfetti(55);
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    // =========================================================
+    // STATION 7: 10-QUESTION QUICKFIRE ENGINE
+    // =========================================================
+    const qfQuestions = [
+      { q: '0.2 hours', a: '12 minutes', m: '0.2 × 60 = 2 × 6 = 12 min' },
+      { q: '0.9 hours', a: '54 minutes', m: '0.9 × 60 = 9 × 6 = 54 min' },
+      { q: '1.25 hours', a: '1 hour 15 minutes', m: 'Keep 1 h. 0.25 h = ¼ of 60 = 15 min' },
+      { q: '2.5 hours', a: '2 hours 30 minutes', m: 'Keep 2 h. 0.5 h = ½ of 60 = 30 min' },
+      { q: '0.8 hours', a: '48 minutes', m: '0.8 × 60 = 8 × 6 = 48 min' },
+      { q: '3.1 hours', a: '3 hours 6 minutes', m: 'Keep 3 h. 0.1 h = 6 min (NOT 10 min!)' },
+      { q: '4.5 hours', a: '4 hours 30 minutes', m: 'Keep 4 h. 0.5 × 60 = 30 min' },
+      { q: '5.25 hours', a: '5 hours 15 minutes', m: 'Keep 5 h. 0.25 × 60 = 15 min' },
+      { q: '2.9 hours', a: '2 hours 54 minutes', m: 'Keep 2 h. 0.9 × 60 = 54 min' },
+      { q: '1.05 hours', a: '1 hour 3 minutes', m: 'Keep 1 h. 0.05 h is half of 0.1 h = 3 min' }
+    ];
+
+    let qfIdx = 0;
+    let qfInterval = null;
+    let qfSecs = 15;
+
+    function renderQF() {
+      stopQFTimer();
+      qfSecs = 15;
+      const item = qfQuestions[qfIdx];
+      document.getElementById('qf-progress').textContent = `Question ${qfIdx + 1} / ${qfQuestions.length}`;
+      document.getElementById('qf-timer-pill').textContent = '15s';
+      document.getElementById('qf-timer-pill').className = 'px-5 py-1.5 rounded-full bg-slate-900 text-white font-display font-bold text-xl min-w-[82px] text-center';
+      document.getElementById('qf-question').textContent = item.q;
+      document.getElementById('qf-answer').textContent = item.a;
+      document.getElementById('qf-method').textContent = item.m;
+      document.getElementById('qf-answer-box').classList.add('hidden');
+      document.getElementById('qf-boards-up').classList.add('hidden');
+    }
+
+    function stopQFTimer() {
+      if (qfInterval) { clearInterval(qfInterval); qfInterval = null; }
+    }
+
+    function startQFTimer() {
+      stopQFTimer();
+      qfSecs = 15;
+      document.getElementById('qf-boards-up').classList.add('hidden');
+      document.getElementById('qf-timer-pill').textContent = `${qfSecs}s`;
+      qfInterval = setInterval(() => {
+        qfSecs--;
+        const pill = document.getElementById('qf-timer-pill');
+        pill.textContent = `${qfSecs}s`;
+        if (qfSecs <= 5 && qfSecs > 0) {
+          pill.className = 'px-5 py-1.5 rounded-full bg-rose-600 text-white font-display font-bold text-xl min-w-[82px] text-center';
+          playTone(760, 0.06, 'sine', 0.08);
+        }
+        if (qfSecs <= 0) {
+          stopQFTimer();
+          document.getElementById('qf-boards-up').classList.remove('hidden');
+          playBuzzer();
+        }
+      }, 1000);
+    }
+
+    function revealQFAnswer() {
+      stopQFTimer();
+      document.getElementById('qf-answer-box').classList.remove('hidden');
+      playChime();
+    }
+
+    function nextQF() {
+      qfIdx = (qfIdx + 1) % qfQuestions.length;
+      renderQF();
+    }
+    function prevQF() {
+      qfIdx = (qfIdx - 1 + qfQuestions.length) % qfQuestions.length;
+      renderQF();
+    }
+    function awardQFTeam(team) {
+      addTeamPoint(team, 1);
+    }
+
+    // =========================================================
+    // DAVID'S BOARD WHITEBOARD (DPR-SAFE + INK PRESERVE)
+    // =========================================================
+    const wbCanvas = document.getElementById('whiteboard-canvas');
+    const wbCtx = wbCanvas.getContext('2d');
+    let wbDrawing = false;
+    let wbColour = '#0f172a';
+    let wbSize = 5;
+    let wbErasing = false;
+    let wbInitialised = false;
+
+    function resizeWhiteboardPreserveInk() {
+      const container = document.getElementById('whiteboard-container');
+      const rect = container.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      let backup = null;
+      if (wbInitialised && wbCanvas.width > 0 && wbCanvas.height > 0) {
+        backup = document.createElement('canvas');
+        backup.width = wbCanvas.width;
+        backup.height = wbCanvas.height;
+        backup.getContext('2d').drawImage(wbCanvas, 0, 0);
+      }
+
+      wbCanvas.width = Math.round(rect.width * dpr);
+      wbCanvas.height = Math.round(rect.height * dpr);
+      wbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      if (backup) {
+        wbCtx.drawImage(backup, 0, 0, rect.width, rect.height);
+      }
+      wbInitialised = true;
+    }
+
+    function openWhiteboard() {
+      document.getElementById('whiteboard-modal').classList.remove('hidden');
+      requestAnimationFrame(() => resizeWhiteboardPreserveInk());
+    }
+    function closeWhiteboard() {
+      document.getElementById('whiteboard-modal').classList.add('hidden');
+    }
+    function setPenColour(col) { wbErasing = false; wbColour = col; }
+    function setPenSize(sz) { wbSize = sz; }
+    function setEraser() { wbErasing = true; }
+    function clearWhiteboard() {
+      const rect = wbCanvas.getBoundingClientRect();
+      wbCtx.clearRect(0, 0, rect.width, rect.height);
+    }
+
+    function getWBPos(e) {
+      const rect = wbCanvas.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    wbCanvas.addEventListener('pointerdown', (e) => {
+      wbDrawing = true;
+      wbCanvas.setPointerCapture(e.pointerId);
+      const pos = getWBPos(e);
+      wbCtx.beginPath();
+      wbCtx.moveTo(pos.x, pos.y);
+    });
+
+    wbCanvas.addEventListener('pointermove', (e) => {
+      if (!wbDrawing) return;
+      const pos = getWBPos(e);
+      wbCtx.lineCap = 'round';
+      wbCtx.lineJoin = 'round';
+      if (wbErasing) {
+        wbCtx.globalCompositeOperation = 'destination-out';
+        wbCtx.lineWidth = wbSize * 3.5;
+      } else {
+        wbCtx.globalCompositeOperation = 'source-over';
+        wbCtx.strokeStyle = wbColour;
+        wbCtx.lineWidth = wbSize;
+      }
+      wbCtx.lineTo(pos.x, pos.y);
+      wbCtx.stroke();
+    });
+
+    wbCanvas.addEventListener('pointerup', () => { wbDrawing = false; wbCtx.globalCompositeOperation = 'source-over'; });
+    wbCanvas.addEventListener('pointercancel', () => { wbDrawing = false; wbCtx.globalCompositeOperation = 'source-over'; });
+    window.addEventListener('resize', () => {
+      if (!document.getElementById('whiteboard-modal').classList.contains('hidden')) {
+        resizeWhiteboardPreserveInk();
+      }
+    });
+
+    // =========================================================
+    // TEACHER DRAWER & GUARDED KEYBOARD SHORTCUTS
+    // =========================================================
+    function toggleTeacherDrawer() {
+      document.getElementById('teacher-drawer').classList.toggle('hidden');
+    }
+
+    function anyModalOpen() {
+      return !document.getElementById('vocab-modal').classList.contains('hidden') ||
+             !document.getElementById('youdo-modal').classList.contains('hidden') ||
+             !document.getElementById('whiteboard-modal').classList.contains('hidden') ||
+             !document.getElementById('teacher-drawer').classList.contains('hidden') ||
+             document.getElementById('ido-stage-wrapper').classList.contains('fullscreen-ido');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'Escape') {
+        closeVocabModal();
+        closeYouDoModal();
+        closeWhiteboard();
+        document.getElementById('teacher-drawer').classList.add('hidden');
+        document.getElementById('ido-stage-wrapper').classList.remove('fullscreen-ido');
+        document.getElementById('fullscreen-ido-btn').textContent = '⛶ Full Screen I Do';
+        return;
+      }
+      if (e.key === 'w' || e.key === 'W') {
+        if (document.getElementById('whiteboard-modal').classList.contains('hidden')) openWhiteboard();
+        else closeWhiteboard();
+        return;
+      }
+      if (e.key === 't' || e.key === 'T') {
+        toggleTeacherDrawer();
+        return;
+      }
+      if (e.key === 'm' || e.key === 'M') {
+        toggleMute();
+        return;
+      }
+      if (!anyModalOpen()) {
+        if (e.key === 'ArrowRight') goToStation(currentStation + 1);
+        if (e.key === 'ArrowLeft') goToStation(currentStation - 1);
+      }
+    });
+
+    // =========================================================
+    // INIT
+    // =========================================================
+    renderVocabGrid();
+    renderIDoStage();
+    updateClockLab(2.4);
+    renderYouDoBoard();
+    renderTFGrid();
+    renderQF();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grade 5 Science — Week 18, Lesson 2: Unit 5 Electricity Mastery Clinic</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --indigo-deep: #1e1b4b;
+      --amber-glow: #f59e0b;
+      --cyan-spark: #06b6d4;
+      --emerald-ok: #10b981;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #eef2ff 50%, #fffbeb 100%);
+      color: #0f172a;
+      min-height: 100vh;
+    }
+    /* Auto-hiding fixed header */
+    #topHeader {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    #topHeader.header-hidden {
+      transform: translateY(-105%);
+    }
+    /* 3D Flip cards for Station 1 Flashback 3 */
+    .flip-scene {
+      perspective: 1200px;
+      height: 350px;
+      cursor: pointer;
+    }
+    .flip-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .flip-card.is-flipped {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1.25rem;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+    /* Animated current flow along closed wire segments only */
+    @keyframes flowDash {
+      to {
+        stroke-dashoffset: -28;
+      }
+    }
+    .current-flow {
+      stroke-dasharray: 8 10;
+      animation: flowDash 0.85s linear infinite;
+    }
+    .current-flow-slow {
+      stroke-dasharray: 8 12;
+      animation: flowDash 1.55s linear infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.85)); }
+      50% { filter: drop-shadow(0 0 18px rgba(251, 191, 36, 1)); }
+    }
+    .lamp-bright {
+      animation: pulseGlow 1.6s ease-in-out infinite;
+    }
+    .station-btn.active-tab {
+      background: linear-gradient(135deg, #4f46e5, #0284c7);
+      color: #ffffff;
+      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.32);
+      border-color: transparent;
+    }
+    /* Confetti canvas */
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 95;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-indigo-200 selection:text-indigo-950">
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- AUTO-HIDING FIXED TOP HEADER -->
+  <header id="topHeader" class="fixed top-0 left-0 right-0 bg-indigo-950/95 backdrop-blur-md text-white shadow-xl border-b-2 border-amber-400">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="px-2.5 py-1 rounded-lg bg-amber-400 text-indigo-950 font-black text-xs tracking-wider uppercase shrink-0">Stage 6 • Unit 5 Clinic</span>
+        <div class="truncate">
+          <div class="text-xs text-cyan-300 font-semibold tracking-wide">Enquiry: Why do some circuits shine bright while others fail completely?</div>
+          <h1 class="text-sm sm:text-base font-extrabold text-white truncate">LO: Master circuit diagrams, brightness and Unit 5 exam traps.</h1>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- Synced Team Red vs Team Blue Scoreboard -->
+        <div class="flex items-center bg-indigo-900/90 border border-indigo-700 rounded-xl px-2.5 py-1 gap-2">
+          <button onclick="addScore('red', 1)" class="flex items-center gap-1.5 bg-rose-600 hover:bg-rose-500 px-2.5 py-1 rounded-lg font-extrabold text-xs transition" title="Add 1 point to Team Red">
+            <span>RED</span>
+            <span id="headerScoreRed" class="bg-white text-rose-700 px-1.5 py-0.5 rounded font-black">0</span>
+          </button>
+          <span class="text-indigo-400 font-bold text-xs">VS</span>
+          <button onclick="addScore('blue', 1)" class="flex items-center gap-1.5 bg-sky-600 hover:bg-sky-500 px-2.5 py-1 rounded-lg font-extrabold text-xs transition" title="Add 1 point to Team Blue">
+            <span>BLUE</span>
+            <span id="headerScoreBlue" class="bg-white text-sky-700 px-1.5 py-0.5 rounded font-black">0</span>
+          </button>
+        </div>
+
+        <button id="whiteboardBtn" onclick="toggleWhiteboard()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-indigo-950 font-extrabold text-xs transition shadow" title="Open David's Board (Shortcut: W)">
+          David's Board (W)
+        </button>
+        <button id="teacherDrawerBtn" onclick="toggleTeacherDrawer()" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-indigo-950 font-extrabold text-xs transition shadow" title="Teacher Prompt Drawer (Shortcut: T)">
+          Teacher Notes (T)
+        </button>
+        <button id="muteBtn" onclick="toggleMute()" class="px-3 py-1.5 rounded-xl bg-indigo-800 hover:bg-indigo-700 text-white font-bold text-xs border border-indigo-600 transition" title="Mute Sound Effects (Shortcut: M)">
+          🔊 Sound (M)
+        </button>
+      </div>
+    </div>
+
+    <!-- STATION NAVIGATION BAR (flex-wrap so tabs never squash) -->
+    <nav class="bg-white/95 text-slate-800 border-t border-indigo-100">
+      <div class="max-w-7xl mx-auto px-4 py-1.5 flex flex-wrap items-center justify-center gap-1.5">
+        <button onclick="showStation(0)" data-station="0" class="station-btn active-tab px-3 py-1.5 rounded-lg text-xs font-extrabold border border-slate-200 hover:bg-indigo-50 transition">0. LO &amp; Criteria</button>
+        <button onclick="showStation(1)" data-station="1" class="station-btn px-3 py-1.5 rounded-lg text-xs font-extrabold border border-slate-200 hover:bg-indigo-50 transition">1. Flashback 3</button>
+        <button onclick="showStation(2)" data-station="2" class="station-btn px-3 py-1.5 rounded-lg text-xs font-extrabold border border-slate-200 hover:bg-indigo-50 transition">2. Vocab &amp; Real Life</button>
+        <button onclick="showStation(3)" data-station="3" class="station-btn px-3 py-1.5 rounded-lg text-xs font-extrabold border border-slate-200 hover:bg-indigo-50 transition">3. I Do: Top 3 Traps</button>
+        <button onclick="showStation(4)" data-station="4" class="station-btn px-3 py-1.5 rounded-lg text-xs font-extrabold border border-slate-200 hover:bg-indigo-50 transition">4. Fault-Doctor Lab</button>
+        <button onclick="showStation(5)" data-station="5" class="station-btn px-3 py-1.5 rounded-lg text-xs font-extrabold border border-slate-200 hover:bg-indigo-50 transition">5. SC Check (0/3)</button>
+        <button onclick="showStation(6)" data-station="6" class="station-btn px-3 py-1.5 rounded-lg text-xs font-extrabold border border-slate-200 hover:bg-indigo-50 transition">6. Unit 5 Quickfire</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="max-w-7xl mx-auto px-4 pt-32 pb-16">
+
+    <!-- ==================== STATION 0: LO & SUCCESS CRITERIA ==================== -->
+    <!-- [SoL: Cognitive Load Management] [SoL: Schema Building] -->
+    <section id="station-0" class="station-panel">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-br from-indigo-950 via-indigo-900 to-sky-900 rounded-3xl p-8 sm:p-10 text-white shadow-2xl border-4 border-amber-400">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <span class="px-3 py-1 rounded-full bg-amber-400 text-indigo-950 font-black text-xs uppercase tracking-wider">Week 18 • Lesson 2 • Electricity Mastery Clinic</span>
+            <span class="px-3 py-1 rounded-full bg-white/15 text-cyan-200 font-bold text-xs">Cambridge 6Pe.01 • 6Pe.02 • 6TWSm.02 • 6TWSa.03</span>
+          </div>
+          <p class="text-cyan-300 font-bold uppercase tracking-widest text-sm mb-2">Learning Objective</p>
+          <h2 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
+            Master circuit diagrams, brightness and Unit 5 exam traps.
+          </h2>
+          <p class="mt-4 text-indigo-100 text-lg font-medium">
+            Enquiry Question: <span class="text-amber-300 font-extrabold">Why do some circuits shine bright while others fail completely?</span>
+          </p>
+        </div>
+
+        <!-- 3 Clear "I can..." Success Criteria -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-2 border-indigo-100">
+          <h3 class="text-xl font-black text-indigo-950 mb-4 flex items-center gap-2">
+            <span class="w-8 h-8 rounded-xl bg-indigo-600 text-white inline-flex items-center justify-center text-sm">✓</span>
+            Our 3 Lesson Success Criteria ("I can...")
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-5 rounded-2xl bg-sky-50 border-2 border-sky-200">
+              <div class="text-xs font-black text-sky-700 uppercase tracking-wider mb-1">Criterion 1 • Official Diagrams</div>
+              <p class="text-slate-800 font-bold text-base leading-snug">I can draw neat, ruler-straight series and parallel circuit diagrams using exact official Cambridge symbols with zero corner or gap errors.</p>
+            </div>
+            <div class="p-5 rounded-2xl bg-amber-50 border-2 border-amber-200">
+              <div class="text-xs font-black text-amber-700 uppercase tracking-wider mb-1">Criterion 2 • Brightness &amp; Break Test</div>
+              <p class="text-slate-800 font-bold text-base leading-snug">I can explain why adding lamps dims bulbs equally in series but keeps them equally bright in parallel, and predict what happens when one bulb breaks.</p>
+            </div>
+            <div class="p-5 rounded-2xl bg-emerald-50 border-2 border-emerald-200">
+              <div class="text-xs font-black text-emerald-700 uppercase tracking-wider mb-1">Criterion 3 • Fault-Doctor &amp; Unit 5</div>
+              <p class="text-slate-800 font-bold text-base leading-snug">I can spot and diagnose circuit faults (open switch, reversed cell, broken loop) and answer mixed Unit 5 Checkpoint questions accurately.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Must / Should / Could Tiers -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-white rounded-2xl p-6 shadow-lg border-t-8 border-emerald-500">
+            <span class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs uppercase mb-2">Must (Level 1)</span>
+            <p class="text-lg font-extrabold text-slate-900">Match and draw official symbols for cell, battery, lamp, switch and buzzer.</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 shadow-lg border-t-8 border-amber-500">
+            <span class="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-black text-xs uppercase mb-2">Should (Level 2)</span>
+            <p class="text-lg font-extrabold text-slate-900">Compare series vs parallel brightness and explain the unscrew-1-bulb test.</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 shadow-lg border-t-8 border-indigo-600">
+            <span class="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-black text-xs uppercase mb-2">Could (Level 3)</span>
+            <p class="text-lg font-extrabold text-slate-900">Diagnose reversed-cell faults and write full 2-mark Checkpoint conclusions.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATION 1: SPACED FLASHBACK 3 ==================== -->
+    <!-- [SoL: Retrieval Practice] [SoL: Spaced Practice] [SoL: Interleaving] -->
+    <section id="station-1" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 bg-white rounded-2xl p-5 shadow-md border border-indigo-100">
+          <div>
+            <span class="text-xs font-black uppercase tracking-wider text-indigo-600">Station 1 • Spaced Retrieval Across Earlier Units</span>
+            <h2 class="text-2xl sm:text-3xl font-black text-indigo-950">Flashback 3 — Mini-Whiteboard Challenge</h2>
+          </div>
+          <button onclick="resetFlashbacks()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm transition">Reset All Cards</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 1.2 Respiratory System -->
+          <div class="flip-scene" onclick="flipCard(this)">
+            <div class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-rose-600 to-pink-700 text-white p-6 flex flex-col justify-between shadow-xl border-4 border-white">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-black uppercase">Unit 1.2 • 6Bs.02</span>
+                  <span class="text-xs font-bold text-rose-100">Click to Reveal</span>
+                </div>
+                <div class="text-center my-auto">
+                  <div class="text-6xl font-black mb-3">🫁</div>
+                  <h3 class="text-2xl font-black mb-2">Respiratory System</h3>
+                  <p class="text-lg font-semibold text-rose-50">Where does oxygen go right after you breathe air into your lungs?</p>
+                </div>
+                <div class="text-center text-xs font-bold uppercase tracking-widest text-rose-200">Tap card to check answer</div>
+              </div>
+              <div class="flip-face flip-back bg-white text-slate-900 p-6 flex flex-col justify-between shadow-xl border-4 border-rose-500">
+                <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-black uppercase self-start">Answer • Unit 1.2</span>
+                <div class="my-auto text-center">
+                  <p class="text-2xl font-black text-rose-700 mb-3">Into the blood!</p>
+                  <p class="text-base font-semibold text-slate-700">Oxygen moves from inhaled air in the lungs directly into the blood, which pumps it to every part of the body.</p>
+                </div>
+                <div class="text-center text-xs font-bold text-slate-400">Primary descriptive phrasing accepted.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 1.4 Diseases & Defences -->
+          <div class="flip-scene" onclick="flipCard(this)">
+            <div class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-teal-600 to-emerald-700 text-white p-6 flex flex-col justify-between shadow-xl border-4 border-white">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-black uppercase">Unit 1.4 • 6Bp.04</span>
+                  <span class="text-xs font-bold text-teal-100">Click to Reveal</span>
+                </div>
+                <div class="text-center my-auto">
+                  <div class="text-6xl font-black mb-3">🛡️</div>
+                  <h3 class="text-2xl font-black mb-2">Body Defences</h3>
+                  <p class="text-lg font-semibold text-teal-50">Name TWO body defence mechanisms that stop harmful pathogens making us ill.</p>
+                </div>
+                <div class="text-center text-xs font-bold uppercase tracking-widest text-teal-200">Tap card to check answer</div>
+              </div>
+              <div class="flip-face flip-back bg-white text-slate-900 p-6 flex flex-col justify-between shadow-xl border-4 border-teal-500">
+                <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-800 text-xs font-black uppercase self-start">Answer • Unit 1.4</span>
+                <div class="my-auto text-center">
+                  <p class="text-2xl font-black text-teal-700 mb-3">Skin, Stomach Acid or Mucus</p>
+                  <p class="text-base font-semibold text-slate-700"><strong>Skin</strong> acts as a barrier; <strong>stomach acid</strong> kills swallowed germs; sticky <strong>mucus</strong> traps microbes in airways.</p>
+                </div>
+                <div class="text-center text-xs font-bold text-slate-400">Any 2 named with brief role = full marks!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 2.3 Reversible Changes -->
+          <div class="flip-scene" onclick="flipCard(this)">
+            <div class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-indigo-600 to-sky-700 text-white p-6 flex flex-col justify-between shadow-xl border-4 border-white">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-black uppercase">Unit 2.3 • 6Cc.01</span>
+                  <span class="text-xs font-bold text-sky-100">Click to Reveal</span>
+                </div>
+                <div class="text-center my-auto">
+                  <div class="text-6xl font-black mb-3">🧂</div>
+                  <h3 class="text-2xl font-black mb-2">Reversible Changes</h3>
+                  <p class="text-lg font-semibold text-sky-50">Explain why dissolving salt in water is a reversible physical change.</p>
+                </div>
+                <div class="text-center text-xs font-bold uppercase tracking-widest text-sky-200">Tap card to check answer</div>
+              </div>
+              <div class="flip-face flip-back bg-white text-slate-900 p-6 flex flex-col justify-between shadow-xl border-4 border-indigo-500">
+                <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-black uppercase self-start">Answer • Unit 2.3</span>
+                <div class="my-auto text-center">
+                  <p class="text-2xl font-black text-indigo-700 mb-3">Evaporate the water!</p>
+                  <p class="text-base font-semibold text-slate-700">No new substance is made. Heating/evaporating the water leaves the original solid salt crystals behind.</p>
+                </div>
+                <div class="text-center text-xs font-bold text-slate-400">Physical change = easily undone.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATION 2: VOCABULARY MODAL + REAL-LIFE RELEVANCE ==================== -->
+    <!-- [SoL: Dual Coding] [SoL: Schema Building] -->
+    <section id="station-2" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-2xl p-6 shadow-md border border-indigo-100 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-black uppercase tracking-wider text-indigo-600">Station 2 • Official Cambridge Electricity Lexicon</span>
+            <h2 class="text-2xl sm:text-3xl font-black text-indigo-950">Tap any term for Symbol Visual + Bilingual Audio Modal</h2>
+          </div>
+          <span class="px-3 py-1.5 rounded-xl bg-amber-100 text-amber-900 font-bold text-xs">Strict Official Symbols Only</span>
+        </div>
+
+        <div id="vocabGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4"></div>
+
+        <!-- Real-Life Science Relevance Strip (100% British English) -->
+        <div class="bg-gradient-to-r from-indigo-950 via-slate-900 to-sky-950 rounded-3xl p-6 text-white shadow-xl border-2 border-cyan-400">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-3 py-1 rounded-full bg-cyan-400 text-indigo-950 font-black text-xs uppercase">Real-Life Science in Hanoi</span>
+            <h3 class="text-lg font-black text-amber-300">Where do we see Series &amp; Parallel Circuits every day?</h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div class="bg-white/10 rounded-2xl p-4 border border-white/15">
+              <div class="font-black text-cyan-300 mb-1">🏠 Apartment Ceiling Lights (Parallel)</div>
+              <p class="text-slate-100">Every room has its own branch. If the kitchen bulb blows, your bedroom lamp and study fan stay brightly lit!</p>
+            </div>
+            <div class="bg-white/10 rounded-2xl p-4 border border-white/15">
+              <div class="font-black text-amber-300 mb-1">🔦 Hand Torches (Cells in Series)</div>
+              <p class="text-slate-100">Cells sit nose-to-tail (<span class="font-mono">+</span> to <span class="font-mono">−</span>) inside a torch so voltages add up (<span class="font-mono">1.5 V + 1.5 V = 3.0 V</span>). Put one cell backwards and the torch stays dark!</p>
+            </div>
+            <div class="bg-white/10 rounded-2xl p-4 border border-white/15">
+              <div class="font-black text-emerald-300 mb-1">🎄 Old Festive String Lights (Series)</div>
+              <p class="text-slate-100">In an old single-loop string, all bulbs share one pathway. One loose bulb breaks the circuit and turns off the entire row.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATION 3: FULL-SCREEN VISUAL I DO (TOP 3 EXAM TRAPS) ==================== -->
+    <!-- [SoL: Worked Examples] [SoL: Misconceptions] [SoL: Dual Coding] -->
+    <section id="station-3" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-2xl p-5 shadow-md border border-indigo-100 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-black uppercase tracking-wider text-rose-600">Station 3 • Full-Screen Visual I Do Clinic</span>
+            <h2 class="text-2xl sm:text-3xl font-black text-indigo-950">Busting the Top 3 Electricity Checkpoint Traps</h2>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="selectTrap(0)" id="trapBtn0" class="px-4 py-2 rounded-xl font-extrabold text-sm bg-indigo-600 text-white shadow">Trap 1: Official Symbols</button>
+            <button onclick="selectTrap(1)" id="trapBtn1" class="px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-700 hover:bg-indigo-50">Trap 2: Series Sharing</button>
+            <button onclick="selectTrap(2)" id="trapBtn2" class="px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-700 hover:bg-indigo-50">Trap 3: Reversed Cell</button>
+            <button onclick="openGiantProjection()" class="px-4 py-2 rounded-xl font-black text-sm bg-amber-400 hover:bg-amber-300 text-indigo-950 shadow">🔍 Giant Projection</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Main Visual Worked Example Area -->
+          <div class="lg:col-span-8 bg-white rounded-3xl p-6 shadow-xl border-2 border-indigo-100 flex flex-col justify-between">
+            <div id="trapContentArea"></div>
+            <div class="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+              <button onclick="triggerTrapDemo()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-sm shadow-lg transition">
+                ▶ Animate Worked Fix
+              </button>
+              <span id="trapDemoBadge" class="text-sm font-bold text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg">Inspect the exam trap, then click Animate Worked Fix!</span>
+            </div>
+          </div>
+
+          <!-- Permanent Steps to Success & Safety Sidebar -->
+          <div class="lg:col-span-4 bg-gradient-to-b from-indigo-950 to-slate-900 text-white rounded-3xl p-6 shadow-xl border-2 border-amber-400 flex flex-col justify-between">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-amber-400 text-indigo-950 font-black text-xs uppercase">Steps to Success &amp; Safety</span>
+              <h3 class="text-xl font-black mt-3 mb-4 text-cyan-300">Checkpoint Drawing &amp; Lab Rules</h3>
+              <ol class="space-y-3 text-sm font-semibold">
+                <li class="flex gap-2.5"><span class="w-6 h-6 rounded-full bg-amber-400 text-indigo-950 font-black inline-flex items-center justify-center shrink-0">1</span><span>Use a sharp pencil and ruler for crisp <strong>90° rectangular corners</strong>.</span></li>
+                <li class="flex gap-2.5"><span class="w-6 h-6 rounded-full bg-amber-400 text-indigo-950 font-black inline-flex items-center justify-center shrink-0">2</span><span><strong>NEVER</strong> place a lamp, switch, buzzer or cell on a corner.</span></li>
+                <li class="flex gap-2.5"><span class="w-6 h-6 rounded-full bg-amber-400 text-indigo-950 font-black inline-flex items-center justify-center shrink-0">3</span><span>Leave a <strong>clean empty gap</strong> between the tall thin <span class="font-mono">+</span> plate and short thick <span class="font-mono">−</span> plate.</span></li>
+                <li class="flex gap-2.5"><span class="w-6 h-6 rounded-full bg-amber-400 text-indigo-950 font-black inline-flex items-center justify-center shrink-0">4</span><span>In a battery, check polarity: <span class="font-mono">+ −</span> joined cleanly to <span class="font-mono">+ −</span>.</span></li>
+                <li class="flex gap-2.5"><span class="w-6 h-6 rounded-full bg-rose-500 text-white font-black inline-flex items-center justify-center shrink-0">!</span><span><strong>Kit Safety:</strong> Never wire a cell directly from <span class="font-mono">+</span> to <span class="font-mono">−</span> without a lamp or buzzer (short circuits overheat wires!).</span></li>
+              </ol>
+            </div>
+            <div class="mt-5 p-3.5 rounded-2xl bg-white/10 border border-white/15 text-xs text-amber-200 font-bold">
+              Examiner Tip: If 2 identical lamps are in series, BOTH share the voltage equally — neither bulb is "first in line"!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATION 4: HANDS-ON KIT + VIRTUAL FAULT-DOCTOR LAB & BRIGHTNESS CHART ==================== -->
+    <!-- [SoL: CPA Progression] [SoL: Elaborative Interrogation] [SoL: Immediate Feedback] -->
+    <section id="station-4" class="station-panel hidden">
+      <div class="space-y-6">
+        <!-- Hands-On Classroom Kit Brief -->
+        <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white rounded-3xl p-5 shadow-lg flex flex-wrap items-center justify-between gap-4">
+          <div class="max-w-3xl">
+            <span class="px-2.5 py-0.5 rounded-full bg-white/20 font-black text-xs uppercase">Concrete ➔ Pictorial ➔ Abstract (CPA)</span>
+            <h2 class="text-2xl font-black mt-1">Hands-On Classroom Kit Fault-Doctor + Virtual Circuit Clinic</h2>
+            <p class="text-sm font-semibold text-amber-50 mt-1">Pairs build each Mystery Circuit using their physical kit trays first, diagnose why it fails, fix it physically, then verify with Official Symbols on the Virtual Fault-Doctor below.</p>
+          </div>
+          <div class="bg-indigo-950/85 px-4 py-3 rounded-2xl text-xs font-bold border border-white/30">
+            <div>Kit Check: 2 × 1.5 V cells • 2 lamps • 1 switch • 6 leads</div>
+            <div class="text-amber-300 mt-1">Task: Build ➔ Diagnose ➔ Fix ➔ Sketch Symbol Diagram</div>
+          </div>
+        </div>
+
+        <!-- VIRTUAL FAULT-DOCTOR LAB -->
+        <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-indigo-100">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div class="flex flex-wrap gap-2">
+              <button onclick="loadMystery(0)" id="mysBtn0" class="px-4 py-2 rounded-xl font-extrabold text-sm bg-indigo-600 text-white shadow">Mystery A: Reversed Cell</button>
+              <button onclick="loadMystery(1)" id="mysBtn1" class="px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-700 hover:bg-indigo-50">Mystery B: Series Break Test</button>
+              <button onclick="loadMystery(2)" id="mysBtn2" class="px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-700 hover:bg-indigo-50">Mystery C: Parallel Break Test</button>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black uppercase text-slate-500">View:</span>
+              <button onclick="setLabView('symbol')" id="viewSymbolBtn" class="px-3.5 py-1.5 rounded-xl font-black text-xs bg-indigo-950 text-white">Official Symbol View</button>
+              <button onclick="setLabView('picture')" id="viewPictureBtn" class="px-3.5 py-1.5 rounded-xl font-black text-xs bg-slate-200 text-slate-800">Picture Kit View</button>
+            </div>
+          </div>
+
+          <!-- Clean Interactive Canvas (Zero overlaid text readouts!) -->
+          <div class="bg-slate-50 rounded-2xl border-2 border-slate-200 p-4 flex items-center justify-center">
+            <svg id="faultDoctorSvg" viewBox="0 0 760 320" class="w-full max-w-3xl h-auto" role="img" aria-label="Interactive Fault-Doctor Circuit"></svg>
+          </div>
+
+          <!-- Dedicated Anchored Dashboard Panel BELOW Canvas -->
+          <div class="mt-4 grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+            <div class="lg:col-span-4 bg-indigo-50 rounded-2xl p-4 border border-indigo-200 flex flex-col justify-between">
+              <div class="text-xs font-black uppercase text-indigo-700 mb-2">Doctor Controls (Manipulate Circuit)</div>
+              <div class="flex flex-wrap gap-2">
+                <button onclick="toggleLabSwitch()" id="labSwitchBtn" class="px-3 py-2 rounded-xl bg-white border-2 border-indigo-300 font-extrabold text-xs text-indigo-950 hover:bg-indigo-100">Toggle Switch</button>
+                <button onclick="toggleLabCell2()" id="labCellBtn" class="px-3 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 font-extrabold text-xs text-indigo-950">Flip Cell 2 Polarity</button>
+                <button onclick="toggleLabLamp1()" id="labLamp1Btn" class="px-3 py-2 rounded-xl bg-rose-100 border-2 border-rose-300 hover:bg-rose-200 font-extrabold text-xs text-rose-900">Break / Fix Lamp 1</button>
+                <button onclick="toggleLabLamp2()" id="labLamp2Btn" class="px-3 py-2 rounded-xl bg-sky-100 border-2 border-sky-300 hover:bg-sky-200 font-extrabold text-xs text-sky-900">Break / Fix Lamp 2</button>
+              </div>
+            </div>
+
+            <div class="lg:col-span-8 bg-slate-900 text-white rounded-2xl p-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="bg-white/10 rounded-xl p-3">
+                <div class="text-[11px] font-bold text-slate-300 uppercase">Net Push</div>
+                <div id="dashVoltage" class="text-2xl font-black text-amber-300">0.0 V</div>
+              </div>
+              <div class="bg-white/10 rounded-xl p-3">
+                <div class="text-[11px] font-bold text-slate-300 uppercase">Lamp 1</div>
+                <div id="dashLamp1" class="text-lg font-black text-rose-300">OFF (0 lux)</div>
+              </div>
+              <div class="bg-white/10 rounded-xl p-3">
+                <div class="text-[11px] font-bold text-slate-300 uppercase">Lamp 2</div>
+                <div id="dashLamp2" class="text-lg font-black text-rose-300">OFF (0 lux)</div>
+              </div>
+              <div class="bg-white/10 rounded-xl p-3">
+                <div class="text-[11px] font-bold text-slate-300 uppercase">Diagnosis</div>
+                <div id="dashStatus" class="text-sm font-extrabold text-cyan-300 leading-tight">Fault Active</div>
+              </div>
+              <div class="col-span-2 sm:col-span-4 bg-indigo-950/90 rounded-xl px-4 py-2.5 border border-cyan-500/40 flex flex-wrap items-center justify-between gap-2">
+                <p id="dashMechanism" class="text-sm font-semibold text-indigo-100">Click "Reveal Scientific Explanation" to check your partner diagnosis!</p>
+                <button onclick="toggleMechanism()" class="px-3 py-1.5 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-indigo-950 font-black text-xs shrink-0">Reveal Mechanism</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LABELLED 3.0 V BRIGHTNESS BAR CHART (NO NAKED GRAPHS!) -->
+        <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-indigo-100">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <div>
+              <span class="text-xs font-black uppercase tracking-wider text-emerald-600">Data Analysis Clinic (6TWSa.03)</span>
+              <h3 class="text-xl font-black text-indigo-950">Lamp Brightness in Series vs Parallel Circuits (3.0 V Battery)</h3>
+            </div>
+            <div class="px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-300 text-xs font-bold text-amber-950">
+              How to Read: Check the Y-axis scale (lux), tap any bar to inspect exact brightness, then compare Series vs Parallel!
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+            <div class="lg:col-span-8 bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <!-- Mathematically exact Y scale: y=240 is 0 lux, y=40 is 120 lux (200px = 120 lux -> 1 lux = 1.6667 px) -->
+              <!-- 100 lux = 166.7px (y=73.3), 50 lux = 83.3px (y=156.7), 33 lux = 55.0px (y=185.0) -->
+              <svg id="brightnessChart" viewBox="0 0 680 305" class="w-full h-auto" role="img" aria-label="Bar chart showing lamp brightness in lux for 3.0 V circuits">
+                <text x="360" y="20" text-anchor="middle" font-size="14" font-weight="800" fill="#1e1b4b">Lamp Brightness per Bulb with a 3.0 V Battery (lux)</text>
+
+                <!-- Horizontal grid lines & Y-axis ticks (0, 20, 40, 60, 80, 100, 120) -->
+                <g stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 4">
+                  <line x1="80" y1="40" x2="645" y2="40" />
+                  <line x1="80" y1="73.3" x2="645" y2="73.3" />
+                  <line x1="80" y1="106.7" x2="645" y2="106.7" />
+                  <line x1="80" y1="140" x2="645" y2="140" />
+                  <line x1="80" y1="173.3" x2="645" y2="173.3" />
+                  <line x1="80" y1="206.7" x2="645" y2="206.7" />
+                </g>
+
+                <!-- Axes -->
+                <line x1="80" y1="35" x2="80" y2="240" stroke="#0f172a" stroke-width="2.5" />
+                <line x1="80" y1="240" x2="650" y2="240" stroke="#0f172a" stroke-width="2.5" />
+
+                <!-- Y-axis numbers -->
+                <g font-size="12" font-weight="700" fill="#334155" text-anchor="end">
+                  <text x="72" y="44">120</text>
+                  <text x="72" y="77.3">100</text>
+                  <text x="72" y="110.7">80</text>
+                  <text x="72" y="144">60</text>
+                  <text x="72" y="177.3">40</text>
+                  <text x="72" y="210.7">20</text>
+                  <text x="72" y="244">0</text>
+                </g>
+                <text x="24" y="140" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a" transform="rotate(-90 24 140)">Lamp Brightness (lux)</text>
+
+                <!-- Bar 1: 1 Lamp = 100 lux -> height 166.7, y=73.3 -->
+                <g class="cursor-pointer" onclick="inspectBar(0)" onmouseenter="inspectBar(0)">
+                  <rect x="108" y="73.3" width="76" height="166.7" rx="6" fill="#f59e0b" stroke="#b45309" stroke-width="2" />
+                  <text x="146" y="65" text-anchor="middle" font-size="13" font-weight="900" fill="#92400e">100</text>
+                  <text x="146" y="262" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">1 Lamp</text>
+                </g>
+
+                <!-- Bar 2: 2 Series = 50 lux -> height 83.3, y=156.7 -->
+                <g class="cursor-pointer" onclick="inspectBar(1)" onmouseenter="inspectBar(1)">
+                  <rect x="218" y="156.7" width="76" height="83.3" rx="6" fill="#0284c7" stroke="#0369a1" stroke-width="2" />
+                  <text x="256" y="149" text-anchor="middle" font-size="13" font-weight="900" fill="#075985">50</text>
+                  <text x="256" y="262" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">2 Series</text>
+                </g>
+
+                <!-- Bar 3: 3 Series = 33 lux -> height 55.0, y=185.0 -->
+                <g class="cursor-pointer" onclick="inspectBar(2)" onmouseenter="inspectBar(2)">
+                  <rect x="328" y="185.0" width="76" height="55.0" rx="6" fill="#6366f1" stroke="#4338ca" stroke-width="2" />
+                  <text x="366" y="177" text-anchor="middle" font-size="13" font-weight="900" fill="#3730a3">33</text>
+                  <text x="366" y="262" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">3 Series</text>
+                </g>
+
+                <!-- Bar 4: 2 Parallel = 100 lux -> height 166.7, y=73.3 -->
+                <g class="cursor-pointer" onclick="inspectBar(3)" onmouseenter="inspectBar(3)">
+                  <rect x="438" y="73.3" width="76" height="166.7" rx="6" fill="#10b981" stroke="#047857" stroke-width="2" />
+                  <text x="476" y="65" text-anchor="middle" font-size="13" font-weight="900" fill="#065f46">100</text>
+                  <text x="476" y="262" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">2 Parallel</text>
+                </g>
+
+                <!-- Bar 5: 3 Parallel = 100 lux -> height 166.7, y=73.3 -->
+                <g class="cursor-pointer" onclick="inspectBar(4)" onmouseenter="inspectBar(4)">
+                  <rect x="548" y="73.3" width="76" height="166.7" rx="6" fill="#059669" stroke="#065f46" stroke-width="2" />
+                  <text x="586" y="65" text-anchor="middle" font-size="13" font-weight="900" fill="#064e3b">100</text>
+                  <text x="586" y="262" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">3 Parallel</text>
+                </g>
+
+                <text x="365" y="292" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">Circuit Arrangement (Control Variable: 3.0 V Battery &amp; Identical Lamps)</text>
+              </svg>
+            </div>
+
+            <!-- Interactive Coordinate Readout Panel -->
+            <div class="lg:col-span-4 space-y-3">
+              <div class="bg-indigo-950 text-white rounded-2xl p-5 border-2 border-cyan-400">
+                <div class="text-xs font-black uppercase text-cyan-300">Selected Bar Coordinate Readout</div>
+                <div id="barTitle" class="text-2xl font-black mt-1 text-amber-300">1 Lamp (Control)</div>
+                <div id="barCoord" class="text-sm font-mono font-bold text-white mt-1">X: 1 Lamp | Y: 100 lux | Voltage per bulb: 3.0 V</div>
+                <p id="barExplain" class="text-sm text-indigo-100 mt-3 leading-relaxed">The single lamp receives the full 3.0 V push from the battery, glowing at maximum brightness (100 lux).</p>
+              </div>
+              <div class="bg-emerald-50 rounded-2xl p-4 border-2 border-emerald-300">
+                <div class="text-xs font-black uppercase text-emerald-800">2-Mark Checkpoint Conclusion Model</div>
+                <p class="text-xs font-bold text-slate-800 mt-1">Adding lamps in <strong>series</strong> shares the 3.0 V push so brightness drops equally (100 ➔ 50 ➔ 33 lux). Adding lamps in <strong>parallel</strong> gives each branch the full 3.0 V, so every lamp stays equally bright (100 lux).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATION 5: DEDICATED SUCCESS CRITERIA WHITEBOARD CHECK ==================== -->
+    <!-- [SoL: Metacognition] [SoL: Immediate Feedback] -->
+    <section id="station-5" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-indigo-100">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <div>
+              <span class="text-xs font-black uppercase tracking-wider text-indigo-600">Station 5 • Individual Mini-Whiteboard Hinge Check</span>
+              <h2 class="text-2xl sm:text-3xl font-black text-indigo-950">Success Criteria Mastery Check</h2>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="text-right">
+                <div id="scProgressText" class="text-xl font-black text-indigo-700">0/3 Met</div>
+                <div class="w-44 h-3 bg-slate-200 rounded-full overflow-hidden mt-1">
+                  <div id="scProgressBar" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all duration-300" style="width: 0%;"></div>
+                </div>
+              </div>
+              <button onclick="resetScChecks()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-xs text-slate-700">Reset</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <!-- SC 1 Check -->
+            <div id="scCard0" class="rounded-2xl p-5 bg-sky-50 border-2 border-sky-200 flex flex-col justify-between">
+              <div>
+                <span class="px-2.5 py-1 rounded-lg bg-sky-600 text-white font-black text-xs">SC 1 • Official Diagram</span>
+                <h3 class="text-lg font-black text-slate-900 mt-3">Whiteboard Draw (60s)</h3>
+                <p class="text-sm font-semibold text-slate-700 mt-2">Draw a neat rectangular series circuit containing: <strong>2-cell battery + open switch + buzzer</strong>.</p>
+                <div id="scAns0" class="hidden mt-3 p-3 rounded-xl bg-white border border-sky-300 text-xs font-bold text-sky-950">
+                  Check: 90° straight corners, ZERO components on corners, tall thin + &amp; short thick − with clean empty gaps, open switch arm angled up, buzzer dome with 2 parallel legs!
+                </div>
+              </div>
+              <div class="mt-4 flex gap-2">
+                <button onclick="toggleScReveal(0)" class="flex-1 py-2 rounded-xl bg-white border border-sky-400 font-extrabold text-xs text-sky-900 hover:bg-sky-100">Reveal Check</button>
+                <button onclick="toggleScMet(0)" id="scMetBtn0" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-black text-xs text-white">Mark Met ✓</button>
+              </div>
+            </div>
+
+            <!-- SC 2 Check -->
+            <div id="scCard1" class="rounded-2xl p-5 bg-amber-50 border-2 border-amber-200 flex flex-col justify-between">
+              <div>
+                <span class="px-2.5 py-1 rounded-lg bg-amber-600 text-white font-black text-xs">SC 2 • Brightness &amp; Break</span>
+                <h3 class="text-lg font-black text-slate-900 mt-3">Whiteboard Predict (45s)</h3>
+                <p class="text-sm font-semibold text-slate-700 mt-2">Two identical bulbs glow at <strong>100 lux each</strong> in a parallel circuit. Bulb A breaks. What happens to Bulb B and why?</p>
+                <div id="scAns1" class="hidden mt-3 p-3 rounded-xl bg-white border border-amber-300 text-xs font-bold text-amber-950">
+                  Answer: Bulb B stays lit at 100 lux (same brightness) because it has its own complete branch connected directly to the battery!
+                </div>
+              </div>
+              <div class="mt-4 flex gap-2">
+                <button onclick="toggleScReveal(1)" class="flex-1 py-2 rounded-xl bg-white border border-amber-400 font-extrabold text-xs text-amber-900 hover:bg-amber-100">Reveal Check</button>
+                <button onclick="toggleScMet(1)" id="scMetBtn1" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-black text-xs text-white">Mark Met ✓</button>
+              </div>
+            </div>
+
+            <!-- SC 3 Check -->
+            <div id="scCard2" class="rounded-2xl p-5 bg-emerald-50 border-2 border-emerald-200 flex flex-col justify-between">
+              <div>
+                <span class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-black text-xs">SC 3 • Fault-Doctor</span>
+                <h3 class="text-lg font-black text-slate-900 mt-3">Whiteboard Diagnose (45s)</h3>
+                <p class="text-sm font-semibold text-slate-700 mt-2">A torch has two fresh 1.5 V cells placed with <strong>+ touching +</strong>. The switch is closed, yet the bulb stays dark. Why?</p>
+                <div id="scAns2" class="hidden mt-3 p-3 rounded-xl bg-white border border-emerald-300 text-xs font-bold text-emerald-950">
+                  Answer: One cell is reversed! Their pushes oppose each other (1.5 V − 1.5 V = 0 V). Flip one cell so + touches − to get 3.0 V.
+                </div>
+              </div>
+              <div class="mt-4 flex gap-2">
+                <button onclick="toggleScReveal(2)" class="flex-1 py-2 rounded-xl bg-white border border-emerald-400 font-extrabold text-xs text-emerald-900 hover:bg-emerald-100">Reveal Check</button>
+                <button onclick="toggleScMet(2)" id="scMetBtn2" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-black text-xs text-white">Mark Met ✓</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATION 6: 10-Q FULL UNIT 5 FINALE QUICKFIRE ==================== -->
+    <!-- [SoL: Automaticity] [SoL: Retrieval Practice] [SoL: Interleaving] -->
+    <section id="station-6" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-r from-indigo-950 via-purple-950 to-sky-950 text-white rounded-3xl p-6 sm:p-8 shadow-2xl border-4 border-amber-400">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-amber-400 text-indigo-950 font-black text-xs uppercase">Full Unit 5 Synthesis • Forces + Electricity</span>
+              <h2 class="text-2xl sm:text-3xl font-black mt-1">Checkpoint Finale Quickfire (10 Questions)</h2>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="bg-white/10 px-4 py-2 rounded-2xl border border-white/20 text-center">
+                <div class="text-[11px] uppercase font-bold text-cyan-300">Question</div>
+                <div id="qfCounter" class="text-2xl font-black">1 / 10</div>
+              </div>
+              <div class="bg-white/10 px-4 py-2 rounded-2xl border border-white/20 text-center">
+                <div class="text-[11px] uppercase font-bold text-amber-300">Timer</div>
+                <div id="qfTimer" class="text-2xl font-black text-amber-300">15s</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="qfTag" class="inline-block px-3 py-1 rounded-lg bg-cyan-500/20 border border-cyan-400 text-cyan-200 font-black text-xs uppercase mb-3">Electricity • 6Pe.01</div>
+          <div id="qfQuestion" class="text-2xl sm:text-4xl font-black leading-snug min-h-[100px] flex items-center">
+            Loading question...
+          </div>
+
+          <div id="qfBoardsBanner" class="hidden my-4 py-3 px-5 rounded-2xl bg-amber-400 text-indigo-950 text-center text-2xl sm:text-3xl font-black tracking-widest animate-bounce">
+            📢 BOARDS UP! SHOW YOUR ANSWERS!
+          </div>
+
+          <div id="qfAnswerBox" class="hidden mt-4 p-5 rounded-2xl bg-emerald-500/20 border-2 border-emerald-400">
+            <div class="text-xs font-black uppercase text-emerald-300 mb-1">Official Cambridge Answer</div>
+            <div id="qfAnswer" class="text-xl sm:text-2xl font-black text-white"></div>
+          </div>
+
+          <div class="mt-6 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/15">
+            <div class="flex flex-wrap gap-2">
+              <button onclick="startQfTimer()" class="px-4 py-2.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-indigo-950 font-black text-sm shadow">⏱ Start 15s Timer</button>
+              <button onclick="revealQfAnswer()" class="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-indigo-950 font-black text-sm shadow">👁 Reveal Answer</button>
+              <button onclick="prevQf()" class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-bold text-sm">◀ Prev</button>
+              <button onclick="nextQf()" class="px-4 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-black text-sm shadow">Next ▶</button>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="addScore('red', 1)" class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 font-black text-sm shadow">+1 Team Red (<span id="qfScoreRed">0</span>)</button>
+              <button onclick="addScore('blue', 1)" class="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 font-black text-sm shadow">+1 Team Blue (<span id="qfScoreBlue">0</span>)</button>
+              <button onclick="celebrateWinner()" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-indigo-950 font-black text-sm shadow">🏆 Finale!</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== STATION 2 BILINGUAL VOCABULARY MODAL (SOLE VIETNAMESE ZONE) ==================== -->
+  <div id="vocabModal" class="hidden fixed inset-0 z-[70] bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border-4 border-indigo-600 relative">
+      <button onclick="closeVocabModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-700 font-black text-xl">✕</button>
+      <div class="flex flex-wrap items-center gap-2 mb-2">
+        <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-black text-xs uppercase">Cambridge Primary Vocabulary</span>
+      </div>
+      <h3 id="vmEn" class="text-3xl sm:text-4xl font-black text-indigo-950"></h3>
+      <p id="vmVn" class="text-xl font-extrabold text-amber-600 mt-1"></p>
+
+      <div class="flex flex-wrap gap-3 mt-4">
+        <button onclick="speakVocab('en-GB')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm shadow">🔊 Hear English (UK)</button>
+        <button onclick="speakVocab('vi-VN')" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm shadow">🔊 Nghe tiếng Việt</button>
+      </div>
+
+      <div id="vmSvg" class="my-5 bg-slate-50 rounded-2xl border-2 border-slate-200 p-4 flex items-center justify-center min-h-[145px]"></div>
+
+      <p id="vmDef" class="text-base sm:text-lg font-bold text-slate-800 leading-relaxed"></p>
+      <p id="vmDefVn" class="text-sm font-semibold text-slate-500 mt-1.5"></p>
+    </div>
+  </div>
+
+  <!-- ==================== GIANT PROJECTION MODAL (STATION 3) ==================== -->
+  <div id="giantModal" class="hidden fixed inset-0 z-[72] bg-indigo-950/95 backdrop-blur-md flex items-center justify-center p-6">
+    <div class="bg-white rounded-3xl max-w-5xl w-full p-8 shadow-2xl border-4 border-amber-400 relative">
+      <button onclick="closeGiantModal()" class="absolute top-5 right-5 px-4 py-2 rounded-xl bg-rose-600 text-white font-black text-sm">Close (Esc)</button>
+      <div id="giantTitle" class="text-xs font-black uppercase tracking-widest text-indigo-600 mb-2">Giant Projection Mode</div>
+      <div id="giantHeadline" class="text-4xl sm:text-6xl font-black text-indigo-950 leading-tight mb-6"></div>
+      <div id="giantVisual" class="bg-slate-50 rounded-2xl p-6 border-2 border-slate-200 flex items-center justify-center"></div>
+      <div id="giantTakeaway" class="mt-5 text-2xl sm:text-3xl font-extrabold text-emerald-800 text-center"></div>
+    </div>
+  </div>
+
+  <!-- ==================== TEACHER PROMPT DRAWER (SHORTCUT: T, z-[75]) ==================== -->
+  <aside id="teacherDrawer" class="hidden fixed top-0 right-0 bottom-0 w-full max-w-md bg-slate-950 text-white z-[75] shadow-2xl border-l-4 border-amber-400 p-6 overflow-y-auto">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
+      <div>
+        <span class="text-xs font-black uppercase text-amber-400">Hidden Teacher Prompt Drawer</span>
+        <h3 class="text-xl font-black">Live Intervention &amp; Pacing (70 mins)</h3>
+      </div>
+      <button onclick="toggleTeacherDrawer()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-rose-600 font-black">✕</button>
+    </div>
+    <div class="space-y-4 text-sm">
+      <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800">
+        <div class="font-black text-cyan-300 uppercase text-xs mb-1">Timing Roadmap (70 Minutes)</div>
+        <ul class="space-y-1 text-slate-200">
+          <li>• St 0 &amp; 1 (LO + Flashback 3): <strong>8 mins</strong></li>
+          <li>• St 2 (Bilingual Vocab + Real Life): <strong>6 mins</strong></li>
+          <li>• St 3 (I Do: Top 3 Exam Traps): <strong>14 mins</strong></li>
+          <li>• St 4 (Classroom Kit + Virtual Fault-Doctor): <strong>16 mins</strong></li>
+          <li>• Worksheet 2 Pre-Assessment Practice: <strong>14 mins</strong></li>
+          <li>• St 5 &amp; 6 (SC Check + 10-Q Finale): <strong>12 mins</strong></li>
+        </ul>
+      </div>
+      <div class="p-4 rounded-2xl bg-rose-950/60 border border-rose-500/50">
+        <div class="font-black text-rose-300 uppercase text-xs mb-1">Red-Flag Hinge Check</div>
+        <p class="text-slate-100">Watch for pupils drawing wires straight through the empty cell gap, placing lamps on 90° corners, or claiming "Bulb 1 is brighter because electricity hits it first".</p>
+      </div>
+      <div class="p-4 rounded-2xl bg-amber-950/50 border border-amber-500/50">
+        <div class="font-black text-amber-300 uppercase text-xs mb-1">Teacher Support Table</div>
+        <p class="text-slate-100">Use physical kit bulbs in series so stuck learners see both bulbs glow identically dim. Coach drawing a neat ruler rectangle FIRST, then erasing small gaps to insert each symbol.</p>
+      </div>
+      <div class="p-4 rounded-2xl bg-indigo-950/70 border border-indigo-400/50">
+        <div class="font-black text-indigo-300 uppercase text-xs mb-1">Whole-Class Backup Pivot (&gt;30% Stuck)</div>
+        <p class="text-slate-100">Run a 3-minute "Symbol Speed-Draw" on mini-whiteboards: hold up Cell, 2-Cell Battery, Open Switch, Lamp, and Buzzer in 10 seconds each before handing out Worksheet 2.</p>
+      </div>
+      <div class="p-3 rounded-xl bg-slate-900 text-xs text-slate-400">
+        Shortcuts: <strong>← / →</strong> Stations • <strong>W</strong> David's Board • <strong>T</strong> Teacher Drawer • <strong>M</strong> Mute • <strong>Esc</strong> Close Modals
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==================== DAVID'S BOARD (DPR-SAFE WHITEBOARD, SHORTCUT: W) ==================== -->
+  <div id="whiteboardModal" class="hidden fixed inset-0 z-[80] bg-slate-950/85 backdrop-blur-sm flex flex-col p-4">
+    <div class="bg-indigo-950 text-white rounded-t-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-2 border-b border-indigo-700">
+      <div class="flex items-center gap-2">
+        <span class="font-black text-amber-400">David's Board</span>
+        <span class="text-xs text-indigo-200 hidden sm:inline">Sketch neat ruler-straight circuits &amp; symbols</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="setPen('#0f172a', 3)" class="w-7 h-7 rounded-full bg-slate-900 border-2 border-white" title="Black Pen"></button>
+        <button onclick="setPen('#dc2626', 3.5)" class="w-7 h-7 rounded-full bg-red-600 border-2 border-white" title="Red Pen"></button>
+        <button onclick="setPen('#2563eb', 3.5)" class="w-7 h-7 rounded-full bg-blue-600 border-2 border-white" title="Blue Pen"></button>
+        <button onclick="setPen('#059669', 3.5)" class="w-7 h-7 rounded-full bg-emerald-600 border-2 border-white" title="Green Pen"></button>
+        <button onclick="setPen('#ffffff', 22)" class="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold">Eraser</button>
+        <button onclick="toggleWbGrid()" class="px-2.5 py-1 rounded-lg bg-indigo-700 hover:bg-indigo-600 text-xs font-bold">Toggle Dot Grid</button>
+        <button onclick="clearWhiteboard()" class="px-2.5 py-1 rounded-lg bg-amber-500 text-indigo-950 text-xs font-black">Clear</button>
+        <button onclick="toggleWhiteboard()" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-xs font-black">Close (W / Esc)</button>
+      </div>
+    </div>
+    <div id="wbWrap" class="flex-1 bg-white rounded-b-2xl overflow-hidden relative shadow-2xl" style="background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 24px 24px;">
+      <canvas id="wbCanvas" class="w-full h-full touch-none cursor-crosshair block"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // ================= AUDIO ENGINE (OFFLINE WEB AUDIO API) =================
+    let isMuted = false;
+    let audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+    function playChime(type = 'pop') {
+      if (isMuted) return;
+      try {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        if (type === 'success') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.09);
+          osc.frequency.setValueAtTime(783.99, now + 0.18);
+          gain.gain.setValueAtTime(0.16, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.42);
+          osc.start(now); osc.stop(now + 0.43);
+        } else if (type === 'alert') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(660, now);
+          osc.frequency.setValueAtTime(880, now + 0.12);
+          osc.frequency.setValueAtTime(660, now + 0.24);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.48);
+          osc.start(now); osc.stop(now + 0.5);
+        } else {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(480, now);
+          osc.frequency.exponentialRampToValueAtTime(680, now + 0.08);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+          osc.start(now); osc.stop(now + 0.15);
+        }
+      } catch (e) {}
+    }
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('muteBtn').textContent = isMuted ? '🔇 Muted (M)' : '🔊 Sound (M)';
+    }
+
+    // ================= AUTO-HIDING HEADER =================
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const cur = window.scrollY || 0;
+      const hdr = document.getElementById('topHeader');
+      if (cur > lastScroll && cur > 60) {
+        hdr.classList.add('header-hidden');
+      } else {
+        hdr.classList.remove('header-hidden');
+      }
+      lastScroll = cur <= 0 ? 0 : cur;
+    });
+
+    // ================= STATION NAVIGATION =================
+    let currentStation = 0;
+    const totalStations = 7;
+    function showStation(idx) {
+      if (idx < 0 || idx >= totalStations) return;
+      currentStation = idx;
+      document.querySelectorAll('.station-panel').forEach((sec, i) => {
+        sec.classList.toggle('hidden', i !== idx);
+      });
+      document.querySelectorAll('.station-btn').forEach(btn => {
+        btn.classList.toggle('active-tab', Number(btn.dataset.station) === idx);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      playChime('pop');
+    }
+
+    // ================= SCOREBOARD & CONFETTI =================
+    const scores = { red: 0, blue: 0 };
+    function addScore(team, delta) {
+      scores[team] = Math.max(0, scores[team] + delta);
+      document.getElementById('headerScoreRed').textContent = scores.red;
+      document.getElementById('headerScoreBlue').textContent = scores.blue;
+      document.getElementById('qfScoreRed').textContent = scores.red;
+      document.getElementById('qfScoreBlue').textContent = scores.blue;
+      playChime('success');
+    }
+    function launchConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const pieces = Array.from({ length: 110 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 180,
+        r: 5 + Math.random() * 6,
+        vx: (Math.random() - 0.5) * 6,
+        vy: 3 + Math.random() * 5,
+        c: ['#f59e0b', '#06b6d4', '#10b981', '#ef4444', '#6366f1'][Math.floor(Math.random() * 5)],
+        rot: Math.random() * 360
+      }));
+      let frames = 0;
+      function tick() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.x += p.vx; p.y += p.vy; p.rot += 6;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot * Math.PI / 180);
+          ctx.fillStyle = p.c;
+          ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 0.6);
+          ctx.restore();
+        });
+        frames++;
+        if (frames < 130) requestAnimationFrame(tick);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      tick();
+    }
+    function celebrateWinner() {
+      playChime('success');
+      launchConfetti();
+    }
+
+    // ================= STATION 1: FLASHBACK 3 =================
+    function flipCard(scene) {
+      scene.querySelector('.flip-card').classList.toggle('is-flipped');
+      playChime('pop');
+    }
+    function resetFlashbacks() {
+      document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('is-flipped'));
+      playChime('pop');
+    }
+
+    // ================= STATION 2: OFFICIAL SYMBOL VOCAB MODAL (SOLE VIETNAMESE ZONE) =================
+    const vocabItems = [
+      {
+        en: 'Conventional symbol',
+        vn: 'Ký hiệu quy ước chuẩn',
+        defEn: 'An agreed standard drawing used by scientists everywhere to show a circuit component clearly.',
+        defVn: 'Ký hiệu tiêu chuẩn thống nhất giúp các nhà khoa học trên toàn thế giới đọc sơ đồ mạch điện.',
+        svg: `<svg viewBox="0 0 260 90" width="240" height="82">
+          <line x1="15" y1="45" x2="62" y2="45" stroke="#0f172a" stroke-width="3"/>
+          <line x1="62" y1="22" x2="62" y2="68" stroke="#0f172a" stroke-width="3"/>
+          <line x1="74" y1="33" x2="74" y2="57" stroke="#0f172a" stroke-width="6.5"/>
+          <line x1="74" y1="45" x2="125" y2="45" stroke="#0f172a" stroke-width="3"/>
+          <circle cx="145" cy="45" r="20" fill="#ffffff" stroke="#0f172a" stroke-width="3"/>
+          <line x1="130.9" y1="30.9" x2="159.1" y2="59.1" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="159.1" y1="30.9" x2="130.9" y2="59.1" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="165" y1="45" x2="245" y2="45" stroke="#0f172a" stroke-width="3"/>
+          <text x="53" y="20" font-size="13" font-weight="900" fill="#dc2626">+</text>
+          <text x="79" y="24" font-size="14" font-weight="900" fill="#2563eb">−</text>
+        </svg>`
+      },
+      {
+        en: 'Cell',
+        vn: 'Pin đơn (1 nguồn điện)',
+        defEn: 'A single electrical power unit: tall thin positive (+) plate, CLEAN EMPTY GAP, short thick negative (−) plate.',
+        defVn: 'Một viên pin đơn: vạch dài mảnh là cực dương (+), khoảng trống sạch ở giữa, vạch ngắn dày là cực âm (−).',
+        svg: `<svg viewBox="0 0 220 90" width="210" height="84">
+          <line x1="20" y1="45" x2="96" y2="45" stroke="#0f172a" stroke-width="3.5"/>
+          <line x1="96" y1="18" x2="96" y2="72" stroke="#0f172a" stroke-width="3"/>
+          <line x1="112" y1="31" x2="112" y2="59" stroke="#0f172a" stroke-width="7"/>
+          <line x1="112" y1="45" x2="200" y2="45" stroke="#0f172a" stroke-width="3.5"/>
+          <text x="80" y="22" font-size="16" font-weight="900" fill="#dc2626">+</text>
+          <text x="120" y="25" font-size="18" font-weight="900" fill="#2563eb">−</text>
+          <text x="104" y="84" text-anchor="middle" font-size="11" font-weight="800" fill="#059669">Clean empty gap!</text>
+        </svg>`
+      },
+      {
+        en: 'Battery',
+        vn: 'Bộ pin (2 pin trở lên)',
+        defEn: 'Two or more cells joined cleanly + to − so their pushes add together (e.g. 1.5 V + 1.5 V = 3.0 V).',
+        defVn: 'Từ hai pin đơn trở lên nối tiếp sạch sẽ cực + với cực − để cộng lực đẩy điện áp.',
+        svg: `<svg viewBox="0 0 260 90" width="240" height="84">
+          <line x1="18" y1="45" x2="76" y2="45" stroke="#0f172a" stroke-width="3.5"/>
+          <line x1="76" y1="18" x2="76" y2="72" stroke="#0f172a" stroke-width="3"/>
+          <line x1="90" y1="31" x2="90" y2="59" stroke="#0f172a" stroke-width="7"/>
+          <line x1="90" y1="45" x2="152" y2="45" stroke="#0f172a" stroke-width="3.5"/>
+          <line x1="152" y1="18" x2="152" y2="72" stroke="#0f172a" stroke-width="3"/>
+          <line x1="166" y1="31" x2="166" y2="59" stroke="#0f172a" stroke-width="7"/>
+          <line x1="166" y1="45" x2="242" y2="45" stroke="#0f172a" stroke-width="3.5"/>
+          <text x="64" y="22" font-size="15" font-weight="900" fill="#dc2626">+</text>
+          <text x="174" y="24" font-size="17" font-weight="900" fill="#2563eb">−</text>
+          <text x="121" y="83" text-anchor="middle" font-size="11" font-weight="800" fill="#4f46e5">1.5 V + 1.5 V = 3.0 V</text>
+        </svg>`
+      },
+      {
+        en: 'Lamp & Buzzer',
+        vn: 'Bóng đèn & Chuông điện',
+        defEn: 'Lamp: opaque circle with edge-to-edge diagonal ×. Buzzer: semicircle dome with two parallel legs (never short across legs!).',
+        defVn: 'Đèn: hình tròn có dấu × chạm viền. Chuông điện: vòm bán nguyệt với hai chân song song.',
+        svg: `<svg viewBox="0 0 280 95" width="260" height="88">
+          <!-- Lamp -->
+          <line x1="12" y1="48" x2="46" y2="48" stroke="#0f172a" stroke-width="3"/>
+          <circle cx="68" cy="48" r="22" fill="#fef3c7" stroke="#0f172a" stroke-width="3"/>
+          <line x1="52.4" y1="32.4" x2="83.6" y2="63.6" stroke="#0f172a" stroke-width="3"/>
+          <line x1="83.6" y1="32.4" x2="52.4" y2="63.6" stroke="#0f172a" stroke-width="3"/>
+          <line x1="90" y1="48" x2="124" y2="48" stroke="#0f172a" stroke-width="3"/>
+          <text x="68" y="86" text-anchor="middle" font-size="11" font-weight="800" fill="#0f172a">Lamp</text>
+          <!-- Buzzer -->
+          <line x1="150" y1="62" x2="195" y2="62" stroke="#0f172a" stroke-width="3"/>
+          <line x1="195" y1="62" x2="195" y2="42" stroke="#0f172a" stroke-width="3"/>
+          <line x1="219" y1="62" x2="219" y2="42" stroke="#0f172a" stroke-width="3"/>
+          <line x1="219" y1="62" x2="266" y2="62" stroke="#0f172a" stroke-width="3"/>
+          <path d="M 183 42 A 24 24 0 0 1 231 42 Z" fill="#ffffff" stroke="#0f172a" stroke-width="3"/>
+          <text x="207" y="86" text-anchor="middle" font-size="11" font-weight="800" fill="#0f172a">Buzzer</text>
+        </svg>`
+      },
+      {
+        en: 'Series circuit',
+        vn: 'Mạch điện mắc nối tiếp',
+        defEn: 'A single continuous loop. Lamps share the voltage equally; if one bulb breaks, every bulb goes out.',
+        defVn: 'Một vòng dây kín duy nhất. Các bóng đèn chia đều điện áp; nếu 1 đèn hỏng, tất cả cùng tắt.',
+        svg: `<svg viewBox="0 0 240 100" width="225" height="92">
+          <polyline points="28,22 104,22" fill="none" stroke="#0f172a" stroke-width="3"/>
+          <line x1="104" y1="8" x2="104" y2="36" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="116" y1="15" x2="116" y2="29" stroke="#0f172a" stroke-width="6"/>
+          <polyline points="116,22 212,22 212,78 168,78" fill="none" stroke="#0f172a" stroke-width="3"/>
+          <line x1="140" y1="78" x2="100" y2="78" stroke="#0f172a" stroke-width="3"/>
+          <polyline points="72,78 28,78 28,22" fill="none" stroke="#0f172a" stroke-width="3"/>
+          <circle cx="86" cy="78" r="14" fill="#fde68a" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="76.1" y1="68.1" x2="95.9" y2="87.9" stroke="#0f172a" stroke-width="2.3"/>
+          <line x1="95.9" y1="68.1" x2="76.1" y2="87.9" stroke="#0f172a" stroke-width="2.3"/>
+          <circle cx="154" cy="78" r="14" fill="#fde68a" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="144.1" y1="68.1" x2="163.9" y2="87.9" stroke="#0f172a" stroke-width="2.3"/>
+          <line x1="163.9" y1="68.1" x2="144.1" y2="87.9" stroke="#0f172a" stroke-width="2.3"/>
+        </svg>`
+      },
+      {
+        en: 'Parallel circuit',
+        vn: 'Mạch điện mắc song song',
+        defEn: 'Separate branches for each lamp. Every branch gets the full battery voltage, and other lamps stay lit if one breaks.',
+        defVn: 'Mỗi bóng đèn nằm trên một nhánh riêng. Mọi đèn đều sáng tối đa và không tắt khi nhánh khác hỏng.',
+        svg: `<svg viewBox="0 0 240 112" width="225" height="104">
+          <polyline points="30,20 106,20" fill="none" stroke="#0f172a" stroke-width="3"/>
+          <line x1="106" y1="8" x2="106" y2="32" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="118" y1="14" x2="118" y2="26" stroke="#0f172a" stroke-width="6"/>
+          <polyline points="118,20 210,20 210,94 134,94" fill="none" stroke="#0f172a" stroke-width="3"/>
+          <polyline points="106,94 30,94 30,20" fill="none" stroke="#0f172a" stroke-width="3"/>
+          <line x1="30" y1="58" x2="106" y2="58" stroke="#0f172a" stroke-width="3"/>
+          <line x1="134" y1="58" x2="210" y2="58" stroke="#0f172a" stroke-width="3"/>
+          <circle cx="120" cy="58" r="14" fill="#fcd34d" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="110.1" y1="48.1" x2="129.9" y2="67.9" stroke="#0f172a" stroke-width="2.3"/>
+          <line x1="129.9" y1="48.1" x2="110.1" y2="67.9" stroke="#0f172a" stroke-width="2.3"/>
+          <circle cx="120" cy="94" r="14" fill="#fcd34d" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="110.1" y1="84.1" x2="129.9" y2="103.9" stroke="#0f172a" stroke-width="2.3"/>
+          <line x1="129.9" y1="84.1" x2="110.1" y2="103.9" stroke="#0f172a" stroke-width="2.3"/>
+        </svg>`
+      },
+      {
+        en: 'Voltage (V)',
+        vn: 'Hiệu điện thế / Điện áp (V)',
+        defEn: 'The electrical push provided by a cell or battery, measured in volts (V). More voltage gives brighter lamps.',
+        defVn: 'Lực đẩy dòng điện của pin hoặc bộ pin, đo bằng đơn vị vôn (V). Điện áp lớn hơn giúp đèn sáng hơn.',
+        svg: `<svg viewBox="0 0 240 86" width="225" height="80">
+          <rect x="20" y="18" width="200" height="50" rx="14" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/>
+          <text x="120" y="50" text-anchor="middle" font-size="22" font-weight="900" fill="#1e1b4b">1.5 V  ➔  3.0 V  ➔  4.5 V</text>
+        </svg>`
+      },
+      {
+        en: 'Reversed cell',
+        vn: 'Pin lắp ngược chiều',
+        defEn: 'When two cells face + to + or − to −, their pushes cancel out to 0 V so lamps stay dark.',
+        defVn: 'Khi hai pin đặt cùng cực + đối + hoặc − đối −, lực đẩy triệt tiêu về 0 V khiến đèn không sáng.',
+        svg: `<svg viewBox="0 0 260 90" width="240" height="84">
+          <line x1="18" y1="45" x2="76" y2="45" stroke="#0f172a" stroke-width="3.5"/>
+          <line x1="76" y1="18" x2="76" y2="72" stroke="#0f172a" stroke-width="3"/>
+          <line x1="90" y1="31" x2="90" y2="59" stroke="#0f172a" stroke-width="7"/>
+          <line x1="90" y1="45" x2="152" y2="45" stroke="#dc2626" stroke-width="3.5"/>
+          <line x1="152" y1="31" x2="152" y2="59" stroke="#0f172a" stroke-width="7"/>
+          <line x1="166" y1="18" x2="166" y2="72" stroke="#0f172a" stroke-width="3"/>
+          <line x1="166" y1="45" x2="242" y2="45" stroke="#0f172a" stroke-width="3.5"/>
+          <text x="97" y="28" font-size="15" font-weight="900" fill="#dc2626">−</text>
+          <text x="137" y="28" font-size="15" font-weight="900" fill="#dc2626">−</text>
+          <text x="121" y="83" text-anchor="middle" font-size="11" font-weight="900" fill="#dc2626">Opposing pushes = 0 V!</text>
+        </svg>`
+      },
+      {
+        en: 'Open & Closed Switch',
+        vn: 'Công tắc mở & Công tắc đóng',
+        defEn: 'Two open circles with an angled arm (open = gap stops current) or straight bar (closed = complete pathway).',
+        defVn: 'Hai vòng tròn rỗng có thanh gạt nâng lên (mở = ngắt mạch) hoặc nối thẳng (đóng = kín mạch).',
+        svg: `<svg viewBox="0 0 260 90" width="240" height="84">
+          <line x1="15" y1="50" x2="44" y2="50" stroke="#0f172a" stroke-width="3"/>
+          <circle cx="50" cy="50" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="55" y1="46" x2="94" y2="25" stroke="#dc2626" stroke-width="3.2"/>
+          <circle cx="96" cy="50" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="102" y1="50" x2="125" y2="50" stroke="#0f172a" stroke-width="3"/>
+          <text x="73" y="80" text-anchor="middle" font-size="11" font-weight="800" fill="#dc2626">Open (OFF)</text>
+          <line x1="140" y1="50" x2="164" y2="50" stroke="#0f172a" stroke-width="3"/>
+          <circle cx="170" cy="50" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="176" y1="50" x2="210" y2="50" stroke="#059669" stroke-width="3.2"/>
+          <circle cx="216" cy="50" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="2.8"/>
+          <line x1="222" y1="50" x2="248" y2="50" stroke="#0f172a" stroke-width="3"/>
+          <text x="193" y="80" text-anchor="middle" font-size="11" font-weight="800" fill="#059669">Closed (ON)</text>
+        </svg>`
+      }
+    ];
+
+    let activeVocabIndex = 0;
+    function renderVocabGrid() {
+      const grid = document.getElementById('vocabGrid');
+      grid.innerHTML = vocabItems.map((v, i) => `
+        <button onclick="openVocabModal(${i})" class="bg-white hover:bg-indigo-50 border-2 border-indigo-100 hover:border-indigo-400 rounded-2xl p-4 shadow-sm hover:shadow-md transition text-left flex flex-col justify-between">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-base sm:text-lg font-black text-indigo-950">${v.en}</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 font-bold shrink-0">Tap</span>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-2 flex items-center justify-center border border-slate-200">${v.svg}</div>
+        </button>
+      `).join('');
+    }
+    function openVocabModal(i) {
+      activeVocabIndex = i;
+      const v = vocabItems[i];
+      document.getElementById('vmEn').textContent = v.en;
+      document.getElementById('vmVn').textContent = v.vn;
+      document.getElementById('vmSvg').innerHTML = v.svg;
+      document.getElementById('vmDef').textContent = v.defEn;
+      document.getElementById('vmDefVn').textContent = v.defVn;
+      document.getElementById('vocabModal').classList.remove('hidden');
+      playChime('pop');
+    }
+    function closeVocabModal() {
+      if ('speechSynthesis' in window) speechSynthesis.cancel();
+      document.getElementById('vocabModal').classList.add('hidden');
+    }
+    function speakVocab(lang) {
+      if (!('speechSynthesis' in window)) return;
+      speechSynthesis.cancel();
+      const v = vocabItems[activeVocabIndex];
+      const u = new SpeechSynthesisUtterance(lang === 'vi-VN' ? `${v.vn}. ${v.defVn}` : `${v.en}. ${v.defEn}`);
+      u.lang = lang;
+      u.rate = 0.92;
+      speechSynthesis.speak(u);
+    }
+
+    // ================= STATION 3: FULL-SCREEN VISUAL I DO (TOP 3 EXAM TRAPS) =================
+    let activeTrap = 0;
+    let trapFixed = false;
+    const traps = [
+      {
+        title: 'Trap 1: Official Symbol & Corner Drawing Errors',
+        wrongLabel: 'EXAM TRAP: Wire drawn through cell gap + Lamp placed on corner!',
+        fixedLabel: 'FULL MARKS: Clean empty cell gap + 90° corners + Opaque lamp centred on side!',
+        giantHeadline: 'NEVER draw wires through a cell gap or put lamps on corners!',
+        giantTakeaway: 'Tall thin (+), CLEAN EMPTY GAP, short thick (−), neat ruler 90° corners!',
+        render(fixed) {
+          if (!fixed) {
+            return `<svg viewBox="0 0 600 220" class="w-full max-w-xl mx-auto">
+              <!-- Flawed diagram -->
+              <rect x="70" y="34" width="460" height="150" fill="none" stroke="#94a3b8" stroke-width="3.5"/>
+              <!-- Wire cutting straight through cell gap (WRONG) -->
+              <line x1="278" y1="12" x2="278" y2="56" stroke="#0f172a" stroke-width="3"/>
+              <line x1="294" y1="22" x2="294" y2="46" stroke="#0f172a" stroke-width="7"/>
+              <line x1="255" y1="34" x2="320" y2="34" stroke="#dc2626" stroke-width="3.5"/>
+              <circle cx="286" cy="34" r="24" fill="none" stroke="#dc2626" stroke-width="3" stroke-dasharray="5 4"/>
+              <text x="286" y="82" text-anchor="middle" font-size="13" font-weight="900" fill="#dc2626">✗ Wire through cell gap!</text>
+              <!-- Lamp placed ON corner (WRONG) -->
+              <circle cx="530" cy="184" r="22" fill="#fee2e2" stroke="#dc2626" stroke-width="3"/>
+              <line x1="514.4" y1="168.4" x2="545.6" y2="199.6" stroke="#dc2626" stroke-width="3"/>
+              <line x1="545.6" y1="168.4" x2="514.4" y2="199.6" stroke="#dc2626" stroke-width="3"/>
+              <text x="455" y="210" text-anchor="middle" font-size="13" font-weight="900" fill="#dc2626">✗ Lamp on a corner!</text>
+            </svg>`;
+          }
+          return `<svg viewBox="0 0 600 220" class="w-full max-w-xl mx-auto">
+            <!-- Neat official Cambridge circuit -->
+            <polyline points="70,38 278,38" fill="none" stroke="#0f172a" stroke-width="4"/>
+            <!-- Clean empty cell gap -->
+            <line x1="278" y1="14" x2="278" y2="62" stroke="#0f172a" stroke-width="3"/>
+            <line x1="296" y1="25" x2="296" y2="51" stroke="#0f172a" stroke-width="7.5"/>
+            <text x="262" y="22" font-size="16" font-weight="900" fill="#dc2626">+</text>
+            <text x="304" y="25" font-size="18" font-weight="900" fill="#2563eb">−</text>
+            <polyline points="296,38 530,38 530,180 314,180" fill="none" stroke="#0f172a" stroke-width="4"/>
+            <polyline points="266,180 70,180 70,38" fill="none" stroke="#0f172a" stroke-width="4"/>
+            <!-- Animated flow ONLY on closed wire segments, stopping before cell gap -->
+            <polyline points="296,38 530,38 530,180 314,180" fill="none" stroke="#f59e0b" stroke-width="3" class="current-flow"/>
+            <polyline points="266,180 70,180 70,38 278,38" fill="none" stroke="#f59e0b" stroke-width="3" class="current-flow"/>
+            <!-- Opaque lamp centred neatly on bottom side -->
+            <circle cx="290" cy="180" r="24" fill="#fef08a" stroke="#0f172a" stroke-width="3.5" class="lamp-bright"/>
+            <line x1="273.0" y1="163.0" x2="307.0" y2="197.0" stroke="#0f172a" stroke-width="3.2"/>
+            <line x1="307.0" y1="163.0" x2="273.0" y2="197.0" stroke="#0f172a" stroke-width="3.2"/>
+            <text x="287" y="84" text-anchor="middle" font-size="13" font-weight="900" fill="#059669">✓ Clean empty cell gap</text>
+            <text x="290" y="142" text-anchor="middle" font-size="13" font-weight="900" fill="#059669">✓ Lamp centred on straight wire (90° corners!)</text>
+          </svg>`;
+        }
+      },
+      {
+        title: 'Trap 2: The "Bulb 1 Is Brighter" Series Myth',
+        wrongLabel: 'MYTH: "Lamp 1 is bright and Lamp 2 is dim because electricity hits Lamp 1 first!"',
+        fixedLabel: 'FACT: In a 3.0 V series loop, BOTH identical lamps share the push equally (1.5 V & 1.5 V) = EQUALLY DIM!',
+        giantHeadline: 'In Series, BOTH Identical Bulbs Glow Equally Dim!',
+        giantTakeaway: '3.0 V shared by 2 series lamps = 1.5 V each (50 lux & 50 lux — NEVER one bright, one dim!)',
+        render(fixed) {
+          const l1Fill = fixed ? '#fde68a' : '#facc15';
+          const l2Fill = fixed ? '#fde68a' : '#e2e8f0';
+          const l1Text = fixed ? '1.5 V • 50 lux (Equal!)' : 'WRONG: "Bright first?"';
+          const l2Text = fixed ? '1.5 V • 50 lux (Equal!)' : 'WRONG: "Leftover dim?"';
+          return `<svg viewBox="0 0 600 225" class="w-full max-w-xl mx-auto">
+            <polyline points="60,38 238,38" fill="none" stroke="#0f172a" stroke-width="4"/>
+            <!-- 2-cell battery (3.0 V) -->
+            <line x1="238" y1="16" x2="238" y2="60" stroke="#0f172a" stroke-width="3"/>
+            <line x1="252" y1="26" x2="252" y2="50" stroke="#0f172a" stroke-width="7"/>
+            <line x1="252" y1="38" x2="306" y2="38" stroke="#0f172a" stroke-width="4"/>
+            <line x1="306" y1="16" x2="306" y2="60" stroke="#0f172a" stroke-width="3"/>
+            <line x1="320" y1="26" x2="320" y2="50" stroke="#0f172a" stroke-width="7"/>
+            <polyline points="320,38 540,38 540,164 424,164" fill="none" stroke="#0f172a" stroke-width="4"/>
+            <line x1="376" y1="164" x2="224" y2="164" stroke="#0f172a" stroke-width="4"/>
+            <polyline points="176,164 60,164 60,38" fill="none" stroke="#0f172a" stroke-width="4"/>
+            ${fixed ? `
+              <polyline points="320,38 540,38 540,164 424,164" fill="none" stroke="#0284c7" stroke-width="3" class="current-flow-slow"/>
+              <line x1="376" y1="164" x2="224" y2="164" stroke="#0284c7" stroke-width="3" class="current-flow-slow"/>
+              <polyline points="176,164 60,164 60,38 238,38" fill="none" stroke="#0284c7" stroke-width="3" class="current-flow-slow"/>
+            ` : ''}
+            <text x="279" y="80" text-anchor="middle" font-size="13" font-weight="900" fill="#1e1b4b">3.0 V Battery (2 Cells)</text>
+            <!-- Lamp 1 -->
+            <circle cx="200" cy="164" r="24" fill="${l1Fill}" stroke="#0f172a" stroke-width="3.5"/>
+            <line x1="183.0" y1="147.0" x2="217.0" y2="181.0" stroke="#0f172a" stroke-width="3"/>
+            <line x1="217.0" y1="147.0" x2="183.0" y2="181.0" stroke="#0f172a" stroke-width="3"/>
+            <text x="200" y="208" text-anchor="middle" font-size="13" font-weight="900" fill="${fixed ? '#059669' : '#dc2626'}">${l1Text}</text>
+            <!-- Lamp 2 -->
+            <circle cx="400" cy="164" r="24" fill="${l2Fill}" stroke="#0f172a" stroke-width="3.5"/>
+            <line x1="383.0" y1="147.0" x2="417.0" y2="181.0" stroke="#0f172a" stroke-width="3"/>
+            <line x1="417.0" y1="147.0" x2="383.0" y2="181.0" stroke="#0f172a" stroke-width="3"/>
+            <text x="400" y="208" text-anchor="middle" font-size="13" font-weight="900" fill="${fixed ? '#059669' : '#dc2626'}">${l2Text}</text>
+          </svg>`;
+        }
+      },
+      {
+        title: 'Trap 3: The Reversed Cell (Opposing Push = 0 V)',
+        wrongLabel: 'EXAM TRAP: Two 1.5 V cells placed − facing − cancel out: 1.5 V − 1.5 V = 0 V (DARK!)',
+        fixedLabel: 'WORKED FIX: Flip Cell 2 so + connects to − cleanly: 1.5 V + 1.5 V = 3.0 V (BRIGHT!)',
+        giantHeadline: 'Reversed Cell (+ to + or − to −) Cancels Push to 0 V!',
+        giantTakeaway: 'Always line up cells nose-to-tail: (+ −) joined to (+ −) adds voltages together!',
+        render(fixed) {
+          return `<svg viewBox="0 0 600 225" class="w-full max-w-xl mx-auto">
+            <polyline points="65,40 226,40" fill="none" stroke="#0f172a" stroke-width="4"/>
+            <!-- Cell 1: + left (226), - right (240) -->
+            <line x1="226" y1="18" x2="226" y2="62" stroke="#0f172a" stroke-width="3"/>
+            <line x1="240" y1="28" x2="240" y2="52" stroke="#0f172a" stroke-width="7"/>
+            <text x="212" y="24" font-size="15" font-weight="900" fill="#dc2626">+</text>
+            <text x="247" y="25" font-size="16" font-weight="900" fill="#2563eb">−</text>
+            <!-- Connector wire between cells -->
+            <line x1="240" y1="40" x2="316" y2="40" stroke="${fixed ? '#0f172a' : '#dc2626'}" stroke-width="4"/>
+            ${fixed ? `
+              <!-- Cell 2 FIXED: + left (316), - right (330) -->
+              <line x1="316" y1="18" x2="316" y2="62" stroke="#0f172a" stroke-width="3"/>
+              <line x1="330" y1="28" x2="330" y2="52" stroke="#0f172a" stroke-width="7"/>
+              <text x="301" y="24" font-size="15" font-weight="900" fill="#dc2626">+</text>
+              <text x="337" y="25" font-size="16" font-weight="900" fill="#2563eb">−</text>
+              <text x="280" y="84" text-anchor="middle" font-size="14" font-weight="900" fill="#059669">✓ 1.5 V + 1.5 V = 3.0 V (PUSH ADDS!)</text>
+            ` : `
+              <!-- Cell 2 REVERSED: - left (316), + right (330) -> - facing - -->
+              <line x1="316" y1="28" x2="316" y2="52" stroke="#0f172a" stroke-width="7"/>
+              <line x1="330" y1="18" x2="330" y2="62" stroke="#0f172a" stroke-width="3"/>
+              <text x="301" y="25" font-size="16" font-weight="900" fill="#dc2626">−</text>
+              <text x="337" y="24" font-size="15" font-weight="900" fill="#dc2626">+</text>
+              <text x="280" y="84" text-anchor="middle" font-size="14" font-weight="900" fill="#dc2626">✗ − facing − : 1.5 V − 1.5 V = 0 V!</text>
+            `}
+            <polyline points="330,40 535,40 535,172 324,172" fill="none" stroke="#0f172a" stroke-width="4"/>
+            <polyline points="276,172 65,172 65,40" fill="none" stroke="#0f172a" stroke-width="4"/>
+            ${fixed ? `
+              <polyline points="330,40 535,40 535,172 324,172" fill="none" stroke="#f59e0b" stroke-width="3" class="current-flow"/>
+              <polyline points="276,172 65,172 65,40 226,40" fill="none" stroke="#f59e0b" stroke-width="3" class="current-flow"/>
+            ` : ''}
+            <circle cx="300" cy="172" r="24" fill="${fixed ? '#fde047' : '#ffffff'}" stroke="#0f172a" stroke-width="3.5" class="${fixed ? 'lamp-bright' : ''}"/>
+            <line x1="283.0" y1="155.0" x2="317.0" y2="189.0" stroke="#0f172a" stroke-width="3.2"/>
+            <line x1="317.0" y1="155.0" x2="283.0" y2="189.0" stroke="#0f172a" stroke-width="3.2"/>
+            <text x="300" y="214" text-anchor="middle" font-size="13" font-weight="900" fill="${fixed ? '#059669' : '#64748b'}">${fixed ? 'BRIGHT! (100 lux)' : 'DARK (0 lux — No push!)'}</text>
+          </svg>`;
+        }
+      }
+    ];
+    function selectTrap(idx) {
+      activeTrap = idx;
+      trapFixed = false;
+      [0, 1, 2].forEach(i => {
+        const b = document.getElementById('trapBtn' + i);
+        b.className = i === idx
+          ? 'px-4 py-2 rounded-xl font-extrabold text-sm bg-indigo-600 text-white shadow'
+          : 'px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-700 hover:bg-indigo-50';
+      });
+      renderTrap();
+      playChime('pop');
+    }
+    function renderTrap() {
+      const t = traps[activeTrap];
+      document.getElementById('trapContentArea').innerHTML = `
+        <div class="flex items-center justify-between gap-2 mb-3">
+          <h3 class="text-xl font-black text-indigo-950">${t.title}</h3>
+          <span class="px-3 py-1 rounded-full text-xs font-black ${trapFixed ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${trapFixed ? 'FIXED ✓' : 'EXAM TRAP'}</span>
+        </div>
+        <div class="p-3 rounded-2xl mb-4 text-sm font-extrabold ${trapFixed ? 'bg-emerald-50 text-emerald-900 border border-emerald-300' : 'bg-rose-50 text-rose-900 border border-rose-300'}">
+          ${trapFixed ? t.fixedLabel : t.wrongLabel}
+        </div>
+        <div class="bg-slate-50 rounded-2xl p-4 border-2 border-slate-200">${t.render(trapFixed)}</div>
+      `;
+      document.getElementById('trapDemoBadge').textContent = trapFixed
+        ? 'Fixed! Toggle again to compare Before vs After.'
+        : 'Spot the mistake first, then click Animate Worked Fix!';
+    }
+    function triggerTrapDemo() {
+      trapFixed = !trapFixed;
+      renderTrap();
+      playChime(trapFixed ? 'success' : 'pop');
+    }
+    function openGiantProjection() {
+      const t = traps[activeTrap];
+      document.getElementById('giantHeadline').textContent = t.giantHeadline;
+      document.getElementById('giantVisual').innerHTML = t.render(trapFixed);
+      document.getElementById('giantTakeaway').textContent = t.giantTakeaway;
+      document.getElementById('giantModal').classList.remove('hidden');
+      playChime('pop');
+    }
+    function closeGiantModal() {
+      document.getElementById('giantModal').classList.add('hidden');
+    }
+
+    // ================= STATION 4: VIRTUAL FAULT-DOCTOR LAB =================
+    const labState = {
+      mystery: 0, // 0=Reversed Cell (series), 1=Series Break Test, 2=Parallel Break Test
+      view: 'symbol', // 'symbol' | 'picture'
+      switchClosed: true,
+      cell2Reversed: true,
+      lamp1Broken: false,
+      lamp2Broken: false,
+      showMechanism: false
+    };
+
+    function loadMystery(idx) {
+      labState.mystery = idx;
+      labState.showMechanism = false;
+      if (idx === 0) {
+        labState.switchClosed = true;
+        labState.cell2Reversed = true;
+        labState.lamp1Broken = false;
+        labState.lamp2Broken = false;
+      } else if (idx === 1) {
+        labState.switchClosed = true;
+        labState.cell2Reversed = false;
+        labState.lamp1Broken = true;
+        labState.lamp2Broken = false;
+      } else {
+        labState.switchClosed = true;
+        labState.cell2Reversed = false;
+        labState.lamp1Broken = true;
+        labState.lamp2Broken = false;
+      }
+      [0, 1, 2].forEach(i => {
+        const b = document.getElementById('mysBtn' + i);
+        b.className = i === idx
+          ? 'px-4 py-2 rounded-xl font-extrabold text-sm bg-indigo-600 text-white shadow'
+          : 'px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-700 hover:bg-indigo-50';
+      });
+      renderFaultDoctor();
+      playChime('pop');
+    }
+    function setLabView(v) {
+      labState.view = v;
+      document.getElementById('viewSymbolBtn').className = v === 'symbol'
+        ? 'px-3.5 py-1.5 rounded-xl font-black text-xs bg-indigo-950 text-white'
+        : 'px-3.5 py-1.5 rounded-xl font-black text-xs bg-slate-200 text-slate-800';
+      document.getElementById('viewPictureBtn').className = v === 'picture'
+        ? 'px-3.5 py-1.5 rounded-xl font-black text-xs bg-indigo-950 text-white'
+        : 'px-3.5 py-1.5 rounded-xl font-black text-xs bg-slate-200 text-slate-800';
+      renderFaultDoctor();
+      playChime('pop');
+    }
+    function toggleLabSwitch() { labState.switchClosed = !labState.switchClosed; renderFaultDoctor(); playChime('pop'); }
+    function toggleLabCell2() { labState.cell2Reversed = !labState.cell2Reversed; renderFaultDoctor(); playChime(labState.cell2Reversed ? 'pop' : 'success'); }
+    function toggleLabLamp1() { labState.lamp1Broken = !labState.lamp1Broken; renderFaultDoctor(); playChime('pop'); }
+    function toggleLabLamp2() { labState.lamp2Broken = !labState.lamp2Broken; renderFaultDoctor(); playChime('pop'); }
+    function toggleMechanism() { labState.showMechanism = !labState.showMechanism; renderFaultDoctor(); playChime('pop'); }
+
+    function drawBatteryBlock(xStart, y, isPicture, cell2Rev) {
+      // STRICT POLARITY MATCH: Cell 1 always + left, - right.
+      // Cell 2 normal: + left, - right. Cell 2 reversed: - left, + right (- facing -).
+      // Spans cleanly from xStart (240) to xStart+160 (400) with ZERO gaps!
+      if (!isPicture) {
+        // Official Cambridge Battery Symbols: clean empty gaps inside each cell, solid wire joining cells plate-to-plate
+        const c1Plus = xStart + 20;   // 260
+        const c1Minus = xStart + 36;  // 276
+        const c2Left = xStart + 124;  // 364
+        const c2Right = xStart + 140; // 380
+        let cell2Svg = '';
+        if (!cell2Rev) {
+          cell2Svg = `
+            <line x1="${c2Left}" y1="${y-22}" x2="${c2Left}" y2="${y+22}" stroke="#0f172a" stroke-width="3"/>
+            <line x1="${c2Right}" y1="${y-12}" x2="${c2Right}" y2="${y+12}" stroke="#0f172a" stroke-width="7.5"/>
+            <text x="${c2Left-14}" y="${y-15}" font-size="14" font-weight="900" fill="#dc2626">+</text>
+            <text x="${c2Right+8}" y="${y-13}" font-size="16" font-weight="900" fill="#2563eb">−</text>
+          `;
+        } else {
+          cell2Svg = `
+            <line x1="${c2Left}" y1="${y-12}" x2="${c2Left}" y2="${y+12}" stroke="#0f172a" stroke-width="7.5"/>
+            <line x1="${c2Right}" y1="${y-22}" x2="${c2Right}" y2="${y+22}" stroke="#0f172a" stroke-width="3"/>
+            <text x="${c2Left-16}" y="${y-13}" font-size="16" font-weight="900" fill="#dc2626">−</text>
+            <text x="${c2Right+8}" y="${y-15}" font-size="14" font-weight="900" fill="#dc2626">+</text>
+          `;
+        }
+        return `
+          <line x1="${xStart}" y1="${y}" x2="${c1Plus}" y2="${y}" stroke="#0f172a" stroke-width="4"/>
+          <line x1="${c1Plus}" y1="${y-22}" x2="${c1Plus}" y2="${y+22}" stroke="#0f172a" stroke-width="3"/>
+          <line x1="${c1Minus}" y1="${y-12}" x2="${c1Minus}" y2="${y+12}" stroke="#0f172a" stroke-width="7.5"/>
+          <text x="${c1Plus-14}" y="${y-15}" font-size="14" font-weight="900" fill="#dc2626">+</text>
+          <text x="${c1Minus+7}" y="${y-13}" font-size="16" font-weight="900" fill="#2563eb">−</text>
+          <line x1="${c1Minus}" y1="${y}" x2="${c2Left}" y2="${y}" stroke="${cell2Rev ? '#dc2626' : '#0f172a'}" stroke-width="4"/>
+          ${cell2Svg}
+          <line x1="${c2Right}" y1="${y}" x2="${xStart+160}" y2="${y}" stroke="#0f172a" stroke-width="4"/>
+        `;
+      } else {
+        // Picture View: exact same polarity! + nub on left of Cell 1; Cell 2 normal has + nub on left, reversed has + nub on right (- facing -)
+        return `
+          <line x1="${xStart}" y1="${y}" x2="${xStart+10}" y2="${y}" stroke="#0f172a" stroke-width="4"/>
+          <!-- Cell 1 (+ nub left, - flat right) -->
+          <rect x="${xStart+10}" y="${y-8}" width="7" height="16" rx="2" fill="#94a3b8" stroke="#0f172a" stroke-width="2"/>
+          <rect x="${xStart+17}" y="${y-18}" width="56" height="36" rx="5" fill="#f59e0b" stroke="#0f172a" stroke-width="2.5"/>
+          <rect x="${xStart+52}" y="${y-18}" width="21" height="36" rx="3" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>
+          <text x="${xStart+28}" y="${y+5}" font-size="15" font-weight="900" fill="#ffffff">+</text>
+          <text x="${xStart+59}" y="${y+5}" font-size="15" font-weight="900" fill="#ffffff">−</text>
+          <!-- Wire between Cell 1 and Cell 2 -->
+          <line x1="${xStart+73}" y1="${y}" x2="${xStart+87}" y2="${y}" stroke="${cell2Rev ? '#dc2626' : '#0f172a'}" stroke-width="4"/>
+          ${!cell2Rev ? `
+            <!-- Cell 2 Normal (+ nub left, - flat right) -->
+            <rect x="${xStart+87}" y="${y-8}" width="7" height="16" rx="2" fill="#94a3b8" stroke="#0f172a" stroke-width="2"/>
+            <rect x="${xStart+94}" y="${y-18}" width="56" height="36" rx="5" fill="#f59e0b" stroke="#0f172a" stroke-width="2.5"/>
+            <rect x="${xStart+129}" y="${y-18}" width="21" height="36" rx="3" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>
+            <text x="${xStart+105}" y="${y+5}" font-size="15" font-weight="900" fill="#ffffff">+</text>
+            <text x="${xStart+136}" y="${y+5}" font-size="15" font-weight="900" fill="#ffffff">−</text>
+          ` : `
+            <!-- Cell 2 Reversed (- flat left, + nub right -> - faces -) -->
+            <rect x="${xStart+87}" y="${y-18}" width="56" height="36" rx="5" fill="#f59e0b" stroke="#dc2626" stroke-width="2.5"/>
+            <rect x="${xStart+87}" y="${y-18}" width="21" height="36" rx="3" fill="#1e293b" stroke="#dc2626" stroke-width="2"/>
+            <rect x="${xStart+143}" y="${y-8}" width="7" height="16" rx="2" fill="#94a3b8" stroke="#dc2626" stroke-width="2"/>
+            <text x="${xStart+94}" y="${y+5}" font-size="15" font-weight="900" fill="#ffffff">−</text>
+            <text x="${xStart+125}" y="${y+5}" font-size="15" font-weight="900" fill="#ffffff">+</text>
+          `}
+          <line x1="${xStart+150}" y1="${y}" x2="${xStart+160}" y2="${y}" stroke="#0f172a" stroke-width="4"/>
+        `;
+      }
+    }
+
+    function drawSwitchBlock(x1, y, closed) {
+      // Spans x1 to x1+64 cleanly (circles at x1+8 and x1+56)
+      return `
+        <g class="cursor-pointer" onclick="toggleLabSwitch()">
+          <line x1="${x1}" y1="${y}" x2="${x1+4}" y2="${y}" stroke="#0f172a" stroke-width="4"/>
+          <circle cx="${x1+10}" cy="${y}" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="3"/>
+          ${closed
+            ? `<line x1="${x1+16}" y1="${y}" x2="${x1+48}" y2="${y}" stroke="#059669" stroke-width="4"/>`
+            : `<line x1="${x1+15}" y1="${y-4}" x2="${x1+50}" y2="${y-24}" stroke="#dc2626" stroke-width="4"/>`
+          }
+          <circle cx="${x1+54}" cy="${y}" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="3"/>
+          <line x1="${x1+60}" y1="${y}" x2="${x1+64}" y2="${y}" stroke="#0f172a" stroke-width="4"/>
+        </g>
+      `;
+    }
+
+    function drawLampBlock(cx, cy, litLux, broken, isPicture, label, clickFn) {
+      const fill = broken ? '#fee2e2' : (litLux >= 90 ? '#fde047' : (litLux > 0 ? '#fef3c7' : '#ffffff'));
+      const glowCls = (!broken && litLux >= 90) ? 'lamp-bright' : '';
+      if (!isPicture) {
+        return `
+          <g class="cursor-pointer" onclick="${clickFn}">
+            <circle cx="${cx}" cy="${cy}" r="22" fill="${fill}" stroke="${broken ? '#dc2626' : '#0f172a'}" stroke-width="3.5" class="${glowCls}"/>
+            <line x1="${(cx-15.6).toFixed(1)}" y1="${(cy-15.6).toFixed(1)}" x2="${(cx+15.6).toFixed(1)}" y2="${(cy+15.6).toFixed(1)}" stroke="${broken ? '#dc2626' : '#0f172a'}" stroke-width="3"/>
+            <line x1="${(cx+15.6).toFixed(1)}" y1="${(cy-15.6).toFixed(1)}" x2="${(cx-15.6).toFixed(1)}" y2="${(cy+15.6).toFixed(1)}" stroke="${broken ? '#dc2626' : '#0f172a'}" stroke-width="3"/>
+            ${broken ? `<text x="${cx}" y="${cy-28}" text-anchor="middle" font-size="12" font-weight="900" fill="#dc2626">BROKEN ✗</text>` : ''}
+            <text x="${cx}" y="${cy+38}" text-anchor="middle" font-size="12" font-weight="800" fill="#1e293b">${label}</text>
+          </g>
+        `;
+      } else {
+        return `
+          <g class="cursor-pointer" onclick="${clickFn}">
+            <rect x="${cx-12}" y="${cy+4}" width="24" height="14" rx="3" fill="#64748b" stroke="#0f172a" stroke-width="2"/>
+            <circle cx="${cx}" cy="${cy-10}" r="20" fill="${fill}" stroke="${broken ? '#dc2626' : '#0f172a'}" stroke-width="3" class="${glowCls}"/>
+            <path d="M ${cx-7} ${cy+2} L ${cx-4} ${cy-12} L ${cx+4} ${cy-12} L ${cx+7} ${cy+2}" fill="none" stroke="${broken ? '#dc2626' : '#92400e'}" stroke-width="2.5" ${broken ? 'stroke-dasharray="3 3"' : ''}/>
+            ${broken ? `<text x="${cx}" y="${cy-35}" text-anchor="middle" font-size="12" font-weight="900" fill="#dc2626">BROKEN ✗</text>` : ''}
+            <text x="${cx}" y="${cy+34}" text-anchor="middle" font-size="12" font-weight="800" fill="#1e293b">${label}</text>
+          </g>
+        `;
+      }
+    }
+
+    function renderFaultDoctor() {
+      const svg = document.getElementById('faultDoctorSvg');
+      const isParallel = labState.mystery === 2;
+      const isPic = labState.view === 'picture';
+      const netV = labState.cell2Reversed ? 0 : 3.0;
+      let l1Lux = 0, l2Lux = 0;
+      let mainFlow = false, b1Flow = false, b2Flow = false;
+
+      if (!isParallel) {
+        const seriesWorks = netV > 0 && labState.switchClosed && !labState.lamp1Broken && !labState.lamp2Broken;
+        if (seriesWorks) {
+          l1Lux = 50; l2Lux = 50; mainFlow = true;
+        }
+      } else {
+        // Guard litCount > 0 cleanly for parallel branches!
+        const b1Active = netV > 0 && labState.switchClosed && !labState.lamp1Broken;
+        const b2Active = netV > 0 && labState.switchClosed && !labState.lamp2Broken;
+        const litCount = (b1Active ? 1 : 0) + (b2Active ? 1 : 0);
+        if (litCount > 0) {
+          mainFlow = true;
+          if (b1Active) { l1Lux = 100; b1Flow = true; }
+          if (b2Active) { l2Lux = 100; b2Flow = true; }
+        }
+      }
+
+      let markup = '';
+      if (!isParallel) {
+        // Rectangular series circuit: Top y=60, Bottom y=245, Left x=100, Right x=660
+        // Battery spans x=240..400 on top wire; Switch spans x=500..564 on top wire; Lamps at x=250 & x=510 on bottom wire
+        markup = `
+          <polyline points="100,60 240,60" fill="none" stroke="#0f172a" stroke-width="4"/>
+          <polyline points="400,60 500,60" fill="none" stroke="#0f172a" stroke-width="4"/>
+          <polyline points="564,60 660,60 660,245 532,245" fill="none" stroke="#0f172a" stroke-width="4"/>
+          <line x1="488" y1="245" x2="272" y2="245" stroke="#0f172a" stroke-width="4"/>
+          <polyline points="228,245 100,245 100,60" fill="none" stroke="#0f172a" stroke-width="4"/>
+          ${mainFlow ? `
+            <polyline points="400,60 500,60" fill="none" stroke="#0284c7" stroke-width="3" class="current-flow-slow"/>
+            <polyline points="564,60 660,60 660,245 532,245" fill="none" stroke="#0284c7" stroke-width="3" class="current-flow-slow"/>
+            <line x1="488" y1="245" x2="272" y2="245" stroke="#0284c7" stroke-width="3" class="current-flow-slow"/>
+            <polyline points="228,245 100,245 100,60 240,60" fill="none" stroke="#0284c7" stroke-width="3" class="current-flow-slow"/>
+          ` : ''}
+          ${drawBatteryBlock(240, 60, isPic, labState.cell2Reversed)}
+          ${drawSwitchBlock(500, 60, labState.switchClosed)}
+          ${drawLampBlock(250, 245, l1Lux, labState.lamp1Broken, isPic, 'Lamp 1 (Series)', 'toggleLabLamp1()')}
+          ${drawLampBlock(510, 245, l2Lux, labState.lamp2Broken, isPic, 'Lamp 2 (Series)', 'toggleLabLamp2()')}
+        `;
+      } else {
+        // Rectangular parallel circuit: Top y=55, Branch 1 y=165, Branch 2 y=258, Left x=110, Right x=650
+        markup = `
+          <polyline points="110,55 240,55" fill="none" stroke="#0f172a" stroke-width="4"/>
+          <polyline points="400,55 500,55" fill="none" stroke="#0f172a" stroke-width="4"/>
+          <polyline points="564,55 650,55 650,258 402,258" fill="none" stroke="#0f172a" stroke-width="4"/>
+          <polyline points="358,258 110,258 110,55" fill="none" stroke="#0f172a" stroke-width="4"/>
+          <!-- Branch 1 wire -->
+          <line x1="110" y1="165" x2="358" y2="165" stroke="#0f172a" stroke-width="4"/>
+          <line x1="402" y1="165" x2="650" y2="165" stroke="#0f172a" stroke-width="4"/>
+          <circle cx="110" cy="165" r="5" fill="#0f172a"/>
+          <circle cx="650" cy="165" r="5" fill="#0f172a"/>
+          ${mainFlow ? `
+            <polyline points="400,55 500,55" fill="none" stroke="#f59e0b" stroke-width="3" class="current-flow"/>
+            <polyline points="564,55 650,55 650,165" fill="none" stroke="#f59e0b" stroke-width="3" class="current-flow"/>
+            <polyline points="110,165 110,55 240,55" fill="none" stroke="#f59e0b" stroke-width="3" class="current-flow"/>
+          ` : ''}
+          ${b1Flow ? `
+            <line x1="650" y1="165" x2="402" y2="165" stroke="#f59e0b" stroke-width="3" class="current-flow"/>
+            <line x1="358" y1="165" x2="110" y2="165" stroke="#f59e0b" stroke-width="3" class="current-flow"/>
+          ` : ''}
+          ${b2Flow ? `
+            <polyline points="650,165 650,258 402,258" fill="none" stroke="#f59e0b" stroke-width="3" class="current-flow"/>
+            <polyline points="358,258 110,258 110,165" fill="none" stroke="#f59e0b" stroke-width="3" class="current-flow"/>
+          ` : ''}
+          ${drawBatteryBlock(240, 55, isPic, labState.cell2Reversed)}
+          ${drawSwitchBlock(500, 55, labState.switchClosed)}
+          ${drawLampBlock(380, 165, l1Lux, labState.lamp1Broken, isPic, 'Lamp 1 (Branch 1)', 'toggleLabLamp1()')}
+          ${drawLampBlock(380, 258, l2Lux, labState.lamp2Broken, isPic, 'Lamp 2 (Branch 2)', 'toggleLabLamp2()')}
+        `;
+      }
+      svg.innerHTML = markup;
+
+      // Update anchored dashboard outside SVG
+      document.getElementById('dashVoltage').textContent = netV.toFixed(1) + ' V';
+      document.getElementById('dashLamp1').textContent = labState.lamp1Broken ? 'BROKEN (0 lux)' : (l1Lux > 0 ? `LIT (${l1Lux} lux)` : 'OFF (0 lux)');
+      document.getElementById('dashLamp1').className = l1Lux > 0 ? 'text-lg font-black text-amber-300' : 'text-lg font-black text-rose-300';
+      document.getElementById('dashLamp2').textContent = labState.lamp2Broken ? 'BROKEN (0 lux)' : (l2Lux > 0 ? `LIT (${l2Lux} lux)` : 'OFF (0 lux)');
+      document.getElementById('dashLamp2').className = l2Lux > 0 ? 'text-lg font-black text-amber-300' : 'text-lg font-black text-rose-300';
+
+      let statusTxt = 'Healthy Circuit!';
+      let mechTxt = '';
+      if (labState.cell2Reversed) {
+        statusTxt = 'FAULT: Reversed Cell';
+        mechTxt = 'Cell 2 is reversed (− facing −). The two 1.5 V pushes cancel out (1.5 V − 1.5 V = 0 V), so no current flows. Flip Cell 2 to fix!';
+      } else if (!labState.switchClosed) {
+        statusTxt = 'FAULT: Open Switch';
+        mechTxt = 'The switch is open, creating an air gap in the main wire. Electricity cannot jump across the gap until the switch is closed.';
+      } else if (!isParallel && (labState.lamp1Broken || labState.lamp2Broken)) {
+        const brokenName = (labState.lamp1Broken && labState.lamp2Broken) ? 'either lamp' : (labState.lamp1Broken ? 'Lamp 1' : 'Lamp 2');
+        statusTxt = 'FAULT: Series Loop Broken';
+        mechTxt = `Series circuits have only ONE pathway. When ${brokenName} breaks, the whole loop opens and ALL lamps immediately go out!`;
+      } else if (isParallel && labState.lamp1Broken && !labState.lamp2Broken) {
+        statusTxt = 'Parallel Pass: Branch 2 Lit!';
+        mechTxt = 'Even though Branch 1 is broken, Lamp 2 has its own complete branch directly across the 3.0 V battery and stays brightly lit at 100 lux!';
+      } else if (isParallel && !labState.lamp1Broken && labState.lamp2Broken) {
+        statusTxt = 'Parallel Pass: Branch 1 Lit!';
+        mechTxt = 'Even though Branch 2 is broken, Lamp 1 has its own complete branch directly across the 3.0 V battery and stays brightly lit at 100 lux!';
+      } else if (isParallel && labState.lamp1Broken && labState.lamp2Broken) {
+        statusTxt = 'Both Branches Broken';
+        mechTxt = 'Both parallel branches have broken bulbs, so no complete pathway remains. Repair either lamp to restore light.';
+      } else if (isParallel) {
+        statusTxt = 'Both Bright (100 lux)';
+        mechTxt = 'In parallel, each branch receives the full 3.0 V push independently, so both lamps shine equally brightly at 100 lux!';
+      } else {
+        statusTxt = 'Both Equal Dim (50 lux)';
+        mechTxt = 'In series, the two identical lamps share the 3.0 V push equally (1.5 V each), so both glow equally dim at 50 lux!';
+      }
+      document.getElementById('dashStatus').textContent = statusTxt;
+      document.getElementById('dashMechanism').textContent = labState.showMechanism
+        ? mechTxt
+        : 'Discuss with your partner first, then click "Reveal Mechanism" to check your scientific explanation!';
+    }
+
+    // ================= STATION 4: BAR CHART COORDINATE INSPECTOR =================
+    const barInfo = [
+      { title: '1 Lamp (Control)', coord: 'X: 1 Lamp | Y: 100 lux | 3.0 V per bulb', exp: 'One single lamp receives the entire 3.0 V push from the battery, glowing at full brightness (100 lux).' },
+      { title: '2 Lamps in Series', coord: 'X: 2 Series | Y: 50 lux | 1.5 V per bulb', exp: 'Two lamps share the 3.0 V push equally (1.5 V each), so both glow equally dimmer at 50 lux.' },
+      { title: '3 Lamps in Series', coord: 'X: 3 Series | Y: 33 lux | 1.0 V per bulb', exp: 'Three lamps share the 3.0 V push equally (1.0 V each), so all three glow very dimly at 33 lux.' },
+      { title: '2 Lamps in Parallel', coord: 'X: 2 Parallel | Y: 100 lux | 3.0 V per bulb', exp: 'Each parallel branch connects directly across the 3.0 V battery, keeping both lamps at full 100 lux brightness!' },
+      { title: '3 Lamps in Parallel', coord: 'X: 3 Parallel | Y: 100 lux | 3.0 V per bulb', exp: 'Adding a third parallel branch still gives every lamp the full 3.0 V push, so all three stay brightly lit at 100 lux!' }
+    ];
+    function inspectBar(i) {
+      const b = barInfo[i];
+      document.getElementById('barTitle').textContent = b.title;
+      document.getElementById('barCoord').textContent = b.coord;
+      document.getElementById('barExplain').textContent = b.exp;
+    }
+
+    // ================= STATION 5: SUCCESS CRITERIA WHITEBOARD CHECK =================
+    const scMet = [false, false, false];
+    function toggleScReveal(i) {
+      document.getElementById('scAns' + i).classList.toggle('hidden');
+      playChime('pop');
+    }
+    function toggleScMet(i) {
+      scMet[i] = !scMet[i];
+      const btn = document.getElementById('scMetBtn' + i);
+      const card = document.getElementById('scCard' + i);
+      if (scMet[i]) {
+        btn.textContent = 'Met! ✓';
+        btn.className = 'flex-1 py-2 rounded-xl bg-indigo-950 font-black text-xs text-amber-300';
+        card.classList.add('ring-4', 'ring-emerald-400');
+      } else {
+        btn.textContent = 'Mark Met ✓';
+        btn.className = 'flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-black text-xs text-white';
+        card.classList.remove('ring-4', 'ring-emerald-400');
+      }
+      const count = scMet.filter(Boolean).length;
+      document.getElementById('scProgressText').textContent = `${count}/3 Met`;
+      document.getElementById('scProgressBar').style.width = `${(count / 3) * 100}%`;
+      document.querySelector('[data-station="5"]').textContent = `5. SC Check (${count}/3)`;
+      playChime(scMet[i] ? 'success' : 'pop');
+      if (count === 3) launchConfetti();
+    }
+    function resetScChecks() {
+      [0, 1, 2].forEach(i => {
+        scMet[i] = false;
+        document.getElementById('scAns' + i).classList.add('hidden');
+        document.getElementById('scMetBtn' + i).textContent = 'Mark Met ✓';
+        document.getElementById('scMetBtn' + i).className = 'flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-black text-xs text-white';
+        document.getElementById('scCard' + i).classList.remove('ring-4', 'ring-emerald-400');
+      });
+      document.getElementById('scProgressText').textContent = '0/3 Met';
+      document.getElementById('scProgressBar').style.width = '0%';
+      document.querySelector('[data-station="5"]').textContent = '5. SC Check (0/3)';
+    }
+
+    // ================= STATION 6: 10-Q FULL UNIT 5 FINALE QUICKFIRE =================
+    const qfList = [
+      { tag: 'Electricity • 6Pe.01', q: 'In the official Cambridge symbol for a single cell, which plate is POSITIVE (+) — the tall thin line or the short thick line?', a: 'The TALL THIN line is positive (+), and the short thick line is negative (−), with a clean empty gap between them.' },
+      { tag: 'Forces • 6Pf.01', q: 'What unit measures MASS, and what unit measures WEIGHT?', a: 'Mass is measured in kilograms (kg). Weight is a force measured in newtons (N).' },
+      { tag: 'Electricity • 6Pe.02', q: 'Two identical bulbs are connected in SERIES to a 3.0 V battery. Is Bulb 1 brighter than Bulb 2?', a: 'NO! Both bulbs glow equally dim because they share the 3.0 V push equally (1.5 V each).' },
+      { tag: 'Forces • 6Pf.02', q: 'A Moon rover has a mass of 18 kg on Earth (weight 180 N). What are its mass and weight on the Moon (where gravity is 1/6 of Earth)?', a: 'Mass stays 18 kg (never changes in space!). Weight drops to 30 N (180 ÷ 6).' },
+      { tag: 'Electricity • 6Pe.01', q: 'Three fresh 1.5 V cells are joined cleanly (+ to −) in a battery. What is the total voltage?', a: '4.5 V (1.5 V + 1.5 V + 1.5 V).' },
+      { tag: 'Forces • 6Pf.03', q: 'A wooden raft floats stationary on West Lake with a downward weight of 45 N. What is the name, size and direction of the opposing force?', a: 'Upthrust = 45 N pointing upwards (equal and opposite = balanced forces).' },
+      { tag: 'Electricity • 6Pe.02', q: 'Why are ceiling lights in a house wired in PARALLEL instead of series?', a: 'Each lamp gets the full voltage (bright) and has its own branch, so if one bulb breaks, the others stay lit!' },
+      { tag: 'Forces • 6Pf.05', q: 'A solid ball of modelling clay sinks in water, but flattening it into a hollow bowl makes it float. Why?', a: 'The hollow bowl shape displaces more water, which increases the upward upthrust force until it balances the weight.' },
+      { tag: 'Electricity • 6Pe.01', q: 'Two 1.5 V cells are placed in a torch with + touching +. The switch is closed, yet the bulb stays dark. What is the fault and net voltage?', a: 'One cell is reversed! Their pushes cancel out to 0 V (1.5 V − 1.5 V = 0 V).' },
+      { tag: 'Forces & Enquiry • 6TWSa.03', q: 'In a fair test comparing 2 series bulbs vs 2 parallel bulbs, name ONE control variable you must keep the same.', a: 'Keep the same battery voltage (same cells) and the same type/brand of identical lamps!' }
+    ];
+    let qfIdx = 0;
+    let qfInterval = null;
+    let qfSeconds = 15;
+    function renderQf() {
+      clearInterval(qfInterval);
+      qfSeconds = 15;
+      const item = qfList[qfIdx];
+      document.getElementById('qfCounter').textContent = `${qfIdx + 1} / ${qfList.length}`;
+      document.getElementById('qfTimer').textContent = '15s';
+      document.getElementById('qfTag').textContent = item.tag;
+      document.getElementById('qfQuestion').textContent = item.q;
+      document.getElementById('qfAnswer').textContent = item.a;
+      document.getElementById('qfAnswerBox').classList.add('hidden');
+      document.getElementById('qfBoardsBanner').classList.add('hidden');
+    }
+    function startQfTimer() {
+      clearInterval(qfInterval);
+      qfSeconds = 15;
+      document.getElementById('qfBoardsBanner').classList.add('hidden');
+      document.getElementById('qfTimer').textContent = '15s';
+      qfInterval = setInterval(() => {
+        qfSeconds--;
+        document.getElementById('qfTimer').textContent = qfSeconds + 's';
+        if (qfSeconds <= 0) {
+          clearInterval(qfInterval);
+          document.getElementById('qfBoardsBanner').classList.remove('hidden');
+          playChime('alert');
+        }
+      }, 1000);
+    }
+    function revealQfAnswer() {
+      clearInterval(qfInterval);
+      document.getElementById('qfAnswerBox').classList.remove('hidden');
+      playChime('success');
+    }
+    function nextQf() { qfIdx = (qfIdx + 1) % qfList.length; renderQf(); playChime('pop'); }
+    function prevQf() { qfIdx = (qfIdx - 1 + qfList.length) % qfList.length; renderQf(); playChime('pop'); }
+
+    // ================= TEACHER DRAWER =================
+    function toggleTeacherDrawer() {
+      document.getElementById('teacherDrawer').classList.toggle('hidden');
+      playChime('pop');
+    }
+
+    // ================= DAVID'S BOARD (DPR-SAFE CANVAS) =================
+    const wbModal = document.getElementById('whiteboardModal');
+    const wbCanvas = document.getElementById('wbCanvas');
+    const wbCtx = wbCanvas.getContext('2d');
+    let wbDrawing = false;
+    let wbColor = '#0f172a';
+    let wbWidth = 3;
+    let wbGridOn = true;
+
+    function resizeWhiteboard() {
+      const wrap = document.getElementById('wbWrap');
+      const rect = wrap.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const dpr = window.devicePixelRatio || 1;
+      const prev = document.createElement('canvas');
+      prev.width = wbCanvas.width;
+      prev.height = wbCanvas.height;
+      if (wbCanvas.width > 0 && wbCanvas.height > 0) prev.getContext('2d').drawImage(wbCanvas, 0, 0);
+      wbCanvas.width = Math.round(rect.width * dpr);
+      wbCanvas.height = Math.round(rect.height * dpr);
+      wbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      wbCtx.lineCap = 'round';
+      wbCtx.lineJoin = 'round';
+      if (prev.width > 0 && prev.height > 0) wbCtx.drawImage(prev, 0, 0, rect.width, rect.height);
+    }
+    function toggleWhiteboard() {
+      wbModal.classList.toggle('hidden');
+      if (!wbModal.classList.contains('hidden')) {
+        requestAnimationFrame(resizeWhiteboard);
+      }
+      playChime('pop');
+    }
+    function setPen(c, w) { wbColor = c; wbWidth = w; }
+    function clearWhiteboard() {
+      const rect = wbCanvas.getBoundingClientRect();
+      wbCtx.clearRect(0, 0, rect.width, rect.height);
+    }
+    function toggleWbGrid() {
+      wbGridOn = !wbGridOn;
+      document.getElementById('wbWrap').style.backgroundImage = wbGridOn
+        ? 'radial-gradient(#cbd5e1 1px, transparent 1px)'
+        : 'none';
+    }
+    function getWbPos(e) {
+      const rect = wbCanvas.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+    wbCanvas.addEventListener('pointerdown', e => {
+      wbDrawing = true;
+      wbCanvas.setPointerCapture(e.pointerId);
+      const p = getWbPos(e);
+      wbCtx.beginPath();
+      wbCtx.moveTo(p.x, p.y);
+      wbCtx.strokeStyle = wbColor;
+      wbCtx.lineWidth = wbWidth;
+    });
+    wbCanvas.addEventListener('pointermove', e => {
+      if (!wbDrawing) return;
+      const p = getWbPos(e);
+      wbCtx.lineTo(p.x, p.y);
+      wbCtx.stroke();
+    });
+    wbCanvas.addEventListener('pointerup', () => { wbDrawing = false; });
+    wbCanvas.addEventListener('pointercancel', () => { wbDrawing = false; });
+    window.addEventListener('resize', () => {
+      if (!wbModal.classList.contains('hidden')) resizeWhiteboard();
+    });
+
+    // ================= KEYBOARD SHORTCUTS (GUARDED WHEN MODALS OPEN) =================
+    function anyModalOpen() {
+      return !document.getElementById('vocabModal').classList.contains('hidden') ||
+             !document.getElementById('giantModal').classList.contains('hidden') ||
+             !document.getElementById('whiteboardModal').classList.contains('hidden') ||
+             !document.getElementById('teacherDrawer').classList.contains('hidden');
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeVocabModal();
+        closeGiantModal();
+        if (!wbModal.classList.contains('hidden')) toggleWhiteboard();
+        if (!document.getElementById('teacherDrawer').classList.contains('hidden')) toggleTeacherDrawer();
+        return;
+      }
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'w' || e.key === 'W') { toggleWhiteboard(); return; }
+      if (e.key === 't' || e.key === 'T') { toggleTeacherDrawer(); return; }
+      if (e.key === 'm' || e.key === 'M') { toggleMute(); return; }
+      if (anyModalOpen()) return;
+      if (e.key === 'ArrowRight') showStation(currentStation + 1);
+      if (e.key === 'ArrowLeft') showStation(currentStation - 1);
+    });
+
+    // ================= INITIALISE =================
+    renderVocabGrid();
+    selectTrap(0);
+    loadMystery(0);
+    renderQf();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grade 4 Science — Week 18 Lesson 2: Modelling Digestion &amp; Vertebrate Systems</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap');
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #f0fdfa 0%, #eff6ff 55%, #fefce8 100%);
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, .font-display { font-family: 'Fredoka', sans-serif; }
+
+    /* Auto-hiding Top Bar */
+    #topHeader {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    #topHeader.header-hidden {
+      transform: translateY(-100%);
+    }
+
+    /* 3D Flip Cards for Station 1 Flashback 3 */
+    .flip-scene {
+      perspective: 1200px;
+      height: 350px;
+      cursor: pointer;
+    }
+    .flip-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .flip-card.is-flipped {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1.5rem;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Animations for Virtual Model */
+    @keyframes gentleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes churnShake {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-4deg) scale(1.03, 0.96); }
+      50% { transform: rotate(4deg) scale(0.97, 1.04); }
+      75% { transform: rotate(-3deg) scale(1.02, 0.98); }
+    }
+    @keyframes dripDown {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(34px); opacity: 0; }
+    }
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); opacity: 0.9; }
+      50% { transform: scale(1.06); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.9; }
+    }
+    .anim-bounce { animation: gentleBounce 1.8s ease-in-out infinite; }
+    .anim-churn { animation: churnShake 0.8s ease-in-out infinite; }
+    .anim-drip-1 { animation: dripDown 1.1s linear infinite; }
+    .anim-drip-2 { animation: dripDown 1.1s linear 0.35s infinite; }
+    .anim-drip-3 { animation: dripDown 1.1s linear 0.7s infinite; }
+    .anim-pulse { animation: pulseRing 1.6s ease-in-out infinite; }
+
+    /* Station visibility (never put flex/grid directly on section) */
+    .station-panel { display: none; }
+    .station-panel.active { display: block; }
+
+    /* Confetti canvas */
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 95;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-16">
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- AUTO-HIDING FIXED TOP HEADER -->
+  <header id="topHeader" class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b-4 border-teal-500 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-2">
+      <!-- Left: Branding & Enquiry Question -->
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white flex items-center justify-center font-display font-bold text-xl shadow">
+          4.1
+        </div>
+        <div class="min-w-0">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-teal-700">
+            Grade 4 Science (Stage 5) &bull; Week 18 Lesson 2 &bull; 5Bs.04 / 5TWSm.02 / 5TWSa.03 / 5TWSc.06
+          </div>
+          <div class="text-sm sm:text-base font-extrabold text-slate-900 truncate">
+            Enquiry: How can models help us understand digestion in humans and other vertebrates?
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Scoreboard + Tools -->
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Team Red vs Team Blue Live Scoreboard -->
+        <div class="flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-xl border-2 border-slate-200">
+          <button onclick="updateScore('red', 1)" class="px-2 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow" title="Add point to Team Red">
+            Red <span id="headerRedScore" class="ml-1 bg-white/20 px-1.5 rounded">0</span>
+          </button>
+          <span class="text-xs font-extrabold text-slate-400">VS</span>
+          <button onclick="updateScore('blue', 1)" class="px-2 py-0.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow" title="Add point to Team Blue">
+            Blue <span id="headerBlueScore" class="ml-1 bg-white/20 px-1.5 rounded">0</span>
+          </button>
+        </div>
+
+        <button id="muteBtn" onclick="toggleMute()" class="px-2.5 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs border border-amber-300 transition" title="Toggle Sound (M)">
+          Sound: ON (M)
+        </button>
+        <button onclick="openWhiteboard()" class="px-2.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow transition" title="Open David's Board (W)">
+          David's Board (W)
+        </button>
+        <button onclick="toggleTeacherDrawer()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs shadow transition" title="Teacher Prompt Drawer (T)">
+          Teacher (T)
+        </button>
+      </div>
+    </div>
+
+    <!-- Station Navigation Bar (flex-wrap so tabs never squash) -->
+    <nav class="bg-teal-50/90 border-t border-teal-200 px-4 py-1.5">
+      <div id="stationTabs" class="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-1.5">
+        <button data-station="0" onclick="goToStation(0)" class="station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition">0. LO &amp; Criteria</button>
+        <button data-station="1" onclick="goToStation(1)" class="station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition">1. Flashback 3</button>
+        <button data-station="2" onclick="goToStation(2)" class="station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition">2. Vocabulary</button>
+        <button data-station="3" onclick="goToStation(3)" class="station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition">3. Virtual Model I Do</button>
+        <button data-station="4" onclick="goToStation(4)" class="station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition">4. Dual Lab &amp; Vertebrates</button>
+        <button data-station="5" onclick="goToStation(5)" class="station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition">5. SC Check (0/3)</button>
+        <button data-station="6" onclick="goToStation(6)" class="station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition">6. Unit 4.1 Quickfire</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 pt-32 sm:pt-28">
+
+    <!-- ============================================================ -->
+    <!-- STATION 0: LO & SUCCESS CRITERIA                             -->
+    <!-- [SoL: Cognitive Load Management] [SoL: Metacognition]        -->
+    <!-- ============================================================ -->
+    <section id="station-0" class="station-panel active">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl shadow-xl border-4 border-teal-500 p-6 sm:p-8 text-center">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-100 text-teal-800 font-extrabold text-xs uppercase tracking-wider mb-3">
+            Unit 4.1 Lesson 2 &bull; Stage 5 Science
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-display font-bold text-slate-900 leading-tight">
+            Model digestion and compare vertebrate digestive systems.
+          </h1>
+          <p class="mt-3 text-base sm:text-lg font-bold text-teal-700">
+            Cambridge Codes: 5Bs.04 &bull; 5TWSm.02 &bull; 5TWSa.03 &bull; 5TWSc.06
+          </p>
+        </div>
+
+        <!-- 3 "I can..." Success Criteria -->
+        <div class="bg-white rounded-3xl shadow-lg border-2 border-sky-200 p-6">
+          <div class="flex items-center justify-between flex-wrap gap-2 mb-4">
+            <h2 class="text-2xl font-display font-bold text-sky-900">Our 3 "I can..." Success Criteria</h2>
+            <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-extrabold">Learning Goals</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-4 rounded-2xl bg-sky-50 border-2 border-sky-200">
+              <div class="w-9 h-9 rounded-xl bg-sky-600 text-white font-display font-bold flex items-center justify-center mb-2">1</div>
+              <p class="font-bold text-slate-800 text-sm sm:text-base">
+                I can explain what each part of a classroom digestive model represents and identify one strength and one limitation of the model.
+              </p>
+            </div>
+            <div class="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-200">
+              <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white font-display font-bold flex items-center justify-center mb-2">2</div>
+              <p class="font-bold text-slate-800 text-sm sm:text-base">
+                I can compare the human digestive system with other vertebrates (dog, bird, fish), noting similarities and simple differences.
+              </p>
+            </div>
+            <div class="p-4 rounded-2xl bg-amber-50 border-2 border-amber-200">
+              <div class="w-9 h-9 rounded-xl bg-amber-600 text-white font-display font-bold flex items-center justify-center mb-2">3</div>
+              <p class="font-bold text-slate-800 text-sm sm:text-base">
+                I can write a clear conclusion explaining how breaking food into tiny soluble pieces allows the small intestine to absorb nutrients.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Must / Should / Could Tiers -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="bg-gradient-to-br from-emerald-50 to-white rounded-3xl p-6 border-4 border-emerald-400 shadow-md">
+            <span class="inline-block px-3 py-1 rounded-full bg-emerald-600 text-white font-extrabold text-xs uppercase mb-3">MUST (Level 1)</span>
+            <p class="text-xl font-display font-bold text-slate-900">
+              Match parts of a digestive model to real human organs.
+            </p>
+          </div>
+          <div class="bg-gradient-to-br from-blue-50 to-white rounded-3xl p-6 border-4 border-blue-400 shadow-md">
+            <span class="inline-block px-3 py-1 rounded-full bg-blue-600 text-white font-extrabold text-xs uppercase mb-3">SHOULD (Level 2)</span>
+            <p class="text-xl font-display font-bold text-slate-900">
+              Identify similarities between human and vertebrate digestive systems.
+            </p>
+          </div>
+          <div class="bg-gradient-to-br from-purple-50 to-white rounded-3xl p-6 border-4 border-purple-400 shadow-md">
+            <span class="inline-block px-3 py-1 rounded-full bg-purple-600 text-white font-extrabold text-xs uppercase mb-3">COULD (Level 3)</span>
+            <p class="text-xl font-display font-bold text-slate-900">
+              Evaluate one strength and one limitation of a scientific model.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button onclick="goToStation(1)" class="px-6 py-3 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-display font-bold text-lg shadow-lg transition">
+            Next: Station 1 — Flashback 3 &rarr;
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 1: SPACED FLASHBACK 3 (Units 2.1, 3.4, 1.4)          -->
+    <!-- [SoL: Retrieval Practice] [SoL: Spaced Practice] [SoL: Interleaving] -->
+    <!-- ============================================================ -->
+    <section id="station-1" class="station-panel">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 border-2 border-indigo-200 shadow-md flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="flex flex-wrap gap-2 mb-1">
+              <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold">Memory Warm-Up</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 text-xs font-extrabold">3 Earlier Units</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-pink-100 text-pink-800 text-xs font-extrabold">Tap to Flip</span>
+            </div>
+            <h2 class="text-3xl font-display font-bold text-slate-900">Spaced Flashback 3 — Mini-Whiteboards Ready!</h2>
+            <p class="text-slate-600 font-semibold">Write your answers on mini-whiteboards first, then tap each giant card to flip and check.</p>
+          </div>
+          <button onclick="resetFlashbacks()" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm">
+            Reset All Cards
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 2.1 Sound Travel -->
+          <div class="flip-scene" onclick="flipCard('fb1')">
+            <div id="fb1" class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-6 shadow-xl flex flex-col justify-between border-4 border-blue-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 font-extrabold text-xs">Unit 2.1 &bull; Sound (5Ps.01)</span>
+                  <span class="text-5xl font-display font-bold opacity-30">1</span>
+                </div>
+                <p class="text-2xl font-display font-bold leading-snug">
+                  Why does sound travel faster through a wooden desk than through air — and why can sound NOT travel in space?
+                </p>
+                <div class="text-xs font-extrabold uppercase tracking-wider text-blue-100 text-center bg-white/15 py-2 rounded-xl">
+                  Tap Card to Reveal Answer
+                </div>
+              </div>
+              <div class="flip-face flip-back bg-white text-slate-900 p-6 shadow-xl flex flex-col justify-between border-4 border-blue-600">
+                <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-800 font-extrabold text-xs w-max">ANSWER &bull; SOUND TRAVEL</span>
+                <div class="space-y-3">
+                  <p class="text-xl font-extrabold text-blue-900">
+                    1. Particles in a solid (wood) are packed closely together, passing vibrations quickly.
+                  </p>
+                  <p class="text-lg font-bold text-slate-700">
+                    2. Space is a vacuum with NO particles to vibrate, so sound cannot travel!
+                  </p>
+                </div>
+                <div class="text-xs font-bold text-slate-500 text-center">Tap again to flip back</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 3.4 Solutions -->
+          <div class="flip-scene" onclick="flipCard('fb2')">
+            <div id="fb2" class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-teal-600 to-emerald-700 text-white p-6 shadow-xl flex flex-col justify-between border-4 border-teal-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 font-extrabold text-xs">Unit 3.4 &bull; Solutions (5Cp.01)</span>
+                  <span class="text-5xl font-display font-bold opacity-30">2</span>
+                </div>
+                <p class="text-2xl font-display font-bold leading-snug">
+                  When sugar dissolves completely in warm water, which substance is the SOLUTE and which is the SOLVENT?
+                </p>
+                <div class="text-xs font-extrabold uppercase tracking-wider text-teal-100 text-center bg-white/15 py-2 rounded-xl">
+                  Tap Card to Reveal Answer
+                </div>
+              </div>
+              <div class="flip-face flip-back bg-white text-slate-900 p-6 shadow-xl flex flex-col justify-between border-4 border-teal-600">
+                <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-800 font-extrabold text-xs w-max">ANSWER &bull; SOLUTIONS</span>
+                <div class="space-y-3">
+                  <p class="text-2xl font-extrabold text-teal-900">Solute = Sugar</p>
+                  <p class="text-2xl font-extrabold text-emerald-700">Solvent = Warm water</p>
+                  <p class="text-sm font-bold text-slate-600">
+                    Link to today: Soluble nutrients dissolve into liquid so the small intestine can absorb them!
+                  </p>
+                </div>
+                <div class="text-xs font-bold text-slate-500 text-center">Tap again to flip back</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 1.4 Seed Germination -->
+          <div class="flip-scene" onclick="flipCard('fb3')">
+            <div id="fb3" class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-amber-500 to-orange-600 text-white p-6 shadow-xl flex flex-col justify-between border-4 border-amber-200">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 font-extrabold text-xs">Unit 1.4 &bull; Germination (5Bp.04)</span>
+                  <span class="text-5xl font-display font-bold opacity-30">3</span>
+                </div>
+                <p class="text-2xl font-display font-bold leading-snug">
+                  Name the TWO main conditions seeds need to germinate — and ONE thing they do NOT need yet!
+                </p>
+                <div class="text-xs font-extrabold uppercase tracking-wider text-amber-100 text-center bg-white/15 py-2 rounded-xl">
+                  Tap Card to Reveal Answer
+                </div>
+              </div>
+              <div class="flip-face flip-back bg-white text-slate-900 p-6 shadow-xl flex flex-col justify-between border-4 border-amber-500">
+                <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-extrabold text-xs w-max">ANSWER &bull; GERMINATION</span>
+                <div class="space-y-3">
+                  <p class="text-2xl font-extrabold text-amber-900">Need: Water &amp; Warmth</p>
+                  <p class="text-xl font-extrabold text-rose-700">Do NOT need: Light!</p>
+                  <p class="text-sm font-bold text-slate-600">
+                    Seeds use their own stored food until green leaves grow above the soil.
+                  </p>
+                </div>
+                <div class="text-xs font-bold text-slate-500 text-center">Tap again to flip back</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 2: VOCABULARY MODAL + REAL-WORLD VETS & SCIENTISTS   -->
+    <!-- [SoL: Dual Coding] [SoL: Schema Building]                    -->
+    <!-- ============================================================ -->
+    <section id="station-2" class="station-panel">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 border-2 border-teal-200 shadow-md">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div class="flex gap-2 mb-1">
+                <span class="px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-800 text-xs font-extrabold">Visual Glossary</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs font-extrabold">Tap Any Word</span>
+              </div>
+              <h2 class="text-3xl font-display font-bold text-slate-900">Key Scientific Vocabulary</h2>
+              <p class="text-slate-600 font-semibold">Tap any word to open the full-screen bilingual audio card with its visual scientific model.</p>
+            </div>
+            <div class="px-4 py-2 rounded-2xl bg-rose-50 border-2 border-rose-300 text-rose-900 font-extrabold text-sm">
+              British Spelling Alert: <span class="underline">o-e-s-o-p-h-a-g-u-s</span>!
+            </div>
+          </div>
+
+          <div id="vocabGrid" class="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4"></div>
+        </div>
+
+        <!-- Real-World Vets & Scientists Strip (100% English ONLY) -->
+        <div class="bg-gradient-to-r from-emerald-700 via-teal-700 to-cyan-800 text-white rounded-3xl p-6 shadow-xl">
+          <div class="flex flex-col md:flex-row items-start md:items-center gap-5">
+            <div class="w-16 h-16 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 64 64" class="w-12 h-12" fill="none" stroke="white" stroke-width="3">
+                <circle cx="32" cy="24" r="10"/>
+                <path d="M16 54c0-10 7-16 16-16s16 6 16 16"/>
+                <path d="M44 18l8-6M52 12v8M44 12h8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-extrabold uppercase tracking-widest text-teal-200 mb-1">
+                Real-World Science &bull; Vets, Zoo Nutritionists &amp; Doctors
+              </div>
+              <h3 class="text-xl sm:text-2xl font-display font-bold mb-1">
+                Why do real scientists build models of organs we cannot see?
+              </h3>
+              <p class="text-sm sm:text-base text-teal-50 font-semibold leading-relaxed">
+                We cannot look inside a living person, dog, or eagle while they digest lunch! Doctors and veterinarians build safe physical and computer models to study how food moves, design healthy diets for zoo animals, and teach students how every organ works together — while always remembering what a model cannot show.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 3: FULL-SCREEN VISUAL I DO — VIRTUAL BAG-AND-FILTER  -->
+    <!-- [SoL: Worked Examples] [SoL: CPA Progression] [SoL: Misconceptions] -->
+    <!-- ============================================================ -->
+    <section id="station-3" class="station-panel">
+      <div class="space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Main Simulator Stage (9 cols) -->
+          <div class="lg:col-span-9 bg-white rounded-3xl shadow-xl border-4 border-teal-500 p-5 sm:p-6">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div>
+                <div class="flex flex-wrap gap-2 mb-1">
+                  <span class="px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-800 text-xs font-extrabold">Step-by-Step Model</span>
+                  <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-extrabold">Hands-On Science</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-slate-900">
+                  Virtual Bag-and-Filter Digestive Model (Zero-Buy Lab!)
+                </h2>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <button onclick="openGiantModelModal()" class="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow">
+                  Giant Projection Mode
+                </button>
+                <button onclick="playAllModelSteps()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow">
+                  Auto-Play Steps 1&ndash;6
+                </button>
+                <button onclick="setModelStep(0)" class="px-3.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs">
+                  Reset
+                </button>
+              </div>
+            </div>
+
+            <!-- Step Selector Strip -->
+            <div id="modelStepButtons" class="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-5"></div>
+
+            <!-- Pure Visual SVG Stage (NO overlapping dynamic text readouts inside) -->
+            <div class="bg-gradient-to-b from-sky-50 to-teal-50 rounded-2xl border-2 border-teal-200 p-4 flex items-center justify-center min-h-[290px]">
+              <div id="modelSvgStage" class="w-full max-w-2xl"></div>
+            </div>
+
+            <!-- Dedicated Anchored Dashboard Panel BELOW Canvas -->
+            <div class="mt-4 bg-slate-900 text-white rounded-2xl p-5 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+              <div>
+                <div class="text-xs font-extrabold uppercase tracking-wider text-teal-300">Classroom Model Prop</div>
+                <div id="dashModelProp" class="text-xl font-display font-bold text-white mt-0.5"></div>
+              </div>
+              <div>
+                <div class="text-xs font-extrabold uppercase tracking-wider text-amber-300">Real Human Organ</div>
+                <div id="dashRealOrgan" class="text-xl font-display font-bold text-amber-200 mt-0.5"></div>
+              </div>
+              <div>
+                <div class="text-xs font-extrabold uppercase tracking-wider text-sky-300">What Happens to Cracker &amp; Banana</div>
+                <div id="dashExplanation" class="text-sm font-bold text-slate-100 mt-0.5"></div>
+              </div>
+            </div>
+
+            <!-- Step Prev/Next Bar -->
+            <div class="mt-4 flex items-center justify-between">
+              <button onclick="stepModel(-1)" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-900 font-extrabold text-sm">&larr; Previous Step</button>
+              <span id="modelStepCounter" class="font-display font-bold text-teal-800 text-lg">Step 1 of 6</span>
+              <button onclick="stepModel(1)" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-sm">Next Step &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Permanent Sidebar: Steps to Success & Safety (3 cols) -->
+          <div class="lg:col-span-3 space-y-4">
+            <div class="bg-amber-50 rounded-3xl border-4 border-amber-400 p-5 shadow-md">
+              <h3 class="text-xl font-display font-bold text-amber-950 mb-3">Steps to Success &amp; Safety</h3>
+              <ol class="space-y-2.5 text-sm font-bold text-slate-800 list-decimal pl-5">
+                <li>Follow the exact 1-way order: Mouth &rarr; Oesophagus &rarr; Stomach &rarr; Small Intestine &rarr; Large Intestine &rarr; Anus.</li>
+                <li>Link EVERY model object to the real organ AND its job.</li>
+                <li>Always wash hands before &amp; after practicals and NEVER eat model food.</li>
+                <li>Handle scissors carefully and wipe spills straight away.</li>
+              </ol>
+            </div>
+
+            <!-- Misconception Alert Box -->
+            <div class="bg-rose-50 rounded-3xl border-4 border-rose-400 p-5 shadow-md">
+              <div class="inline-block px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-xs font-extrabold mb-2">Myth Buster</div>
+              <h3 class="text-lg font-display font-bold text-rose-950 mb-1">Myth Buster!</h3>
+              <p class="text-sm font-bold text-rose-900">
+                Does the stomach absorb nutrients into the blood?
+              </p>
+              <p class="text-sm font-semibold text-slate-800 mt-1">
+                <strong>NO!</strong> The stomach churns and mixes food with acid. The <strong>small intestine</strong> absorbs tiny dissolved nutrients into the blood!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Model Evaluation Callout: Strengths AND Limitations -->
+        <div class="bg-white rounded-3xl shadow-lg border-2 border-purple-300 p-6">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <h3 class="text-2xl font-display font-bold text-purple-950">
+              Think Like a Scientist: Strengths &amp; Limitations of Our Model (5TWSm.02)
+            </h3>
+            <!-- [SoL: Elaborative Interrogation] -->
+<span class="px-3 py-1 rounded-full bg-purple-100 text-purple-800 text-xs font-extrabold">Explain Why</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="rounded-2xl border-2 border-emerald-400 bg-emerald-50 p-5">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-lg font-display font-bold text-emerald-900">Strengths (What the Model Shows Well)</span>
+                <button onclick="toggleEval('strengthList')" class="px-3 py-1 rounded-xl bg-emerald-600 text-white text-xs font-extrabold">Reveal / Hide</button>
+              </div>
+              <ul id="strengthList" class="hidden space-y-2 text-sm font-bold text-emerald-950 list-disc pl-5 mt-3">
+                <li>Shows the correct 1-way order of organs from mouth to anus safely outside the body.</li>
+                <li>Squeezing the bag clearly models stomach muscles churning food into liquid soup.</li>
+                <li>The fine cloth filter shows why only tiny dissolved nutrients pass into the blood while big lumps stay inside.</li>
+              </ul>
+            </div>
+            <div class="rounded-2xl border-2 border-rose-400 bg-rose-50 p-5">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-lg font-display font-bold text-rose-900">Limitations (What the Model CANNOT Show)</span>
+                <button onclick="toggleEval('limitList')" class="px-3 py-1 rounded-xl bg-rose-600 text-white text-xs font-extrabold">Reveal / Hide</button>
+              </div>
+              <ul id="limitList" class="hidden space-y-2 text-sm font-bold text-rose-950 list-disc pl-5 mt-3">
+                <li>A plastic bag has NO real living stomach acid or digestive juices breaking food down chemically.</li>
+                <li>There are NO real blood vessels carrying absorbed nutrients away to cells around the body.</li>
+                <li>Real digestion takes many hours (up to 24&ndash;48 hours), whereas the classroom model takes minutes.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 4: DUAL LAB — MODEL MATCHER + VERTEBRATE COMPARATOR  -->
+    <!-- [SoL: Immediate Feedback] [SoL: Dual Coding]                 -->
+    <!-- ============================================================ -->
+    <section id="station-4" class="station-panel">
+      <div class="space-y-6">
+        <!-- Dual Lab Sub-Tab Switcher -->
+        <div class="bg-white rounded-3xl p-4 border-2 border-teal-300 shadow-md flex flex-wrap items-center justify-between gap-3">
+          <div class="flex flex-wrap gap-2">
+            <button id="labTabMatcher" onclick="switchLabTab('matcher')" class="px-5 py-2.5 rounded-2xl font-display font-bold text-base transition bg-teal-600 text-white shadow">
+              Lab A: Model-to-Organ Matcher
+            </button>
+            <button id="labTabVertebrate" onclick="switchLabTab('vertebrate')" class="px-5 py-2.5 rounded-2xl font-display font-bold text-base transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+              Lab B: Vertebrate Digestive Comparator
+            </button>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold">Interactive Lab</span>
+        </div>
+
+        <!-- LAB A: MODEL-TO-ORGAN MATCHER -->
+        <div id="labMatcherPanel" class="bg-white rounded-3xl shadow-xl border-4 border-teal-400 p-6">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+            <div>
+              <h2 class="text-2xl font-display font-bold text-slate-900">Interactive Model-to-Organ Matcher</h2>
+              <p class="text-sm font-bold text-slate-600">Step 1: Click a Model Part on the left. Step 2: Click the matching Real Human Organ on the right!</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span id="matcherScoreBadge" class="px-4 py-1.5 rounded-full bg-teal-100 text-teal-900 font-extrabold text-sm">Matched: 0 / 6</span>
+              <button onclick="initMatcherLab()" class="px-3.5 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 font-bold text-xs">Shuffle &amp; Reset</button>
+            </div>
+          </div>
+
+          <div id="matcherFeedback" class="mb-4 p-3 rounded-2xl bg-sky-50 border border-sky-200 font-bold text-sky-900 text-sm">
+            Pick any blue Model Prop card to begin matching!
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 class="text-sm font-extrabold uppercase tracking-wider text-blue-700 mb-2">Classroom Model Parts</h3>
+              <div id="matcherLeft" class="space-y-2.5"></div>
+            </div>
+            <div>
+              <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-700 mb-2">Real Human Digestive Organs</h3>
+              <div id="matcherRight" class="space-y-2.5"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LAB B: VERTEBRATE DIGESTIVE COMPARATOR -->
+        <div id="labVertebratePanel" class="hidden space-y-6">
+          <div class="bg-white rounded-3xl shadow-xl border-4 border-indigo-400 p-6">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div>
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-slate-900">Vertebrate Digestive System Comparator (5Bs.04)</h2>
+                <p class="text-sm font-bold text-slate-600">Select ANY vertebrate below to compare it side-by-side with a Human!</p>
+              </div>
+              <div class="flex flex-wrap gap-2" id="vertButtons">
+                <button onclick="selectVertebrate('dog')" data-vert="dog" class="vert-btn px-4 py-2 rounded-xl font-extrabold text-sm bg-indigo-600 text-white shadow">Dog (Mammal)</button>
+                <button onclick="selectVertebrate('bird')" data-vert="bird" class="vert-btn px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-800 hover:bg-slate-200">Bird (Chicken)</button>
+                <button onclick="selectVertebrate('fish')" data-vert="fish" class="vert-btn px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-800 hover:bg-slate-200">Fish (Salmon)</button>
+                <button onclick="selectVertebrate('human')" data-vert="human" class="vert-btn px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-800 hover:bg-slate-200">Human Focus</button>
+              </div>
+            </div>
+
+            <!-- Side-by-Side SVG Anatomy Comparison -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Always Human Reference -->
+              <div class="rounded-2xl border-2 border-teal-300 bg-teal-50/60 p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-display font-bold text-xl text-teal-950">Human (Omnivore Mammal)</span>
+                  <span class="px-2.5 py-0.5 rounded-full bg-teal-200 text-teal-900 text-xs font-extrabold">Reference</span>
+                </div>
+                <svg viewBox="0 0 398 210" class="w-full h-52 bg-white rounded-xl border border-teal-200">
+                  <!-- Human torso outline -->
+                  <circle cx="95" cy="36" r="18" fill="#fef3c7" stroke="#0f172a" stroke-width="2.5"/>
+                  <path d="M55 75 Q95 58 135 75 L140 185 Q95 198 50 185 Z" fill="#f1f5f9" stroke="#0f172a" stroke-width="2.5"/>
+                  <!-- Digestive tube -->
+                  <circle cx="95" cy="42" r="5" fill="#ef4444"/>
+                  <path d="M95 47 L95 92" stroke="#f97316" stroke-width="7" stroke-linecap="round"/>
+                  <path d="M95 92 C122 92 126 118 102 124 C86 128 84 110 95 92 Z" fill="#f59e0b" stroke="#92400e" stroke-width="2"/>
+                  <path d="M96 125 C78 132 114 140 82 148 C114 156 84 164 102 168" fill="none" stroke="#ec4899" stroke-width="6" stroke-linecap="round"/>
+                  <path d="M72 172 L72 130 L122 130 L122 172 L95 182" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+                  <circle cx="95" cy="187" r="4.5" fill="#0f172a"/>
+                  <!-- Crisp Labels -->
+                  <line x1="102" y1="42" x2="178" y2="28" stroke="#334155" stroke-width="1.5"/>
+                  <text x="184" y="32" font-size="12" font-weight="800" fill="#0f172a">1. Mouth (teeth + saliva)</text>
+                  <line x1="99" y1="74" x2="178" y2="62" stroke="#334155" stroke-width="1.5"/>
+                  <text x="184" y="66" font-size="12" font-weight="800" fill="#c2410c">2. Oesophagus (tube)</text>
+                  <line x1="115" y1="108" x2="178" y2="96" stroke="#334155" stroke-width="1.5"/>
+                  <text x="184" y="100" font-size="12" font-weight="800" fill="#b45309">3. Stomach (churns)</text>
+                  <line x1="110" y1="146" x2="178" y2="132" stroke="#334155" stroke-width="1.5"/>
+                  <text x="184" y="136" font-size="12" font-weight="800" fill="#be185d">4. Small intestine (nutrients)</text>
+                  <line x1="124" y1="164" x2="178" y2="164" stroke="#334155" stroke-width="1.5"/>
+                  <text x="184" y="168" font-size="12" font-weight="800" fill="#047857">5. Large intestine (water)</text>
+                  <line x1="100" y1="187" x2="178" y2="194" stroke="#334155" stroke-width="1.5"/>
+                  <text x="184" y="198" font-size="12" font-weight="800" fill="#0f172a">6. Anus (solid waste)</text>
+                </svg>
+                <div class="mt-3 text-xs font-bold text-teal-900 bg-white rounded-xl p-3 border border-teal-200">
+                  <strong>Diet:</strong> Plants &amp; meat (omnivore). Uses teeth &amp; saliva, medium-length small intestine to absorb nutrients from mixed foods.
+                </div>
+              </div>
+
+              <!-- Selected Vertebrate Panel -->
+              <div class="rounded-2xl border-2 border-indigo-300 bg-indigo-50/60 p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span id="vertTitle" class="font-display font-bold text-xl text-indigo-950"></span>
+                  <span id="vertGroup" class="px-2.5 py-0.5 rounded-full bg-indigo-200 text-indigo-900 text-xs font-extrabold"></span>
+                </div>
+                <div id="vertSvgBox" class="w-full h-52 bg-white rounded-xl border border-indigo-200 flex items-center justify-center"></div>
+                <div id="vertNotes" class="mt-3 text-xs font-bold text-indigo-950 bg-white rounded-xl p-3 border border-indigo-200"></div>
+              </div>
+            </div>
+
+            <!-- Shared 1-Way Tube Pattern Banner -->
+            <div class="mt-5 p-4 rounded-2xl bg-gradient-to-r from-teal-600 to-indigo-600 text-white flex flex-wrap items-center justify-between gap-3">
+              <div class="font-display font-bold text-lg">
+                THE BIG VERTEBRATE PATTERN: Mouth/Beak &rarr; Oesophagus &rarr; Stomach &rarr; Intestines &rarr; Exit!
+              </div>
+              <span class="px-3 py-1 rounded-full bg-white/20 font-extrabold text-xs">ALL vertebrates share this 1-way digestive tube!</span>
+            </div>
+          </div>
+
+          <!-- Click-to-Reveal Mechanism Explainer + Labelled Scientific Bar Chart (NO NAKED GRAPHS!) -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Click-to-Reveal Explainer -->
+            <div class="bg-white rounded-3xl shadow-lg border-2 border-amber-300 p-6 space-y-4">
+              <h3 class="text-xl font-display font-bold text-amber-950">Click-to-Reveal Adaptation Explainers</h3>
+              <button onclick="toggleEval('birdGizzardBox')" class="w-full text-left p-4 rounded-2xl bg-amber-50 hover:bg-amber-100 border-2 border-amber-300 transition">
+                <div class="font-extrabold text-amber-950">1. Why do birds swallow tiny stones (grit) when they eat seeds? (Tap)</div>
+                <p id="birdGizzardBox" class="hidden mt-2 text-sm font-bold text-slate-700">
+                  Birds have NO teeth! Instead, food softens in a pouch called a <strong>crop</strong>, then enters a thick, muscular <strong>gizzard</strong> filled with swallowed grit that grinds hard seeds into tiny pieces before the intestine absorbs nutrients.
+                </p>
+              </button>
+              <button onclick="toggleEval('lengthDietBox')" class="w-full text-left p-4 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-300 transition">
+                <div class="font-extrabold text-emerald-950">2. Why do plant-eating vertebrates have longer intestines than meat-eaters? (Tap)</div>
+                <p id="lengthDietBox" class="hidden mt-2 text-sm font-bold text-slate-700">
+                  Tough plant fibres take much longer to break down and absorb than meat. A longer small intestine gives more time and surface area to absorb dissolved nutrients into the blood!
+                </p>
+              </button>
+            </div>
+
+            <!-- Interactive Scientific Graph (Title, Labelled Axes with Units, How-to-Read, Click Readout) -->
+            <div class="bg-white rounded-3xl shadow-lg border-2 border-sky-300 p-6">
+              <h3 class="text-lg font-display font-bold text-sky-950">
+                Graph: Intestine Length Compared to Body Length (Vertebrates)
+              </h3>
+              <p class="text-xs font-bold text-sky-800 bg-sky-50 border border-sky-200 rounded-xl px-3 py-1.5 mt-1 mb-3">
+                How to Read: Look at each vertebrate on the X-axis, then read the Y-axis to see how many times longer its intestine is than its body length (ratio). Tap any bar!
+              </p>
+              <svg viewBox="0 0 380 185" class="w-full h-44">
+                <!-- Axes -->
+                <line x1="58" y1="15" x2="58" y2="145" stroke="#0f172a" stroke-width="2.5"/>
+                <line x1="58" y1="145" x2="365" y2="145" stroke="#0f172a" stroke-width="2.5"/>
+                <!-- Horizontal grid & Y labels -->
+                <line x1="58" y1="115" x2="365" y2="115" stroke="#cbd5e1" stroke-dasharray="4 3"/>
+                <text x="50" y="119" font-size="10" font-weight="700" text-anchor="end" fill="#334155">3×</text>
+                <line x1="58" y1="85" x2="365" y2="85" stroke="#cbd5e1" stroke-dasharray="4 3"/>
+                <text x="50" y="89" font-size="10" font-weight="700" text-anchor="end" fill="#334155">6×</text>
+                <line x1="58" y1="55" x2="365" y2="55" stroke="#cbd5e1" stroke-dasharray="4 3"/>
+                <text x="50" y="59" font-size="10" font-weight="700" text-anchor="end" fill="#334155">9×</text>
+                <line x1="58" y1="25" x2="365" y2="25" stroke="#cbd5e1" stroke-dasharray="4 3"/>
+                <text x="50" y="29" font-size="10" font-weight="700" text-anchor="end" fill="#334155">12×</text>
+                <text x="50" y="149" font-size="10" font-weight="700" text-anchor="end" fill="#334155">0×</text>
+                <!-- Y-axis Title -->
+                <text x="15" y="82" font-size="10" font-weight="800" fill="#0f172a" transform="rotate(-90 15 82)" text-anchor="middle">Intestine : Body Ratio (times)</text>
+                <!-- X-axis Title -->
+                <text x="210" y="180" font-size="10" font-weight="800" fill="#0f172a" text-anchor="middle">Vertebrate Animal (by Diet)</text>
+                <!-- Bars (interactive) -->
+                <g class="cursor-pointer" onclick="showGraphPoint('Fish (Carnivore)', '1.5× body length', 'Short, simple tube for fast meat/insect digestion.')">
+                  <rect x="76" y="130" width="46" height="15" rx="4" fill="#0ea5e9"/>
+                  <text x="99" y="160" font-size="10" font-weight="800" text-anchor="middle" fill="#0f172a">Fish</text>
+                </g>
+                <g class="cursor-pointer" onclick="showGraphPoint('Dog (Carnivore)', '3.5× body length', 'Short-to-medium intestine because meat digests quickly.')">
+                  <rect x="148" y="110" width="46" height="35" rx="4" fill="#6366f1"/>
+                  <text x="171" y="160" font-size="10" font-weight="800" text-anchor="middle" fill="#0f172a">Dog</text>
+                </g>
+                <g class="cursor-pointer" onclick="showGraphPoint('Human (Omnivore)', '5.0× body length', 'Medium-long intestine to absorb nutrients from both plants and meat.')">
+                  <rect x="220" y="95" width="46" height="50" rx="4" fill="#14b8a6"/>
+                  <text x="243" y="160" font-size="10" font-weight="800" text-anchor="middle" fill="#0f172a">Human</text>
+                </g>
+                <g class="cursor-pointer" onclick="showGraphPoint('Rabbit (Herbivore)', '10.5× body length', 'Very long intestine to break down tough plant fibres slowly!')">
+                  <rect x="292" y="40" width="46" height="105" rx="4" fill="#10b981"/>
+                  <text x="315" y="160" font-size="10" font-weight="800" text-anchor="middle" fill="#0f172a">Rabbit</text>
+                </g>
+              </svg>
+              <div id="graphReadout" class="mt-2 p-3 rounded-xl bg-slate-900 text-white text-xs font-bold">
+                Coordinate Readout: Tap any bar on the graph to inspect its exact ratio and diet link!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 5: DEDICATED SUCCESS CRITERIA WHITEBOARD CHECK       -->
+    <!-- [SoL: Metacognition] [SoL: Immediate Feedback]               -->
+    <!-- ============================================================ -->
+    <section id="station-5" class="station-panel">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 border-4 border-emerald-500 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold">Success Check &bull; Mini-Whiteboard Hinge Check</span>
+              <h2 class="text-3xl font-display font-bold text-slate-900 mt-1">Success Criteria Whiteboard Check</h2>
+              <p class="text-slate-600 font-bold">Check all 3 "I can..." goals on mini-whiteboards before launching the Unit 4.1 Finale Quickfire!</p>
+            </div>
+            <div class="w-full sm:w-72 bg-slate-100 p-3 rounded-2xl border-2 border-slate-200">
+              <div class="flex justify-between text-sm font-extrabold text-slate-800 mb-1">
+                <span>Class Progress</span>
+                <span id="scProgressText" class="text-emerald-700">0 / 3 Met</span>
+              </div>
+              <div class="w-full h-4 bg-slate-300 rounded-full overflow-hidden">
+                <div id="scProgressBar" class="h-full bg-emerald-500 transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- SC Check 1 -->
+          <div id="scCard0" class="bg-white rounded-3xl border-4 border-sky-300 p-6 shadow-md flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-900 text-xs font-extrabold">SC 1 &bull; Model Evaluation</span>
+              <h3 class="text-xl font-display font-bold text-slate-900">
+                In our classroom model, what organ does the fine cloth filter represent — and name ONE limitation of the bag-and-filter model.
+              </h3>
+              <div id="scAns0" class="hidden p-3.5 rounded-2xl bg-sky-50 border border-sky-300 text-sm font-bold text-sky-950">
+                <strong>Model Answer:</strong> Fine cloth filter = <strong>Small intestine</strong> (absorbs dissolved nutrients). Limitation = No real stomach acid, no living muscles, or no blood vessels carrying nutrients away.
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="toggleEval('scAns0')" class="flex-1 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 font-extrabold text-xs">Reveal Answer</button>
+              <button id="scBtn0" onclick="toggleScMet(0)" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs">Mark SC 1 Met</button>
+            </div>
+          </div>
+
+          <!-- SC Check 2 -->
+          <div id="scCard1" class="bg-white rounded-3xl border-4 border-indigo-300 p-6 shadow-md flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-900 text-xs font-extrabold">SC 2 &bull; Vertebrate Comparison</span>
+              <h3 class="text-xl font-display font-bold text-slate-900">
+                Name ONE similarity and ONE difference between a human's digestive system and a bird's digestive system.
+              </h3>
+              <div id="scAns1" class="hidden p-3.5 rounded-2xl bg-indigo-50 border border-indigo-300 text-sm font-bold text-indigo-950">
+                <strong>Model Answer:</strong> Similarity = Both have a 1-way tube with an oesophagus, stomach, and intestines. Difference = Birds have a beak and grit-filled gizzard (no teeth), whereas humans chew with teeth.
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="toggleEval('scAns1')" class="flex-1 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 font-extrabold text-xs">Reveal Answer</button>
+              <button id="scBtn1" onclick="toggleScMet(1)" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs">Mark SC 2 Met</button>
+            </div>
+          </div>
+
+          <!-- SC Check 3 -->
+          <div id="scCard2" class="bg-white rounded-3xl border-4 border-amber-300 p-6 shadow-md flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold">SC 3 &bull; Scientific Conclusion</span>
+              <h3 class="text-xl font-display font-bold text-slate-900">
+                Finish the conclusion: "Breaking food into tiny soluble pieces is essential because..."
+              </h3>
+              <div id="scAns2" class="hidden p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-sm font-bold text-amber-950">
+                <strong>Model Answer:</strong> "...only tiny dissolved nutrients can pass through the wall of the <strong>small intestine</strong> and be absorbed into the blood to travel around the body."
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="toggleEval('scAns2')" class="flex-1 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 font-extrabold text-xs">Reveal Answer</button>
+              <button id="scBtn2" onclick="toggleScMet(2)" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs">Mark SC 3 Met</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 6: 8-QUESTION UNIT 4.1 FINALE QUICKFIRE              -->
+    <!-- [SoL: Automaticity] [SoL: Retrieval Practice]                -->
+    <!-- ============================================================ -->
+    <section id="station-6" class="station-panel">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-teal-950 text-white rounded-3xl p-6 sm:p-8 shadow-2xl border-4 border-amber-400">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-xs font-extrabold uppercase">Speed Challenge &bull; Unit 4.1 Finale</span>
+              <h2 class="text-3xl font-display font-bold mt-1">Digestive System Quickfire Showdown!</h2>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="text-center bg-white/10 px-4 py-2 rounded-2xl border border-white/20">
+                <div class="text-xs uppercase font-bold text-amber-300">Question</div>
+                <div id="qfCounter" class="text-2xl font-display font-bold">1 / 8</div>
+              </div>
+              <div class="text-center bg-white/10 px-5 py-2 rounded-2xl border border-white/20 min-w-[95px]">
+                <div class="text-xs uppercase font-bold text-teal-300">Timer</div>
+                <div id="qfTimerDisplay" class="text-3xl font-display font-bold text-amber-300">20s</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOARDS UP Banner -->
+          <div id="boardsUpBanner" class="hidden mb-5 py-4 px-6 rounded-2xl bg-amber-400 text-slate-950 text-center font-display font-bold text-4xl tracking-wider shadow-lg anim-pulse">
+            BOARDS UP! SHOW YOUR MINI-WHITEBOARDS!
+          </div>
+
+          <!-- Question Card -->
+          <div class="bg-white text-slate-900 rounded-3xl p-6 sm:p-8 shadow-inner">
+            <div id="qfBadge" class="inline-block px-3 py-1 rounded-full bg-teal-100 text-teal-800 text-xs font-extrabold mb-3"></div>
+            <p id="qfQuestion" class="text-2xl sm:text-4xl font-display font-bold leading-snug text-slate-900"></p>
+            <div id="qfAnswerBox" class="hidden mt-6 p-5 rounded-2xl bg-emerald-50 border-4 border-emerald-400">
+              <div class="text-xs font-extrabold uppercase text-emerald-700 mb-1">Correct Answer</div>
+              <p id="qfAnswer" class="text-xl sm:text-2xl font-extrabold text-emerald-950"></p>
+            </div>
+          </div>
+
+          <!-- Controls & Team Scoring -->
+          <div class="mt-6 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex flex-wrap gap-2">
+              <button onclick="startQfTimer(15)" class="px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-sm">15s Timer</button>
+              <button onclick="startQfTimer(20)" class="px-4 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-extrabold text-sm">20s Timer</button>
+              <button onclick="stopQfTimer()" class="px-4 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-extrabold text-sm">Pause</button>
+              <button onclick="revealQfAnswer()" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-sm shadow">Reveal Answer</button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="awardTeam('red')" class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-sm shadow">
+                +1 Team Red (<span id="qfRedScore">0</span>)
+              </button>
+              <button onclick="awardTeam('blue')" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-sm shadow">
+                +1 Team Blue (<span id="qfBlueScore">0</span>)
+              </button>
+            </div>
+
+            <div class="flex gap-2">
+              <button onclick="moveQf(-1)" class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-extrabold text-sm">&larr; Prev</button>
+              <button onclick="moveQf(1)" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm">Next Q &rarr;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- STATION 2 VOCABULARY FULL-SCREEN MODAL (SOLE VN EXCEPTION)   -->
+  <!-- ============================================================ -->
+  <div id="vocabModal" class="hidden fixed inset-0 z-[70] bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border-4 border-teal-500 relative">
+      <button onclick="closeVocabModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 font-extrabold text-slate-700 text-lg">&times;</button>
+      <div class="text-xs font-extrabold uppercase tracking-wider text-teal-600 mb-1">Bilingual Science Vocabulary Card</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center mt-2">
+        <div class="space-y-3">
+          <h3 id="vmEn" class="text-4xl font-display font-bold text-slate-900"></h3>
+          <p id="vmVn" class="text-2xl font-bold text-teal-700"></p>
+          <p id="vmDef" class="text-base font-semibold text-slate-700 leading-relaxed bg-slate-50 p-3.5 rounded-2xl border border-slate-200"></p>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button onclick="speakVocab('en')" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow">
+              Listen (UK English)
+            </button>
+            <button onclick="speakVocab('vn')" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow">
+              Nghe (Tiếng Việt)
+            </button>
+          </div>
+        </div>
+        <div id="vmSvg" class="bg-teal-50 rounded-2xl border-2 border-teal-200 p-4 flex items-center justify-center min-h-[210px]"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- GIANT PROJECTION MODAL FOR STATION 3 VIRTUAL MODEL           -->
+  <!-- ============================================================ -->
+  <div id="giantModelModal" class="hidden fixed inset-0 z-[72] bg-slate-950/90 flex items-center justify-center p-6">
+    <div class="bg-white rounded-3xl max-w-5xl w-full p-8 shadow-2xl border-4 border-purple-500 relative text-center space-y-5">
+      <button onclick="closeGiantModelModal()" class="absolute top-4 right-4 px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 font-extrabold text-slate-800">Close (Esc)</button>
+      <div class="text-sm font-extrabold uppercase tracking-widest text-purple-700">Giant Projection Mode &bull; Bag-and-Filter Digestive Model</div>
+      <div id="giantStepTitle" class="text-4xl sm:text-6xl font-display font-bold text-slate-900"></div>
+      <div id="giantStepOrgan" class="text-3xl sm:text-5xl font-display font-bold text-teal-700"></div>
+      <p id="giantStepDesc" class="text-2xl sm:text-3xl font-bold text-slate-700 max-w-3xl mx-auto"></p>
+      <div class="flex justify-center gap-4 pt-3">
+        <button onclick="stepModel(-1); syncGiantModal();" class="px-6 py-3 rounded-2xl bg-slate-200 hover:bg-slate-300 font-extrabold text-lg">&larr; Previous Step</button>
+        <button onclick="stepModel(1); syncGiantModal();" class="px-6 py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-lg">Next Step &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- DAVID'S BOARD FULL-SCREEN WHITEBOARD (W) — DPR-SAFE INK      -->
+  <!-- ============================================================ -->
+  <div id="whiteboardOverlay" class="hidden fixed inset-0 z-[80] bg-white flex flex-col">
+    <div class="bg-slate-900 text-white px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="font-display font-bold text-lg text-amber-300">David's Board &bull; Live Sketch Pad</div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="setPen('#0f172a', 4)" class="w-8 h-8 rounded-full bg-slate-950 border-2 border-white" title="Black"></button>
+        <button onclick="setPen('#dc2626', 4)" class="w-8 h-8 rounded-full bg-red-600 border-2 border-white" title="Red"></button>
+        <button onclick="setPen('#2563eb', 4)" class="w-8 h-8 rounded-full bg-blue-600 border-2 border-white" title="Blue"></button>
+        <button onclick="setPen('#059669', 4)" class="w-8 h-8 rounded-full bg-emerald-600 border-2 border-white" title="Green"></button>
+        <button onclick="setPen('#ffffff', 26)" class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold">Eraser</button>
+        <button onclick="clearWhiteboard()" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-xs font-bold">Clear</button>
+        <button onclick="closeWhiteboard()" class="px-3.5 py-1 rounded-lg bg-amber-400 text-slate-950 text-xs font-extrabold">Close (W / Esc)</button>
+      </div>
+    </div>
+    <div id="wbContainer" class="flex-1 relative bg-white overflow-hidden">
+      <canvas id="wbCanvas" class="w-full h-full cursor-crosshair touch-none"></canvas>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TEACHER PROMPT DRAWER (T) — z-[75]                           -->
+  <!-- ============================================================ -->
+  <aside id="teacherDrawer" class="hidden fixed top-0 right-0 bottom-0 w-full max-w-md z-[75] bg-slate-900 text-white shadow-2xl border-l-4 border-amber-400 p-6 overflow-y-auto">
+    <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
+      <h3 class="text-xl font-display font-bold text-amber-300">Teacher Prompt Drawer (T)</h3>
+      <button onclick="toggleTeacherDrawer()" class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold">Close (Esc)</button>
+    </div>
+    <div class="space-y-4 text-sm">
+      <div class="p-3.5 rounded-xl bg-slate-800 border border-slate-700">
+        <div class="font-extrabold text-teal-300 mb-1">70-Minute Pacing Map</div>
+        <ul class="space-y-1 text-slate-200 list-disc pl-4">
+          <li>St 0 &amp; 1 (8m): LO/SC + Spaced Flashback 3 (Units 2.1, 3.4, 1.4).</li>
+          <li>St 2 (6m): Bilingual Vocab Modal + Vets &amp; Scientists real-world strip.</li>
+          <li>St 3 (14m): Virtual Bag-and-Filter Model I Do + Strength &amp; Limitation evaluation.</li>
+          <li>St 4 (16m): Model Matcher + Vertebrate Comparator (Human / Dog / Bird / Fish).</li>
+          <li>Worksheet 2 (14m): B&amp;W model evaluation, vertebrate comparison &amp; 2-mark conclusion.</li>
+          <li>St 5 &amp; 6 (12m): SC Whiteboard Check (0/3&ndash;3/3 Met) + 8-Q Unit 4.1 Quickfire.</li>
+        </ul>
+      </div>
+      <div class="p-3.5 rounded-xl bg-rose-950/70 border border-rose-500">
+        <div class="font-extrabold text-rose-300 mb-1">Red-Flag Hinge Check</div>
+        <p class="text-slate-100">Watch for pupils thinking the plastic bag model is identical to a real body (forgetting no real acid or blood vessels), or believing only humans/mammals have stomachs and intestines.</p>
+      </div>
+      <div class="p-3.5 rounded-xl bg-amber-950/70 border border-amber-500">
+        <div class="font-extrabold text-amber-300 mb-1">Teacher Support Table &amp; Backup Pivot (&gt;30% Stuck)</div>
+        <p class="text-slate-100 mb-2"><strong>Support Table:</strong> Lay out human and dog/bird diagrams side-by-side and highlight the matching 1-way tube order.</p>
+        <p class="text-slate-100"><strong>Whole-Class Pivot:</strong> Ask "Does a plastic bag have real acid or blood carrying nutrients away?" Write on David's Board: <em>"The model is good because ___, but limited because ___."</em></p>
+      </div>
+      <div class="p-3.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-300">
+        Shortcuts: &larr;/&rarr; change station (disabled when modals open) | W = David's Board | T = Teacher Drawer | M = Mute | Esc = Close popups.
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    // ============================================================
+    // AUDIO ENGINE (OFFLINE WEB AUDIO API) & MUTE STATE
+    // ============================================================
+    let isMuted = false;
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playTone(freq, dur, type = 'sine', vol = 0.14) {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(vol, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + dur);
+    }
+
+    function playChime() {
+      playTone(523.25, 0.12, 'triangle');
+      setTimeout(() => playTone(659.25, 0.12, 'triangle'), 100);
+      setTimeout(() => playTone(783.99, 0.22, 'triangle'), 200);
+    }
+
+    function playBuzz() {
+      playTone(190, 0.22, 'sawtooth', 0.11);
+    }
+
+    function playBoardsUpAlert() {
+      playTone(880, 0.14, 'square', 0.12);
+      setTimeout(() => playTone(880, 0.14, 'square', 0.12), 180);
+      setTimeout(() => playTone(1174.66, 0.35, 'square', 0.14), 360);
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      const btn = document.getElementById('muteBtn');
+      btn.textContent = isMuted ? 'Sound: OFF (M)' : 'Sound: ON (M)';
+      btn.className = isMuted
+        ? 'px-2.5 py-1.5 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-900 font-bold text-xs border border-rose-300 transition'
+        : 'px-2.5 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs border border-amber-300 transition';
+    }
+
+    // ============================================================
+    // AUTO-HIDING HEADER
+    // ============================================================
+    let lastScrollY = 0;
+    window.addEventListener('scroll', () => {
+      const curr = window.scrollY;
+      const hdr = document.getElementById('topHeader');
+      if (curr > lastScrollY && curr > 60) {
+        hdr.classList.add('header-hidden');
+      } else {
+        hdr.classList.remove('header-hidden');
+      }
+      lastScrollY = curr;
+    });
+
+    // ============================================================
+    // STATION NAVIGATION
+    // ============================================================
+    let currentStation = 0;
+    const totalStations = 7;
+
+    function goToStation(idx) {
+      if (idx < 0 || idx >= totalStations) return;
+      currentStation = idx;
+      for (let i = 0; i < totalStations; i++) {
+        document.getElementById(`station-${i}`).classList.toggle('active', i === idx);
+      }
+      document.querySelectorAll('.station-tab').forEach(btn => {
+        const s = Number(btn.dataset.station);
+        if (s === idx) {
+          btn.className = 'station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition bg-teal-600 text-white shadow';
+        } else {
+          btn.className = 'station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition bg-white text-teal-900 hover:bg-teal-100 border border-teal-200';
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      playTone(440 + idx * 40, 0.08, 'sine', 0.08);
+    }
+
+    // ============================================================
+    // STATION 1: FLASHBACK 3
+    // ============================================================
+    function flipCard(id) {
+      document.getElementById(id).classList.toggle('is-flipped');
+      playTone(580, 0.09, 'triangle', 0.1);
+    }
+    function resetFlashbacks() {
+      ['fb1', 'fb2', 'fb3'].forEach(id => document.getElementById(id).classList.remove('is-flipped'));
+    }
+
+    // ============================================================
+    // STATION 2: BILINGUAL VOCABULARY MODAL (SOLE VN EXCEPTION)
+    // ============================================================
+    const vocabData = [
+      {
+        en: 'model',
+        vn: 'mô hình khoa học',
+        def: 'A simple representation (object or diagram) used by scientists to explain how something real works.',
+        svg: `<svg viewBox="0 0 140 120" class="w-40 h-32"><rect x="20" y="25" width="42" height="58" rx="8" fill="#bae6fd" stroke="#0369a1" stroke-width="3"/><path d="M70 54h20" stroke="#0f172a" stroke-width="3"/><polygon points="88,48 97,54 88,60" fill="#0f172a"/><path d="M98 30c18 0 22 26 8 44-10 12-20 4-14-18 2-8 1-26 6-26z" fill="#fde68a" stroke="#b45309" stroke-width="3"/><text x="41" y="102" font-size="11" font-weight="800" text-anchor="middle" fill="#0369a1">Bag</text><text x="108" y="102" font-size="11" font-weight="800" text-anchor="middle" fill="#b45309">Stomach</text></svg>`
+      },
+      {
+        en: 'vertebrate',
+        vn: 'động vật có xương sống',
+        def: 'An animal that has a backbone inside its body, such as a human, dog, bird, frog, or fish.',
+        svg: `<svg viewBox="0 0 140 120" class="w-40 h-32"><path d="M22 65 Q70 28 118 65" fill="none" stroke="#0f766e" stroke-width="5" stroke-linecap="round"/><circle cx="35" cy="56" r="5" fill="#14b8a6"/><circle cx="52" cy="48" r="5" fill="#14b8a6"/><circle cx="70" cy="45" r="5" fill="#14b8a6"/><circle cx="88" cy="48" r="5" fill="#14b8a6"/><circle cx="105" cy="56" r="5" fill="#14b8a6"/><text x="70" y="96" font-size="12" font-weight="800" text-anchor="middle" fill="#0f766e">Backbone!</text></svg>`
+      },
+      {
+        en: 'nutrients',
+        vn: 'chất dinh dưỡng',
+        def: 'Tiny useful substances from digested food that give our bodies energy and help us grow and repair.',
+        svg: `<svg viewBox="0 0 140 120" class="w-40 h-32"><circle cx="42" cy="45" r="10" fill="#f59e0b"/><circle cx="72" cy="36" r="9" fill="#10b981"/><circle cx="96" cy="54" r="11" fill="#ec4899"/><circle cx="62" cy="70" r="8" fill="#3b82f6"/><circle cx="88" cy="82" r="9" fill="#8b5cf6"/><text x="70" y="108" font-size="11" font-weight="800" text-anchor="middle" fill="#0f172a">Tiny soluble pieces</text></svg>`
+      },
+      {
+        en: 'absorb',
+        vn: 'hấp thụ',
+        def: 'To soak up or take in a liquid or tiny dissolved nutrients through a wall into the blood.',
+        svg: `<svg viewBox="0 0 140 120" class="w-40 h-32"><line x1="20" y1="54" x2="120" y2="54" stroke="#0f172a" stroke-width="4" stroke-dasharray="6 5"/><circle cx="45" cy="32" r="5" fill="#f59e0b"/><circle cx="70" cy="32" r="5" fill="#ec4899"/><circle cx="95" cy="32" r="5" fill="#10b981"/><path d="M45 42v26M70 42v26M95 42v26" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/><rect x="20" y="76" width="100" height="24" rx="8" fill="#fecdd3" stroke="#be123c" stroke-width="2"/><text x="70" y="92" font-size="11" font-weight="800" text-anchor="middle" fill="#9f1239">Into the Blood</text></svg>`
+      },
+      {
+        en: 'waste',
+        vn: 'chất thải',
+        def: 'Leftover parts of food that the body cannot digest or absorb, pushed out through the anus.',
+        svg: `<svg viewBox="0 0 140 120" class="w-40 h-32"><path d="M35 28h70l-12 52H47z" fill="#e2e8f0" stroke="#334155" stroke-width="3"/><circle cx="70" cy="96" r="11" fill="#92400e"/><path d="M70 64v18" stroke="#0f172a" stroke-width="3"/></svg>`
+      },
+      {
+        en: 'digestion',
+        vn: 'sự tiêu hoá',
+        def: 'The process of breaking large pieces of food down into tiny soluble nutrients the body can absorb.',
+        svg: `<svg viewBox="0 0 140 120" class="w-40 h-32"><rect x="16" y="40" width="32" height="32" rx="6" fill="#fbbf24" stroke="#92400e" stroke-width="3"/><path d="M56 56h22" stroke="#0f172a" stroke-width="3"/><circle cx="94" cy="44" r="6" fill="#fbbf24"/><circle cx="110" cy="48" r="6" fill="#fbbf24"/><circle cx="98" cy="64" r="6" fill="#fbbf24"/><circle cx="114" cy="66" r="6" fill="#fbbf24"/><text x="70" y="102" font-size="11" font-weight="800" text-anchor="middle" fill="#0f172a">Big food &rarr; Tiny pieces</text></svg>`
+      },
+      {
+        en: 'oesophagus',
+        vn: 'thực quản',
+        def: 'The muscular tube that squeezes swallowed food from the mouth down into the stomach.',
+        svg: `<svg viewBox="0 0 140 120" class="w-40 h-32"><rect x="54" y="15" width="32" height="90" rx="14" fill="#fed7aa" stroke="#c2410c" stroke-width="3"/><circle cx="70" cy="58" r="11" fill="#eab308" stroke="#854d0e" stroke-width="2"/><path d="M40 48l12 8M100 48l-12 8" stroke="#c2410c" stroke-width="3" stroke-linecap="round"/><text x="70" y="116" font-size="10" font-weight="800" text-anchor="middle" fill="#c2410c">Muscles squeeze down</text></svg>`
+      },
+      {
+        en: 'small intestine',
+        vn: 'ruột non',
+        def: 'A long, narrow coiled tube where tiny dissolved nutrients are absorbed into the blood.',
+        svg: `<svg viewBox="0 0 140 120" class="w-40 h-32"><path d="M35 30 C95 30 95 50 45 50 C95 50 95 70 45 70 C95 70 95 90 45 90" fill="none" stroke="#ec4899" stroke-width="10" stroke-linecap="round"/><text x="70" y="112" font-size="11" font-weight="800" text-anchor="middle" fill="#be185d">Absorbs nutrients!</text></svg>`
+      },
+      {
+        en: 'large intestine',
+        vn: 'ruột già',
+        def: 'A wider tube that absorbs remaining water from undigested food so solid waste forms.',
+        svg: `<svg viewBox="0 0 140 120" class="w-40 h-32"><path d="M35 90 V32 H105 V90" fill="none" stroke="#10b981" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="58" r="6" fill="#38bdf8"/><circle cx="88" cy="58" r="6" fill="#38bdf8"/><text x="70" y="112" font-size="11" font-weight="800" text-anchor="middle" fill="#047857">Absorbs water!</text></svg>`
+      },
+      {
+        en: 'conclusion',
+        vn: 'kết luận khoa học',
+        def: 'A clear scientific statement explaining what your model or test results show and why.',
+        svg: `<svg viewBox="0 0 140 120" class="w-40 h-32"><rect x="28" y="20" width="84" height="78" rx="10" fill="#fef9c3" stroke="#ca8a04" stroke-width="3"/><path d="M44 45h52M44 62h52M44 79h34" stroke="#854d0e" stroke-width="4" stroke-linecap="round"/><circle cx="104" cy="86" r="14" fill="#10b981"/><path d="M98 86l4 4 9-9" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/></svg>`
+      }
+    ];
+
+    let activeVocabIndex = 0;
+
+    function buildVocabGrid() {
+      const grid = document.getElementById('vocabGrid');
+      grid.innerHTML = vocabData.map((v, i) => `
+        <button onclick="openVocabModal(${i})" class="p-4 rounded-2xl bg-gradient-to-br from-teal-50 to-white hover:from-teal-100 hover:to-sky-50 border-2 border-teal-300 shadow-sm hover:shadow-md transition text-center group">
+          <div class="text-lg font-display font-bold text-slate-900 group-hover:text-teal-700">${v.en}</div>
+          <div class="mt-1 text-xs font-extrabold text-teal-600 uppercase">Tap to Explore</div>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(i) {
+      activeVocabIndex = i;
+      const v = vocabData[i];
+      document.getElementById('vmEn').textContent = v.en;
+      document.getElementById('vmVn').textContent = v.vn;
+      document.getElementById('vmDef').textContent = v.def;
+      document.getElementById('vmSvg').innerHTML = v.svg;
+      document.getElementById('vocabModal').classList.remove('hidden');
+      playTone(620, 0.08, 'triangle', 0.1);
+    }
+
+    function closeVocabModal() {
+      window.speechSynthesis && window.speechSynthesis.cancel();
+      document.getElementById('vocabModal').classList.add('hidden');
+    }
+
+    function speakVocab(lang) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const v = vocabData[activeVocabIndex];
+      const u = new SpeechSynthesisUtterance(lang === 'en' ? v.en : v.vn);
+      u.lang = lang === 'en' ? 'en-GB' : 'vi-VN';
+      u.rate = 0.9;
+      window.speechSynthesis.speak(u);
+    }
+
+    // ============================================================
+    // STATION 3: VIRTUAL BAG-AND-FILTER DIGESTIVE MODEL
+    // ============================================================
+    const modelSteps = [
+      {
+        short: '1. Teeth',
+        prop: 'Fork & Scissors',
+        organ: 'Teeth (Mouth)',
+        desc: 'Chops and crushes the solid cracker and banana into smaller pieces so digestion can start.',
+        svg: `<svg viewBox="0 0 420 220" class="w-full h-60">
+          <rect x="65" y="130" width="290" height="58" rx="22" fill="#e2e8f0" stroke="#334155" stroke-width="3"/>
+          <!-- Cracker pieces -->
+          <rect x="115" y="138" width="46" height="32" rx="6" fill="#f59e0b" stroke="#92400e" stroke-width="2.5"/>
+          <rect x="172" y="142" width="38" height="28" rx="6" fill="#fbbf24" stroke="#92400e" stroke-width="2.5"/>
+          <circle cx="242" cy="154" r="18" fill="#fef08a" stroke="#ca8a04" stroke-width="2.5"/>
+          <circle cx="282" cy="156" r="15" fill="#fef08a" stroke="#ca8a04" stroke-width="2.5"/>
+          <!-- Fork chopping animation -->
+          <g class="anim-bounce">
+            <rect x="182" y="20" width="16" height="65" rx="6" fill="#64748b"/>
+            <path d="M168 85h44v28h-8v-18h-7v18h-8v-18h-7v18h-14z" fill="#475569" stroke="#0f172a" stroke-width="2"/>
+          </g>
+          <text x="210" y="208" font-size="14" font-weight="800" text-anchor="middle" fill="#0f172a">Fork &amp; Scissors crushing solid cracker + banana</text>
+        </svg>`
+      },
+      {
+        short: '2. Saliva',
+        prop: 'Water Spray Bottle',
+        organ: 'Saliva (Mouth)',
+        desc: 'Sprays liquid onto the crushed cracker & banana to wet, soften, and start breaking down starch.',
+        svg: `<svg viewBox="0 0 420 220" class="w-full h-60">
+          <!-- Spray bottle -->
+          <rect x="55" y="70" width="66" height="96" rx="14" fill="#38bdf8" stroke="#0369a1" stroke-width="3"/>
+          <rect x="74" y="42" width="28" height="28" rx="4" fill="#0284c7"/>
+          <path d="M102 48h34l-6 14h-28z" fill="#0f172a"/>
+          <!-- Animated spray droplets -->
+          <g class="anim-drip-1"><circle cx="155" cy="64" r="5" fill="#0ea5e9"/><circle cx="176" cy="78" r="4" fill="#38bdf8"/></g>
+          <g class="anim-drip-2"><circle cx="195" cy="92" r="5" fill="#0284c7"/><circle cx="215" cy="108" r="4.5" fill="#0ea5e9"/></g>
+          <g class="anim-drip-3"><circle cx="234" cy="116" r="5" fill="#38bdf8"/></g>
+          <!-- Softened bowl -->
+          <path d="M190 142h170c-6 36-30 52-85 52s-79-16-85-52z" fill="#e2e8f0" stroke="#334155" stroke-width="3"/>
+          <ellipse cx="275" cy="144" rx="72" ry="16" fill="#fde68a" stroke="#d97706" stroke-width="2.5"/>
+          <text x="210" y="212" font-size="14" font-weight="800" text-anchor="middle" fill="#0369a1">Water spray softening crushed food into a wet mash</text>
+        </svg>`
+      },
+      {
+        short: '3. Oesophagus',
+        prop: 'Squeezing a Flexible Tube',
+        organ: 'Oesophagus',
+        desc: 'Hands squeeze behind the food ball to push it along the tube — just like muscular squeezing moves swallowed food down!',
+        svg: `<svg viewBox="0 0 420 220" class="w-full h-60">
+          <!-- Flexible tube -->
+          <rect x="170" y="18" width="80" height="172" rx="34" fill="#ffedd5" stroke="#ea580c" stroke-width="4"/>
+          <!-- Squeezing arrows -->
+          <g class="anim-pulse">
+            <path d="M115 78h46M146 66l15 12-15 12" fill="none" stroke="#c2410c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M305 78h-46M274 66l-15 12 15 12" fill="none" stroke="#c2410c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <!-- Food bolus moving down -->
+          <g class="anim-bounce">
+            <ellipse cx="210" cy="115" rx="26" ry="20" fill="#f59e0b" stroke="#92400e" stroke-width="3"/>
+          </g>
+          <text x="210" y="210" font-size="14" font-weight="800" text-anchor="middle" fill="#c2410c">Muscular squeezing pushes food down the oesophagus</text>
+        </svg>`
+      },
+      {
+        short: '4. Stomach',
+        prop: 'Resealable Bag + Lemon Juice Squeezed',
+        organ: 'Stomach',
+        desc: 'Squeezing the sealed bag churns food and mixes it with sour lemon juice ("stomach acid") into a thick liquid soup!',
+        svg: `<svg viewBox="0 0 420 220" class="w-full h-60">
+          <g class="anim-churn" style="transform-origin: 210px 110px;">
+            <!-- Ziplock bag -->
+            <rect x="125" y="25" width="170" height="156" rx="16" fill="#e0f2fe" stroke="#0284c7" stroke-width="4"/>
+            <line x1="125" y1="45" x2="295" y2="45" stroke="#0369a1" stroke-width="4"/>
+            <!-- Thick soup inside -->
+            <path d="M132 108 Q170 94 210 108 T288 108 V172 Q210 178 132 172 Z" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+            <circle cx="172" cy="140" r="9" fill="#fef08a"/>
+            <circle cx="222" cy="150" r="11" fill="#fde047"/>
+            <circle cx="255" cy="134" r="8" fill="#fef08a"/>
+          </g>
+          <text x="210" y="208" font-size="14" font-weight="800" text-anchor="middle" fill="#0369a1">Resealable bag churning food + sour liquid into soup</text>
+        </svg>`
+      },
+      {
+        short: '5. Small Intestine',
+        prop: 'Fine Cloth / Mesh Filter Over Bowl',
+        organ: 'Small Intestine',
+        desc: 'Tiny dissolved nutrients pass through tiny holes in the cloth into the bowl ("blood"), while big solid lumps stay inside!',
+        svg: `<svg viewBox="0 0 420 220" class="w-full h-60">
+          <!-- Fine mesh tube/cloth -->
+          <rect x="125" y="24" width="170" height="62" rx="22" fill="#fce7f3" stroke="#be185d" stroke-width="4" stroke-dasharray="7 4"/>
+          <ellipse cx="210" cy="55" rx="64" ry="18" fill="#d97706"/>
+          <!-- Dripping nutrient liquid -->
+          <g class="anim-drip-1"><circle cx="165" cy="96" r="6" fill="#f59e0b"/></g>
+          <g class="anim-drip-2"><circle cx="210" cy="96" r="6" fill="#ec4899"/></g>
+          <g class="anim-drip-3"><circle cx="255" cy="96" r="6" fill="#f59e0b"/></g>
+          <!-- Bowl representing Blood -->
+          <path d="M115 136h190c-10 42-40 58-95 58s-85-16-95-58z" fill="#fecdd3" stroke="#be123c" stroke-width="3.5"/>
+          <ellipse cx="210" cy="150" rx="76" ry="12" fill="#fb7185"/>
+          <text x="210" y="178" font-size="12" font-weight="800" text-anchor="middle" fill="#881337">Bowl = Blood</text>
+          <text x="210" y="213" font-size="13" font-weight="800" text-anchor="middle" fill="#be185d">Fine cloth lets tiny soluble nutrients drip through</text>
+        </svg>`
+      },
+      {
+        short: '6. Large Int. & Anus',
+        prop: 'Paper Towel + Snipped Corner',
+        organ: 'Large Intestine & Anus',
+        desc: 'Paper towel soaks up leftover water (large intestine), leaving solid waste paste pushed out through the snipped corner (anus).',
+        svg: `<svg viewBox="0 0 420 220" class="w-full h-60">
+          <!-- Paper towel absorbing water -->
+          <rect x="52" y="34" width="136" height="122" rx="14" fill="#d1fae5" stroke="#047857" stroke-width="3.5"/>
+          <circle cx="92" cy="84" r="10" fill="#38bdf8"/>
+          <circle cx="132" cy="110" r="12" fill="#0ea5e9"/>
+          <circle cx="148" cy="68" r="8" fill="#38bdf8"/>
+          <text x="120" y="144" font-size="11" font-weight="800" text-anchor="middle" fill="#065f46">Water soaked up!</text>
+          <!-- Arrow -->
+          <path d="M198 95h38M224 83l12 12-12 12" fill="none" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>
+          <!-- Snipped corner pushing solid paste -->
+          <path d="M250 38h104l-36 92h-32z" fill="#f1f5f9" stroke="#334155" stroke-width="3.5"/>
+          <g class="anim-bounce">
+            <rect x="284" y="138" width="36" height="36" rx="12" fill="#92400e" stroke="#451a03" stroke-width="2.5"/>
+          </g>
+          <text x="210" y="208" font-size="12" font-weight="800" text-anchor="middle" fill="#065f46">Large intestine: water &bull; Anus: solid waste</text>
+        </svg>`
+      }
+    ];
+
+    let activeModelStep = 0;
+    let modelAutoTimer = null;
+
+    function buildModelButtons() {
+      const box = document.getElementById('modelStepButtons');
+      box.innerHTML = modelSteps.map((st, idx) => `
+        <button onclick="setModelStep(${idx})" id="msBtn-${idx}" class="px-2.5 py-2 rounded-xl text-xs font-extrabold border-2 transition">
+          ${st.short}
+        </button>
+      `).join('');
+    }
+
+    function setModelStep(idx) {
+      if (modelAutoTimer && arguments[1] !== 'auto') {
+        clearInterval(modelAutoTimer);
+        modelAutoTimer = null;
+      }
+      activeModelStep = Math.max(0, Math.min(modelSteps.length - 1, idx));
+      const st = modelSteps[activeModelStep];
+      document.getElementById('modelSvgStage').innerHTML = st.svg;
+      document.getElementById('dashModelProp').textContent = st.prop;
+      document.getElementById('dashRealOrgan').textContent = st.organ;
+      document.getElementById('dashExplanation').textContent = st.desc;
+      document.getElementById('modelStepCounter').textContent = `Step ${activeModelStep + 1} of ${modelSteps.length}`;
+
+      modelSteps.forEach((_, i) => {
+        const b = document.getElementById(`msBtn-${i}`);
+        if (i === activeModelStep) {
+          b.className = 'px-2.5 py-2 rounded-xl text-xs font-extrabold border-2 transition bg-teal-600 text-white border-teal-700 shadow';
+        } else {
+          b.className = 'px-2.5 py-2 rounded-xl text-xs font-extrabold border-2 transition bg-slate-50 text-slate-700 border-slate-200 hover:bg-teal-50';
+        }
+      });
+      syncGiantModal();
+      playTone(460 + activeModelStep * 55, 0.1, 'triangle', 0.1);
+    }
+
+    function stepModel(delta) {
+      setModelStep((activeModelStep + delta + modelSteps.length) % modelSteps.length);
+    }
+
+    function playAllModelSteps() {
+      if (modelAutoTimer) clearInterval(modelAutoTimer);
+      setModelStep(0, 'auto');
+      let step = 0;
+      modelAutoTimer = setInterval(() => {
+        step++;
+        if (step >= modelSteps.length) {
+          clearInterval(modelAutoTimer);
+          modelAutoTimer = null;
+          playChime();
+          return;
+        }
+        setModelStep(step, 'auto');
+      }, 2400);
+    }
+
+    function openGiantModelModal() {
+      syncGiantModal();
+      document.getElementById('giantModelModal').classList.remove('hidden');
+    }
+    function closeGiantModelModal() {
+      document.getElementById('giantModelModal').classList.add('hidden');
+    }
+    function syncGiantModal() {
+      const st = modelSteps[activeModelStep];
+      document.getElementById('giantStepTitle').textContent = `Step ${activeModelStep + 1}: ${st.prop}`;
+      document.getElementById('giantStepOrgan').textContent = `= ${st.organ}`;
+      document.getElementById('giantStepDesc').textContent = st.desc;
+    }
+
+    function toggleEval(id) {
+      document.getElementById(id).classList.toggle('hidden');
+      playTone(540, 0.08, 'sine', 0.09);
+    }
+
+    // ============================================================
+    // STATION 4: DUAL LAB (MATCHER + VERTEBRATE COMPARATOR)
+    // ============================================================
+    function switchLabTab(tab) {
+      const isM = tab === 'matcher';
+      document.getElementById('labMatcherPanel').classList.toggle('hidden', !isM);
+      document.getElementById('labVertebratePanel').classList.toggle('hidden', isM);
+      document.getElementById('labTabMatcher').className = isM
+        ? 'px-5 py-2.5 rounded-2xl font-display font-bold text-base transition bg-teal-600 text-white shadow'
+        : 'px-5 py-2.5 rounded-2xl font-display font-bold text-base transition bg-slate-100 text-slate-700 hover:bg-slate-200';
+      document.getElementById('labTabVertebrate').className = !isM
+        ? 'px-5 py-2.5 rounded-2xl font-display font-bold text-base transition bg-indigo-600 text-white shadow'
+        : 'px-5 py-2.5 rounded-2xl font-display font-bold text-base transition bg-slate-100 text-slate-700 hover:bg-slate-200';
+    }
+
+    const matcherPairs = [
+      { id: 'm1', prop: 'Fork & scissors chopping cracker', organ: 'Teeth (Mouth) — chews food into small pieces' },
+      { id: 'm2', prop: 'Water spray bottle wetting food', organ: 'Saliva (Mouth) — softens food & starts breakdown' },
+      { id: 'm3', prop: 'Squeezing a sealed bag + sour liquid', organ: 'Stomach — churns food & mixes with acid' },
+      { id: 'm4', prop: 'Fine cloth filter dripping into bowl', organ: 'Small intestine — absorbs tiny nutrients into blood' },
+      { id: 'm5', prop: 'Paper towel squeezing leftover water', organ: 'Large intestine — absorbs water from waste' },
+      { id: 'm6', prop: 'Snipped bag corner pushing paste out', organ: 'Anus — pushes solid waste out of the body' }
+    ];
+    let selectedLeftId = null;
+    let matchedIds = new Set();
+
+    function initMatcherLab() {
+      selectedLeftId = null;
+      matchedIds = new Set();
+      const leftOrder = [...matcherPairs].sort(() => Math.random() - 0.5);
+      const rightOrder = [...matcherPairs].sort(() => Math.random() - 0.5);
+
+      document.getElementById('matcherLeft').innerHTML = leftOrder.map(item => `
+        <button id="ml-${item.id}" onclick="selectMatcherLeft('${item.id}')" class="w-full text-left p-3.5 rounded-2xl border-2 border-blue-300 bg-blue-50 hover:bg-blue-100 font-bold text-sm text-slate-900 transition">
+          ${item.prop}
+        </button>
+      `).join('');
+
+      document.getElementById('matcherRight').innerHTML = rightOrder.map(item => `
+        <button id="mr-${item.id}" onclick="selectMatcherRight('${item.id}')" class="w-full text-left p-3.5 rounded-2xl border-2 border-emerald-300 bg-emerald-50 hover:bg-emerald-100 font-bold text-sm text-slate-900 transition">
+          ${item.organ}
+        </button>
+      `).join('');
+
+      document.getElementById('matcherScoreBadge').textContent = 'Matched: 0 / 6';
+      document.getElementById('matcherFeedback').textContent = 'Pick any blue Model Prop card to begin matching!';
+      document.getElementById('matcherFeedback').className = 'mb-4 p-3 rounded-2xl bg-sky-50 border border-sky-200 font-bold text-sky-900 text-sm';
+    }
+
+    function selectMatcherLeft(id) {
+      if (matchedIds.has(id)) return;
+      selectedLeftId = id;
+      matcherPairs.forEach(p => {
+        if (!matchedIds.has(p.id)) {
+          const el = document.getElementById(`ml-${p.id}`);
+          el.className = p.id === id
+            ? 'w-full text-left p-3.5 rounded-2xl border-4 border-blue-600 bg-blue-200 font-extrabold text-sm text-blue-950 transition shadow'
+            : 'w-full text-left p-3.5 rounded-2xl border-2 border-blue-300 bg-blue-50 hover:bg-blue-100 font-bold text-sm text-slate-900 transition';
+        }
+      });
+      playTone(500, 0.06, 'sine', 0.08);
+    }
+
+    function selectMatcherRight(id) {
+      if (!selectedLeftId || matchedIds.has(id)) return;
+      const fb = document.getElementById('matcherFeedback');
+      if (selectedLeftId === id) {
+        matchedIds.add(id);
+        const lBtn = document.getElementById(`ml-${id}`);
+        const rBtn = document.getElementById(`mr-${id}`);
+        lBtn.className = 'w-full text-left p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-600 text-white font-extrabold text-sm opacity-90';
+        rBtn.className = 'w-full text-left p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-600 text-white font-extrabold text-sm opacity-90';
+        selectedLeftId = null;
+        document.getElementById('matcherScoreBadge').textContent = `Matched: ${matchedIds.size} / 6`;
+        fb.textContent = matchedIds.size === 6
+          ? 'Brilliant! All 6 classroom model parts matched to their real human organs!'
+          : 'Spot on! Correct match! Pick the next blue Model Prop.';
+        fb.className = 'mb-4 p-3 rounded-2xl bg-emerald-100 border-2 border-emerald-400 font-extrabold text-emerald-950 text-sm';
+        playChime();
+        if (matchedIds.size === 6) launchConfetti();
+      } else {
+        fb.textContent = 'Not quite! Think carefully about what that model part DOES (chopping, churning, filtering nutrients, or soaking water). Try again!';
+        fb.className = 'mb-4 p-3 rounded-2xl bg-rose-100 border-2 border-rose-400 font-extrabold text-rose-950 text-sm';
+        playBuzz();
+      }
+    }
+
+    // Vertebrate Comparator Data
+    const vertebrateData = {
+      dog: {
+        title: 'Dog (Carnivore Mammal)',
+        group: 'Mammal Vertebrate',
+        notes: '<strong>Similarity:</strong> Exact same 6-organ 1-way tube as a human! <strong>Difference:</strong> Sharp canine teeth tear meat, strong stomach acid, and a shorter small intestine because meat digests quickly.',
+        svg: `<svg viewBox="0 0 360 200" class="w-full h-full">
+          <!-- Dog body silhouette -->
+          <path d="M40 82 Q55 58 84 68 L255 68 Q295 68 302 95 L292 140 H96 L65 104 Z" fill="#fef3c7" stroke="#0f172a" stroke-width="2.5"/>
+          <circle cx="58" cy="76" r="4" fill="#0f172a"/>
+          <!-- Tube -->
+          <circle cx="46" cy="90" r="5" fill="#ef4444"/>
+          <path d="M51 90 L132 94" stroke="#f97316" stroke-width="7" stroke-linecap="round"/>
+          <ellipse cx="156" cy="98" rx="22" ry="15" fill="#f59e0b" stroke="#92400e" stroke-width="2"/>
+          <path d="M178 98 C192 84 202 114 218 96 C230 84 240 112 252 98" fill="none" stroke="#ec4899" stroke-width="6" stroke-linecap="round"/>
+          <path d="M252 98 H286" stroke="#10b981" stroke-width="9" stroke-linecap="round"/>
+          <circle cx="292" cy="98" r="4.5" fill="#0f172a"/>
+          <!-- Labels -->
+          <text x="14" y="42" font-size="10.5" font-weight="800" fill="#dc2626">Mouth (sharp teeth)</text>
+          <text x="72" y="162" font-size="10.5" font-weight="800" text-anchor="middle" fill="#c2410c">Oesophagus</text>
+          <text x="172" y="42" font-size="11" font-weight="800" text-anchor="middle" fill="#b45309">Stomach</text>
+          <text x="232" y="162" font-size="10.5" font-weight="800" text-anchor="middle" fill="#be185d">Short Small Intestine</text>
+          <text x="292" y="42" font-size="11" font-weight="800" text-anchor="middle" fill="#047857">Large Int. &amp; Anus</text>
+        </svg>`
+      },
+      bird: {
+        title: 'Bird — Chicken (Seed-Eater)',
+        group: 'Bird Vertebrate',
+        notes: '<strong>Similarity:</strong> Same 1-way tube with oesophagus, stomach, and intestines! <strong>Difference:</strong> NO teeth! Uses a beak, a storage <strong>crop</strong>, and a grit-filled muscular <strong>gizzard</strong> to grind seeds.',
+        svg: `<svg viewBox="0 0 360 200" class="w-full h-full">
+          <!-- Bird outline -->
+          <path d="M44 74 L74 62 Q92 48 112 64 L228 74 Q282 78 294 110 Q278 148 205 150 Q120 150 96 116 L72 86 Z" fill="#fef9c3" stroke="#0f172a" stroke-width="2.5"/>
+          <polygon points="44,74 72,66 72,82" fill="#f59e0b" stroke="#0f172a" stroke-width="2"/>
+          <!-- Tube -->
+          <path d="M72 76 L116 96" stroke="#f97316" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="122" cy="108" r="14" fill="#fde047" stroke="#ca8a04" stroke-width="2.5"/>
+          <path d="M134 108 L166 110" stroke="#f97316" stroke-width="6"/>
+          <ellipse cx="182" cy="112" rx="18" ry="15" fill="#d97706" stroke="#78350f" stroke-width="2.5"/>
+          <circle cx="178" cy="110" r="2.5" fill="#fff"/><circle cx="187" cy="116" r="2.5" fill="#fff"/>
+          <path d="M200 112 C214 96 226 126 242 110 C252 100 260 118 272 112" fill="none" stroke="#ec4899" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="282" cy="112" r="5" fill="#0f172a"/>
+          <!-- Labels -->
+          <text x="58" y="42" font-size="11" font-weight="800" text-anchor="middle" fill="#b45309">Beak (no teeth)</text>
+          <text x="122" y="172" font-size="11" font-weight="800" text-anchor="middle" fill="#a16207">Crop (stores)</text>
+          <text x="182" y="42" font-size="11" font-weight="800" text-anchor="middle" fill="#92400e">Gizzard (grinds)</text>
+          <text x="242" y="172" font-size="11" font-weight="800" text-anchor="middle" fill="#be185d">Intestines &amp; Exit</text>
+        </svg>`
+      },
+      fish: {
+        title: 'Fish — Salmon (Aquatic Vertebrate)',
+        group: 'Fish Vertebrate',
+        notes: '<strong>Similarity:</strong> Has a mouth, short oesophagus, stomach, intestine, and exit just like humans! <strong>Difference:</strong> Streamlined short tube; swallows prey whole without chewing.',
+        svg: `<svg viewBox="0 0 360 200" class="w-full h-full">
+          <!-- Fish body -->
+          <path d="M40 100 Q120 44 265 92 L318 64 L305 100 L318 136 L265 108 Q120 156 40 100 Z" fill="#e0f2fe" stroke="#0369a1" stroke-width="2.5"/>
+          <circle cx="72" cy="88" r="5" fill="#0f172a"/>
+          <!-- Tube -->
+          <circle cx="48" cy="102" r="5" fill="#ef4444"/>
+          <path d="M53 102 L118 102" stroke="#f97316" stroke-width="6"/>
+          <ellipse cx="145" cy="104" rx="24" ry="14" fill="#f59e0b" stroke="#92400e" stroke-width="2.5"/>
+          <path d="M169 104 Q205 118 242 108" fill="none" stroke="#ec4899" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="248" cy="110" r="4.5" fill="#0f172a"/>
+          <!-- Labels -->
+          <text x="58" y="44" font-size="11" font-weight="800" text-anchor="middle" fill="#dc2626">Mouth</text>
+          <text x="108" y="168" font-size="11" font-weight="800" text-anchor="middle" fill="#c2410c">Short Oesophagus</text>
+          <text x="148" y="44" font-size="11" font-weight="800" text-anchor="middle" fill="#b45309">Stomach</text>
+          <text x="218" y="168" font-size="11" font-weight="800" text-anchor="middle" fill="#be185d">Intestine &amp; Exit</text>
+        </svg>`
+      },
+      human: {
+        title: 'Human Digestive Zoom (6 Organs)',
+        group: 'Mammal Vertebrate',
+        notes: '<strong>Check all 6 Cambridge Stage 5 organs:</strong> 1. Mouth (teeth &amp; saliva) &rarr; 2. Oesophagus &rarr; 3. Stomach &rarr; 4. Small intestine (nutrients into blood) &rarr; 5. Large intestine (water) &rarr; 6. Anus.',
+        svg: `<svg viewBox="0 0 360 200" class="w-full h-full">
+          <rect x="20" y="25" width="320" height="150" rx="18" fill="#f0fdfa" stroke="#0d9488" stroke-width="2.5"/>
+          <text x="180" y="64" font-size="16" font-weight="800" text-anchor="middle" fill="#0f766e">1-Way Human Food Pathway</text>
+          <text x="180" y="98" font-size="13" font-weight="800" text-anchor="middle" fill="#0f172a">Mouth &rarr; Oesophagus &rarr; Stomach</text>
+          <text x="180" y="128" font-size="13" font-weight="800" text-anchor="middle" fill="#be185d">&rarr; Small Intestine (Nutrients)</text>
+          <text x="180" y="156" font-size="13" font-weight="800" text-anchor="middle" fill="#047857">&rarr; Large Intestine (Water) &rarr; Anus</text>
+        </svg>`
+      }
+    };
+
+    function selectVertebrate(key) {
+      const v = vertebrateData[key];
+      document.getElementById('vertTitle').textContent = v.title;
+      document.getElementById('vertGroup').textContent = v.group;
+      document.getElementById('vertSvgBox').innerHTML = v.svg;
+      document.getElementById('vertNotes').innerHTML = v.notes;
+      document.querySelectorAll('.vert-btn').forEach(btn => {
+        const active = btn.dataset.vert === key;
+        btn.className = active
+          ? 'vert-btn px-4 py-2 rounded-xl font-extrabold text-sm bg-indigo-600 text-white shadow'
+          : 'vert-btn px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-800 hover:bg-slate-200';
+      });
+      playTone(540, 0.08, 'triangle', 0.09);
+    }
+
+    function showGraphPoint(animal, ratio, note) {
+      document.getElementById('graphReadout').textContent = `Coordinate Readout: ${animal} = ${ratio}. ${note}`;
+      playTone(620, 0.08, 'sine', 0.09);
+    }
+
+    // ============================================================
+    // STATION 5: SUCCESS CRITERIA WHITEBOARD CHECK (0/3 TO 3/3)
+    // ============================================================
+    const scMet = [false, false, false];
+
+    function toggleScMet(idx) {
+      scMet[idx] = !scMet[idx];
+      const count = scMet.filter(Boolean).length;
+      document.getElementById('scProgressText').textContent = `${count} / 3 Met`;
+      document.getElementById('scProgressBar').style.width = `${(count / 3) * 100}%`;
+      document.querySelector('[data-station="5"]').textContent = `5. SC Check (${count}/3)`;
+
+      const btn = document.getElementById(`scBtn-${idx}`) || document.getElementById(`scBtn${idx}`);
+      const card = document.getElementById(`scCard${idx}`);
+      if (scMet[idx]) {
+        btn.textContent = `SC ${idx + 1} Met!`;
+        btn.className = 'flex-1 py-2.5 rounded-xl bg-emerald-700 text-white font-extrabold text-xs shadow';
+        card.classList.add('ring-4', 'ring-emerald-400');
+        playChime();
+      } else {
+        btn.textContent = `Mark SC ${idx + 1} Met`;
+        btn.className = 'flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs';
+        card.classList.remove('ring-4', 'ring-emerald-400');
+      }
+      if (count === 3) launchConfetti();
+    }
+
+    // ============================================================
+    // STATION 6: 8-QUESTION UNIT 4.1 FINALE QUICKFIRE
+    // ============================================================
+    const quickfireData = [
+      { badge: 'Q1 &bull; Organ Order', q: 'Write the 6 human digestive organs in the EXACT order food travels from start to finish.', a: 'Mouth &rarr; Oesophagus &rarr; Stomach &rarr; Small intestine &rarr; Large intestine &rarr; Anus.' },
+      { badge: 'Q2 &bull; Digestive Model', q: 'In our classroom digestive model, which real human organ is represented by squeezing a resealable bag with sour liquid?', a: 'The STOMACH (churns food and mixes it with acid).' },
+      { badge: 'Q3 &bull; Model Strengths & Limitations', q: 'State ONE limitation of the bag-and-filter digestive model.', a: 'It has NO real living stomach acid/digestive juices, NO real blood vessels carrying nutrients away, and runs much faster than a real body.' },
+      { badge: 'Q4 &bull; Myth Buster', q: 'Which organ absorbs tiny dissolved NUTRIENTS into the blood — the stomach, small intestine, or large intestine?', a: 'The SMALL INTESTINE! (The large intestine absorbs leftover water.)' },
+      { badge: 'Q5 &bull; Oesophagus', q: 'How does food move down the oesophagus to the stomach? (Careful: NOT just gravity!)', a: 'Muscles in the oesophagus wall squeeze and push food down into the stomach.' },
+      { badge: 'Q6 &bull; Vertebrates', q: 'True or False: "Only mammals have a stomach and intestines." Explain your answer.', a: 'FALSE! Many other vertebrates — including birds, fish, frogs, and reptiles — also have a similar 1-way digestive system with a stomach and intestines.' },
+      { badge: 'Q7 &bull; Bird Adaptation', q: 'Birds have NO teeth. Which muscular organ filled with tiny swallowed stones grinds seeds inside a bird?', a: 'The GIZZARD!' },
+      { badge: 'Q8 &bull; Scientific Conclusion', q: 'Why MUST teeth and stomach churning break food into tiny soluble pieces BEFORE it reaches the small intestine?', a: 'Only tiny dissolved nutrients can pass through the wall of the small intestine and be absorbed into the blood.' }
+    ];
+
+    let qfIndex = 0;
+    let qfSeconds = 20;
+    let qfInterval = null;
+    const scores = { red: 0, blue: 0 };
+
+    function renderQf() {
+      stopQfTimer();
+      const item = quickfireData[qfIndex];
+      document.getElementById('qfCounter').textContent = `${qfIndex + 1} / ${quickfireData.length}`;
+      document.getElementById('qfBadge').innerHTML = item.badge;
+      document.getElementById('qfQuestion').innerHTML = item.q;
+      document.getElementById('qfAnswer').innerHTML = item.a;
+      document.getElementById('qfAnswerBox').classList.add('hidden');
+      document.getElementById('boardsUpBanner').classList.add('hidden');
+      qfSeconds = 20;
+      document.getElementById('qfTimerDisplay').textContent = '20s';
+    }
+
+    function moveQf(delta) {
+      qfIndex = (qfIndex + delta + quickfireData.length) % quickfireData.length;
+      renderQf();
+      playTone(500, 0.08, 'triangle', 0.08);
+    }
+
+    function startQfTimer(sec) {
+      stopQfTimer();
+      qfSeconds = sec;
+      document.getElementById('boardsUpBanner').classList.add('hidden');
+      document.getElementById('qfTimerDisplay').textContent = `${qfSeconds}s`;
+      qfInterval = setInterval(() => {
+        qfSeconds--;
+        document.getElementById('qfTimerDisplay').textContent = `${qfSeconds}s`;
+        if (qfSeconds <= 3 && qfSeconds > 0) playTone(660, 0.08, 'sine', 0.1);
+        if (qfSeconds <= 0) {
+          stopQfTimer();
+          document.getElementById('boardsUpBanner').classList.remove('hidden');
+          playBoardsUpAlert();
+        }
+      }, 1000);
+    }
+
+    function stopQfTimer() {
+      if (qfInterval) {
+        clearInterval(qfInterval);
+        qfInterval = null;
+      }
+    }
+
+    function revealQfAnswer() {
+      document.getElementById('qfAnswerBox').classList.remove('hidden');
+      playChime();
+    }
+
+    function updateScore(team, delta) {
+      scores[team] = Math.max(0, scores[team] + delta);
+      document.getElementById('headerRedScore').textContent = scores.red;
+      document.getElementById('headerBlueScore').textContent = scores.blue;
+      document.getElementById('qfRedScore').textContent = scores.red;
+      document.getElementById('qfBlueScore').textContent = scores.blue;
+      playChime();
+    }
+
+    function awardTeam(team) {
+      updateScore(team, 1);
+      launchConfetti();
+    }
+
+    // ============================================================
+    // DAVID'S BOARD (W) — DPR-SAFE PRESERVING INK ON RESIZE
+    // ============================================================
+    let wbDrawing = false;
+    let wbColor = '#0f172a';
+    let wbWidth = 4;
+    let wbCtx = null;
+
+    function openWhiteboard() {
+      document.getElementById('whiteboardOverlay').classList.remove('hidden');
+      resizeWhiteboard(true);
+    }
+
+    function closeWhiteboard() {
+      document.getElementById('whiteboardOverlay').classList.add('hidden');
+    }
+
+    function resizeWhiteboard(preserveInk) {
+      const canvas = document.getElementById('wbCanvas');
+      const box = document.getElementById('wbContainer');
+      if (!canvas || !box) return;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = box.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+
+      let backup = null;
+      if (preserveInk && canvas.width > 0 && canvas.height > 0) {
+        backup = document.createElement('canvas');
+        backup.width = canvas.width;
+        backup.height = canvas.height;
+        backup.getContext('2d').drawImage(canvas, 0, 0);
+      }
+
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      wbCtx = canvas.getContext('2d');
+      wbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      wbCtx.lineCap = 'round';
+      wbCtx.lineJoin = 'round';
+
+      if (backup) {
+        wbCtx.save();
+        wbCtx.setTransform(1, 0, 0, 1, 0, 0);
+        wbCtx.drawImage(backup, 0, 0);
+        wbCtx.restore();
+      }
+    }
+
+    function setPen(col, w) {
+      wbColor = col;
+      wbWidth = w;
+    }
+
+    function clearWhiteboard() {
+      const canvas = document.getElementById('wbCanvas');
+      if (wbCtx) {
+        wbCtx.save();
+        wbCtx.setTransform(1, 0, 0, 1, 0, 0);
+        wbCtx.clearRect(0, 0, canvas.width, canvas.height);
+        wbCtx.restore();
+      }
+    }
+
+    function initWhiteboardEvents() {
+      const canvas = document.getElementById('wbCanvas');
+      const getPos = e => {
+        const r = canvas.getBoundingClientRect();
+        const pt = e.touches ? e.touches[0] : e;
+        return { x: pt.clientX - r.left, y: pt.clientY - r.top };
+      };
+      const start = e => {
+        e.preventDefault();
+        wbDrawing = true;
+        const p = getPos(e);
+        wbCtx.beginPath();
+        wbCtx.moveTo(p.x, p.y);
+      };
+      const move = e => {
+        if (!wbDrawing) return;
+        e.preventDefault();
+        const p = getPos(e);
+        wbCtx.strokeStyle = wbColor;
+        wbCtx.lineWidth = wbWidth;
+        wbCtx.lineTo(p.x, p.y);
+        wbCtx.stroke();
+      };
+      const end = () => { wbDrawing = false; };
+      canvas.addEventListener('mousedown', start);
+      canvas.addEventListener('mousemove', move);
+      window.addEventListener('mouseup', end);
+      canvas.addEventListener('touchstart', start, { passive: false });
+      canvas.addEventListener('touchmove', move, { passive: false });
+      window.addEventListener('touchend', end);
+      window.addEventListener('resize', () => {
+        if (!document.getElementById('whiteboardOverlay').classList.contains('hidden')) {
+          resizeWhiteboard(true);
+        }
+      });
+    }
+
+    // ============================================================
+    // TEACHER PROMPT DRAWER (T)
+    // ============================================================
+    function toggleTeacherDrawer() {
+      document.getElementById('teacherDrawer').classList.toggle('hidden');
+    }
+
+    // ============================================================
+    // CONFETTI CELEBRATION
+    // ============================================================
+    function launchConfetti() {
+      const c = document.getElementById('confettiCanvas');
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      const ctx = c.getContext('2d');
+      const cols = ['#14b8a6', '#f59e0b', '#ec4899', '#3b82f6', '#10b981', '#8b5cf6'];
+      const parts = Array.from({ length: 85 }, () => ({
+        x: Math.random() * c.width,
+        y: -20 - Math.random() * 120,
+        vx: (Math.random() - 0.5) * 6,
+        vy: 3 + Math.random() * 5,
+        size: 6 + Math.random() * 6,
+        col: cols[Math.floor(Math.random() * cols.length)],
+        rot: Math.random() * 360
+      }));
+      let frames = 0;
+      function tick() {
+        ctx.clearRect(0, 0, c.width, c.height);
+        parts.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += 6;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rot * Math.PI) / 180);
+          ctx.fillStyle = p.col;
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          ctx.restore();
+        });
+        frames++;
+        if (frames < 110) requestAnimationFrame(tick);
+        else ctx.clearRect(0, 0, c.width, c.height);
+      }
+      tick();
+    }
+
+    // ============================================================
+    // KEYBOARD SHORTCUTS (GUARDED WHEN MODALS/OVERLAYS OPEN)
+    // ============================================================
+    function anyModalOpen() {
+      return !document.getElementById('vocabModal').classList.contains('hidden') ||
+             !document.getElementById('giantModelModal').classList.contains('hidden') ||
+             !document.getElementById('whiteboardOverlay').classList.contains('hidden') ||
+             !document.getElementById('teacherDrawer').classList.contains('hidden');
+    }
+
+    window.addEventListener('keydown', e => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'Escape') {
+        closeVocabModal();
+        closeGiantModelModal();
+        closeWhiteboard();
+        document.getElementById('teacherDrawer').classList.add('hidden');
+        return;
+      }
+      if (e.key === 'w' || e.key === 'W') {
+        if (document.getElementById('whiteboardOverlay').classList.contains('hidden')) openWhiteboard();
+        else closeWhiteboard();
+        return;
+      }
+      if (e.key === 't' || e.key === 'T') {
+        toggleTeacherDrawer();
+        return;
+      }
+      if (e.key === 'm' || e.key === 'M') {
+        toggleMute();
+        return;
+      }
+      if (anyModalOpen()) return;
+      if (e.key === 'ArrowRight') goToStation(currentStation + 1);
+      if (e.key === 'ArrowLeft') goToStation(currentStation - 1);
+    });
+
+    // ============================================================
+    // INIT ON LOAD
+    // ============================================================
+    buildVocabGrid();
+    buildModelButtons();
+    setModelStep(0);
+    initMatcherLab();
+    selectVertebrate('dog');
+    renderQf();
+    initWhiteboardEvents();
+    goToStation(0);
+  </script>
+</body>
+</html>

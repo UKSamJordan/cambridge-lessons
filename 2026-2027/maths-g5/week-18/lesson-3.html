@@ -1,0 +1,2490 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Timetable Studio Challenge — Hanoi–Da Nang Express (Stage 6 | 6Gt.01)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap');
+
+    :root {
+      --studio-emerald: #064e3b;
+      --studio-emerald-mid: #047857;
+      --studio-gold: #b45309;
+      --studio-gold-bright: #d97706;
+      --studio-cream: #faf7f0;
+      --studio-paper: #fffdf8;
+      --studio-ink: #1c2826;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: var(--studio-cream);
+      background-image:
+        linear-gradient(to right, rgba(6, 78, 59, 0.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(6, 78, 59, 0.045) 1px, transparent 1px);
+      background-size: 28px 28px;
+      color: var(--studio-ink);
+      overflow-x: hidden;
+    }
+
+    .font-studio-serif { font-family: 'DM Serif Display', Georgia, serif; }
+    .font-mono-tech { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+    .studio-blueprint-banner {
+      background: linear-gradient(135deg, #052e2b 0%, #064e3b 55%, #0f5132 100%);
+      background-image:
+        radial-gradient(circle at 86% 20%, rgba(217, 119, 6, 0.28), transparent 46%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(135deg, #052e2b 0%, #064e3b 55%, #065f46 100%);
+      background-size: 100% 100%, 24px 24px, 24px 24px, 100% 100%;
+    }
+
+    #top-header {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+
+    /* Main Tabs: NEVER apply flex or grid directly on toggleable <section> */
+    .phase-section { display: none; }
+    .phase-section.active {
+      display: block;
+      animation: fadeSlideIn 0.26s ease-out;
+    }
+
+    /* Cycle Sub-Panels */
+    .cycle-panel { display: none; }
+    .cycle-panel.active {
+      display: block;
+      animation: fadeSlideIn 0.22s ease-out;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 3D Flip Cards */
+    .flip-perspective { perspective: 1200px; }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .flip-back { transform: rotateY(180deg); }
+
+    /* Full-Screen Mini-Teach Stage (z-65: below Teacher Drawer z-75 and Board/Modal z-80) */
+    .fullscreen-stage {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 65 !important;
+      background: #faf7f0 !important;
+      padding: 18px 26px !important;
+      overflow-y: auto !important;
+      border-radius: 0 !important;
+      border: none !important;
+    }
+
+    /* David's Board Squared Grid */
+    .davids-grid {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, #cbd5e1 1px, transparent 1px),
+        linear-gradient(to bottom, #cbd5e1 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* Studio Drafting Paper Card */
+    .studio-card {
+      background: var(--studio-paper);
+      border: 2px solid #d6cbb5;
+      box-shadow: 0 6px 20px rgba(6, 78, 59, 0.06);
+    }
+
+    /* WAGOLL Spotlight Highlights */
+    .wagoll-span {
+      transition: all 0.25s ease;
+      border-radius: 6px;
+      padding: 1px 4px;
+    }
+    .wagoll-hl-base60 {
+      background-color: #fde68a;
+      color: #78350f;
+      box-shadow: 0 0 0 2px #f59e0b;
+      font-weight: 800;
+    }
+    .wagoll-hl-clock {
+      background-color: #a7f3d0;
+      color: #064e3b;
+      box-shadow: 0 0 0 2px #10b981;
+      font-weight: 800;
+    }
+    .wagoll-hl-saved {
+      background-color: #bae6fd;
+      color: #0c4a6e;
+      box-shadow: 0 0 0 2px #0284c7;
+      font-weight: 800;
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 95;
+    }
+
+    @keyframes pulseRing {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.45); }
+      50% { box-shadow: 0 0 0 12px rgba(217, 119, 6, 0); }
+    }
+    .pulse-gold { animation: pulseRing 1.8s infinite; }
+
+    /* Custom Range Sliders */
+    input[type="range"].studio-slider {
+      accent-color: #047857;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-16">
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- AUTO-HIDING STUDIO TOP HEADER (z-50) -->
+  <header id="top-header" class="fixed top-0 left-0 right-0 bg-[#052e2b]/95 backdrop-blur-md text-amber-50 border-b-2 border-amber-500/70 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-emerald-950 font-extrabold flex items-center justify-center text-xl shadow-inner border border-amber-200">
+          🚆
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wider rounded bg-amber-400 text-emerald-950">3-Cycle Studio Project</span>
+            <span class="text-xs font-mono-tech text-emerald-200">Stage 6 • 6Gt.01 • Week 18 Lesson 3</span>
+          </div>
+          <h1 class="text-sm sm:text-base font-bold text-white leading-tight">Hanoi–Da Nang Express Timetable Studio — <span class="text-amber-300">07:30 Depart • ≤ 18:00 Arrival</span></h1>
+        </div>
+      </div>
+
+      <!-- Studio Controls & Team Scoreboard -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <div class="flex items-center bg-emerald-950/90 border border-emerald-700 rounded-full px-2.5 py-1 gap-2 text-xs font-bold">
+          <button onclick="awardTeam('red', 1)" class="flex items-center gap-1 text-rose-300 hover:text-rose-200 transition" title="Add point to Team Red">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
+            Red: <span id="score-red" class="font-mono-tech text-white text-sm">0</span>
+          </button>
+          <span class="text-emerald-600">|</span>
+          <button onclick="awardTeam('blue', 1)" class="flex items-center gap-1 text-sky-300 hover:text-sky-200 transition" title="Add point to Team Blue">
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span>
+            Blue: <span id="score-blue" class="font-mono-tech text-white text-sm">0</span>
+          </button>
+        </div>
+
+        <button id="btn-mute" onclick="toggleMute()" class="px-2.5 py-1.5 rounded-lg bg-emerald-900 hover:bg-emerald-800 border border-emerald-700 text-xs font-bold text-emerald-100 transition" title="Mute / Unmute Audio (M)">
+          🔊 <span class="hidden sm:inline">Sound (M)</span>
+        </button>
+        <button onclick="toggleTeacherDrawer()" class="px-2.5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-xs font-bold text-white transition" title="Teacher Coaching Drawer (T)">
+          📋 <span class="hidden sm:inline">Teacher (T)</span>
+        </button>
+        <button onclick="openDavidsBoard()" class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-emerald-950 text-xs font-extrabold transition shadow" title="Open David's Board Whiteboard (W)">
+          ✏️ David's Board (W)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN STUDIO WORKSPACE -->
+  <main class="max-w-7xl mx-auto px-4 pt-24">
+
+    <!-- 7-TAB STRUCTURED 3-CYCLE PROJECT NAVIGATION BAR (flex-wrap) -->
+    <nav aria-label="7-Tab Studio Project Navigation" class="mb-6 bg-[#fffdf8] border-2 border-emerald-900/20 rounded-2xl p-2 shadow-sm">
+      <div class="flex flex-wrap gap-1.5 justify-center">
+        <button onclick="goPhase(0)" data-phase="0" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          🎯 0. LO, SC &amp; Roles
+        </button>
+        <button onclick="goPhase(1)" data-phase="1" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          ⚡ 1. Starter &amp; Glossary
+        </button>
+        <button onclick="goPhase(2)" data-phase="2" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          📐 2. Cycle 1: Convert Legs
+        </button>
+        <button onclick="goPhase(3)" data-phase="3" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          ⏱️ 3. Cycle 2: Schedule &amp; Fix
+        </button>
+        <button onclick="goPhase(4)" data-phase="4" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          🎨 4. Cycle 3: Poster &amp; Pitch
+        </button>
+        <button onclick="goPhase(5)" data-phase="5" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          ✅ 5. SC Review
+        </button>
+        <button onclick="goPhase(6)" data-phase="6" class="phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          ⚡ 6. Finale Quickfire
+        </button>
+      </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- TAB 0: LO, SUCCESS CRITERIA & STUDIO ROLES                   -->
+    <!-- ============================================================ -->
+    <section id="phase-0" class="phase-section active">
+      <div class="space-y-6">
+
+        <!-- Prominent WALT + 3 Numbered "I can..." Success Criteria Banner -->
+        <div class="studio-blueprint-banner rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-500/80 shadow-xl relative overflow-hidden">
+          <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            <div class="space-y-2.5 max-w-3xl">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-300/60 text-amber-200 text-xs font-extrabold uppercase tracking-widest">
+                <span>🎯 WALT • Stage 6 • 6Gt.01 + 6Gg.03 / 6Gg.01 • 70-Min Studio Project</span>
+              </div>
+              <h2 class="font-studio-serif text-3xl sm:text-5xl tracking-tight text-white leading-tight">
+                Plan and verify a Hanoi–Da Nang timetable using decimal time.
+              </h2>
+              <p class="text-emerald-100 text-sm sm:text-base font-medium">
+                Hanoi–Da Nang Express Timetable Studio — 3 structured cycles converting 7 decimal rail legs, spotting base-10 traps, and beating the <span class="text-amber-300 font-extrabold">18:00 Da Nang arrival deadline</span>!
+              </p>
+            </div>
+            <div class="bg-emerald-950/85 border-2 border-amber-400/70 rounded-2xl p-4 min-w-[265px] shrink-0">
+              <div class="text-xs uppercase tracking-wider text-amber-300 font-extrabold mb-2 text-center">Hanoi–Da Nang Express Specs</div>
+              <div class="grid grid-cols-3 gap-2 text-center">
+                <div class="bg-emerald-900/70 rounded-xl p-2">
+                  <div class="text-base font-mono-tech font-bold text-white">07:30</div>
+                  <div class="text-[10px] text-emerald-200 font-bold">Departure</div>
+                </div>
+                <div class="bg-emerald-900/70 rounded-xl p-2">
+                  <div class="text-base font-mono-tech font-bold text-amber-300">≤ 18:00</div>
+                  <div class="text-[10px] text-emerald-200 font-bold">Deadline</div>
+                </div>
+                <div class="bg-emerald-900/70 rounded-xl p-2">
+                  <div class="text-base font-mono-tech font-bold text-emerald-300">7 Legs</div>
+                  <div class="text-[10px] text-emerald-200 font-bold">Route Plan</div>
+                </div>
+              </div>
+              <div class="mt-2.5 text-[11px] text-emerald-200 text-center font-semibold">
+                Max Journey: 10 h 30 min (10.5 h) • A3 Team Poster
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 Numbered "I can..." Success Criteria Cards (Exact Lesson Plan wording) -->
+          <div class="mt-6 pt-5 border-t border-emerald-700/80">
+            <div class="text-xs font-extrabold uppercase tracking-wider text-amber-300 mb-3">
+              ✅ Success Criteria — By the end of this studio project:
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+              <div class="bg-white/10 backdrop-blur-sm border-2 border-emerald-400/70 rounded-2xl p-4 flex items-start gap-3">
+                <span class="w-8 h-8 rounded-xl bg-amber-400 text-emerald-950 font-mono-tech font-extrabold flex items-center justify-center shrink-0 text-base">1</span>
+                <p class="text-sm font-bold text-white leading-snug">
+                  I can convert multi-leg decimal travel durations accurately into mixed hours, minutes and seconds to build a complete schedule.
+                </p>
+              </div>
+              <div class="bg-white/10 backdrop-blur-sm border-2 border-amber-400/70 rounded-2xl p-4 flex items-start gap-3">
+                <span class="w-8 h-8 rounded-xl bg-amber-400 text-emerald-950 font-mono-tech font-extrabold flex items-center justify-center shrink-0 text-base">2</span>
+                <p class="text-sm font-bold text-white leading-snug">
+                  I can detect and fix timetable conversion errors and verify total journey times across both decimal and mixed units.
+                </p>
+              </div>
+              <div class="bg-white/10 backdrop-blur-sm border-2 border-teal-300/70 rounded-2xl p-4 flex items-start gap-3">
+                <span class="w-8 h-8 rounded-xl bg-amber-400 text-emerald-950 font-mono-tech font-extrabold flex items-center justify-center shrink-0 text-base">3</span>
+                <p class="text-sm font-bold text-white leading-snug">
+                  I can justify schedule adjustments clearly in writing using exact base-60 calculations.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Compact Must / Should / Could Strip -->
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+            <div class="bg-emerald-950/75 border border-emerald-500/60 rounded-xl px-3 py-2 flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-emerald-500 text-emerald-950 font-extrabold uppercase">Must</span>
+              <span class="text-emerald-100 font-semibold">Convert every decimal journey leg accurately into hours and minutes.</span>
+            </div>
+            <div class="bg-emerald-950/75 border border-amber-500/60 rounded-xl px-3 py-2 flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-amber-400 text-emerald-950 font-extrabold uppercase">Should</span>
+              <span class="text-amber-100 font-semibold">Build a zero-gap timetable arriving before the deadline and spot delay errors.</span>
+            </div>
+            <div class="bg-emerald-950/75 border border-purple-400/60 rounded-xl px-3 py-2 flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-purple-400 text-purple-950 font-extrabold uppercase">Could</span>
+              <span class="text-purple-100 font-semibold">Optimise route transfers and justify time savings clearly in writing.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DYNAMIC GROUP SIZE SWITCHER + 4 COLOUR-CODED STUDIO ROLE CARDS -->
+        <div class="studio-card rounded-3xl p-6 space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-stone-200 pb-4">
+            <div>
+              <h3 class="font-studio-serif text-2xl sm:text-3xl text-emerald-950">👥 Studio Team Roles — Every Pupil Actively Works!</h3>
+              <p class="text-sm text-slate-600 mt-0.5">Select your table size to see exact individual role pairings across all 3 cycles.</p>
+            </div>
+            <div class="inline-flex bg-stone-200/80 p-1 rounded-xl border border-stone-300 self-start">
+              <button onclick="setGroupSize(4)" id="grp-btn-4" class="grp-btn px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition bg-emerald-800 text-white shadow">Group of 4</button>
+              <button onclick="setGroupSize(3)" id="grp-btn-3" class="grp-btn px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-700 hover:bg-white">Group of 3</button>
+              <button onclick="setGroupSize(2)" id="grp-btn-2" class="grp-btn px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-700 hover:bg-white">Pair of 2</button>
+            </div>
+          </div>
+
+          <div id="group-size-banner" class="hidden rounded-2xl bg-amber-50 border-2 border-amber-400 px-4 py-3 text-sm font-bold text-amber-950"></div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Role 1 -->
+            <div class="rounded-2xl border-2 border-emerald-700 bg-emerald-50/70 p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="w-8 h-8 rounded-lg bg-emerald-800 text-white font-mono-tech font-bold flex items-center justify-center text-sm">1</span>
+                  <span id="role-tag-1" class="px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-950 text-[11px] font-extrabold">Pupil A</span>
+                </div>
+                <h4 class="font-extrabold text-emerald-950 text-base">🗺️ Chief Timetable Planner</h4>
+                <p class="text-xs text-slate-700 mt-1.5 leading-relaxed">Leads the Hanoi–Da Nang route map (Page 2), tracks the 07:30 start and ≤ 18:00 deadline, and chooses route upgrades with the team.</p>
+              </div>
+              <div class="mt-3 pt-2 border-t border-emerald-200 text-[11px] font-bold text-emerald-900">
+                Owns: Route Map + Upgrade Choice
+              </div>
+            </div>
+
+            <!-- Role 2 -->
+            <div class="rounded-2xl border-2 border-amber-600 bg-amber-50/70 p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="w-8 h-8 rounded-lg bg-amber-600 text-white font-mono-tech font-bold flex items-center justify-center text-sm">2</span>
+                  <span id="role-tag-2" class="px-2.5 py-0.5 rounded-full bg-amber-200 text-amber-950 text-[11px] font-extrabold">Pupil B</span>
+                </div>
+                <h4 class="font-extrabold text-amber-950 text-base">🔢 Decimal Time Converter</h4>
+                <p class="text-xs text-slate-700 mt-1.5 leading-relaxed">Converts every decimal leg into exact hours, minutes and seconds using × 60, blocking Base-10 Traps (0.4 h = 24 min, NEVER 40 min!).</p>
+              </div>
+              <div class="mt-3 pt-2 border-t border-amber-200 text-[11px] font-bold text-amber-900">
+                Owns: All 7 ×60 Conversions
+              </div>
+            </div>
+
+            <!-- Role 3 -->
+            <div class="rounded-2xl border-2 border-sky-700 bg-sky-50/70 p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="w-8 h-8 rounded-lg bg-sky-700 text-white font-mono-tech font-bold flex items-center justify-center text-sm">3</span>
+                  <span id="role-tag-3" class="px-2.5 py-0.5 rounded-full bg-sky-200 text-sky-950 text-[11px] font-extrabold">Pupil C</span>
+                </div>
+                <h4 class="font-extrabold text-sky-950 text-base">⏱️ Delay &amp; Schedule Auditor</h4>
+                <p class="text-xs text-slate-700 mt-1.5 leading-relaxed">Checks every 24-hour clock addition and hour-boundary regrouping on Page 3, spots the 18:06 late finish, and cross-checks total decimal hours.</p>
+              </div>
+              <div class="mt-3 pt-2 border-t border-sky-200 text-[11px] font-bold text-sky-900">
+                Owns: 24-Hour Clock + Error Audit
+              </div>
+            </div>
+
+            <!-- Role 4 -->
+            <div class="rounded-2xl border-2 border-purple-700 bg-purple-50/70 p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="w-8 h-8 rounded-lg bg-purple-700 text-white font-mono-tech font-bold flex items-center justify-center text-sm">4</span>
+                  <span id="role-tag-4" class="px-2.5 py-0.5 rounded-full bg-purple-200 text-purple-950 text-[11px] font-extrabold">Pupil D</span>
+                </div>
+                <h4 class="font-extrabold text-purple-950 text-base">✍️ Lead Reasoning Writer</h4>
+                <p class="text-xs text-slate-700 mt-1.5 leading-relaxed">Writes the 3-star mathematical justification on Page 4 with exact × 60 proofs, leads the A3 poster layout, and anchors the 60-second pitch.</p>
+              </div>
+              <div class="mt-3 pt-2 border-t border-purple-200 text-[11px] font-bold text-purple-900">
+                Owns: Written Proof + 60s Pitch
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROUTE OPTIONS & UPGRADE MENU -->
+        <div class="studio-card rounded-3xl p-6 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="font-studio-serif text-2xl text-emerald-950">🛤️ Hanoi–Da Nang Route &amp; Upgrade Options Menu</h3>
+              <p class="text-sm text-slate-600">Default route departs Hanoi at <strong class="font-mono-tech text-emerald-900">07:30</strong> across 7 legs. Teams convert all 7 legs first, detect the late finish, then select upgrades!</p>
+            </div>
+            <button onclick="goPhase(1)" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-sm font-extrabold shadow transition">
+              Next: Starter &amp; Glossary →
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <!-- Default 7 Legs Preview -->
+            <div class="bg-white rounded-2xl border-2 border-stone-300 p-4">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-emerald-800 mb-2">Default 7-Leg Express Route (Before Upgrades)</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div class="flex justify-between items-center bg-stone-50 px-3 py-1.5 rounded-lg border border-stone-200">
+                  <span class="font-bold">1. Hanoi ➔ Vinh</span>
+                  <span class="font-mono-tech font-extrabold text-emerald-800">3.5 h</span>
+                </div>
+                <div class="flex justify-between items-center bg-amber-50/70 px-3 py-1.5 rounded-lg border border-amber-200">
+                  <span class="font-bold">2. Vinh Track Switch</span>
+                  <span class="font-mono-tech font-extrabold text-amber-800">0.25 h</span>
+                </div>
+                <div class="flex justify-between items-center bg-stone-50 px-3 py-1.5 rounded-lg border border-stone-200">
+                  <span class="font-bold">3. Vinh ➔ Dong Hoi</span>
+                  <span class="font-mono-tech font-extrabold text-emerald-800">2.4 h</span>
+                </div>
+                <div class="flex justify-between items-center bg-amber-50/70 px-3 py-1.5 rounded-lg border border-amber-200">
+                  <span class="font-bold">4. Dong Hoi Lunch</span>
+                  <span class="font-mono-tech font-extrabold text-amber-800">0.6 h</span>
+                </div>
+                <div class="flex justify-between items-center bg-stone-50 px-3 py-1.5 rounded-lg border border-stone-200">
+                  <span class="font-bold">5. Dong Hoi ➔ Hue</span>
+                  <span class="font-mono-tech font-extrabold text-emerald-800">1.9 h</span>
+                </div>
+                <div class="flex justify-between items-center bg-amber-50/70 px-3 py-1.5 rounded-lg border border-amber-200">
+                  <span class="font-bold">6. Hue Platform Stop</span>
+                  <span class="font-mono-tech font-extrabold text-amber-800">0.2 h</span>
+                </div>
+                <div class="flex justify-between items-center bg-stone-50 px-3 py-1.5 rounded-lg border border-stone-200 sm:col-span-2">
+                  <span class="font-bold">7. Hue ➔ Da Nang (Hai Van Pass Express)</span>
+                  <span class="font-mono-tech font-extrabold text-emerald-800">1.75 h</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Route Upgrade Options -->
+            <div class="bg-emerald-950 text-white rounded-2xl border-2 border-amber-400 p-4 flex flex-col justify-between">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-amber-300 mb-2">⚡ Cycle 2 Schedule Upgrade Catalogue</div>
+              <div class="space-y-2 text-xs">
+                <div class="bg-emerald-900/70 border border-emerald-700 rounded-xl p-2.5 flex justify-between items-center gap-2">
+                  <div>
+                    <div class="font-extrabold text-amber-300">Option A — Quick-Bento Lunch (Leg 4)</div>
+                    <div class="text-emerald-100">Trim Dong Hoi Lunch from 0.6 h ➔ 0.35 h</div>
+                  </div>
+                  <span class="px-2 py-1 rounded bg-emerald-400 text-emerald-950 font-mono-tech font-extrabold shrink-0">−0.25 h</span>
+                </div>
+                <div class="bg-emerald-900/70 border border-emerald-700 rounded-xl p-2.5 flex justify-between items-center gap-2">
+                  <div>
+                    <div class="font-extrabold text-amber-300">Option B — Coastal Express Engine (Leg 3)</div>
+                    <div class="text-emerald-100">Speed up Vinh ➔ Dong Hoi from 2.4 h ➔ 2.15 h</div>
+                  </div>
+                  <span class="px-2 py-1 rounded bg-emerald-400 text-emerald-950 font-mono-tech font-extrabold shrink-0">−0.25 h</span>
+                </div>
+                <div class="bg-emerald-900/70 border border-rose-500/60 rounded-xl p-2.5 flex justify-between items-center gap-2">
+                  <div>
+                    <div class="font-extrabold text-rose-300">Option C — Rapid Hue Whistle (Leg 6)</div>
+                    <div class="text-emerald-100">Trim Hue Platform Stop from 0.2 h ➔ 0.15 h (Careful: enough alone?)</div>
+                  </div>
+                  <span class="px-2 py-1 rounded bg-rose-300 text-rose-950 font-mono-tech font-extrabold shrink-0">−0.05 h</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 1: BRISK STARTER (FLASHBACK 3) & STUDIO GLOSSARY         -->
+    <!-- ============================================================ -->
+    <section id="phase-1" class="phase-section">
+      <div class="space-y-6">
+
+        <!-- Flashback 3 Section -->
+        <div class="studio-card rounded-3xl p-6 space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <span class="px-2.5 py-1 rounded-full bg-amber-100 border border-amber-400 text-amber-900 text-xs font-extrabold uppercase tracking-wider">⚡ 3-Minute Spaced Retrieval • 3 Earlier Units</span>
+              <h2 class="font-studio-serif text-3xl text-emerald-950 mt-1">Flashback 3 — Mini-Whiteboards Ready!</h2>
+            </div>
+            <button onclick="flipAllFlashbacks()" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-extrabold shadow transition">
+              🔄 Flip All 3 Cards
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <!-- Card 1: Unit 5 Quadrilaterals & Circles -->
+            <div class="flip-perspective h-[330px] cursor-pointer" onclick="toggleFlip(this)">
+              <div class="flip-card w-full h-full">
+                <div class="flip-inner">
+                  <div class="flip-face rounded-3xl bg-gradient-to-br from-emerald-800 to-teal-900 text-white p-6 border-4 border-amber-400 shadow-lg flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                      <span class="px-2.5 py-1 rounded-lg bg-amber-400 text-emerald-950 text-xs font-extrabold">Unit 5 • 6Gg.01 / 6Gg.02</span>
+                      <span class="text-xs font-bold text-emerald-200">Tap to Reveal</span>
+                    </div>
+                    <div class="text-center space-y-3 my-auto">
+                      <div class="text-3xl font-extrabold leading-tight">Radius = <span class="text-amber-300 font-mono-tech">8.5 cm</span></div>
+                      <p class="text-base font-bold text-emerald-100">1) Find the circle's <strong>diameter</strong>.<br>2) Name a quadrilateral with 2 pairs of parallel sides and NO right angles.</p>
+                    </div>
+                    <div class="text-center text-xs text-amber-200 font-bold">Mini-Whiteboard • 45 Seconds</div>
+                  </div>
+                  <div class="flip-face flip-back rounded-3xl bg-emerald-50 text-emerald-950 p-6 border-4 border-emerald-700 shadow-lg flex flex-col justify-between">
+                    <span class="px-2.5 py-1 rounded-lg bg-emerald-800 text-white text-xs font-extrabold self-start">Answer • Unit 5</span>
+                    <div class="text-center space-y-3 my-auto">
+                      <div class="text-4xl font-mono-tech font-extrabold text-emerald-800">d = 17 cm</div>
+                      <p class="text-sm font-bold text-slate-700">Diameter = 2 × radius = 2 × 8.5 cm = 17 cm</p>
+                      <div class="inline-block px-3 py-1.5 rounded-xl bg-amber-200 text-amber-950 font-extrabold text-sm">
+                        Parallelogram (or Rhombus)
+                      </div>
+                    </div>
+                    <div class="text-center text-xs text-slate-500 font-bold">Tap again to flip back</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Unit 7.1 Right-Angled Triangles -->
+            <div class="flip-perspective h-[330px] cursor-pointer" onclick="toggleFlip(this)">
+              <div class="flip-card w-full h-full">
+                <div class="flip-inner">
+                  <div class="flip-face rounded-3xl bg-gradient-to-br from-amber-600 to-orange-700 text-white p-6 border-4 border-amber-200 shadow-lg flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                      <span class="px-2.5 py-1 rounded-lg bg-white text-amber-900 text-xs font-extrabold">Unit 7.1 • 6Gg.03</span>
+                      <span class="text-xs font-bold text-amber-100">Tap to Reveal</span>
+                    </div>
+                    <div class="text-center space-y-2 my-auto">
+                      <svg viewBox="0 0 180 95" class="w-40 h-20 mx-auto" aria-label="Right-angled triangle with area 36 square centimetres and base 9 centimetres">
+                        <polygon points="46,80 166,80 46,14" fill="rgba(255,255,255,0.22)" stroke="#ffffff" stroke-width="3"/>
+                        <rect x="46" y="66" width="14" height="14" fill="none" stroke="#fde68a" stroke-width="2.5"/>
+                        <text x="106" y="93" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="800">base = 9 cm</text>
+                        <text x="40" y="52" text-anchor="end" fill="#fde68a" font-size="13" font-weight="800">h = ?</text>
+                        <text x="90" y="62" text-anchor="middle" fill="#ffffff" font-size="12.5" font-weight="800">Area = 36 cm²</text>
+                      </svg>
+                      <p class="text-base font-bold text-white">Find the missing perpendicular height!</p>
+                    </div>
+                    <div class="text-center text-xs text-amber-100 font-bold">Remember: Double the area first!</div>
+                  </div>
+                  <div class="flip-face flip-back rounded-3xl bg-amber-50 text-amber-950 p-6 border-4 border-amber-600 shadow-lg flex flex-col justify-between">
+                    <span class="px-2.5 py-1 rounded-lg bg-amber-700 text-white text-xs font-extrabold self-start">Answer • Unit 7.1</span>
+                    <div class="text-center space-y-3 my-auto">
+                      <div class="text-5xl font-mono-tech font-extrabold text-amber-700">8 cm</div>
+                      <p class="text-sm font-bold text-slate-700">Rectangle area = 36 × 2 = <strong>72 cm²</strong></p>
+                      <p class="text-sm font-bold text-emerald-900">Height = 72 ÷ 9 = <strong>8 cm</strong></p>
+                    </div>
+                    <div class="text-center text-xs text-slate-500 font-bold">Tap again to flip back</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Unit 4 Negative Integers -->
+            <div class="flip-perspective h-[330px] cursor-pointer" onclick="toggleFlip(this)">
+              <div class="flip-card w-full h-full">
+                <div class="flip-inner">
+                  <div class="flip-face rounded-3xl bg-gradient-to-br from-sky-800 to-indigo-900 text-white p-6 border-4 border-sky-300 shadow-lg flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                      <span class="px-2.5 py-1 rounded-lg bg-sky-300 text-sky-950 text-xs font-extrabold">Unit 4 • 6Ni.01</span>
+                      <span class="text-xs font-bold text-sky-200">Tap to Reveal</span>
+                    </div>
+                    <div class="text-center space-y-3 my-auto">
+                      <div class="text-4xl font-mono-tech font-extrabold text-sky-200">−4°C ➔ +13°C</div>
+                      <p class="text-base font-bold text-white">Overnight on Fansipan it was <strong>−4°C</strong>. By noon it rose to <strong>+13°C</strong>.<br>Find the temperature difference!</p>
+                    </div>
+                    <div class="text-center text-xs text-sky-200 font-bold">Jump via 0°C on a number line!</div>
+                  </div>
+                  <div class="flip-face flip-back rounded-3xl bg-sky-50 text-sky-950 p-6 border-4 border-sky-700 shadow-lg flex flex-col justify-between">
+                    <span class="px-2.5 py-1 rounded-lg bg-sky-800 text-white text-xs font-extrabold self-start">Answer • Unit 4</span>
+                    <div class="text-center space-y-3 my-auto">
+                      <div class="text-5xl font-mono-tech font-extrabold text-sky-800">17°C</div>
+                      <p class="text-sm font-bold text-slate-700">From −4°C to 0°C = <strong>+4°C</strong></p>
+                      <p class="text-sm font-bold text-slate-700">From 0°C to +13°C = <strong>+13°C</strong></p>
+                      <p class="text-sm font-extrabold text-emerald-800">Total jump = 4 + 13 = 17°C!</p>
+                    </div>
+                    <div class="text-center text-xs text-slate-500 font-bold">Tap again to flip back</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STUDIO BILINGUAL GLOSSARY (SOLE VIETNAMESE EXCEPTION VIA MODAL) -->
+        <div class="studio-card rounded-3xl p-6 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-100 border border-emerald-400 text-emerald-900 text-xs font-extrabold uppercase tracking-wider">🗣️ Studio Bilingual Glossary • Click Any Term</span>
+              <h3 class="font-studio-serif text-2xl sm:text-3xl text-emerald-950 mt-1">Key Railway &amp; Decimal Time Vocabulary</h3>
+            </div>
+            <span class="text-xs font-bold text-slate-600 bg-stone-100 px-3 py-1.5 rounded-full border border-stone-300">
+              🔊 Tap a tile for visual model + bilingual audio
+            </span>
+          </div>
+
+          <div id="vocab-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            <!-- Populated cleanly via JS from VOCAB_ITEMS -->
+          </div>
+        </div>
+
+        <!-- REAL-WORLD VIETNAM RAILWAY TIMETABLES STRIP (100% ENGLISH) -->
+        <div class="bg-emerald-950 text-white rounded-3xl p-6 border-2 border-amber-400 shadow-lg space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-amber-300">🌍 Why Does This Matter in Real Life?</span>
+              <h3 class="font-studio-serif text-2xl text-white">Vietnam Railways &amp; Precision Transport Scheduling</h3>
+            </div>
+            <button onclick="goPhase(2)" class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 text-sm font-extrabold shadow transition">
+              Launch Cycle 1: Convert Legs →
+            </button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div class="bg-emerald-900/75 border border-emerald-700 rounded-2xl p-4 space-y-1.5">
+              <div class="text-2xl">🚆</div>
+              <h4 class="font-extrabold text-amber-300">Reunification Express (SE1–SE8)</h4>
+              <p class="text-xs text-emerald-100 leading-relaxed">Railway computers calculate speeds in decimal hours (like 2.4 h between Vinh and Dong Hoi), then convert into exact 24-hour station departure boards for passengers.</p>
+            </div>
+            <div class="bg-emerald-900/75 border border-emerald-700 rounded-2xl p-4 space-y-1.5">
+              <div class="text-2xl">✈️</div>
+              <h4 class="font-extrabold text-amber-300">Noi Bai &amp; Da Nang Connections</h4>
+              <p class="text-xs text-emerald-100 leading-relaxed">If a shuttle timetable says 0.4 hours and a traveller guesses 40 minutes instead of 24 minutes, they misplan their transfer by 16 minutes and risk missing their gate!</p>
+            </div>
+            <div class="bg-emerald-900/75 border border-emerald-700 rounded-2xl p-4 space-y-1.5">
+              <div class="text-2xl">🚇</div>
+              <h4 class="font-extrabold text-amber-300">Hanoi Metro Line 2A Headways</h4>
+              <p class="text-xs text-emerald-100 leading-relaxed">Urban metro trains run on tight decimal-minute intervals (such as 6.5 min = 6 min 30 s) so platforms stay safe and punctual during rush hour.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 2: CYCLE 1 — CONVERT LEGS (2A ➔ 2B ➔ 2C)                -->
+    <!-- ============================================================ -->
+    <section id="phase-2" class="phase-section">
+      <div class="space-y-5">
+
+        <!-- Cycle 1 Sub-Step Stepper -->
+        <div class="studio-card rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-xl bg-emerald-800 text-white font-extrabold text-xs uppercase tracking-wider">Cycle 1 (15 mins)</span>
+            <span class="font-extrabold text-emerald-950 text-sm">Convert All 7 Express Legs</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setCycleStep(1, 0)" id="c1-btn-0" class="c1-step-btn px-3 py-1.5 rounded-xl text-xs font-extrabold transition">2A. Mini-Teach (3m)</button>
+            <button onclick="setCycleStep(1, 1)" id="c1-btn-1" class="c1-step-btn px-3 py-1.5 rounded-xl text-xs font-extrabold transition">2B. Timed Task 1 (10m)</button>
+            <button onclick="setCycleStep(1, 2)" id="c1-btn-2" class="c1-step-btn px-3 py-1.5 rounded-xl text-xs font-extrabold transition">2C. Pit-Stop Check 1 (2m)</button>
+          </div>
+        </div>
+
+        <!-- 2A: MINI-TEACH — HANOI–DA NANG LEG CONVERTER SANDBOX -->
+        <div id="c1-panel-0" class="cycle-panel active">
+          <div id="stage-c1" class="studio-card rounded-3xl p-6 space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-stone-200 pb-3">
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-400 text-amber-900 text-xs font-extrabold uppercase">2A • Mini-Teach (3 mins) • I Do / We Do</span>
+                <h3 class="font-studio-serif text-2xl sm:text-3xl text-emerald-950 mt-1">Hanoi–Da Nang Leg Converter Sandbox</h3>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="toggleFullScreen('stage-c1', this)" class="px-3.5 py-2 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-white text-xs font-extrabold shadow transition">
+                  ⛶ Full Screen
+                </button>
+                <button onclick="setCycleStep(1, 1)" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-emerald-950 text-xs font-extrabold shadow transition">
+                  Start Timed Task 1 →
+                </button>
+              </div>
+            </div>
+
+            <!-- Preset Leg Pills -->
+            <div class="flex flex-wrap gap-2 items-center">
+              <span class="text-xs font-extrabold text-slate-600 uppercase">Tap a Route Leg:</span>
+              <button onclick="loadSandboxLeg(3.5, 'Leg 1: Hanoi ➔ Vinh')" class="px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-950 text-xs font-extrabold border border-emerald-400">3.5 h</button>
+              <button onclick="loadSandboxLeg(0.25, 'Leg 2: Vinh Switch')" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 text-xs font-extrabold border border-amber-400">0.25 h</button>
+              <button onclick="loadSandboxLeg(2.4, 'Leg 3: Vinh ➔ Dong Hoi (Trap!)')" class="px-3 py-1.5 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-extrabold border border-rose-400">2.4 h ⚠️</button>
+              <button onclick="loadSandboxLeg(0.6, 'Leg 4: Dong Hoi Lunch (Trap!)')" class="px-3 py-1.5 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-extrabold border border-rose-400">0.6 h ⚠️</button>
+              <button onclick="loadSandboxLeg(1.9, 'Leg 5: Dong Hoi ➔ Hue')" class="px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-950 text-xs font-extrabold border border-emerald-400">1.9 h</button>
+              <button onclick="loadSandboxLeg(0.2, 'Leg 6: Hue Stop')" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 text-xs font-extrabold border border-amber-400">0.2 h</button>
+              <button onclick="loadSandboxLeg(1.75, 'Leg 7: Hue ➔ Da Nang')" class="px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-950 text-xs font-extrabold border border-emerald-400">1.75 h</button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <!-- Left: Live Base-60 Clock Dial SVG -->
+              <div class="lg:col-span-5 bg-white rounded-3xl border-2 border-emerald-800/30 p-5 flex flex-col items-center justify-center shadow-inner">
+                <div id="sb-leg-label" class="text-xs font-extrabold uppercase tracking-wider text-emerald-800 mb-2">Leg 3: Vinh ➔ Dong Hoi (Trap!)</div>
+                <svg id="sb-clock-svg" viewBox="0 0 220 220" class="w-52 h-52">
+                  <circle cx="110" cy="110" r="96" fill="#faf7f0" stroke="#064e3b" stroke-width="5"/>
+                  <path id="sb-clock-wedge" d="M 110 110 L 110 14 A 96 96 0 0 1 166.4 187.7 Z" fill="#f59e0b" fill-opacity="0.38"/>
+                  <g stroke="#064e3b" stroke-width="2.5">
+                    <line x1="110" y1="16" x2="110" y2="28"/>
+                    <line x1="204" y1="110" x2="192" y2="110"/>
+                    <line x1="110" y1="204" x2="110" y2="192"/>
+                    <line x1="16" y1="110" x2="28" y2="110"/>
+                  </g>
+                  <text x="110" y="42" text-anchor="middle" font-size="13" font-weight="800" fill="#064e3b">0 / 60</text>
+                  <text x="180" y="115" text-anchor="middle" font-size="13" font-weight="800" fill="#064e3b">15</text>
+                  <text x="110" y="186" text-anchor="middle" font-size="13" font-weight="800" fill="#064e3b">30</text>
+                  <text x="40" y="115" text-anchor="middle" font-size="13" font-weight="800" fill="#064e3b">45</text>
+                  <line id="sb-clock-hand" x1="110" y1="110" x2="166.4" y2="187.7" stroke="#b45309" stroke-width="5" stroke-linecap="round"/>
+                  <circle cx="110" cy="110" r="7" fill="#064e3b"/>
+                </svg>
+                <div class="w-full mt-3 space-y-1">
+                  <div class="flex justify-between text-xs font-extrabold text-slate-700">
+                    <span>Adjust Decimal Hours:</span>
+                    <span id="sb-slider-val" class="font-mono-tech text-emerald-900">2.40 h</span>
+                  </div>
+                  <input id="sb-hours-slider" type="range" min="0.05" max="4.00" step="0.05" value="2.40" oninput="updateSandboxFromSlider()" class="studio-slider w-full"/>
+                </div>
+              </div>
+
+              <!-- Right: Live Split & Base-10 Trap Comparison -->
+              <div class="lg:col-span-7 space-y-4">
+                <div class="bg-emerald-950 text-white rounded-3xl p-5 border-2 border-amber-400">
+                  <div class="text-xs font-extrabold uppercase tracking-wider text-amber-300 mb-2">Step-by-Step Base-60 Conversion</div>
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                    <div class="bg-emerald-900/80 rounded-2xl p-3 border border-emerald-700">
+                      <div class="text-[11px] text-emerald-200 font-bold uppercase">Decimal Input</div>
+                      <div id="sb-dec-out" class="text-3xl font-mono-tech font-extrabold text-white mt-1">2.4 h</div>
+                    </div>
+                    <div class="bg-emerald-900/80 rounded-2xl p-3 border border-amber-400/70">
+                      <div class="text-[11px] text-amber-200 font-bold uppercase">Multiply Decimal × 60</div>
+                      <div id="sb-calc-out" class="text-xl font-mono-tech font-extrabold text-amber-300 mt-2">0.4 × 60 = 24</div>
+                    </div>
+                    <div class="bg-amber-400 text-emerald-950 rounded-2xl p-3">
+                      <div class="text-[11px] font-extrabold uppercase">Exact Mixed Time</div>
+                      <div id="sb-mixed-out" class="text-2xl font-mono-tech font-extrabold mt-1">2 h 24 min</div>
+                    </div>
+                  </div>
+                  <div class="mt-3 pt-3 border-t border-emerald-800 flex flex-wrap justify-between items-center text-xs font-bold text-emerald-100 gap-2">
+                    <span>Whole Hours Kept: <strong id="sb-whole-out" class="text-white font-mono-tech">2 h</strong></span>
+                    <span>Total Minutes: <strong id="sb-totmin-out" class="text-amber-300 font-mono-tech">144 min</strong></span>
+                  </div>
+                </div>
+
+                <!-- Base-10 Trap Alert Box -->
+                <div class="rounded-2xl bg-rose-50 border-2 border-rose-500 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <div class="space-y-1">
+                    <div class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-rose-800">
+                      <span>⚠️ Base-10 Trap Alert!</span>
+                    </div>
+                    <p id="sb-trap-text" class="text-sm font-bold text-rose-950">
+                      NEVER write 2.4 h = 2 h 40 min! Time is Base-60 (60 minutes in 1 hour), so 0.4 × 60 = 24 minutes!
+                    </p>
+                  </div>
+                  <div class="shrink-0 bg-white border-2 border-rose-300 rounded-xl px-3 py-2 text-center">
+                    <div class="text-[10px] font-extrabold text-rose-600 uppercase">Seconds Check</div>
+                    <div class="text-xs font-mono-tech font-extrabold text-emerald-900">0.5 min = 30 s</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2B: TIMED TASK 1 (10 MINS) + 4 LIVE ROLE CARDS -->
+        <div id="c1-panel-1" class="cycle-panel">
+          <div class="studio-card rounded-3xl p-6 space-y-5">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b-2 border-stone-200 pb-4">
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 border border-emerald-500 text-emerald-900 text-xs font-extrabold uppercase">2B • Timed Sprint 1 • Worksheet Page 2</span>
+                <h3 class="font-studio-serif text-3xl text-emerald-950 mt-1">Convert All 7 Route Legs into Mixed Time</h3>
+              </div>
+
+              <!-- 10:00 Countdown Timer -->
+              <div class="bg-emerald-950 text-white rounded-2xl px-5 py-3 border-2 border-amber-400 flex items-center gap-4 shadow-md">
+                <div id="timer-c1-display" class="text-4xl font-mono-tech font-extrabold text-amber-300 tracking-wider">10:00</div>
+                <div class="flex flex-col gap-1">
+                  <button onclick="toggleTimer('c1', 600)" id="timer-c1-btn" class="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-emerald-950 text-xs font-extrabold">▶ Start</button>
+                  <button onclick="resetTimer('c1', 600)" class="px-3 py-1 rounded-lg bg-emerald-800 hover:bg-emerald-700 text-emerald-100 text-xs font-bold">↺ Reset</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 Live Sprint-1 Role Job Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
+              <div class="rounded-2xl border-2 border-emerald-700 bg-emerald-50 p-4 space-y-1.5">
+                <div class="text-xs font-extrabold text-emerald-900 uppercase">1. Chief Planner</div>
+                <p class="text-sm font-bold text-slate-800">Label every station along the Hanoi–Da Nang map on Page 2 and highlight all 7 decimal durations.</p>
+              </div>
+              <div class="rounded-2xl border-2 border-amber-600 bg-amber-50 p-4 space-y-1.5">
+                <div class="text-xs font-extrabold text-amber-900 uppercase">2. Time Converter</div>
+                <p class="text-sm font-bold text-slate-800">Show the exact <span class="font-mono-tech">× 60</span> working in the dotted grid for Legs 1–7 (watch 2.4 h, 0.6 h, and 1.9 h!).</p>
+              </div>
+              <div class="rounded-2xl border-2 border-sky-700 bg-sky-50 p-4 space-y-1.5">
+                <div class="text-xs font-extrabold text-sky-900 uppercase">3. Schedule Auditor</div>
+                <p class="text-sm font-bold text-slate-800">Re-check each leg independently. Tick the table ONLY when decimal and mixed totals BOTH equal 10 h 36 min!</p>
+              </div>
+              <div class="rounded-2xl border-2 border-purple-700 bg-purple-50 p-4 space-y-1.5">
+                <div class="text-xs font-extrabold text-purple-900 uppercase">4. Reasoning Writer</div>
+                <p class="text-sm font-bold text-slate-800">Write one clear Base-60 warning note explaining why <span class="font-mono-tech">0.4 h = 24 min</span> and NOT 40 min.</p>
+              </div>
+            </div>
+
+            <!-- Collapsible Bonus Client Twist -->
+            <div class="rounded-2xl border-2 border-amber-500 bg-amber-50/80 overflow-hidden">
+              <button onclick="toggleCollapse('bonus-c1')" class="w-full px-5 py-3 flex items-center justify-between text-left font-extrabold text-amber-950 hover:bg-amber-100/70 transition">
+                <span>⚡ Early-Finisher Bonus Client Twist — Click to Reveal!</span>
+                <span class="text-xs font-mono-tech bg-amber-400 text-emerald-950 px-2.5 py-0.5 rounded-full">Optional Stretch</span>
+              </button>
+              <div id="bonus-c1" class="hidden px-5 pb-4 pt-1 border-t border-amber-300 space-y-2">
+                <p class="text-sm font-bold text-slate-800">
+                  Convert the <strong>12.5-minute</strong> pre-departure boarding buffer into <strong>minutes and seconds</strong> AND verify it in <strong>total seconds</strong>!
+                </p>
+                <button onclick="toggleCollapse('bonus-c1-ans')" class="px-3 py-1 rounded-lg bg-emerald-800 text-white text-xs font-extrabold">Reveal Bonus Check</button>
+                <div id="bonus-c1-ans" class="hidden bg-white border border-emerald-400 rounded-xl p-3 text-sm font-bold text-emerald-950">
+                  0.5 × 60 = 30 s ➔ <strong>12 minutes 30 seconds</strong> | Total seconds: (12 × 60) + 30 = 720 + 30 = <strong>750 seconds</strong>!
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end">
+              <button onclick="setCycleStep(1, 2)" class="px-5 py-2.5 rounded-xl bg-rose-700 hover:bg-rose-600 text-white text-sm font-extrabold shadow transition">
+                🛑 Call Pit-Stop Check 1 →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2C: PIT-STOP CHECK 1 (2 MINS) -->
+        <div id="c1-panel-2" class="cycle-panel">
+          <div class="rounded-3xl bg-gradient-to-br from-rose-900 via-rose-800 to-amber-900 text-white p-6 sm:p-8 border-4 border-amber-400 shadow-xl space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <span class="px-3 py-1 rounded-full bg-amber-400 text-rose-950 text-xs font-extrabold uppercase tracking-widest">2C • Pit-Stop Check 1 (2 mins) • AfL Gate</span>
+              <span class="text-xs font-bold text-amber-200">Every Pupil Proves It Independently</span>
+            </div>
+
+            <div class="text-center space-y-3 py-2">
+              <div class="text-2xl sm:text-4xl font-extrabold tracking-tight text-amber-300">🛑 FREEZE &amp; MINI-WHITEBOARDS UP!</div>
+              <div class="bg-black/30 border-2 border-white/30 rounded-3xl p-6 max-w-3xl mx-auto">
+                <p class="text-xl sm:text-3xl font-bold leading-snug">
+                  A regional shuttle leg takes <span class="font-mono-tech text-amber-300 underline decoration-amber-400">1.8 hours</span>.<br>
+                  Write its exact mixed duration on YOUR whiteboard!
+                </p>
+              </div>
+              <div class="pt-2">
+                <button onclick="revealPitStop('ps1-ans')" class="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-base shadow-lg transition pulse-gold">
+                  👁️ Reveal Exact Answer &amp; Trap Check
+                </button>
+              </div>
+              <div id="ps1-ans" class="hidden max-w-2xl mx-auto bg-white text-emerald-950 rounded-2xl p-5 border-4 border-emerald-400 shadow-lg space-y-2">
+                <div class="text-3xl sm:text-4xl font-mono-tech font-extrabold text-emerald-800">1 hour 48 minutes</div>
+                <p class="text-sm font-bold text-slate-700">Working: Keep 1 whole hour. Multiply <span class="font-mono-tech text-emerald-900">0.8 × 60 = 48 minutes</span>.</p>
+                <p class="text-xs font-extrabold text-rose-700">⚠️ Trap Check: NEVER 1 h 80 min or 1 h 8 min!</p>
+              </div>
+            </div>
+
+            <!-- Table Gatekeeper Ticks -->
+            <div class="bg-white/10 border border-white/25 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div class="space-y-1.5 text-xs sm:text-sm font-bold">
+                <div class="text-amber-300 uppercase text-xs font-extrabold">Table Gatekeeper Checklist:</div>
+                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-4 h-4 accent-amber-400"/> All 7 decimal legs converted using × 60 on Page 2</label>
+                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-4 h-4 accent-amber-400"/> Total default journey verified as 10.6 h = 10 h 36 min</label>
+              </div>
+              <button onclick="goPhase(3)" class="px-5 py-3 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-emerald-950 font-extrabold text-sm shadow-lg shrink-0 transition">
+                Proceed to Cycle 2 →
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 3: CYCLE 2 — SCHEDULE & FIX (3A ➔ 3B ➔ 3C)              -->
+    <!-- ============================================================ -->
+    <section id="phase-3" class="phase-section">
+      <div class="space-y-5">
+
+        <!-- Cycle 2 Sub-Step Stepper -->
+        <div class="studio-card rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-xl bg-amber-600 text-white font-extrabold text-xs uppercase tracking-wider">Cycle 2 (14 mins)</span>
+            <span class="font-extrabold text-emerald-950 text-sm">Build 24-Hour Clock &amp; Fix Late Arrival</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setCycleStep(2, 0)" id="c2-btn-0" class="c2-step-btn px-3 py-1.5 rounded-xl text-xs font-extrabold transition">3A. Mini-Teach (3m)</button>
+            <button onclick="setCycleStep(2, 1)" id="c2-btn-1" class="c2-step-btn px-3 py-1.5 rounded-xl text-xs font-extrabold transition">3B. Timed Task 2 (9m)</button>
+            <button onclick="setCycleStep(2, 2)" id="c2-btn-2" class="c2-step-btn px-3 py-1.5 rounded-xl text-xs font-extrabold transition">3C. Pit-Stop Check 2 (2m)</button>
+          </div>
+        </div>
+
+        <!-- 3A: MINI-TEACH — DELAY & ARRIVAL CLOCK SIMULATOR -->
+        <div id="c2-panel-0" class="cycle-panel active">
+          <div id="stage-c2" class="studio-card rounded-3xl p-6 space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-stone-200 pb-3">
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-400 text-amber-900 text-xs font-extrabold uppercase">3A • Mini-Teach (3 mins) • Live Optimisation Model</span>
+                <h3 class="font-studio-serif text-2xl sm:text-3xl text-emerald-950 mt-1">Delay &amp; Arrival Clock Simulator (07:30 ➔ ≤ 18:00)</h3>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="toggleFullScreen('stage-c2', this)" class="px-3.5 py-2 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-white text-xs font-extrabold shadow transition">
+                  ⛶ Full Screen
+                </button>
+                <button onclick="setCycleStep(2, 1)" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-emerald-950 text-xs font-extrabold shadow transition">
+                  Start Timed Task 2 →
+                </button>
+              </div>
+            </div>
+
+            <!-- Top Live Status Strip -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div class="bg-emerald-950 text-white rounded-2xl p-3.5 text-center">
+                <div class="text-[11px] font-bold uppercase text-emerald-200">Total Decimal Hours</div>
+                <div id="sim-dec-total" class="text-2xl font-mono-tech font-extrabold text-amber-300 mt-0.5">10.60 h</div>
+              </div>
+              <div class="bg-emerald-950 text-white rounded-2xl p-3.5 text-center">
+                <div class="text-[11px] font-bold uppercase text-emerald-200">Total Mixed Duration</div>
+                <div id="sim-mix-total" class="text-2xl font-mono-tech font-extrabold text-white mt-0.5">10 h 36 min</div>
+              </div>
+              <div class="bg-emerald-950 text-white rounded-2xl p-3.5 text-center">
+                <div class="text-[11px] font-bold uppercase text-emerald-200">Da Nang Arrival</div>
+                <div id="sim-arrival" class="text-3xl font-mono-tech font-extrabold text-rose-400 mt-0.5">18:06</div>
+              </div>
+              <div id="sim-status-box" class="bg-rose-100 border-2 border-rose-500 text-rose-950 rounded-2xl p-3.5 text-center flex flex-col justify-center">
+                <div id="sim-status-badge" class="text-base font-extrabold">❌ 6 mins LATE!</div>
+                <div id="sim-status-sub" class="text-xs font-bold mt-0.5">Must arrive ≤ 18:00</div>
+              </div>
+            </div>
+
+            <!-- Interactive Upgrade Controls (Never Destroyed on Update!) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              <div class="lg:col-span-5 bg-white rounded-2xl border-2 border-stone-300 p-4 space-y-4">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-extrabold text-emerald-950 text-sm uppercase tracking-wider">🛠️ Test Schedule Upgrades</h4>
+                  <button onclick="resetScheduleSim()" class="text-xs font-bold text-emerald-800 hover:underline">Reset Default</button>
+                </div>
+
+                <!-- Lunch Stop Slider -->
+                <div class="bg-amber-50 border border-amber-300 rounded-xl p-3 space-y-1.5">
+                  <div class="flex justify-between text-xs font-extrabold text-amber-950">
+                    <span>Option A: Dong Hoi Lunch Stop</span>
+                    <span id="sim-lunch-label" class="font-mono-tech">0.60 h (36 min)</span>
+                  </div>
+                  <input id="sim-lunch-slider" type="range" min="0.35" max="0.60" step="0.05" value="0.60" oninput="updateScheduleSim()" class="studio-slider w-full"/>
+                  <div class="flex justify-between text-[10px] font-bold text-slate-600">
+                    <span>0.35 h (Quick-Bento: −15m)</span>
+                    <span>0.60 h (Default)</span>
+                  </div>
+                </div>
+
+                <!-- Coastal Express Toggle -->
+                <label class="flex items-center justify-between bg-emerald-50 border border-emerald-300 rounded-xl p-3 cursor-pointer">
+                  <div>
+                    <div class="text-xs font-extrabold text-emerald-950">Option B: Coastal Express Engine</div>
+                    <div class="text-[11px] text-slate-600 font-semibold">Leg 3: 2.4 h ➔ 2.15 h (saves 0.25 h = 15 min)</div>
+                  </div>
+                  <input id="sim-coastal-chk" type="checkbox" onchange="updateScheduleSim()" class="w-5 h-5 accent-emerald-700"/>
+                </label>
+
+                <!-- Hue Whistle Toggle -->
+                <label class="flex items-center justify-between bg-sky-50 border border-sky-300 rounded-xl p-3 cursor-pointer">
+                  <div>
+                    <div class="text-xs font-extrabold text-sky-950">Option C: Rapid Hue Platform Stop</div>
+                    <div class="text-[11px] text-slate-600 font-semibold">Leg 6: 0.2 h ➔ 0.15 h (saves 0.05 h = 3 min)</div>
+                  </div>
+                  <input id="sim-hue-chk" type="checkbox" onchange="updateScheduleSim()" class="w-5 h-5 accent-sky-700"/>
+                </label>
+
+                <!-- Timeline Bar vs 18:00 Deadline -->
+                <div class="pt-1 space-y-1">
+                  <div class="flex justify-between text-[11px] font-extrabold text-slate-700">
+                    <span>07:30</span>
+                    <span class="text-amber-700">Deadline: 18:00 (10.5 h)</span>
+                  </div>
+                  <div class="relative w-full h-5 bg-stone-200 rounded-full overflow-hidden border border-stone-400">
+                    <div id="sim-progress-bar" class="h-full bg-rose-600 transition-all duration-300" style="width: 98%;"></div>
+                    <div class="absolute top-0 bottom-0 w-1 bg-amber-950" style="left: 95.45%;" title="18:00 Deadline"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Live 7-Leg 24-Hour Clock Ledger -->
+              <div class="lg:col-span-7 bg-white rounded-2xl border-2 border-emerald-800/30 p-4 overflow-x-auto">
+                <div class="text-xs font-extrabold uppercase tracking-wider text-emerald-900 mb-2">Live 24-Hour Clock Ledger (Watch Hour Regrouping!)</div>
+                <table class="w-full text-xs border-collapse">
+                  <thead>
+                    <tr class="bg-emerald-900 text-white">
+                      <th class="p-2 text-left rounded-tl-lg">Leg</th>
+                      <th class="p-2 text-center">Decimal</th>
+                      <th class="p-2 text-center">Mixed</th>
+                      <th class="p-2 text-center">Depart</th>
+                      <th class="p-2 text-center rounded-tr-lg">Arrive</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-stone-200 font-semibold">
+                    <tr><td class="p-2 font-bold">1. Hanoi ➔ Vinh</td><td id="r0-dec" class="p-2 text-center font-mono-tech">3.5 h</td><td id="r0-mix" class="p-2 text-center font-mono-tech">3 h 30 m</td><td id="r0-dep" class="p-2 text-center font-mono-tech">07:30</td><td id="r0-arr" class="p-2 text-center font-mono-tech font-extrabold text-emerald-900">11:00</td></tr>
+                    <tr class="bg-amber-50/40"><td class="p-2 font-bold">2. Vinh Switch</td><td id="r1-dec" class="p-2 text-center font-mono-tech">0.25 h</td><td id="r1-mix" class="p-2 text-center font-mono-tech">0 h 15 m</td><td id="r1-dep" class="p-2 text-center font-mono-tech">11:00</td><td id="r1-arr" class="p-2 text-center font-mono-tech font-extrabold text-emerald-900">11:15</td></tr>
+                    <tr><td class="p-2 font-bold">3. Vinh ➔ Dong Hoi</td><td id="r2-dec" class="p-2 text-center font-mono-tech">2.4 h</td><td id="r2-mix" class="p-2 text-center font-mono-tech">2 h 24 m</td><td id="r2-dep" class="p-2 text-center font-mono-tech">11:15</td><td id="r2-arr" class="p-2 text-center font-mono-tech font-extrabold text-emerald-900">13:39</td></tr>
+                    <tr class="bg-amber-50/40"><td class="p-2 font-bold">4. Dong Hoi Lunch</td><td id="r3-dec" class="p-2 text-center font-mono-tech">0.6 h</td><td id="r3-mix" class="p-2 text-center font-mono-tech">0 h 36 m</td><td id="r3-dep" class="p-2 text-center font-mono-tech">13:39</td><td id="r3-arr" class="p-2 text-center font-mono-tech font-extrabold text-emerald-900">14:15</td></tr>
+                    <tr><td class="p-2 font-bold">5. Dong Hoi ➔ Hue</td><td id="r4-dec" class="p-2 text-center font-mono-tech">1.9 h</td><td id="r4-mix" class="p-2 text-center font-mono-tech">1 h 54 m</td><td id="r4-dep" class="p-2 text-center font-mono-tech">14:15</td><td id="r4-arr" class="p-2 text-center font-mono-tech font-extrabold text-emerald-900">16:09</td></tr>
+                    <tr class="bg-amber-50/40"><td class="p-2 font-bold">6. Hue Platform</td><td id="r5-dec" class="p-2 text-center font-mono-tech">0.2 h</td><td id="r5-mix" class="p-2 text-center font-mono-tech">0 h 12 m</td><td id="r5-dep" class="p-2 text-center font-mono-tech">16:09</td><td id="r5-arr" class="p-2 text-center font-mono-tech font-extrabold text-emerald-900">16:21</td></tr>
+                    <tr class="bg-emerald-50"><td class="p-2 font-extrabold">7. Hue ➔ Da Nang</td><td id="r6-dec" class="p-2 text-center font-mono-tech">1.75 h</td><td id="r6-mix" class="p-2 text-center font-mono-tech">1 h 45 m</td><td id="r6-dep" class="p-2 text-center font-mono-tech">16:21</td><td id="r6-arr" class="p-2 text-center font-mono-tech font-extrabold text-rose-700 text-sm">18:06</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3B: TIMED TASK 2 (9 MINS) + 4 LIVE ROLE CARDS -->
+        <div id="c2-panel-1" class="cycle-panel">
+          <div class="studio-card rounded-3xl p-6 space-y-5">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b-2 border-stone-200 pb-4">
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-500 text-amber-900 text-xs font-extrabold uppercase">3B • Timed Sprint 2 • Worksheet Page 3</span>
+                <h3 class="font-studio-serif text-3xl text-emerald-950 mt-1">Assemble the 24-Hour Timetable &amp; Beat 18:00</h3>
+              </div>
+
+              <!-- 09:00 Countdown Timer -->
+              <div class="bg-emerald-950 text-white rounded-2xl px-5 py-3 border-2 border-amber-400 flex items-center gap-4 shadow-md">
+                <div id="timer-c2-display" class="text-4xl font-mono-tech font-extrabold text-amber-300 tracking-wider">09:00</div>
+                <div class="flex flex-col gap-1">
+                  <button onclick="toggleTimer('c2', 540)" id="timer-c2-btn" class="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-emerald-950 text-xs font-extrabold">▶ Start</button>
+                  <button onclick="resetTimer('c2', 540)" class="px-3 py-1 rounded-lg bg-emerald-800 hover:bg-emerald-700 text-emerald-100 text-xs font-bold">↺ Reset</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 Live Sprint-2 Role Job Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
+              <div class="rounded-2xl border-2 border-emerald-700 bg-emerald-50 p-4 space-y-1.5">
+                <div class="text-xs font-extrabold text-emerald-900 uppercase">1. Chief Planner</div>
+                <p class="text-sm font-bold text-slate-800">Lead the team decision: choose Option A, Option B, or BOTH to bring arrival strictly before 18:00.</p>
+              </div>
+              <div class="rounded-2xl border-2 border-amber-600 bg-amber-50 p-4 space-y-1.5">
+                <div class="text-xs font-extrabold text-amber-900 uppercase">2. Time Converter</div>
+                <p class="text-sm font-bold text-slate-800">Convert your chosen upgrade duration (<span class="font-mono-tech">0.35 h = 21 min</span> or <span class="font-mono-tech">2.15 h = 2 h 09 min</span>) and exact minutes saved.</p>
+              </div>
+              <div class="rounded-2xl border-2 border-sky-700 bg-sky-50 p-4 space-y-1.5">
+                <div class="text-xs font-extrabold text-sky-900 uppercase">3. Schedule Auditor</div>
+                <p class="text-sm font-bold text-slate-800">Verify EVERY hour crossing on Page 3 (<span class="font-mono-tech">13:39 + 36m = 14:15</span>; <span class="font-mono-tech">14:15 + 1h54m = 16:09</span>; <span class="font-mono-tech">16:21 + 1h45m = 18:06</span>).</p>
+              </div>
+              <div class="rounded-2xl border-2 border-purple-700 bg-purple-50 p-4 space-y-1.5">
+                <div class="text-xs font-extrabold text-purple-900 uppercase">4. Reasoning Writer</div>
+                <p class="text-sm font-bold text-slate-800">Record the exact arrival difference (default 18:06 vs upgraded 17:51 or 17:36) ready for your Page 4 proof.</p>
+              </div>
+            </div>
+
+            <!-- Collapsible Bonus Client Twist -->
+            <div class="rounded-2xl border-2 border-amber-500 bg-amber-50/80 overflow-hidden">
+              <button onclick="toggleCollapse('bonus-c2')" class="w-full px-5 py-3 flex items-center justify-between text-left font-extrabold text-amber-950 hover:bg-amber-100/70 transition">
+                <span>⚡ Early-Finisher Bonus Client Twist — Click to Reveal!</span>
+                <span class="text-xs font-mono-tech bg-amber-400 text-emerald-950 px-2.5 py-0.5 rounded-full">Reverse Conversion</span>
+              </button>
+              <div id="bonus-c2" class="hidden px-5 pb-4 pt-1 border-t border-amber-300 space-y-2">
+                <p class="text-sm font-bold text-slate-800">
+                  Calculate your team's upgraded total journey time back into a <strong>single decimal number of hours</strong>!
+                </p>
+                <button onclick="toggleCollapse('bonus-c2-ans')" class="px-3 py-1 rounded-lg bg-emerald-800 text-white text-xs font-extrabold">Reveal Bonus Check</button>
+                <div id="bonus-c2-ans" class="hidden bg-white border border-emerald-400 rounded-xl p-3 text-sm font-bold text-emerald-950">
+                  Option A or B (10 h 21 min): 21 ÷ 60 = 0.35 ➔ <strong>10.35 hours</strong> | Both A + B (10 h 06 min): 6 ÷ 60 = 0.1 ➔ <strong>10.1 hours</strong>!
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end">
+              <button onclick="setCycleStep(2, 2)" class="px-5 py-2.5 rounded-xl bg-rose-700 hover:bg-rose-600 text-white text-sm font-extrabold shadow transition">
+                🛑 Call Pit-Stop Check 2 →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3C: PIT-STOP CHECK 2 (2 MINS) -->
+        <div id="c2-panel-2" class="cycle-panel">
+          <div class="rounded-3xl bg-gradient-to-br from-rose-900 via-rose-800 to-amber-900 text-white p-6 sm:p-8 border-4 border-amber-400 shadow-xl space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <span class="px-3 py-1 rounded-full bg-amber-400 text-rose-950 text-xs font-extrabold uppercase tracking-widest">3C • Pit-Stop Check 2 (2 mins) • Bug Audit Gate</span>
+              <span class="text-xs font-bold text-amber-200">Individual Mini-Whiteboard Proof</span>
+            </div>
+
+            <div class="text-center space-y-3 py-2">
+              <div class="text-2xl sm:text-4xl font-extrabold tracking-tight text-amber-300">🛑 FREEZE &amp; MINI-WHITEBOARDS UP!</div>
+              <div class="bg-black/30 border-2 border-white/30 rounded-3xl p-6 max-w-3xl mx-auto">
+                <p class="text-lg sm:text-2xl font-bold leading-snug">
+                  An assistant wrote that a <span class="font-mono-tech text-amber-300">0.3 hour</span> delay adds <span class="line-through text-rose-300">30 minutes</span> to an <span class="font-mono-tech text-emerald-300">11:45</span> arrival (<span class="line-through text-rose-300">12:15</span>).<br>
+                  Spot the error and write the <strong>TRUE arrival time</strong>!
+                </p>
+              </div>
+              <div class="pt-2">
+                <button onclick="revealPitStop('ps2-ans')" class="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-base shadow-lg transition pulse-gold">
+                  👁️ Reveal Bug Fix &amp; True Arrival
+                </button>
+              </div>
+              <div id="ps2-ans" class="hidden max-w-2xl mx-auto bg-white text-emerald-950 rounded-2xl p-5 border-4 border-emerald-400 shadow-lg space-y-2">
+                <div class="text-4xl font-mono-tech font-extrabold text-emerald-800">12:03</div>
+                <p class="text-sm font-bold text-slate-700">Error: <span class="font-mono-tech text-rose-700">0.3 h ≠ 30 min</span>. Multiply by 60: <span class="font-mono-tech text-emerald-900">0.3 × 60 = 18 minutes</span>.</p>
+                <p class="text-sm font-bold text-emerald-900">Jump cleanly: 11:45 + 15 min = 12:00, then + 3 min = <strong>12:03</strong>!</p>
+              </div>
+            </div>
+
+            <!-- Table Gatekeeper Ticks -->
+            <div class="bg-white/10 border border-white/25 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div class="space-y-1.5 text-xs sm:text-sm font-bold">
+                <div class="text-amber-300 uppercase text-xs font-extrabold">Table Gatekeeper Checklist:</div>
+                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-4 h-4 accent-amber-400"/> Default 18:06 late arrival verified on Page 3</label>
+                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-4 h-4 accent-amber-400"/> Upgraded timetable reaches Da Nang strictly ≤ 18:00</label>
+              </div>
+              <button onclick="goPhase(4)" class="px-5 py-3 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-emerald-950 font-extrabold text-sm shadow-lg shrink-0 transition">
+                Proceed to Cycle 3 →
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 4: CYCLE 3 — WAGOLL, POSTER & PITCH (4A ➔ 4B ➔ 4C)      -->
+    <!-- ============================================================ -->
+    <section id="phase-4" class="phase-section">
+      <div class="space-y-5">
+
+        <!-- Cycle 3 Sub-Step Stepper -->
+        <div class="studio-card rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-xl bg-purple-800 text-white font-extrabold text-xs uppercase tracking-wider">Cycle 3 (18 mins)</span>
+            <span class="font-extrabold text-emerald-950 text-sm">WAGOLL Justification, A3 Poster &amp; 60s Pitch</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setCycleStep(3, 0)" id="c3-btn-0" class="c3-step-btn px-3 py-1.5 rounded-xl text-xs font-extrabold transition">4A. WAGOLL Mini-Teach (3m)</button>
+            <button onclick="setCycleStep(3, 1)" id="c3-btn-1" class="c3-step-btn px-3 py-1.5 rounded-xl text-xs font-extrabold transition">4B. Timed Task 3 (10m)</button>
+            <button onclick="setCycleStep(3, 2)" id="c3-btn-2" class="c3-step-btn px-3 py-1.5 rounded-xl text-xs font-extrabold transition">4C. Audit &amp; Pitch (5m)</button>
+          </div>
+        </div>
+
+        <!-- 4A: WAGOLL MINI-TEACH -->
+        <div id="c3-panel-0" class="cycle-panel active">
+          <div id="stage-c3" class="studio-card rounded-3xl p-6 space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-stone-200 pb-3">
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full bg-purple-100 border border-purple-400 text-purple-900 text-xs font-extrabold uppercase">4A • WAGOLL Mini-Teach (3 mins) • Mathematical Justification</span>
+                <h3 class="font-studio-serif text-2xl sm:text-3xl text-emerald-950 mt-1">1-Star Timetable Note vs 3-Star Mathematician's Proof</h3>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="toggleFullScreen('stage-c3', this)" class="px-3.5 py-2 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-white text-xs font-extrabold shadow transition">
+                  ⛶ Full Screen
+                </button>
+                <button onclick="setCycleStep(3, 1)" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-emerald-950 text-xs font-extrabold shadow transition">
+                  Start Timed Task 3 →
+                </button>
+              </div>
+            </div>
+
+            <!-- 3 Clickable Spotlight Toggles -->
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-extrabold uppercase text-slate-600">Spotlight Proof Features:</span>
+              <button onclick="toggleWagollHighlight('base60', this)" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 border-2 border-amber-500 text-amber-950 text-xs font-extrabold transition">
+                🔎 1. Exact ×60 Proof
+              </button>
+              <button onclick="toggleWagollHighlight('clock', this)" class="px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 border-2 border-emerald-500 text-emerald-950 text-xs font-extrabold transition">
+                🔎 2. 24-Hour Clock Regrouping
+              </button>
+              <button onclick="toggleWagollHighlight('saved', this)" class="px-3 py-1.5 rounded-xl bg-sky-100 hover:bg-sky-200 border-2 border-sky-500 text-sky-950 text-xs font-extrabold transition">
+                🔎 3. Exact Minutes Saved Before 18:00
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <!-- 1-Star Weak Example -->
+              <div class="rounded-3xl bg-rose-50 border-2 border-rose-300 p-5 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-rose-600 text-white text-xs font-extrabold">★ 1-Star Weak Timetable Note</span>
+                  <span class="text-xs font-bold text-rose-700">Missing Maths!</span>
+                </div>
+                <blockquote class="bg-white rounded-2xl p-4 border border-rose-200 text-base text-slate-700 italic leading-relaxed">
+                  "The first train was late so we changed the lunch stop to be shorter. Now the train gets to Da Nang before 6 o'clock and everybody is happy."
+                </blockquote>
+                <ul class="text-xs font-bold text-rose-800 space-y-1">
+                  <li>❌ No × 60 conversion shown for decimal hours.</li>
+                  <li>❌ No 24-hour clock times (18:06 or 17:51).</li>
+                  <li>❌ Does not prove how many exact minutes were saved.</li>
+                </ul>
+              </div>
+
+              <!-- 3-Star WAGOLL Example -->
+              <div class="rounded-3xl bg-emerald-50 border-4 border-emerald-700 p-5 space-y-3 shadow-md">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-emerald-800 text-amber-300 text-xs font-extrabold">★★★ 3-Star Mathematician's Justification</span>
+                  <span class="text-xs font-bold text-emerald-800">Checkpoint Gold!</span>
+                </div>
+                <blockquote class="bg-white rounded-2xl p-4 border-2 border-emerald-300 text-base text-slate-900 font-medium leading-relaxed">
+                  "The default 7-leg route totals <span class="wagoll-span" data-hl="base60">10.6 hours, which equals 10 hours 36 minutes because 0.6 × 60 = 36 min</span>. Departing Hanoi at 07:30, <span class="wagoll-span" data-hl="clock">16:21 + 1 h 45 min regroups 66 minutes into 1 h 06 min, arriving at 18:06</span> — 6 minutes late! We selected Option A to trim Dong Hoi Lunch from <span class="wagoll-span" data-hl="base60">0.6 h (36 min) to 0.35 h (0.35 × 60 = 21 min)</span>. This saves <span class="wagoll-span" data-hl="saved">0.25 h = 15 exact minutes, bringing arrival to 17:51 — 9 minutes before the 18:00 deadline</span>!"
+                </blockquote>
+                <div class="text-xs font-extrabold text-emerald-900">
+                  ✅ Tap the 3 spotlight buttons above to light up every proof ingredient!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4B: TIMED TASK 3 (10 MINS) + 4 LIVE ROLE CARDS -->
+        <div id="c3-panel-1" class="cycle-panel">
+          <div class="studio-card rounded-3xl p-6 space-y-5">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b-2 border-stone-200 pb-4">
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full bg-purple-100 border border-purple-500 text-purple-900 text-xs font-extrabold uppercase">4B • Timed Sprint 3 • Worksheet Page 4 &amp; A3 Poster</span>
+                <h3 class="font-studio-serif text-3xl text-emerald-950 mt-1">Mount Your Express Poster &amp; Write 3-Star Proofs</h3>
+              </div>
+
+              <!-- 10:00 Countdown Timer -->
+              <div class="bg-emerald-950 text-white rounded-2xl px-5 py-3 border-2 border-amber-400 flex items-center gap-4 shadow-md">
+                <div id="timer-c3-display" class="text-4xl font-mono-tech font-extrabold text-amber-300 tracking-wider">10:00</div>
+                <div class="flex flex-col gap-1">
+                  <button onclick="toggleTimer('c3', 600)" id="timer-c3-btn" class="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-emerald-950 text-xs font-extrabold">▶ Start</button>
+                  <button onclick="resetTimer('c3', 600)" class="px-3 py-1 rounded-lg bg-emerald-800 hover:bg-emerald-700 text-emerald-100 text-xs font-bold">↺ Reset</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 Live Sprint-3 Role Job Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
+              <div class="rounded-2xl border-2 border-emerald-700 bg-emerald-50 p-4 space-y-1.5">
+                <div class="text-xs font-extrabold text-emerald-900 uppercase">1. Chief Planner</div>
+                <p class="text-sm font-bold text-slate-800">Arrange and glue Pages 2, 3 &amp; 4 neatly onto your A3 poster with bold Hanoi–Da Nang Express title &amp; arrival banner.</p>
+              </div>
+              <div class="rounded-2xl border-2 border-amber-600 bg-amber-50 p-4 space-y-1.5">
+                <div class="text-xs font-extrabold text-amber-900 uppercase">2. Time Converter</div>
+                <p class="text-sm font-bold text-slate-800">Highlight every <span class="font-mono-tech">× 60</span> equation cleanly so visiting Peer Auditors can check your conversions in 10 seconds.</p>
+              </div>
+              <div class="rounded-2xl border-2 border-sky-700 bg-sky-50 p-4 space-y-1.5">
+                <div class="text-xs font-extrabold text-sky-900 uppercase">3. Schedule Auditor</div>
+                <p class="text-sm font-bold text-slate-800">Complete a final zero-error check of every departure/arrival time and prepare to inspect another team's poster.</p>
+              </div>
+              <div class="rounded-2xl border-2 border-purple-700 bg-purple-50 p-4 space-y-1.5">
+                <div class="text-xs font-extrabold text-purple-900 uppercase">4. Reasoning Writer</div>
+                <p class="text-sm font-bold text-slate-800">Complete all 3 written reasoning prompts on Page 4 with exact numbers and rehearse the 60-second team pitch!</p>
+              </div>
+            </div>
+
+            <!-- Collapsible Bonus Client Twist -->
+            <div class="rounded-2xl border-2 border-amber-500 bg-amber-50/80 overflow-hidden">
+              <button onclick="toggleCollapse('bonus-c3')" class="w-full px-5 py-3 flex items-center justify-between text-left font-extrabold text-amber-950 hover:bg-amber-100/70 transition">
+                <span>⚡ Early-Finisher Bonus Client Twist — Click to Reveal!</span>
+                <span class="text-xs font-mono-tech bg-amber-400 text-emerald-950 px-2.5 py-0.5 rounded-full">Return Express</span>
+              </button>
+              <div id="bonus-c3" class="hidden px-5 pb-4 pt-1 border-t border-amber-300 space-y-2">
+                <p class="text-sm font-bold text-slate-800">
+                  Add a <strong>return-train departure time</strong> exactly <strong>2.25 hours</strong> after your upgraded train reaches Da Nang!
+                </p>
+                <button onclick="toggleCollapse('bonus-c3-ans')" class="px-3 py-1 rounded-lg bg-emerald-800 text-white text-xs font-extrabold">Reveal Bonus Check</button>
+                <div id="bonus-c3-ans" class="hidden bg-white border border-emerald-400 rounded-xl p-3 text-sm font-bold text-emerald-950">
+                  2.25 h = <strong>2 hours 15 minutes</strong> (0.25 × 60 = 15 min).<br>
+                  • From <strong>17:51</strong> (Option A or B) ➔ Return departs <strong>20:06</strong>!<br>
+                  • From <strong>17:36</strong> (Options A + B) ➔ Return departs <strong>19:51</strong>!
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end">
+              <button onclick="setCycleStep(3, 2)" class="px-5 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-sm font-extrabold shadow transition">
+                Move to Peer Audit &amp; 60s Pitch →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4C: PEER AUDIT, 60-SECOND PITCH & STUDIO AWARDS -->
+        <div id="c3-panel-2" class="cycle-panel">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+            <!-- Left: 4-Point Peer-Audit Inspector Checklist -->
+            <div class="lg:col-span-6 studio-card rounded-3xl p-6 space-y-4">
+              <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+                <div>
+                  <span class="text-xs font-extrabold uppercase text-sky-800">4C • Peer-Audit Inspection</span>
+                  <h3 class="font-studio-serif text-2xl text-emerald-950">🔍 4-Point Inspector Checklist</h3>
+                </div>
+                <span id="audit-count-pill" class="px-3 py-1 rounded-full bg-stone-200 text-slate-800 font-mono-tech text-xs font-extrabold">0 / 4 Verified</span>
+              </div>
+              <div class="space-y-2.5 text-sm font-bold text-slate-800">
+                <label class="flex items-start gap-3 p-3 rounded-2xl bg-white border-2 border-stone-200 hover:border-emerald-500 cursor-pointer">
+                  <input type="checkbox" onchange="updateAuditCount()" class="audit-chk w-5 h-5 mt-0.5 accent-emerald-700"/>
+                  <span>1. Every decimal leg is accurately converted using × 60 (zero Base-10 Traps!).</span>
+                </label>
+                <label class="flex items-start gap-3 p-3 rounded-2xl bg-white border-2 border-stone-200 hover:border-emerald-500 cursor-pointer">
+                  <input type="checkbox" onchange="updateAuditCount()" class="audit-chk w-5 h-5 mt-0.5 accent-emerald-700"/>
+                  <span>2. All 24-hour clock additions regroup cleanly across every 60-minute boundary.</span>
+                </label>
+                <label class="flex items-start gap-3 p-3 rounded-2xl bg-white border-2 border-stone-200 hover:border-emerald-500 cursor-pointer">
+                  <input type="checkbox" onchange="updateAuditCount()" class="audit-chk w-5 h-5 mt-0.5 accent-emerald-700"/>
+                  <span>3. Final upgraded train arrives at Da Nang strictly at or before 18:00.</span>
+                </label>
+                <label class="flex items-start gap-3 p-3 rounded-2xl bg-white border-2 border-stone-200 hover:border-emerald-500 cursor-pointer">
+                  <input type="checkbox" onchange="updateAuditCount()" class="audit-chk w-5 h-5 mt-0.5 accent-emerald-700"/>
+                  <span>4. Written justification cites exact minutes saved and total journey verification.</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Right: 60-Second Pitch Timer + Studio Awards -->
+            <div class="lg:col-span-6 space-y-5">
+              <div class="bg-emerald-950 text-white rounded-3xl p-6 border-2 border-amber-400 shadow-lg space-y-4">
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <span class="text-xs font-extrabold uppercase text-amber-300">🎤 60-Second Express Pitch</span>
+                    <h4 class="font-studio-serif text-2xl text-white">Team Pitch Clock</h4>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <div id="timer-pitch-display" class="text-4xl font-mono-tech font-extrabold text-amber-300">01:00</div>
+                    <div class="flex flex-col gap-1">
+                      <button onclick="toggleTimer('pitch', 60)" id="timer-pitch-btn" class="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-emerald-950 text-xs font-extrabold">▶ Go</button>
+                      <button onclick="resetTimer('pitch', 60)" class="px-3 py-1 rounded-lg bg-emerald-800 hover:bg-emerald-700 text-xs font-bold">↺</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-emerald-900/75 border border-emerald-700 rounded-2xl p-3.5 text-xs sm:text-sm text-emerald-50 leading-relaxed">
+                  <strong class="text-amber-300">Pitch Stem:</strong> "Our default Hanoi–Da Nang route took <strong>10.6 hours (10 h 36 min)</strong> and arrived late at <strong>18:06</strong>. We chose <strong>[Option ___]</strong>, saving <strong>[___] minutes</strong> because <strong>[0.__ × 60 = ___]</strong>, so our Express arrives on time at <strong>[__:__]</strong>!"
+                </div>
+              </div>
+
+              <!-- 4 Clickable Studio Award Badges -->
+              <div class="studio-card rounded-3xl p-5 space-y-3">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-extrabold text-emerald-950 text-sm uppercase tracking-wider">🏆 Tap to Award Studio Badges (Confetti!)</h4>
+                  <button onclick="goPhase(5)" class="px-3.5 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-extrabold">Next: SC Review →</button>
+                </div>
+                <div class="grid grid-cols-2 gap-2.5">
+                  <button onclick="celebrateAward(this, 'Precision Timekeeper')" class="p-3 rounded-2xl bg-amber-50 hover:bg-amber-100 border-2 border-amber-400 text-left transition">
+                    <div class="text-lg">⏱️</div>
+                    <div class="text-xs font-extrabold text-amber-950">Precision Timekeeper</div>
+                    <div class="text-[11px] text-slate-600">Flawless × 60 conversions</div>
+                  </button>
+                  <button onclick="celebrateAward(this, 'Zero-Trap Auditor')" class="p-3 rounded-2xl bg-sky-50 hover:bg-sky-100 border-2 border-sky-400 text-left transition">
+                    <div class="text-lg">🔍</div>
+                    <div class="text-xs font-extrabold text-sky-950">Zero-Trap Auditor</div>
+                    <div class="text-[11px] text-slate-600">Sharpest peer check</div>
+                  </button>
+                  <button onclick="celebrateAward(this, 'Express Optimiser')" class="p-3 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-500 text-left transition">
+                    <div class="text-lg">🚆</div>
+                    <div class="text-xs font-extrabold text-emerald-950">Express Optimiser</div>
+                    <div class="text-[11px] text-slate-600">Best on-time schedule</div>
+                  </button>
+                  <button onclick="celebrateAward(this, 'Master Mathematician Pitch')" class="p-3 rounded-2xl bg-purple-50 hover:bg-purple-100 border-2 border-purple-400 text-left transition">
+                    <div class="text-lg">🎤</div>
+                    <div class="text-xs font-extrabold text-purple-950">Master Pitch</div>
+                    <div class="text-[11px] text-slate-600">Clear 3-star justification</div>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 5: DEDICATED FINAL SUCCESS CRITERIA REVIEW (WHITEBOARD)  -->
+    <!-- ============================================================ -->
+    <section id="phase-5" class="phase-section">
+      <div class="space-y-6">
+
+        <!-- Mastery Progress Header -->
+        <div class="studio-blueprint-banner rounded-3xl p-6 text-white border-4 border-amber-400 shadow-xl space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase tracking-wider">✅ Individual Mastery Gate (7 mins) • Mini-Whiteboards</span>
+              <h2 class="font-studio-serif text-3xl sm:text-4xl mt-1">Success Criteria Review — Prove It Yourself!</h2>
+              <p class="text-sm text-emerald-100 mt-1">Group posters are complete — now every single pupil proves all 3 "I can..." Success Criteria independently!</p>
+            </div>
+            <div class="bg-emerald-950/90 border-2 border-amber-400 rounded-2xl px-5 py-3 text-center shrink-0">
+              <div id="sc-met-counter" class="text-3xl font-mono-tech font-extrabold text-amber-300">0 / 3 Met</div>
+              <div class="w-40 h-2.5 bg-emerald-900 rounded-full mt-2 overflow-hidden">
+                <div id="sc-met-bar" class="h-full bg-emerald-400 transition-all duration-500" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Individual SC Diagnostic Cards (Word-for-Word SCs from Tab 0) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <!-- SC 1 -->
+          <div class="studio-card rounded-3xl p-5 flex flex-col justify-between space-y-4 border-t-8 border-t-emerald-700">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-emerald-800 text-white font-mono-tech text-xs font-extrabold">SC 1</span>
+                <label class="flex items-center gap-1.5 text-xs font-extrabold text-emerald-900 cursor-pointer bg-emerald-100 px-2.5 py-1 rounded-full">
+                  <input type="checkbox" onchange="updateScMastery()" class="sc-chk w-4 h-4 accent-emerald-700"/> Tick as Met
+                </label>
+              </div>
+              <p class="text-xs font-bold text-slate-700 leading-snug bg-stone-100 p-2.5 rounded-xl border border-stone-200">
+                "I can convert multi-leg decimal travel durations accurately into mixed hours, minutes and seconds to build a complete schedule."
+              </p>
+              <div class="bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 text-center space-y-1">
+                <div class="text-[11px] font-extrabold uppercase text-emerald-800">Fresh Whiteboard Check 1</div>
+                <div class="text-2xl font-mono-tech font-extrabold text-emerald-950">Convert 2.9 hours</div>
+                <div class="text-xs font-bold text-slate-600">Write in hours and minutes!</div>
+              </div>
+              <button onclick="toggleCollapse('sc1-ans')" class="w-full py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-extrabold transition">👁️ Reveal Proof</button>
+              <div id="sc1-ans" class="hidden bg-white border-2 border-emerald-500 rounded-xl p-3 text-center">
+                <div class="text-xl font-mono-tech font-extrabold text-emerald-800">2 hours 54 minutes</div>
+                <div class="text-xs font-bold text-slate-600 mt-0.5">0.9 × 60 = 54 min (NOT 90 min!)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SC 2 -->
+          <div class="studio-card rounded-3xl p-5 flex flex-col justify-between space-y-4 border-t-8 border-t-amber-600">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-amber-600 text-white font-mono-tech text-xs font-extrabold">SC 2</span>
+                <label class="flex items-center gap-1.5 text-xs font-extrabold text-amber-900 cursor-pointer bg-amber-100 px-2.5 py-1 rounded-full">
+                  <input type="checkbox" onchange="updateScMastery()" class="sc-chk w-4 h-4 accent-amber-600"/> Tick as Met
+                </label>
+              </div>
+              <p class="text-xs font-bold text-slate-700 leading-snug bg-stone-100 p-2.5 rounded-xl border border-stone-200">
+                "I can detect and fix timetable conversion errors and verify total journey times across both decimal and mixed units."
+              </p>
+              <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 text-center space-y-1">
+                <div class="text-[11px] font-extrabold uppercase text-amber-800">Fresh Whiteboard Check 2</div>
+                <div class="text-2xl font-mono-tech font-extrabold text-amber-950">3 min 42 s ➔ ? min</div>
+                <div class="text-xs font-bold text-slate-600">Convert back into decimal minutes!</div>
+              </div>
+              <button onclick="toggleCollapse('sc2-ans')" class="w-full py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-extrabold transition">👁️ Reveal Proof</button>
+              <div id="sc2-ans" class="hidden bg-white border-2 border-amber-500 rounded-xl p-3 text-center">
+                <div class="text-xl font-mono-tech font-extrabold text-amber-800">3.7 minutes</div>
+                <div class="text-xs font-bold text-slate-600 mt-0.5">42 ÷ 60 = 7 ÷ 10 = 0.7 min ➔ 3.7 min</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SC 3 -->
+          <div class="studio-card rounded-3xl p-5 flex flex-col justify-between space-y-4 border-t-8 border-t-purple-700">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-purple-700 text-white font-mono-tech text-xs font-extrabold">SC 3</span>
+                <label class="flex items-center gap-1.5 text-xs font-extrabold text-purple-900 cursor-pointer bg-purple-100 px-2.5 py-1 rounded-full">
+                  <input type="checkbox" onchange="updateScMastery()" class="sc-chk w-4 h-4 accent-purple-700"/> Tick as Met
+                </label>
+              </div>
+              <p class="text-xs font-bold text-slate-700 leading-snug bg-stone-100 p-2.5 rounded-xl border border-stone-200">
+                "I can justify schedule adjustments clearly in writing using exact base-60 calculations."
+              </p>
+              <div class="bg-purple-50 border-2 border-purple-300 rounded-2xl p-4 text-center space-y-1">
+                <div class="text-[11px] font-extrabold uppercase text-purple-800">Fresh Whiteboard Check 3</div>
+                <div class="text-xl font-mono-tech font-extrabold text-purple-950">0.6 h stop ➔ 0.35 h</div>
+                <div class="text-xs font-bold text-slate-600">Prove how many exact minutes are saved!</div>
+              </div>
+              <button onclick="toggleCollapse('sc3-ans')" class="w-full py-2 rounded-xl bg-purple-700 hover:bg-purple-600 text-white text-xs font-extrabold transition">👁️ Reveal Proof</button>
+              <div id="sc3-ans" class="hidden bg-white border-2 border-purple-500 rounded-xl p-3 text-center">
+                <div class="text-xl font-mono-tech font-extrabold text-purple-800">15 minutes saved</div>
+                <div class="text-xs font-bold text-slate-600 mt-0.5">0.6 − 0.35 = 0.25 h; 0.25 × 60 = 15 min</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-center pt-2">
+          <button onclick="goPhase(6)" class="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-emerald-950 font-extrabold text-base shadow-xl border-2 border-amber-700 transition">
+            ⚡ Launch Finale Quickfire →
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 6: DEDICATED UNITS 5 & 7 FINALE QUICKFIRE                -->
+    <!-- ============================================================ -->
+    <section id="phase-6" class="phase-section">
+      <div class="space-y-5">
+        <div class="studio-blueprint-banner rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-400 shadow-2xl space-y-6">
+
+          <!-- Top Quickfire Controls -->
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase tracking-wider">⚡ Units 5 &amp; 7 Finale Quickfire</span>
+              <span id="qf-topic-pill" class="px-3 py-1 rounded-full bg-emerald-800 border border-emerald-500 text-emerald-100 text-xs font-bold">7.2 Time</span>
+              <span id="qf-progress" class="font-mono-tech text-sm font-bold text-amber-200">Q 1 / 8</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="prevQuickfire()" class="px-3 py-1.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 border border-emerald-600 text-xs font-bold">← Prev</button>
+              <button onclick="nextQuickfire()" class="px-3 py-1.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 border border-emerald-600 text-xs font-bold">Next →</button>
+            </div>
+          </div>
+
+          <!-- Giant Question Display -->
+          <div class="bg-emerald-950/85 border-2 border-emerald-600 rounded-3xl p-6 sm:p-10 text-center space-y-5 min-h-[260px] flex flex-col justify-center">
+            <div id="qf-question" class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
+              Convert 0.7 hours into minutes.
+            </div>
+            <div id="qf-boards-alert" class="hidden inline-block mx-auto px-6 py-2 rounded-full bg-rose-600 text-white text-2xl font-extrabold tracking-widest animate-bounce">
+              🛑 BOARDS UP!
+            </div>
+            <div id="qf-answer-box" class="hidden bg-amber-400 text-emerald-950 rounded-2xl p-5 max-w-2xl mx-auto shadow-lg">
+              <div id="qf-answer-main" class="text-3xl sm:text-4xl font-mono-tech font-extrabold">42 minutes</div>
+              <div id="qf-answer-method" class="text-sm sm:text-base font-bold mt-1">0.7 × 60 = 42 minutes</div>
+            </div>
+          </div>
+
+          <!-- Timer & Team Scoring Controls -->
+          <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+            <div class="flex items-center gap-3">
+              <div id="qf-timer-display" class="w-20 h-14 rounded-2xl bg-black/40 border-2 border-amber-400 flex items-center justify-center font-mono-tech text-3xl font-extrabold text-amber-300">
+                15s
+              </div>
+              <button onclick="startQfTimer()" id="qf-timer-btn" class="px-4 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-sm shadow">
+                ▶ Start 15s
+              </button>
+              <button onclick="revealQfAnswer()" class="px-4 py-3 rounded-xl bg-white hover:bg-emerald-50 text-emerald-950 font-extrabold text-sm shadow">
+                👁️ Reveal Method
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="awardTeam('red', 1)" class="px-4 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-sm shadow transition">
+                +1 Team Red 🔴
+              </button>
+              <button onclick="awardTeam('blue', 1)" class="px-4 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-sm shadow transition">
+                +1 Team Blue 🔵
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- BILINGUAL VOCABULARY MODAL (z-80 — SOLE VIETNAMESE SPACE)    -->
+  <!-- ============================================================ -->
+  <div id="vocab-modal" class="hidden fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4" onclick="if(event.target===this) closeVocabModal()">
+    <div class="bg-[#fffdf8] border-4 border-emerald-800 rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-4 relative">
+      <button onclick="closeVocabModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-stone-200 hover:bg-rose-100 text-slate-800 font-extrabold">✕</button>
+      <div class="flex items-center gap-2">
+        <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold uppercase">Studio Bilingual Glossary</span>
+      </div>
+      <div class="space-y-1">
+        <h3 id="vm-en" class="font-studio-serif text-3xl text-emerald-950"></h3>
+        <div id="vm-vn" class="text-xl font-extrabold text-amber-700"></div>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="speakVocab('en-GB')" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-extrabold flex items-center gap-1.5 shadow">
+          🔊 Listen (English UK)
+        </button>
+        <button onclick="speakVocab('vi-VN')" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-emerald-950 text-xs font-extrabold flex items-center gap-1.5 shadow">
+          🔊 Nghe (Tiếng Việt)
+        </button>
+      </div>
+      <div id="vm-svg" class="bg-emerald-50/70 border-2 border-emerald-200 rounded-2xl p-4 flex items-center justify-center"></div>
+      <div class="space-y-2 text-sm">
+        <div class="bg-white border border-stone-200 rounded-xl p-3">
+          <span class="text-xs font-extrabold uppercase text-emerald-800">English Definition:</span>
+          <p id="vm-def-en" class="font-semibold text-slate-800 mt-0.5"></p>
+        </div>
+        <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-3">
+          <span class="text-xs font-extrabold uppercase text-amber-800">Giải thích Tiếng Việt:</span>
+          <p id="vm-def-vn" class="font-semibold text-slate-800 mt-0.5"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TEACHER COACHING DRAWER (z-75 — HIDDEN BY DEFAULT, KEY: T)   -->
+  <!-- ============================================================ -->
+  <aside id="teacher-drawer" class="hidden fixed top-0 right-0 bottom-0 w-full max-w-md z-[75] bg-[#052e2b] text-emerald-50 border-l-4 border-amber-400 shadow-2xl overflow-y-auto p-6 space-y-5">
+    <div class="flex items-center justify-between border-b border-emerald-700 pb-3">
+      <div>
+        <div class="text-xs font-extrabold uppercase tracking-wider text-amber-300">📋 Teacher Coaching Drawer (T)</div>
+        <h3 class="font-studio-serif text-2xl text-white">70-Min 3-Cycle Pacing &amp; Intervention</h3>
+      </div>
+      <button onclick="toggleTeacherDrawer()" class="w-9 h-9 rounded-full bg-emerald-800 hover:bg-rose-600 text-white font-extrabold">✕</button>
+    </div>
+
+    <div class="bg-emerald-900/70 rounded-2xl p-4 border border-emerald-700 space-y-2 text-xs">
+      <div class="font-extrabold text-amber-300 uppercase">Exact 70-Minute Studio Breakdown</div>
+      <ul class="space-y-1.5 font-semibold">
+        <li>• <strong>Tab 0 (5m):</strong> WALT, 3 "I can..." SCs, 07:30–18:00 brief &amp; 4 roles.</li>
+        <li>• <strong>Tab 1 (6m):</strong> Flashback 3 (Units 5, 7.1, 4) + Studio Glossary.</li>
+        <li>• <strong>Tab 2 Cycle 1 (15m):</strong> Mini-Teach (3m) ➔ Convert 7 legs on p.2 (10m) ➔ Pit-Stop 1.8 h (2m).</li>
+        <li>• <strong>Tab 3 Cycle 2 (14m):</strong> Arrival Simulator (3m) ➔ 24-h ledger &amp; upgrade on p.3 (9m) ➔ Pit-Stop 0.3 h bug (2m).</li>
+        <li>• <strong>Tab 4 Cycle 3 (18m):</strong> WAGOLL (3m) ➔ A3 Poster &amp; p.4 proofs (10m) ➔ Peer Audit &amp; 60s Pitch (5m).</li>
+        <li>• <strong>Tab 5 SC Review (7m):</strong> 3 fresh individual whiteboard checks (2.9 h; 3 min 42 s; 0.6−0.35 h).</li>
+        <li>• <strong>Tab 6 Quickfire (5m):</strong> 8 Units 5 &amp; 7 rapid questions.</li>
+      </ul>
+    </div>
+
+    <div class="bg-rose-950/80 rounded-2xl p-4 border border-rose-500/60 space-y-2 text-xs">
+      <div class="font-extrabold text-rose-300 uppercase">🚨 If They Aren't Getting It (Live Intervention)</div>
+      <p><strong>Red-Flag Hinge:</strong> Pupils add decimal hours directly onto clock times (08:30 + 1.4 h = 09:70 or 09:44) instead of multiplying 0.4 × 60 = 24 min first.</p>
+      <p><strong>Support Table Rule Card:</strong> "Step 1: Convert EVERY decimal into h &amp; min FIRST. Step 2: Add minutes carefully — regroup every 60 minutes into 1 hour!"</p>
+      <p><strong>Whole-Class Pivot (&gt;30% stuck):</strong> Freeze 2 mins on David's Board (`W`), jump along an open timeline: 09:45 + 1 h 24 min (09:45 ➔ 10:45 ➔ 11:00 ➔ 11:09).</p>
+    </div>
+
+    <div class="bg-emerald-900/50 rounded-2xl p-4 border border-emerald-700 space-y-1.5 text-xs">
+      <div class="font-extrabold text-amber-300 uppercase">EAL Speaking &amp; Reasoning Stems</div>
+      <p>• "Because time uses base-60, 0.__ hours equals 0.__ × 60 = ___ minutes."</p>
+      <p>• "When we cross 60 minutes, we regroup 60 minutes into 1 whole hour."</p>
+      <p>• "Option ___ saves ___ minutes, so we beat 18:00 by ___ minutes."</p>
+    </div>
+
+    <div class="text-[11px] text-emerald-300 font-mono-tech">
+      Shortcuts: ←/→ Tabs • W David's Board • T Drawer • M Mute • Esc Close
+    </div>
+  </aside>
+
+  <!-- ============================================================ -->
+  <!-- DAVID'S BOARD WHITEBOARD OVERLAY (z-80, DPR-SAFE, KEY: W)    -->
+  <!-- ============================================================ -->
+  <div id="davids-board" class="hidden fixed inset-0 z-[85] bg-slate-900/95 flex flex-col">
+    <div class="bg-[#052e2b] text-white px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 border-b-2 border-amber-400">
+      <div class="flex items-center gap-2">
+        <span class="font-studio-serif text-xl text-amber-300">✏️ David's Board</span>
+        <span class="text-xs text-emerald-200 hidden sm:inline">32px Timeline &amp; Sketch Grid</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- 5 Ink Colours -->
+        <button onclick="setPen('#0f172a')" class="w-7 h-7 rounded-full bg-slate-900 border-2 border-white" title="Black Ink"></button>
+        <button onclick="setPen('#dc2626')" class="w-7 h-7 rounded-full bg-red-600 border-2 border-white" title="Red Ink"></button>
+        <button onclick="setPen('#0284c7')" class="w-7 h-7 rounded-full bg-sky-600 border-2 border-white" title="Blue Ink"></button>
+        <button onclick="setPen('#059669')" class="w-7 h-7 rounded-full bg-emerald-600 border-2 border-white" title="Green Ink"></button>
+        <button onclick="setPen('#d97706')" class="w-7 h-7 rounded-full bg-amber-600 border-2 border-white" title="Amber Ink"></button>
+        <span class="text-emerald-600">|</span>
+        <!-- 3 Pen Weights -->
+        <button onclick="setPenWidth(3)" class="px-2 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-xs font-bold">Thin</button>
+        <button onclick="setPenWidth(6)" class="px-2 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-xs font-bold">Med</button>
+        <button onclick="setPenWidth(12)" class="px-2 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-xs font-bold">Bold</button>
+        <button onclick="setEraser()" class="px-2.5 py-1 rounded bg-amber-500 text-emerald-950 text-xs font-extrabold">🧽 Eraser</button>
+        <button onclick="clearDavidsBoard()" class="px-2.5 py-1 rounded bg-rose-600 hover:bg-rose-500 text-white text-xs font-extrabold">🗑️ Clear</button>
+        <button onclick="closeDavidsBoard()" class="px-3 py-1 rounded bg-white text-emerald-950 text-xs font-extrabold">✕ Close (Esc)</button>
+      </div>
+    </div>
+    <div class="flex-1 relative davids-grid overflow-hidden">
+      <canvas id="db-canvas" class="w-full h-full touch-none cursor-crosshair block"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. GLOBAL STATE & AUDIO ENGINE (OFFLINE WEB AUDIO API)
+    // =========================================================================
+    let currentPhase = 0;
+    let isMuted = false;
+    let scores = { red: 0, blue: 0 };
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) audioCtx = new Ctx();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playTone(freq, duration, type = 'sine', gainVal = 0.12) {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(gainVal, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration);
+    }
+
+    function playChime() {
+      playTone(523.25, 0.14, 'triangle', 0.14);
+      setTimeout(() => playTone(659.25, 0.14, 'triangle', 0.14), 90);
+      setTimeout(() => playTone(783.99, 0.24, 'triangle', 0.15), 180);
+    }
+
+    function playBuzzer() {
+      playTone(220, 0.28, 'sawtooth', 0.12);
+      setTimeout(() => playTone(185, 0.35, 'sawtooth', 0.12), 180);
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      const btn = document.getElementById('btn-mute');
+      btn.innerHTML = isMuted ? '🔇 <span class="hidden sm:inline">Muted (M)</span>' : '🔊 <span class="hidden sm:inline">Sound (M)</span>';
+    }
+
+    // =========================================================================
+    // 2. CONFETTI ENGINE
+    // =========================================================================
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const cCtx = confettiCanvas.getContext('2d');
+    let confettiPieces = [];
+    let confettiAnimId = null;
+
+    function resizeConfetti() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfetti);
+    resizeConfetti();
+
+    function launchConfetti(count = 75) {
+      const colours = ['#f59e0b', '#10b981', '#0ea5e9', '#f43f5e', '#a855f7', '#fbbf24'];
+      for (let i = 0; i < count; i++) {
+        confettiPieces.push({
+          x: Math.random() * confettiCanvas.width,
+          y: -12 - Math.random() * 60,
+          w: 7 + Math.random() * 6,
+          h: 5 + Math.random() * 6,
+          vx: (Math.random() - 0.5) * 4.5,
+          vy: 2.8 + Math.random() * 4.2,
+          rot: Math.random() * 360,
+          vrot: (Math.random() - 0.5) * 10,
+          color: colours[Math.floor(Math.random() * colours.length)],
+          life: 140
+        });
+      }
+      if (!confettiAnimId) animateConfetti();
+    }
+
+    function animateConfetti() {
+      cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      confettiPieces = confettiPieces.filter(p => p.life > 0 && p.y < confettiCanvas.height + 20);
+      for (const p of confettiPieces) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vrot;
+        p.life--;
+        cCtx.save();
+        cCtx.translate(p.x, p.y);
+        cCtx.rotate((p.rot * Math.PI) / 180);
+        cCtx.fillStyle = p.color;
+        cCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        cCtx.restore();
+      }
+      if (confettiPieces.length > 0) {
+        confettiAnimId = requestAnimationFrame(animateConfetti);
+      } else {
+        confettiAnimId = null;
+      }
+    }
+
+    function awardTeam(team, pts) {
+      scores[team] += pts;
+      document.getElementById('score-red').textContent = scores.red;
+      document.getElementById('score-blue').textContent = scores.blue;
+      playChime();
+      launchConfetti(45);
+    }
+
+    // =========================================================================
+    // 3. AUTO-HIDING HEADER & 7-TAB NAVIGATION
+    // =========================================================================
+    let lastScrollY = 0;
+    window.addEventListener('scroll', () => {
+      const hdr = document.getElementById('top-header');
+      const cur = window.scrollY;
+      if (cur > lastScrollY && cur > 60) {
+        hdr.style.transform = 'translateY(-100%)';
+      } else {
+        hdr.style.transform = 'translateY(0)';
+      }
+      lastScrollY = cur;
+    });
+
+    function goPhase(idx) {
+      if (idx < 0 || idx > 6) return;
+      currentPhase = idx;
+      document.querySelectorAll('.phase-section').forEach((sec, i) => {
+        sec.classList.toggle('active', i === idx);
+      });
+      document.querySelectorAll('.phase-tab').forEach((btn, i) => {
+        if (i === idx) {
+          btn.className = 'phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition bg-emerald-800 text-amber-300 shadow-md border-2 border-amber-400';
+        } else {
+          btn.className = 'phase-tab px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition bg-stone-100 text-slate-700 hover:bg-emerald-50 border border-stone-200';
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      playTone(480 + idx * 35, 0.08, 'sine', 0.06);
+    }
+
+    function setCycleStep(cycleNum, stepIdx) {
+      for (let i = 0; i < 3; i++) {
+        const panel = document.getElementById(`c${cycleNum}-panel-${i}`);
+        const btn = document.getElementById(`c${cycleNum}-btn-${i}`);
+        if (panel) panel.classList.toggle('active', i === stepIdx);
+        if (btn) {
+          if (i === stepIdx) {
+            btn.className = `c${cycleNum}-step-btn px-3 py-1.5 rounded-xl text-xs font-extrabold transition bg-emerald-800 text-amber-300 shadow`;
+          } else {
+            btn.className = `c${cycleNum}-step-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-stone-100 text-slate-700 hover:bg-emerald-50`;
+          }
+        }
+      }
+      playTone(540 + stepIdx * 50, 0.07, 'sine', 0.05);
+    }
+
+    function toggleFullScreen(stageId, btn) {
+      const el = document.getElementById(stageId);
+      const isFs = el.classList.toggle('fullscreen-stage');
+      btn.textContent = isFs ? '✕ Exit Full Screen' : '⛶ Full Screen';
+    }
+
+    function toggleCollapse(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('hidden');
+    }
+
+    // =========================================================================
+    // 4. TAB 0: GROUP SIZE SWITCHER (4 / 3 / 2)
+    // =========================================================================
+    function setGroupSize(size) {
+      [4, 3, 2].forEach(n => {
+        const b = document.getElementById(`grp-btn-${n}`);
+        if (n === size) {
+          b.className = 'grp-btn px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition bg-emerald-800 text-white shadow';
+        } else {
+          b.className = 'grp-btn px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-700 hover:bg-white';
+        }
+      });
+
+      const banner = document.getElementById('group-size-banner');
+      if (size === 4) {
+        banner.classList.add('hidden');
+        document.getElementById('role-tag-1').textContent = 'Pupil A';
+        document.getElementById('role-tag-2').textContent = 'Pupil B';
+        document.getElementById('role-tag-3').textContent = 'Pupil C';
+        document.getElementById('role-tag-4').textContent = 'Pupil D';
+      } else if (size === 3) {
+        banner.classList.remove('hidden');
+        banner.textContent = 'Group of 3 Adaptation: Pupil A combines Chief Timetable Planner + Lead Reasoning Writer; Pupil B = Decimal Time Converter; Pupil C = Delay & Schedule Auditor.';
+        document.getElementById('role-tag-1').textContent = 'Pupil A (Dual)';
+        document.getElementById('role-tag-2').textContent = 'Pupil B';
+        document.getElementById('role-tag-3').textContent = 'Pupil C';
+        document.getElementById('role-tag-4').textContent = 'Pupil A (Dual)';
+      } else {
+        banner.classList.remove('hidden');
+        banner.textContent = 'Pair of 2 Adaptation: Partner A leads Chief Planner + Decimal Time Converter (Roles 1 & 2); Partner B leads Delay Auditor + Lead Reasoning Writer (Roles 3 & 4).';
+        document.getElementById('role-tag-1').textContent = 'Partner A';
+        document.getElementById('role-tag-2').textContent = 'Partner A';
+        document.getElementById('role-tag-3').textContent = 'Partner B';
+        document.getElementById('role-tag-4').textContent = 'Partner B';
+      }
+    }
+
+    // =========================================================================
+    // 5. TAB 1: FLASHBACK 3 + STUDIO BILINGUAL GLOSSARY (SOLE VN MODAL)
+    // =========================================================================
+    function toggleFlip(wrapper) {
+      const card = wrapper.querySelector('.flip-card');
+      card.classList.toggle('flipped');
+      playTone(600, 0.07, 'triangle', 0.07);
+    }
+
+    function flipAllFlashbacks() {
+      const cards = document.querySelectorAll('.flip-card');
+      const anyUnflipped = Array.from(cards).some(c => !c.classList.contains('flipped'));
+      cards.forEach(c => c.classList.toggle('flipped', anyUnflipped));
+      playChime();
+    }
+
+    const VOCAB_ITEMS = [
+      {
+        en: 'timetable',
+        vn: 'thời gian biểu / lịch tàu',
+        defEn: 'A structured table showing exact departure, stopover, and arrival times for a journey.',
+        defVn: 'Bảng liệt kê chính xác giờ khởi hành, giờ dừng và giờ đến của một hành trình.',
+        svg: '<svg viewBox="0 0 220 75" class="w-56 h-20"><rect x="10" y="8" width="200" height="58" rx="8" fill="#ffffff" stroke="#064e3b" stroke-width="2.5"/><rect x="10" y="8" width="200" height="18" rx="6" fill="#064e3b"/><text x="110" y="21" text-anchor="middle" fill="#fde68a" font-size="10" font-weight="800">HANOI ➔ DA NANG</text><text x="35" y="42" font-size="11" font-weight="800" fill="#064e3b">07:30</text><text x="105" y="42" font-size="10" font-weight="700" fill="#b45309">+3 h 30 m</text><text x="170" y="42" font-size="11" font-weight="800" fill="#064e3b">11:00</text><line x1="20" y1="50" x2="200" y2="50" stroke="#cbd5e1" stroke-width="1.5"/><text x="110" y="61" text-anchor="middle" font-size="9" font-weight="700" fill="#475569">Exact 24-Hour Schedule</text></svg>'
+      },
+      {
+        en: 'departure',
+        vn: 'giờ khởi hành',
+        defEn: 'The exact clock time when a train, bus, or ferry leaves a station.',
+        defVn: 'Thời điểm chính xác mà tàu hỏa, xe buýt hoặc phà rời khỏi ga hoặc bến.',
+        svg: '<svg viewBox="0 0 220 70" class="w-56 h-20"><rect x="15" y="24" width="66" height="24" rx="6" fill="#064e3b"/><text x="48" y="40" text-anchor="middle" fill="#fde68a" font-size="12" font-weight="800">07:30</text><line x1="88" y1="36" x2="185" y2="36" stroke="#d97706" stroke-width="4" stroke-dasharray="6,4"/><polygon points="185,28 202,36 185,44" fill="#d97706"/><text x="142" y="24" text-anchor="middle" fill="#064e3b" font-size="10" font-weight="800">LEAVES STATION ➔</text></svg>'
+      },
+      {
+        en: 'arrival',
+        vn: 'giờ đến nơi',
+        defEn: 'The exact clock time when a journey reaches its destination station.',
+        defVn: 'Thời điểm chính xác mà chuyến đi tới ga đích.',
+        svg: '<svg viewBox="0 0 220 70" class="w-56 h-20"><line x1="20" y1="36" x2="115" y2="36" stroke="#047857" stroke-width="4"/><polygon points="115,28 130,36 115,44" fill="#047857"/><rect x="136" y="22" width="70" height="28" rx="6" fill="#f59e0b"/><text x="171" y="40" text-anchor="middle" fill="#052e2b" font-size="12" font-weight="800">17:51</text><text x="171" y="15" text-anchor="middle" fill="#064e3b" font-size="10" font-weight="800">DA NANG GOAL</text></svg>'
+      },
+      {
+        en: 'duration',
+        vn: 'khoảng thời gian di chuyển',
+        defEn: 'How long an event or travel leg lasts from start to finish (not a clock time).',
+        defVn: 'Độ dài thời gian một chặng đi hoặc sự kiện diễn ra từ lúc bắt đầu đến khi kết thúc.',
+        svg: '<svg viewBox="0 0 220 70" class="w-56 h-20"><line x1="25" y1="44" x2="195" y2="44" stroke="#064e3b" stroke-width="3"/><circle cx="25" cy="44" r="6" fill="#064e3b"/><circle cx="195" cy="44" r="6" fill="#d97706"/><path d="M 25 36 Q 110 4 195 36" fill="none" stroke="#d97706" stroke-width="3"/><text x="110" y="22" text-anchor="middle" fill="#b45309" font-size="12" font-weight="800">+ 2 h 24 min (2.4 h)</text><text x="25" y="62" text-anchor="middle" font-size="10" font-weight="700" fill="#064e3b">11:15</text><text x="195" y="62" text-anchor="middle" font-size="10" font-weight="700" fill="#064e3b">13:39</text></svg>'
+      },
+      {
+        en: 'layover',
+        vn: 'thời gian dừng chờ / quá cảnh',
+        defEn: 'A planned pause between two travel legs for track changes, meals, or transfers.',
+        defVn: 'Khoảng thời gian dừng nghỉ theo kế hoạch giữa hai chặng tàu để đổi đường ray hoặc ăn trưa.',
+        svg: '<svg viewBox="0 0 220 70" class="w-56 h-20"><rect x="14" y="25" width="52" height="22" rx="5" fill="#047857"/><text x="40" y="40" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="800">LEG 3</text><rect x="74" y="20" width="72" height="32" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="2.5" stroke-dasharray="4,3"/><text x="110" y="35" text-anchor="middle" fill="#92400e" font-size="10" font-weight="800">PAUSE</text><text x="110" y="47" text-anchor="middle" fill="#92400e" font-size="9" font-weight="700">0.35 h = 21m</text><rect x="154" y="25" width="52" height="22" rx="5" fill="#047857"/><text x="180" y="40" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="800">LEG 5</text></svg>'
+      },
+      {
+        en: 'decimal hours',
+        vn: 'giờ thập phân',
+        defEn: 'Time written using a decimal point (e.g. 2.4 h), where the decimal fraction is multiplied by 60 to find minutes.',
+        defVn: 'Thời gian viết dưới dạng số thập phân (ví dụ 2,4 giờ); ta nhân phần thập phân với 60 để đổi ra phút.',
+        svg: '<svg viewBox="0 0 220 70" class="w-56 h-20"><rect x="16" y="16" width="72" height="38" rx="8" fill="#064e3b"/><text x="52" y="40" text-anchor="middle" fill="#fde68a" font-size="16" font-weight="800">2.4 h</text><text x="108" y="39" text-anchor="middle" fill="#b45309" font-size="16" font-weight="800">➔</text><rect x="128" y="16" width="80" height="38" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="2"/><text x="168" y="34" text-anchor="middle" fill="#064e3b" font-size="11" font-weight="800">0.4 × 60</text><text x="168" y="48" text-anchor="middle" fill="#b45309" font-size="11" font-weight="800">= 24 min</text></svg>'
+      },
+      {
+        en: 'mixed units',
+        vn: 'đơn vị hỗn hợp (giờ, phút, giây)',
+        defEn: 'Expressing a duration using more than one time unit together, such as 1 hour 48 minutes or 12 minutes 30 seconds.',
+        defVn: 'Cách viết khoảng thời gian kết hợp nhiều đơn vị đo như 1 giờ 48 phút hoặc 12 phút 30 giây.',
+        svg: '<svg viewBox="0 0 220 70" class="w-56 h-20"><rect x="14" y="18" width="56" height="34" rx="7" fill="#064e3b"/><text x="42" y="40" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="800">1 h</text><text x="80" y="40" text-anchor="middle" fill="#064e3b" font-size="14" font-weight="800">+</text><rect x="90" y="18" width="60" height="34" rx="7" fill="#d97706"/><text x="120" y="40" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="800">48 m</text><text x="160" y="40" text-anchor="middle" fill="#064e3b" font-size="14" font-weight="800">+</text><rect x="170" y="18" width="42" height="34" rx="7" fill="#0284c7"/><text x="191" y="40" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="800">30 s</text></svg>'
+      },
+      {
+        en: 'justify',
+        vn: 'lập luận chứng minh',
+        defEn: 'To give clear mathematical proof and exact calculations showing why your schedule choice works.',
+        defVn: 'Đưa ra bằng chứng toán học rõ ràng và phép tính chính xác để chứng minh lựa chọn lịch trình là đúng.',
+        svg: '<svg viewBox="0 0 220 70" class="w-56 h-20"><rect x="14" y="12" width="192" height="46" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2.5"/><text x="110" y="31" text-anchor="middle" fill="#5b21b6" font-size="11" font-weight="800">"0.25 × 60 = 15 min saved"</text><text x="110" y="48" text-anchor="middle" fill="#047857" font-size="11" font-weight="800">"18:06 − 15 m = 17:51 ≤ 18:00 ✓"</text></svg>'
+      },
+      {
+        en: 'optimise',
+        vn: 'tối ưu hóa',
+        defEn: 'To improve a timetable by trimming layovers or upgrading legs so the train meets its deadline efficiently.',
+        defVn: 'Cải thiện lịch trình bằng cách rút ngắn giờ dừng hoặc nâng cấp chặng đi để tàu về đích đúng hạn hiệu quả nhất.',
+        svg: '<svg viewBox="0 0 220 70" class="w-56 h-20"><rect x="16" y="18" width="68" height="34" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/><text x="50" y="39" text-anchor="middle" fill="#991b1b" font-size="13" font-weight="800">18:06 ✕</text><text x="108" y="40" text-anchor="middle" fill="#047857" font-size="16" font-weight="800">➔</text><rect x="130" y="18" width="76" height="34" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="2"/><text x="168" y="39" text-anchor="middle" fill="#065f46" font-size="13" font-weight="800">17:51 ✓</text></svg>'
+      }
+    ];
+
+    let activeVocab = null;
+
+    function renderVocabGrid() {
+      const grid = document.getElementById('vocab-grid');
+      grid.innerHTML = VOCAB_ITEMS.map((item, idx) => `
+        <button onclick="openVocabModal(${idx})" class="p-3.5 rounded-2xl bg-white hover:bg-emerald-50 border-2 border-emerald-800/25 hover:border-amber-500 text-left shadow-sm transition group">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono-tech font-bold text-amber-700">#${idx + 1}</span>
+            <span class="text-sm group-hover:scale-110 transition">🔊</span>
+          </div>
+          <div class="font-extrabold text-emerald-950 text-base capitalize mt-1">${item.en}</div>
+          <div class="text-[11px] font-semibold text-slate-500 mt-0.5">Tap for visual &amp; audio</div>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(idx) {
+      activeVocab = VOCAB_ITEMS[idx];
+      document.getElementById('vm-en').textContent = activeVocab.en.charAt(0).toUpperCase() + activeVocab.en.slice(1);
+      document.getElementById('vm-vn').textContent = activeVocab.vn;
+      document.getElementById('vm-svg').innerHTML = activeVocab.svg;
+      document.getElementById('vm-def-en').textContent = activeVocab.defEn;
+      document.getElementById('vm-def-vn').textContent = activeVocab.defVn;
+      document.getElementById('vocab-modal').classList.remove('hidden');
+      playTone(640, 0.08, 'sine', 0.06);
+    }
+
+    function closeVocabModal() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('vocab-modal').classList.add('hidden');
+    }
+
+    function speakVocab(lang) {
+      if (!activeVocab || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const text = lang === 'en-GB'
+        ? `${activeVocab.en}. ${activeVocab.defEn}`
+        : `${activeVocab.vn}. ${activeVocab.defVn}`;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = lang;
+      utter.rate = 0.92;
+      window.speechSynthesis.speak(utter);
+    }
+
+    // =========================================================================
+    // 6. TAB 2: CYCLE 1 — HANOI–DA NANG LEG CONVERTER SANDBOX
+    // =========================================================================
+    function renderSandbox(hoursVal, labelText) {
+      const h = Math.round(hoursVal * 100) / 100;
+      const wholeH = Math.floor(h + 1e-9);
+      const frac = Math.round((h - wholeH) * 100) / 100;
+      const mins = Math.round(frac * 60);
+      const totalMins = wholeH * 60 + mins;
+
+      document.getElementById('sb-leg-label').textContent = labelText;
+      document.getElementById('sb-slider-val').textContent = `${h.toFixed(2)} h`;
+      document.getElementById('sb-dec-out').textContent = `${parseFloat(h.toFixed(2))} h`;
+      document.getElementById('sb-calc-out').textContent = `${parseFloat(frac.toFixed(2))} × 60 = ${mins}`;
+      document.getElementById('sb-mixed-out').textContent = `${wholeH} h ${String(mins).padStart(2, '0')} min`;
+      document.getElementById('sb-whole-out').textContent = `${wholeH} h`;
+      document.getElementById('sb-totmin-out').textContent = `${totalMins} min`;
+
+      // Base-10 Trap text
+      const trapGuess = Math.round(frac * 100);
+      if (frac > 0) {
+        document.getElementById('sb-trap-text').textContent =
+          `NEVER write ${parseFloat(h.toFixed(2))} h = ${wholeH} h ${trapGuess} min! Time uses Base-60 (60 minutes in 1 hour), so ${parseFloat(frac.toFixed(2))} × 60 = ${mins} minutes!`;
+      } else {
+        document.getElementById('sb-trap-text').textContent =
+          `Exact whole hour! ${wholeH}.0 h has 0 extra minutes (${wholeH} × 60 = ${totalMins} minutes total).`;
+      }
+
+      // Clock SVG Sector & Hand (angle from 12 o'clock clockwise)
+      const angleDeg = (mins / 60) * 360;
+      const rad = ((angleDeg - 90) * Math.PI) / 180;
+      const r = 96;
+      const cx = 110, cy = 110;
+      const x2 = cx + r * Math.cos(rad);
+      const y2 = cy + r * Math.sin(rad);
+      const largeArc = angleDeg > 180 ? 1 : 0;
+      const wedge = document.getElementById('sb-clock-wedge');
+      if (mins === 0) {
+        wedge.setAttribute('d', '');
+      } else {
+        wedge.setAttribute('d', `M ${cx} ${cy} L ${cx} ${cy - r} A ${r} ${r} 0 ${largeArc} 1 ${x2.toFixed(1)} ${y2.toFixed(1)} Z`);
+      }
+      const hand = document.getElementById('sb-clock-hand');
+      hand.setAttribute('x2', (cx + 78 * Math.cos(rad)).toFixed(1));
+      hand.setAttribute('y2', (cy + 78 * Math.sin(rad)).toFixed(1));
+    }
+
+    function loadSandboxLeg(val, label) {
+      document.getElementById('sb-hours-slider').value = val.toFixed(2);
+      renderSandbox(val, label);
+      playTone(580, 0.08, 'triangle', 0.08);
+    }
+
+    function updateSandboxFromSlider() {
+      const val = parseFloat(document.getElementById('sb-hours-slider').value);
+      renderSandbox(val, 'Custom Express Leg Exploration');
+    }
+
+    // =========================================================================
+    // 7. TAB 3: CYCLE 2 — DELAY & ARRIVAL CLOCK SIMULATOR (TARGETED DOM UPDATES)
+    // =========================================================================
+    function formatClock(totalMinsFromMidnight) {
+      const hh = Math.floor(totalMinsFromMidnight / 60) % 24;
+      const mm = totalMinsFromMidnight % 60;
+      return `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
+    }
+
+    function formatMixed(totalMins) {
+      const h = Math.floor(totalMins / 60);
+      const m = totalMins % 60;
+      return `${h} h ${String(m).padStart(2, '0')} m`;
+    }
+
+    function updateScheduleSim() {
+      const lunchH = parseFloat(document.getElementById('sim-lunch-slider').value);
+      const coastalOn = document.getElementById('sim-coastal-chk').checked;
+      const hueOn = document.getElementById('sim-hue-chk').checked;
+
+      const lunchMins = Math.round(lunchH * 60);
+      document.getElementById('sim-lunch-label').textContent = `${lunchH.toFixed(2)} h (${lunchMins} min)`;
+
+      const legDecimals = [
+        3.5,
+        0.25,
+        coastalOn ? 2.15 : 2.4,
+        lunchH,
+        1.9,
+        hueOn ? 0.15 : 0.2,
+        1.75
+      ];
+
+      let clockMin = 7 * 60 + 30; // 07:30 departure
+      let totalDec = 0;
+      let totalMins = 0;
+
+      legDecimals.forEach((dec, idx) => {
+        const mins = Math.round(dec * 60);
+        const depStr = formatClock(clockMin);
+        clockMin += mins;
+        const arrStr = formatClock(clockMin);
+        totalDec += dec;
+        totalMins += mins;
+
+        document.getElementById(`r${idx}-dec`).textContent = `${parseFloat(dec.toFixed(2))} h`;
+        document.getElementById(`r${idx}-mix`).textContent = formatMixed(mins);
+        document.getElementById(`r${idx}-dep`).textContent = depStr;
+        document.getElementById(`r${idx}-arr`).textContent = arrStr;
+      });
+
+      const finalArrStr = formatClock(clockMin);
+      const deadlineMin = 18 * 60; // 18:00
+      const diff = clockMin - deadlineMin; // positive = late, <=0 = on time
+
+      document.getElementById('sim-dec-total').textContent = `${parseFloat(totalDec.toFixed(2))} h`;
+      document.getElementById('sim-mix-total').textContent = `${Math.floor(totalMins / 60)} h ${String(totalMins % 60).padStart(2, '0')} min`;
+      const arrEl = document.getElementById('sim-arrival');
+      arrEl.textContent = finalArrStr;
+      const lastCell = document.getElementById('r6-arr');
+
+      const statusBox = document.getElementById('sim-status-box');
+      const statusBadge = document.getElementById('sim-status-badge');
+      const statusSub = document.getElementById('sim-status-sub');
+      const bar = document.getElementById('sim-progress-bar');
+
+      const pct = Math.min(100, (totalMins / 660) * 100);
+      bar.style.width = `${pct.toFixed(1)}%`;
+
+      if (diff > 0) {
+        arrEl.className = 'text-3xl font-mono-tech font-extrabold text-rose-400 mt-0.5';
+        lastCell.className = 'p-2 text-center font-mono-tech font-extrabold text-rose-700 text-sm';
+        statusBox.className = 'bg-rose-100 border-2 border-rose-500 text-rose-950 rounded-2xl p-3.5 text-center flex flex-col justify-center';
+        statusBadge.textContent = `❌ ${diff} min${diff === 1 ? '' : 's'} LATE!`;
+        statusSub.textContent = 'Trim layover or upgrade leg!';
+        bar.className = 'h-full bg-rose-600 transition-all duration-300';
+      } else {
+        const early = Math.abs(diff);
+        arrEl.className = 'text-3xl font-mono-tech font-extrabold text-emerald-300 mt-0.5';
+        lastCell.className = 'p-2 text-center font-mono-tech font-extrabold text-emerald-700 text-sm';
+        statusBox.className = 'bg-emerald-100 border-2 border-emerald-600 text-emerald-950 rounded-2xl p-3.5 text-center flex flex-col justify-center';
+        statusBadge.textContent = early === 0 ? '✅ EXACTLY ON TIME!' : `✅ ${early} mins EARLY!`;
+        statusSub.textContent = 'Beats 18:00 Da Nang deadline!';
+        bar.className = 'h-full bg-emerald-600 transition-all duration-300';
+      }
+    }
+
+    function resetScheduleSim() {
+      document.getElementById('sim-lunch-slider').value = '0.60';
+      document.getElementById('sim-coastal-chk').checked = false;
+      document.getElementById('sim-hue-chk').checked = false;
+      updateScheduleSim();
+    }
+
+    // =========================================================================
+    // 8. COUNTDOWN TIMERS (AUTO-RESET ON 00:00!)
+    // =========================================================================
+    const timers = {
+      c1: { remaining: 600, interval: null },
+      c2: { remaining: 540, interval: null },
+      c3: { remaining: 600, interval: null },
+      pitch: { remaining: 60, interval: null }
+    };
+
+    function formatMMSS(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function toggleTimer(key, defaultSecs) {
+      const t = timers[key];
+      const btn = document.getElementById(`timer-${key}-btn`);
+      const disp = document.getElementById(`timer-${key}-display`);
+
+      if (t.interval) {
+        clearInterval(t.interval);
+        t.interval = null;
+        btn.textContent = key === 'pitch' ? '▶ Go' : '▶ Resume';
+        return;
+      }
+
+      // Auto-reset if restarted at 00:00
+      if (t.remaining <= 0) {
+        t.remaining = defaultSecs;
+        disp.textContent = formatMMSS(t.remaining);
+      }
+
+      btn.textContent = '⏸ Pause';
+      playTone(660, 0.08, 'sine', 0.07);
+      t.interval = setInterval(() => {
+        t.remaining--;
+        disp.textContent = formatMMSS(Math.max(0, t.remaining));
+        if (t.remaining <= 5 && t.remaining > 0) {
+          playTone(880, 0.06, 'sine', 0.06);
+        }
+        if (t.remaining <= 0) {
+          clearInterval(t.interval);
+          t.interval = null;
+          btn.textContent = key === 'pitch' ? '▶ Restart' : '▶ Restart';
+          playBuzzer();
+        }
+      }, 1000);
+    }
+
+    function resetTimer(key, defaultSecs) {
+      const t = timers[key];
+      if (t.interval) {
+        clearInterval(t.interval);
+        t.interval = null;
+      }
+      t.remaining = defaultSecs;
+      document.getElementById(`timer-${key}-display`).textContent = formatMMSS(defaultSecs);
+      document.getElementById(`timer-${key}-btn`).textContent = key === 'pitch' ? '▶ Go' : '▶ Start';
+    }
+
+    function revealPitStop(id) {
+      const el = document.getElementById(id);
+      el.classList.remove('hidden');
+      playChime();
+    }
+
+    // =========================================================================
+    // 9. TAB 4: WAGOLL SPOTLIGHT, PEER AUDIT & AWARDS
+    // =========================================================================
+    const wagollState = { base60: false, clock: false, saved: false };
+
+    function toggleWagollHighlight(key, btn) {
+      wagollState[key] = !wagollState[key];
+      const cls = `wagoll-hl-${key}`;
+      document.querySelectorAll(`.wagoll-span[data-hl="${key}"]`).forEach(sp => {
+        sp.classList.toggle(cls, wagollState[key]);
+      });
+      btn.classList.toggle('ring-4', wagollState[key]);
+      btn.classList.toggle('ring-emerald-700', wagollState[key]);
+      playTone(620, 0.07, 'triangle', 0.07);
+    }
+
+    function updateAuditCount() {
+      const checked = document.querySelectorAll('.audit-chk:checked').length;
+      const pill = document.getElementById('audit-count-pill');
+      pill.textContent = `${checked} / 4 Verified`;
+      if (checked === 4) {
+        pill.className = 'px-3 py-1 rounded-full bg-emerald-600 text-white font-mono-tech text-xs font-extrabold';
+        playChime();
+        launchConfetti(50);
+      } else {
+        pill.className = 'px-3 py-1 rounded-full bg-stone-200 text-slate-800 font-mono-tech text-xs font-extrabold';
+      }
+    }
+
+    function celebrateAward(btn, title) {
+      btn.classList.add('ring-4', 'ring-amber-500', 'scale-[1.02]');
+      playChime();
+      launchConfetti(70);
+    }
+
+    // =========================================================================
+    // 10. TAB 5: SC MASTERY TRACKER (0/3 MET + CONFETTI)
+    // =========================================================================
+    function updateScMastery() {
+      const met = document.querySelectorAll('.sc-chk:checked').length;
+      document.getElementById('sc-met-counter').textContent = `${met} / 3 Met`;
+      document.getElementById('sc-met-bar').style.width = `${(met / 3) * 100}%`;
+      if (met === 3) {
+        playChime();
+        launchConfetti(90);
+      } else {
+        playTone(540 + met * 60, 0.08, 'sine', 0.07);
+      }
+    }
+
+    // =========================================================================
+    // 11. TAB 6: FINALE QUICKFIRE ENGINE (8 QUESTIONS)
+    // =========================================================================
+    const QF_ITEMS = [
+      { topic: '7.2 Time', q: 'Convert 0.7 hours into minutes.', a: '42 minutes', m: '0.7 × 60 = 42 minutes (NOT 70 minutes!)' },
+      { topic: '7.1 Triangles', q: 'A right-angled triangle has perpendicular sides 16 cm and 9 cm. Find its area.', a: '72 cm²', m: '(16 × 9) ÷ 2 = 144 ÷ 2 = 72 cm²' },
+      { topic: 'Unit 5 Circles', q: 'A bicycle wheel has a diameter of 58 cm. What is its radius?', a: '29 cm', m: 'Radius = diameter ÷ 2 = 58 ÷ 2 = 29 cm' },
+      { topic: '7.2 Time', q: 'Convert 4.15 hours into hours and minutes.', a: '4 hours 9 minutes', m: 'Keep 4 h. 0.15 × 60 = 9 minutes ➔ 4 h 09 min' },
+      { topic: 'Unit 5 Shapes', q: 'How many lines of symmetry does a non-square rhombus have?', a: '2 lines of symmetry', m: 'Fold along each of its 2 perpendicular diagonals.' },
+      { topic: '7.2 Time', q: 'A train departs at 13:50 and travels for 1.3 hours. What is its arrival time?', a: '15:08', m: '1.3 h = 1 h 18 min (0.3 × 60 = 18). 13:50 + 1 h 18 m = 15:08' },
+      { topic: '7.1 Triangles', q: 'A right-angled triangle has area 45 cm² and height 9 cm. Find its base.', a: '10 cm', m: 'Double the area: 45 × 2 = 90 cm². Then 90 ÷ 9 = 10 cm.' },
+      { topic: '7.2 Time', q: 'Convert 2 minutes 54 seconds into a decimal number of minutes.', a: '2.9 minutes', m: '54 ÷ 60 = 9 ÷ 10 = 0.9 min ➔ 2.9 minutes' }
+    ];
+
+    let qfIdx = 0;
+    let qfSecs = 15;
+    let qfInterval = null;
+
+    function renderQuickfire() {
+      stopQfTimer();
+      const item = QF_ITEMS[qfIdx];
+      document.getElementById('qf-topic-pill').textContent = item.topic;
+      document.getElementById('qf-progress').textContent = `Q ${qfIdx + 1} / ${QF_ITEMS.length}`;
+      document.getElementById('qf-question').textContent = item.q;
+      document.getElementById('qf-answer-main').textContent = item.a;
+      document.getElementById('qf-answer-method').textContent = item.m;
+      document.getElementById('qf-answer-box').classList.add('hidden');
+      document.getElementById('qf-boards-alert').classList.add('hidden');
+      qfSecs = 15;
+      document.getElementById('qf-timer-display').textContent = '15s';
+      document.getElementById('qf-timer-btn').textContent = '▶ Start 15s';
+    }
+
+    function stopQfTimer() {
+      if (qfInterval) {
+        clearInterval(qfInterval);
+        qfInterval = null;
+      }
+    }
+
+    function startQfTimer() {
+      if (qfInterval) {
+        stopQfTimer();
+        document.getElementById('qf-timer-btn').textContent = '▶ Resume';
+        return;
+      }
+      if (qfSecs <= 0) {
+        qfSecs = 15;
+        document.getElementById('qf-timer-display').textContent = '15s';
+        document.getElementById('qf-boards-alert').classList.add('hidden');
+      }
+      document.getElementById('qf-timer-btn').textContent = '⏸ Pause';
+      qfInterval = setInterval(() => {
+        qfSecs--;
+        document.getElementById('qf-timer-display').textContent = `${Math.max(0, qfSecs)}s`;
+        if (qfSecs <= 3 && qfSecs > 0) playTone(880, 0.06, 'sine', 0.08);
+        if (qfSecs <= 0) {
+          stopQfTimer();
+          document.getElementById('qf-boards-alert').classList.remove('hidden');
+          document.getElementById('qf-timer-btn').textContent = '▶ Restart';
+          playBuzzer();
+        }
+      }, 1000);
+    }
+
+    function revealQfAnswer() {
+      stopQfTimer();
+      document.getElementById('qf-boards-alert').classList.add('hidden');
+      document.getElementById('qf-answer-box').classList.remove('hidden');
+      playChime();
+    }
+
+    function nextQuickfire() {
+      qfIdx = (qfIdx + 1) % QF_ITEMS.length;
+      renderQuickfire();
+    }
+
+    function prevQuickfire() {
+      qfIdx = (qfIdx - 1 + QF_ITEMS.length) % QF_ITEMS.length;
+      renderQuickfire();
+    }
+
+    // =========================================================================
+    // 12. TEACHER DRAWER & DPR-SAFE DAVID'S BOARD WHITEBOARD
+    // =========================================================================
+    function toggleTeacherDrawer() {
+      document.getElementById('teacher-drawer').classList.toggle('hidden');
+    }
+
+    const dbOverlay = document.getElementById('davids-board');
+    const dbCanvas = document.getElementById('db-canvas');
+    const dbCtx = dbCanvas.getContext('2d');
+    let dbDrawing = false;
+    let dbColor = '#0f172a';
+    let dbWidth = 4;
+    let dbErasing = false;
+
+    function resizeDavidsBoard() {
+      const rect = dbCanvas.parentElement.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      const dpr = window.devicePixelRatio || 1;
+      const snapshot = dbCanvas.width > 0 ? dbCanvas.toDataURL() : null;
+      dbCanvas.width = Math.floor(rect.width * dpr);
+      dbCanvas.height = Math.floor(rect.height * dpr);
+      dbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      dbCtx.lineCap = 'round';
+      dbCtx.lineJoin = 'round';
+      if (snapshot) {
+        const img = new Image();
+        img.onload = () => {
+          dbCtx.globalCompositeOperation = 'source-over';
+          dbCtx.drawImage(img, 0, 0, rect.width, rect.height);
+        };
+        img.src = snapshot;
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      if (!dbOverlay.classList.contains('hidden')) resizeDavidsBoard();
+    });
+
+    function openDavidsBoard() {
+      dbOverlay.classList.remove('hidden');
+      requestAnimationFrame(resizeDavidsBoard);
+    }
+
+    function closeDavidsBoard() {
+      dbOverlay.classList.add('hidden');
+    }
+
+    function setPen(col) {
+      dbErasing = false;
+      dbColor = col;
+    }
+
+    function setPenWidth(w) {
+      dbWidth = w;
+    }
+
+    function setEraser() {
+      dbErasing = true;
+    }
+
+    function clearDavidsBoard() {
+      const rect = dbCanvas.parentElement.getBoundingClientRect();
+      dbCtx.clearRect(0, 0, rect.width, rect.height);
+    }
+
+    function getPointerPos(e) {
+      const rect = dbCanvas.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    dbCanvas.addEventListener('pointerdown', (e) => {
+      dbDrawing = true;
+      dbCanvas.setPointerCapture(e.pointerId);
+      const pos = getPointerPos(e);
+      dbCtx.beginPath();
+      dbCtx.moveTo(pos.x, pos.y);
+    });
+
+    dbCanvas.addEventListener('pointermove', (e) => {
+      if (!dbDrawing) return;
+      const pos = getPointerPos(e);
+      dbCtx.globalCompositeOperation = dbErasing ? 'destination-out' : 'source-over';
+      dbCtx.strokeStyle = dbColor;
+      dbCtx.lineWidth = dbErasing ? 24 : dbWidth;
+      dbCtx.lineTo(pos.x, pos.y);
+      dbCtx.stroke();
+    });
+
+    dbCanvas.addEventListener('pointerup', () => { dbDrawing = false; dbCtx.globalCompositeOperation = 'source-over'; });
+    dbCanvas.addEventListener('pointercancel', () => { dbDrawing = false; dbCtx.globalCompositeOperation = 'source-over'; });
+
+    // =========================================================================
+    // 13. KEYBOARD SHORTCUTS (GUARDED WHEN MODALS/INPUTS ACTIVE)
+    // =========================================================================
+    function isAnyOverlayOpen() {
+      return !document.getElementById('vocab-modal').classList.contains('hidden') ||
+             !document.getElementById('davids-board').classList.contains('hidden') ||
+             !document.getElementById('teacher-drawer').classList.contains('hidden') ||
+             Boolean(document.querySelector('.fullscreen-stage'));
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.key === 'Escape') {
+        closeVocabModal();
+        closeDavidsBoard();
+        document.getElementById('teacher-drawer').classList.add('hidden');
+        document.querySelectorAll('.fullscreen-stage').forEach(el => {
+          el.classList.remove('fullscreen-stage');
+          el.querySelectorAll('button').forEach(b => {
+            if (b.textContent.includes('Exit Full Screen')) b.textContent = '⛶ Full Screen';
+          });
+        });
+        return;
+      }
+
+      if (e.key.toLowerCase() === 'w' && document.getElementById('vocab-modal').classList.contains('hidden')) {
+        if (dbOverlay.classList.contains('hidden')) openDavidsBoard(); else closeDavidsBoard();
+        return;
+      }
+      if (e.key.toLowerCase() === 't') {
+        toggleTeacherDrawer();
+        return;
+      }
+      if (e.key.toLowerCase() === 'm') {
+        toggleMute();
+        return;
+      }
+
+      if (isAnyOverlayOpen()) return;
+
+      if (e.key === 'ArrowRight') goPhase(currentPhase + 1);
+      if (e.key === 'ArrowLeft') goPhase(currentPhase - 1);
+    });
+
+    // =========================================================================
+    // 14. INITIALISE STUDIO APP
+    // =========================================================================
+    renderVocabGrid();
+    goPhase(0);
+    setCycleStep(1, 0);
+    setCycleStep(2, 0);
+    setCycleStep(3, 0);
+    renderSandbox(2.4, 'Leg 3: Vinh ➔ Dong Hoi (Trap!)');
+    updateScheduleSim();
+    renderQuickfire();
+  </script>
+</body>
+</html>
