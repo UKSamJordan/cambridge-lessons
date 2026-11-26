@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit 7.1 Lesson 2 — Compound Shapes &amp; Missing Lengths (6Gg.03)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800;900&display=swap');
+
+    :root {
+      --bg-grad: linear-gradient(135deg, #f0f9ff 0%, #eef2ff 50%, #fdf4ff 100%);
+    }
+
+    body {
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-grad);
+      color: #0f172a;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: 'Fredoka', 'Nunito', sans-serif;
+    }
+
+    /* Auto-hiding fixed header */
+    #topHeader {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    #topHeader.header-hidden {
+      transform: translateY(-100%);
+    }
+
+    /* 3D Flip Cards */
+    .flip-perspective {
+      perspective: 1200px;
+    }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+
+    /* David's Board 32px squared grid */
+    #davidsCanvasWrap {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, rgba(99, 102, 241, 0.16) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(99, 102, 241, 0.16) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* Fullscreen I Do Stage */
+    #iDoStageCard.fullscreen-ido {
+      position: fixed;
+      inset: 12px;
+      z-index: 65;
+      margin: 0;
+      border-radius: 24px;
+      overflow-y: auto;
+      box-shadow: 0 25px 60px rgba(15, 23, 42, 0.4);
+    }
+
+    /* Smooth range slider */
+    input[type="range"] {
+      accent-color: #4f46e5;
+      cursor: pointer;
+    }
+
+    /* Animated pulse for BOARDS UP */
+    @keyframes popBounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+    .animate-pop {
+      animation: popBounce 0.7s ease-in-out infinite;
+    }
+
+    /* Confetti canvas */
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 95;
+    }
+
+    /* SVG split transition */
+    .split-part {
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-indigo-200 selection:text-indigo-900">
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- AUTO-HIDING FIXED HEADER -->
+  <header id="topHeader" class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b-2 border-indigo-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 text-white flex items-center justify-center font-display font-bold text-lg shadow">
+          7.1
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">Grade 5 Maths · 6Gg.03</span>
+            <span class="text-xs font-bold text-slate-500">Week 17 · Lesson 2</span>
+          </div>
+          <h1 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">Solve compound area and missing-length triangle problems.</h1>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Team Scoreboard Pill -->
+        <div class="flex items-center bg-slate-100 rounded-full p-1 border border-slate-200 shadow-inner">
+          <button type="button" onclick="awardTeam('red', 1)" title="Add point to Team Red" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500 hover:bg-rose-600 text-white text-xs font-extrabold transition">
+            <span>🔴 Red</span>
+            <span id="headerScoreRed" class="bg-white/25 px-1.5 rounded-full">0</span>
+          </button>
+          <span class="px-1.5 text-xs font-black text-slate-400">vs</span>
+          <button type="button" onclick="awardTeam('blue', 1)" title="Add point to Team Blue" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sky-500 hover:bg-sky-600 text-white text-xs font-extrabold transition">
+            <span>🔵 Blue</span>
+            <span id="headerScoreBlue" class="bg-white/25 px-1.5 rounded-full">0</span>
+          </button>
+        </div>
+
+        <button type="button" id="muteBtn" onclick="toggleMute()" title="Toggle Sound (M)" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-200 transition">
+          🔊 Sound (M)
+        </button>
+        <button type="button" onclick="toggleTeacherDrawer()" title="Teacher Prompt Drawer (T)" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs border border-amber-300 transition">
+          👩‍🏫 Prompts (T)
+        </button>
+        <button type="button" onclick="openDavidsBoard()" title="Open David's Board Whiteboard (W)" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow transition">
+          ✏️ David's Board (W)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 pt-24 pb-12">
+
+    <!-- STATION NAVIGATION BAR (flex-wrap so tabs never squash) -->
+    <nav aria-label="Lesson Stations" class="bg-white/90 backdrop-blur rounded-2xl p-2 shadow-md border border-indigo-100 mb-6 flex flex-wrap gap-1.5 justify-center">
+      <button type="button" data-station="0" onclick="switchStation(0)" class="station-tab px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition">0 · LO &amp; Criteria</button>
+      <button type="button" data-station="1" onclick="switchStation(1)" class="station-tab px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition">1 · Flashback 3</button>
+      <button type="button" data-station="2" onclick="switchStation(2)" class="station-tab px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition">2 · Vocabulary</button>
+      <button type="button" data-station="3" onclick="switchStation(3)" class="station-tab px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition">3 · I Do &amp; CPA Labs</button>
+      <button type="button" data-station="4" onclick="switchStation(4)" class="station-tab px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition">4 · Practice Board</button>
+      <button type="button" data-station="5" onclick="switchStation(5)" class="station-tab px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition">5 · Reasoning Lab</button>
+      <button type="button" data-station="6" onclick="switchStation(6)" class="station-tab px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition">6 · Criteria Check</button>
+      <button type="button" data-station="7" onclick="switchStation(7)" class="station-tab px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition">7 · Quickfire 🏆</button>
+    </nav>
+
+    <!-- =====================================================================
+         STATION 0: LO & SUCCESS CRITERIA
+         ===================================================================== -->
+    <section id="station-0" class="station-section">
+      <div class="space-y-6">
+        <div class="rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 p-8 sm:p-10 text-white shadow-xl relative overflow-hidden">
+          <div class="relative z-10 max-w-4xl">
+            <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur px-4 py-1.5 rounded-full text-sm font-extrabold tracking-wide mb-4">
+              <span>📐 Cambridge Stage 6 Maths · Unit 7.1 · Code 6Gg.03</span>
+            </div>
+            <h2 class="text-4xl sm:text-5xl font-display font-bold leading-tight mb-4">
+              Solve compound area and missing-length triangle problems.
+            </h2>
+            <p class="text-lg sm:text-xl text-indigo-100 font-semibold">
+              Use decimal side lengths, decompose shapes cleanly, and rebuild the rectangle to find missing sides!
+            </p>
+          </div>
+          <!-- Decorative geometric diagram -->
+          <svg class="hidden md:block absolute right-8 top-1/2 -translate-y-1/2 w-56 h-56 opacity-90" viewBox="0 0 220 200" aria-hidden="true">
+            <rect x="20" y="90" width="120" height="80" fill="rgba(255,255,255,0.22)" stroke="#ffffff" stroke-width="3.5" rx="3"/>
+            <polygon points="20,90 140,90 140,22" fill="rgba(253,224,71,0.35)" stroke="#fde047" stroke-width="3.5"/>
+            <rect x="124" y="74" width="16" height="16" fill="none" stroke="#fde047" stroke-width="2.5"/>
+            <line x1="20" y1="90" x2="140" y2="90" stroke="#ffffff" stroke-width="3" stroke-dasharray="7 5"/>
+            <text x="80" y="138" text-anchor="middle" fill="#ffffff" font-weight="800" font-size="16">Rectangle</text>
+            <text x="104" y="72" text-anchor="middle" fill="#fef08a" font-weight="800" font-size="14">Triangle</text>
+          </svg>
+        </div>
+
+        <!-- Must / Should / Could Criteria Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="bg-white rounded-3xl p-6 border-2 border-emerald-300 shadow-md hover:shadow-lg transition">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-3.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-sm">🟢 MUST</span>
+              <span class="text-2xl">📏</span>
+            </div>
+            <h3 class="text-2xl font-display font-bold text-slate-900 mb-2">Decimal Triangle Area</h3>
+            <p class="text-slate-700 text-lg font-bold leading-snug">Calculate right-angled triangle areas with decimal side lengths.</p>
+            <div class="mt-4 bg-emerald-50 rounded-xl p-3 text-sm font-bold text-emerald-900">
+              Formula: Area = base × perpendicular height ÷ 2
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 border-2 border-amber-300 shadow-md hover:shadow-lg transition">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-3.5 py-1 rounded-full bg-amber-100 text-amber-800 font-extrabold text-sm">🟠 SHOULD</span>
+              <span class="text-2xl">🏠</span>
+            </div>
+            <h3 class="text-2xl font-display font-bold text-slate-900 mb-2">Compound Shapes</h3>
+            <p class="text-slate-700 text-lg font-bold leading-snug">Split compound shapes into rectangles and right-angled triangles.</p>
+            <div class="mt-4 bg-amber-50 rounded-xl p-3 text-sm font-bold text-amber-900">
+              Add non-overlapping parts — or subtract a cut-out!
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 border-2 border-purple-300 shadow-md hover:shadow-lg transition">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-3.5 py-1 rounded-full bg-purple-100 text-purple-800 font-extrabold text-sm">🟣 COULD</span>
+              <span class="text-2xl">🔄</span>
+            </div>
+            <h3 class="text-2xl font-display font-bold text-slate-900 mb-2">Missing Side Lengths</h3>
+            <p class="text-slate-700 text-lg font-bold leading-snug">Double triangle area first to find a missing length.</p>
+            <div class="mt-4 bg-purple-50 rounded-xl p-3 text-sm font-bold text-purple-900">
+              Rebuild the rectangle: (Area × 2) ÷ known side
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-center pt-2">
+          <button type="button" onclick="switchStation(1)" class="px-8 py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-display font-bold text-xl shadow-lg hover:scale-105 transition">
+            Start Lesson: Spaced Flashback 3 →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         STATION 1: SPACED FLASHBACK 3 (3 EARLIER UNITS)
+         ===================================================================== -->
+    <section id="station-1" class="station-section hidden">
+      <div class="space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-white rounded-2xl p-5 border border-indigo-100 shadow-sm">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Spaced &amp; Interleaved Retrieval</span>
+            <h2 class="text-3xl font-display font-bold text-slate-900">Flashback 3 — Tap Each Card to Reveal!</h2>
+          </div>
+          <button type="button" onclick="resetFlashbacks()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition">
+            ↺ Flip All Back
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 2 Special Numbers -->
+          <div class="flip-perspective h-[350px]">
+            <div id="fb-card-1" onclick="flipCard('fb-card-1')" class="flip-card w-full h-full cursor-pointer">
+              <div class="flip-inner">
+                <div class="flip-face rounded-3xl bg-gradient-to-br from-rose-500 to-orange-500 text-white p-6 shadow-xl flex flex-col justify-between">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Unit 2 · Special Numbers</span>
+                    <span class="text-2xl">🧊</span>
+                  </div>
+                  <div class="text-center my-auto">
+                    <p class="text-sm font-bold uppercase tracking-wider text-rose-100 mb-2">Calculate</p>
+                    <p class="text-6xl sm:text-7xl font-display font-bold tracking-tight">4³ − 6²</p>
+                  </div>
+                  <div class="text-center text-xs font-bold text-white/90 bg-black/15 rounded-xl py-2">
+                    Tap card to reveal answer
+                  </div>
+                </div>
+                <div class="flip-face flip-back rounded-3xl bg-white border-4 border-rose-400 p-6 shadow-xl flex flex-col justify-between">
+                  <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-extrabold self-start">Unit 2 Answer</span>
+                  <div class="text-center my-auto space-y-2">
+                    <p class="text-xl font-bold text-slate-600">4³ = 4 × 4 × 4 = 64</p>
+                    <p class="text-xl font-bold text-slate-600">6² = 6 × 6 = 36</p>
+                    <p class="text-6xl font-display font-bold text-rose-600 pt-2">28</p>
+                    <p class="text-sm font-bold text-slate-500">64 − 36 = 28</p>
+                  </div>
+                  <div class="text-center text-xs font-bold text-slate-400">Tap to flip back</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 6 Percentages -->
+          <div class="flip-perspective h-[350px]">
+            <div id="fb-card-2" onclick="flipCard('fb-card-2')" class="flip-card w-full h-full cursor-pointer">
+              <div class="flip-inner">
+                <div class="flip-face rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 shadow-xl flex flex-col justify-between">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Unit 6 · Percentages</span>
+                    <span class="text-2xl">💯</span>
+                  </div>
+                  <div class="text-center my-auto">
+                    <p class="text-sm font-bold uppercase tracking-wider text-emerald-100 mb-2">Find the value</p>
+                    <p class="text-6xl font-display font-bold leading-tight">35% of 120</p>
+                  </div>
+                  <div class="text-center text-xs font-bold text-white/90 bg-black/15 rounded-xl py-2">
+                    Tap card to reveal answer
+                  </div>
+                </div>
+                <div class="flip-face flip-back rounded-3xl bg-white border-4 border-emerald-400 p-6 shadow-xl flex flex-col justify-between">
+                  <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold self-start">Unit 6 Answer</span>
+                  <div class="text-center my-auto space-y-2">
+                    <p class="text-lg font-bold text-slate-600">10% of 120 = 12 ➔ 30% = 36</p>
+                    <p class="text-lg font-bold text-slate-600">5% of 120 = 6</p>
+                    <p class="text-6xl font-display font-bold text-emerald-600 pt-2">42</p>
+                    <p class="text-sm font-bold text-slate-500">36 + 6 = 42</p>
+                  </div>
+                  <div class="text-center text-xs font-bold text-slate-400">Tap to flip back</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 4 Negative Integers -->
+          <div class="flip-perspective h-[350px]">
+            <div id="fb-card-3" onclick="flipCard('fb-card-3')" class="flip-card w-full h-full cursor-pointer">
+              <div class="flip-inner">
+                <div class="flip-face rounded-3xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white p-6 shadow-xl flex flex-col justify-between">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase">Unit 4 · Negative Integers</span>
+                    <span class="text-2xl">🌡️</span>
+                  </div>
+                  <div class="text-center my-auto">
+                    <p class="text-sm font-bold uppercase tracking-wider text-sky-100 mb-2">Find the difference</p>
+                    <p class="text-5xl sm:text-6xl font-display font-bold leading-tight">−7°C to +11°C</p>
+                  </div>
+                  <div class="text-center text-xs font-bold text-white/90 bg-black/15 rounded-xl py-2">
+                    Tap card to reveal answer
+                  </div>
+                </div>
+                <div class="flip-face flip-back rounded-3xl bg-white border-4 border-sky-400 p-6 shadow-xl flex flex-col justify-between">
+                  <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-extrabold self-start">Unit 4 Answer</span>
+                  <div class="text-center my-auto space-y-2">
+                    <p class="text-lg font-bold text-slate-600">From −7°C to 0°C = 7°C</p>
+                    <p class="text-lg font-bold text-slate-600">From 0°C to +11°C = 11°C</p>
+                    <p class="text-6xl font-display font-bold text-sky-600 pt-2">18°C</p>
+                    <p class="text-sm font-bold text-slate-500">7 + 11 = 18°C difference</p>
+                  </div>
+                  <div class="text-center text-xs font-bold text-slate-400">Tap to flip back</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         STATION 2: BILINGUAL VOCABULARY (MODAL ONLY) + REAL-LIFE STRIP
+         ===================================================================== -->
+    <section id="station-2" class="station-section hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-2xl p-5 border border-indigo-100 shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-violet-600">Dual-Coded Mathematical Language</span>
+            <h2 class="text-3xl font-display font-bold text-slate-900">Key Vocabulary — Tap Any Word for Visual &amp; Audio</h2>
+          </div>
+          <span class="px-3 py-1.5 rounded-full bg-violet-100 text-violet-800 font-extrabold text-xs">Click a tile to open audio &amp; diagram</span>
+        </div>
+
+        <!-- Vocab Tiles Grid (100% English on board; bilingual inside Modal) -->
+        <div id="vocabGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
+
+        <!-- REAL-LIFE RELEVANCE STRIP (100% British English) -->
+        <div class="rounded-3xl bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 border-2 border-amber-200 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-3xl">🌍</span>
+            <div>
+              <h3 class="text-2xl font-display font-bold text-slate-900">Why Do Builders Split Compound Shapes?</h3>
+              <p class="text-sm font-bold text-amber-900">Real people decompose tricky shapes into rectangles and right-angled triangles every day!</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl p-5 border border-amber-200 shadow-sm">
+              <div class="text-3xl mb-2">🏡</div>
+              <h4 class="font-display font-bold text-lg text-slate-900 mb-1">House Gable Walls &amp; Paint</h4>
+              <p class="text-sm font-semibold text-slate-600 leading-relaxed">
+                Painters split a house end-wall into a <strong>rectangular wall</strong> and a <strong>triangular roof gable</strong> so they buy the exact litres of paint without wasting money.
+              </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 border border-amber-200 shadow-sm">
+              <div class="text-3xl mb-2">🌿</div>
+              <h4 class="font-display font-bold text-lg text-slate-900 mb-1">Irregular Garden Plots</h4>
+              <p class="text-sm font-semibold text-slate-600 leading-relaxed">
+                Garden designers in Hanoi measure angled courtyards by splitting them into tidy rectangles and right-angled triangles to order exact square metres of tiles and grass turf.
+              </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 border border-amber-200 shadow-sm">
+              <div class="text-3xl mb-2">✂️</div>
+              <h4 class="font-display font-bold text-lg text-slate-900 mb-1">Tailoring &amp; Fabric Cutting</h4>
+              <p class="text-sm font-semibold text-slate-600 leading-relaxed">
+                Tailors and flag makers calculate the area of rectangles minus triangular cut-outs so every roll of fabric covers the right number of garments.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         STATION 3: FULL-SCREEN VISUAL ANIMATED I DO + HANDS-ON CPA LABS
+         ===================================================================== -->
+    <section id="station-3" class="station-section hidden">
+      <div class="space-y-6">
+
+        <!-- I DO VISUAL ANIMATED STAGE -->
+        <div id="iDoStageCard" class="bg-white rounded-3xl border-2 border-indigo-200 shadow-xl p-6 transition-all">
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100 mb-5">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-3 py-1 rounded-full bg-indigo-600 text-white font-extrabold text-xs uppercase">I Do · Visual Models</span>
+              <button type="button" onclick="selectIDoModel(1)" id="idoBtn1" class="ido-tab px-4 py-2 rounded-xl font-bold text-sm transition">1. Decimal Triangles</button>
+              <button type="button" onclick="selectIDoModel(2)" id="idoBtn2" class="ido-tab px-4 py-2 rounded-xl font-bold text-sm transition">2. House-Gable Split</button>
+              <button type="button" onclick="selectIDoModel(3)" id="idoBtn3" class="ido-tab px-4 py-2 rounded-xl font-bold text-sm transition">3. Reverse Missing Length</button>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="toggleStepsChecklist()" class="px-3.5 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs sm:text-sm transition">
+                📋 Steps Checklist
+              </button>
+              <button type="button" id="fsIDoBtn" onclick="toggleFullscreenIDo()" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm transition">
+                ⛶ Full Screen I Do
+              </button>
+            </div>
+          </div>
+
+          <!-- Toggleable Compact Steps Checklist Pill Bar -->
+          <div id="stepsChecklistBar" class="hidden mb-5 bg-amber-50 border-2 border-amber-200 rounded-2xl p-3.5">
+            <div class="flex flex-wrap items-center justify-center gap-3 text-sm font-extrabold text-amber-950">
+              <span class="bg-white px-3 py-1.5 rounded-xl border border-amber-300">① Spot the 90° perpendicular sides</span>
+              <span>➔</span>
+              <span class="bg-white px-3 py-1.5 rounded-xl border border-amber-300">② Split compound shapes cleanly (no overlaps)</span>
+              <span>➔</span>
+              <span class="bg-white px-3 py-1.5 rounded-xl border border-amber-300">③ Missing side? DOUBLE Area first, then divide!</span>
+            </div>
+          </div>
+
+          <!-- MODEL 1: DECIMAL RIGHT-ANGLED TRIANGLES -->
+          <div id="idoModel1" class="ido-panel">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+              <!-- Example A: 6.5 x 4 / 2 = 13 -->
+              <div class="bg-sky-50 rounded-2xl p-5 border-2 border-sky-200">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-3 py-1 rounded-full bg-sky-600 text-white text-xs font-extrabold">Example A · Halve the Even Side!</span>
+                  <button type="button" onclick="toggleM1Ghost('A')" class="px-3 py-1 rounded-lg bg-white border border-sky-300 text-sky-800 font-bold text-xs hover:bg-sky-100 transition">👁 Toggle Ghost Rectangle</button>
+                </div>
+                <svg viewBox="0 0 320 200" class="w-full h-48 mx-auto">
+                  <!-- Ghost rectangle -->
+                  <rect id="m1GhostA" x="45" y="30" width="210" height="120" fill="rgba(14,165,233,0.12)" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="7 5" style="opacity:1; transition: opacity 0.4s;"/>
+                  <!-- Main right-angled triangle -->
+                  <polygon points="45,150 255,150 45,30" fill="rgba(56,189,248,0.45)" stroke="#0369a1" stroke-width="4"/>
+                  <!-- Right angle mark -->
+                  <rect x="45" y="130" width="20" height="20" fill="none" stroke="#0369a1" stroke-width="3"/>
+                  <!-- Labels -->
+                  <text x="150" y="178" text-anchor="middle" fill="#0f172a" font-weight="900" font-size="18">Base = 6.5 cm</text>
+                  <text x="18" y="96" text-anchor="middle" fill="#0369a1" font-weight="900" font-size="17" transform="rotate(-90 18 96)">h = 4 cm</text>
+                  <text x="160" y="80" text-anchor="middle" fill="#64748b" font-weight="700" font-size="13">sloping side (ignore)</text>
+                </svg>
+                <div class="bg-white rounded-xl p-4 mt-3 border border-sky-200 space-y-1.5 text-center">
+                  <p class="text-lg font-bold text-slate-700">Full Rectangle: 6.5 × 4 = <span class="text-sky-700">26 cm²</span></p>
+                  <p class="text-2xl font-display font-bold text-sky-700">Triangle Area = 26 ÷ 2 = 13 cm²</p>
+                  <p class="text-xs font-extrabold text-emerald-700 bg-emerald-50 rounded-lg py-1 px-2">Smart Mental Trick: Halve 4 first (4 ÷ 2 = 2), then 6.5 × 2 = 13 cm²!</p>
+                </div>
+              </div>
+
+              <!-- Example B: 8 x 4.5 / 2 = 18 -->
+              <div class="bg-violet-50 rounded-2xl p-5 border-2 border-violet-200">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-3 py-1 rounded-full bg-violet-600 text-white text-xs font-extrabold">Example B · Decimal Height</span>
+                  <button type="button" onclick="toggleM1Ghost('B')" class="px-3 py-1 rounded-lg bg-white border border-violet-300 text-violet-800 font-bold text-xs hover:bg-violet-100 transition">👁 Toggle Ghost Rectangle</button>
+                </div>
+                <svg viewBox="0 0 320 200" class="w-full h-48 mx-auto">
+                  <rect id="m1GhostB" x="45" y="30" width="220" height="120" fill="rgba(139,92,246,0.12)" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="7 5" style="opacity:1; transition: opacity 0.4s;"/>
+                  <polygon points="45,150 265,150 265,30" fill="rgba(167,139,250,0.45)" stroke="#6d28d9" stroke-width="4"/>
+                  <rect x="245" y="130" width="20" height="20" fill="none" stroke="#6d28d9" stroke-width="3"/>
+                  <text x="155" y="178" text-anchor="middle" fill="#0f172a" font-weight="900" font-size="18">Base = 8 cm</text>
+                  <text x="295" y="96" text-anchor="middle" fill="#6d28d9" font-weight="900" font-size="17" transform="rotate(90 295 96)">h = 4.5 cm</text>
+                </svg>
+                <div class="bg-white rounded-xl p-4 mt-3 border border-violet-200 space-y-1.5 text-center">
+                  <p class="text-lg font-bold text-slate-700">Full Rectangle: 8 × 4.5 = <span class="text-violet-700">36 cm²</span></p>
+                  <p class="text-2xl font-display font-bold text-violet-700">Triangle Area = 36 ÷ 2 = 18 cm²</p>
+                  <p class="text-xs font-extrabold text-emerald-700 bg-emerald-50 rounded-lg py-1 px-2">Smart Mental Trick: Halve 8 first (8 ÷ 2 = 4), then 4 × 4.5 = 18 cm²!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MODEL 2: SPLITTING A HOUSE-GABLE COMPOUND SHAPE -->
+          <div id="idoModel2" class="ido-panel hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <div class="lg:col-span-7 bg-slate-50 rounded-2xl p-5 border-2 border-slate-200 text-center">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                  <span class="px-3 py-1 rounded-full bg-amber-500 text-white font-extrabold text-xs">Animated Decomposition Model</span>
+                  <button type="button" id="m2SplitBtn" onclick="toggleHouseSplit()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm shadow transition">
+                    ✂️ Animate Colour-Split!
+                  </button>
+                </div>
+                <svg viewBox="0 0 400 280" class="w-full max-w-md h-64 mx-auto">
+                  <!-- Top Right-Angled Gable Roof Triangle -->
+                  <g id="m2RoofGroup" class="split-part">
+                    <polygon points="80,125 320,125 320,40" fill="rgba(245,158,11,0.42)" stroke="#b45309" stroke-width="4"/>
+                    <rect x="300" y="105" width="20" height="20" fill="none" stroke="#b45309" stroke-width="3"/>
+                    <text x="235" y="100" text-anchor="middle" fill="#92400e" font-weight="900" font-size="16">Roof Triangle</text>
+                    <text x="352" y="88" text-anchor="middle" fill="#b45309" font-weight="900" font-size="17">3 m</text>
+                    <text x="200" y="118" text-anchor="middle" fill="#b45309" font-weight="800" font-size="14" id="m2RoofBaseLbl" style="opacity:0; transition:opacity 0.4s;">base = 8 m</text>
+                  </g>
+                  <!-- Dashed split line -->
+                  <line x1="72" y1="125" x2="328" y2="125" stroke="#dc2626" stroke-width="3" stroke-dasharray="8 6"/>
+                  <!-- Bottom Rectangular Wall -->
+                  <g id="m2WallGroup" class="split-part">
+                    <rect x="80" y="125" width="240" height="120" fill="rgba(59,130,246,0.32)" stroke="#1d4ed8" stroke-width="4"/>
+                    <rect x="80" y="225" width="20" height="20" fill="none" stroke="#1d4ed8" stroke-width="2.5"/>
+                    <text x="200" y="192" text-anchor="middle" fill="#1e3a8a" font-weight="900" font-size="18">Rectangular Wall</text>
+                    <text x="48" y="190" text-anchor="middle" fill="#1d4ed8" font-weight="900" font-size="17">5 m</text>
+                    <text x="200" y="268" text-anchor="middle" fill="#0f172a" font-weight="900" font-size="18">Width = 8 m</text>
+                  </g>
+                </svg>
+              </div>
+
+              <div class="lg:col-span-5 space-y-4">
+                <div class="bg-blue-50 border-2 border-blue-300 rounded-2xl p-4">
+                  <span class="text-xs font-extrabold uppercase text-blue-700">Part 1 · Rectangular Wall</span>
+                  <p class="text-2xl font-display font-bold text-blue-900 mt-1">8 m × 5 m = 40 m²</p>
+                </div>
+                <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4">
+                  <span class="text-xs font-extrabold uppercase text-amber-800">Part 2 · Right-Angled Roof Triangle</span>
+                  <p class="text-sm font-bold text-amber-900">Shares the exact same base width (8 m)!</p>
+                  <p class="text-2xl font-display font-bold text-amber-900 mt-1">8 m × 3 m ÷ 2 = 12 m²</p>
+                </div>
+                <div class="bg-emerald-600 text-white rounded-2xl p-5 shadow-lg">
+                  <span class="text-xs font-extrabold uppercase text-emerald-100">Total Compound Area</span>
+                  <p class="text-3xl font-display font-bold mt-1">40 m² + 12 m² = 52 m²</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MODEL 3: REVERSE MISSING LENGTH ("REBUILD THE RECTANGLE FIRST!") -->
+          <div id="idoModel3" class="ido-panel hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <div class="lg:col-span-7 bg-purple-50 rounded-2xl p-5 border-2 border-purple-200 text-center">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                  <span class="px-3 py-1 rounded-full bg-purple-700 text-white font-extrabold text-xs">Golden Rule: Rebuild the Rectangle First!</span>
+                  <div class="flex gap-2">
+                    <button type="button" onclick="setM3Step(0)" class="px-3 py-1.5 rounded-lg bg-white border border-purple-300 text-purple-900 font-bold text-xs hover:bg-purple-100">Reset</button>
+                    <button type="button" onclick="setM3Step(1)" class="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs shadow">Step 1: ×2 Rebuild!</button>
+                    <button type="button" onclick="setM3Step(2)" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow">Step 2: ÷ 8 = Height!</button>
+                  </div>
+                </div>
+                <svg viewBox="0 0 400 245" class="w-full max-w-md h-60 mx-auto">
+                  <!-- Second flipped twin triangle -->
+                  <g id="m3TwinTri" class="split-part" style="opacity:0; transform: translate(35px, -28px);">
+                    <polygon points="75,45 315,45 315,195" fill="rgba(168,85,247,0.28)" stroke="#7e22ce" stroke-width="3.5" stroke-dasharray="7 5"/>
+                    <text x="235" y="102" text-anchor="middle" fill="#6b21a8" font-weight="900" font-size="18">+ 24 cm²</text>
+                  </g>
+                  <!-- Original triangle -->
+                  <polygon points="75,195 315,195 75,45" fill="rgba(124,58,237,0.45)" stroke="#4c1d95" stroke-width="4"/>
+                  <rect x="75" y="175" width="20" height="20" fill="none" stroke="#4c1d95" stroke-width="3"/>
+                  <text x="150" y="152" text-anchor="middle" fill="#ffffff" font-weight="900" font-size="20">Area = 24 cm²</text>
+                  <text x="195" y="228" text-anchor="middle" fill="#0f172a" font-weight="900" font-size="19">Base = 8 cm</text>
+                  <text id="m3HeightLbl" x="34" y="125" text-anchor="middle" fill="#b91c1c" font-weight="900" font-size="20">h = ?</text>
+                </svg>
+              </div>
+
+              <div class="lg:col-span-5 space-y-3">
+                <div class="bg-white border-2 border-slate-200 rounded-2xl p-4">
+                  <p class="text-xs font-extrabold uppercase text-slate-500">Problem</p>
+                  <p class="text-lg font-extrabold text-slate-900">A right-angled triangle has Area = 24 cm² and Base = 8 cm. Find its height.</p>
+                </div>
+                <div id="m3Card1" class="bg-purple-100 border-2 border-purple-400 rounded-2xl p-4 opacity-40 transition-all">
+                  <p class="text-xs font-extrabold uppercase text-purple-800">Step 1 · Double to Rebuild the Rectangle</p>
+                  <p class="text-2xl font-display font-bold text-purple-950">24 × 2 = 48 cm²</p>
+                </div>
+                <div id="m3Card2" class="bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-4 opacity-40 transition-all">
+                  <p class="text-xs font-extrabold uppercase text-emerald-800">Step 2 · Divide by Known Base</p>
+                  <p class="text-2xl font-display font-bold text-emerald-950">48 ÷ 8 = 6 cm</p>
+                  <p class="text-xs font-extrabold text-emerald-800 mt-1">Check: 8 × 6 ÷ 2 = 24 cm² ✓</p>
+                </div>
+                <div class="bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs font-extrabold text-rose-800">
+                  ⚠️ Watch Out! Never do 24 ÷ 8 = 3 cm — that forgets the triangle was halved!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HANDS-ON INTERACTIVE CPA LABS -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          <!-- LAB A: INTERACTIVE COMPOUND HOUSE-GABLE AREA BUILDER -->
+          <div class="bg-white rounded-3xl p-6 border-2 border-indigo-200 shadow-lg space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-xs font-extrabold uppercase text-indigo-600">Interactive CPA Lab A</span>
+                <h3 class="text-2xl font-display font-bold text-slate-900">🏠 House-Gable Area Builder</h3>
+              </div>
+              <button type="button" onclick="resetHouseLab()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700">↺ Reset</button>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-3 border border-slate-200">
+              <svg viewBox="0 0 360 220" class="w-full h-48">
+                <!-- Dynamic roof triangle -->
+                <polygon id="labRoofPoly" points="70,110 270,110 270,50" fill="rgba(245,158,11,0.38)" stroke="#b45309" stroke-width="3.5"/>
+                <rect id="labRoofSq" x="256" y="96" width="14" height="14" fill="none" stroke="#b45309" stroke-width="2.5"/>
+                <!-- Dynamic wall rectangle -->
+                <rect id="labWallRect" x="70" y="110" width="200" height="80" fill="rgba(59,130,246,0.3)" stroke="#1d4ed8" stroke-width="3.5"/>
+                <line id="labSplitLine" x1="65" y1="110" x2="275" y2="110" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6 4"/>
+                <!-- Dynamic labels -->
+                <text id="labLblW" x="170" y="210" text-anchor="middle" fill="#0f172a" font-weight="900" font-size="14">Width = 8 m</text>
+                <text id="labLblH" x="40" y="155" text-anchor="middle" fill="#1d4ed8" font-weight="900" font-size="13">Wall 5 m</text>
+                <text id="labLblR" x="308" y="84" text-anchor="middle" fill="#b45309" font-weight="900" font-size="13">Roof 3 m</text>
+                <text id="labWallAreaTxt" x="170" y="155" text-anchor="middle" fill="#1e3a8a" font-weight="900" font-size="15">40 m²</text>
+                <text id="labRoofAreaTxt" x="215" y="95" text-anchor="middle" fill="#92400e" font-weight="900" font-size="14">12 m²</text>
+              </svg>
+            </div>
+
+            <!-- Sliders (static DOM, targeted updates) -->
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between text-sm font-extrabold text-slate-800">
+                  <label for="sliderW">Wall Width (Base)</label>
+                  <span id="valW" class="text-indigo-700">8 m</span>
+                </div>
+                <input id="sliderW" type="range" min="4" max="14" step="0.5" value="8" oninput="updateHouseLab()" class="w-full">
+              </div>
+              <div>
+                <div class="flex justify-between text-sm font-extrabold text-slate-800">
+                  <label for="sliderH">Wall Height (Rectangle)</label>
+                  <span id="valH" class="text-blue-700">5 m</span>
+                </div>
+                <input id="sliderH" type="range" min="2" max="8" step="0.5" value="5" oninput="updateHouseLab()" class="w-full">
+              </div>
+              <div>
+                <div class="flex justify-between text-sm font-extrabold text-slate-800">
+                  <label for="sliderR">Roof Height (Triangle)</label>
+                  <span id="valR" class="text-amber-700">3 m</span>
+                </div>
+                <input id="sliderR" type="range" min="2" max="8" step="0.5" value="3" oninput="updateHouseLab()" class="w-full">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-center pt-1">
+              <div class="bg-blue-50 border border-blue-200 rounded-xl p-2.5">
+                <p class="text-[11px] font-extrabold text-blue-700 uppercase">Rectangle</p>
+                <p id="outRectCalc" class="text-xs font-bold text-slate-600">8 × 5</p>
+                <p id="outRectArea" class="text-xl font-display font-bold text-blue-800">40 m²</p>
+              </div>
+              <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5">
+                <p class="text-[11px] font-extrabold text-amber-800 uppercase">Triangle</p>
+                <p id="outTriCalc" class="text-xs font-bold text-slate-600">8 × 3 ÷ 2</p>
+                <p id="outTriArea" class="text-xl font-display font-bold text-amber-800">12 m²</p>
+              </div>
+              <div class="bg-emerald-600 text-white rounded-xl p-2.5 shadow">
+                <p class="text-[11px] font-extrabold text-emerald-100 uppercase">Total Area</p>
+                <p class="text-xs font-bold text-emerald-100">Rect + Tri</p>
+                <p id="outTotalArea" class="text-xl font-display font-bold">52 m²</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- LAB B: INTERACTIVE MISSING-SIDE "DOUBLE FIRST!" SOLVER -->
+          <div class="bg-white rounded-3xl p-6 border-2 border-purple-200 shadow-lg space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-xs font-extrabold uppercase text-purple-600">Interactive CPA Lab B</span>
+                <h3 class="text-2xl font-display font-bold text-slate-900">🔄 Missing-Side "Double First!" Solver</h3>
+              </div>
+              <button type="button" id="revToggleBtn" onclick="toggleRevDouble()" class="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs shadow transition">
+                ×2 Rebuild Rectangle
+              </button>
+            </div>
+
+            <div class="bg-purple-50 rounded-2xl p-3 border border-purple-200">
+              <svg viewBox="0 0 360 205" class="w-full h-44">
+                <g id="revTwinGroup" class="split-part" style="opacity:0.08; transform: translate(24px,-18px);">
+                  <polygon points="75,35 285,35 285,165" fill="rgba(168,85,247,0.35)" stroke="#7e22ce" stroke-width="3" stroke-dasharray="6 4"/>
+                  <text id="revTwinLbl" x="215" y="85" text-anchor="middle" fill="#6b21a8" font-weight="900" font-size="16">+ 18 cm²</text>
+                </g>
+                <polygon points="75,165 285,165 75,35" fill="rgba(124,58,237,0.45)" stroke="#4c1d95" stroke-width="3.5"/>
+                <rect x="75" y="149" width="16" height="16" fill="none" stroke="#4c1d95" stroke-width="2.5"/>
+                <text id="revAreaLbl" x="145" y="132" text-anchor="middle" fill="#ffffff" font-weight="900" font-size="16">Area = 18 cm²</text>
+                <text id="revBaseLbl" x="180" y="192" text-anchor="middle" fill="#0f172a" font-weight="900" font-size="15">Base = 6 cm</text>
+                <text id="revHeightLbl" x="35" y="105" text-anchor="middle" fill="#b91c1c" font-weight="900" font-size="16">h = ?</text>
+              </svg>
+            </div>
+
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between text-sm font-extrabold text-slate-800">
+                  <label for="revSliderArea">Given Triangle Area</label>
+                  <span id="revValArea" class="text-purple-700">18 cm²</span>
+                </div>
+                <input id="revSliderArea" type="range" min="6" max="60" step="3" value="18" oninput="updateRevLab()" class="w-full">
+              </div>
+              <div>
+                <div class="flex justify-between text-sm font-extrabold text-slate-800">
+                  <label for="revSliderBase">Given Known Base</label>
+                  <span id="revValBase" class="text-indigo-700">6 cm</span>
+                </div>
+                <input id="revSliderBase" type="range" min="2" max="12" step="1" value="6" oninput="updateRevLab()" class="w-full">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 text-center">
+              <div class="bg-purple-100 border border-purple-300 rounded-xl p-3">
+                <p class="text-xs font-extrabold uppercase text-purple-800">Step 1 · Double Area</p>
+                <p id="revOutDouble" class="text-xl font-display font-bold text-purple-950">18 × 2 = 36 cm²</p>
+              </div>
+              <div class="bg-emerald-100 border border-emerald-400 rounded-xl p-3">
+                <p class="text-xs font-extrabold uppercase text-emerald-800">Step 2 · Divide by Base</p>
+                <p id="revOutHeight" class="text-xl font-display font-bold text-emerald-950">36 ÷ 6 = 6 cm</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         STATION 4: ALL-TIERS SIDE-BY-SIDE BOARD VIEW + GIANT PROJECTION MODE
+         ===================================================================== -->
+    <section id="station-4" class="station-section hidden">
+      <div class="space-y-5">
+        <div class="bg-white rounded-2xl p-5 border border-indigo-100 shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Independent &amp; Paired Practice</span>
+            <h2 class="text-3xl font-display font-bold text-slate-900">All-Tiers Practice Board — Tap Any Card to Project!</h2>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="filterTier('all')" data-tier-btn="all" class="tier-filter-btn px-4 py-2 rounded-xl font-extrabold text-xs bg-indigo-600 text-white shadow">All Tiers (9)</button>
+            <button type="button" onclick="filterTier('must')" data-tier-btn="must" class="tier-filter-btn px-4 py-2 rounded-xl font-extrabold text-xs bg-emerald-100 text-emerald-800">🟢 Must</button>
+            <button type="button" onclick="filterTier('should')" data-tier-btn="should" class="tier-filter-btn px-4 py-2 rounded-xl font-extrabold text-xs bg-amber-100 text-amber-800">🟠 Should</button>
+            <button type="button" onclick="filterTier('could')" data-tier-btn="could" class="tier-filter-btn px-4 py-2 rounded-xl font-extrabold text-xs bg-purple-100 text-purple-800">🟣 Could</button>
+          </div>
+        </div>
+
+        <div id="practiceColumns" class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <!-- Column 1: Must -->
+          <div id="col-must" class="space-y-3 bg-emerald-50/70 rounded-3xl p-4 border-2 border-emerald-200">
+            <div class="flex items-center justify-between px-2">
+              <h3 class="text-xl font-display font-bold text-emerald-900">🟢 Must · Decimal Triangles</h3>
+              <span class="text-xs font-extrabold bg-emerald-200 text-emerald-900 px-2.5 py-0.5 rounded-full">3 tasks</span>
+            </div>
+            <div id="cards-must" class="space-y-3"></div>
+          </div>
+
+          <!-- Column 2: Should -->
+          <div id="col-should" class="space-y-3 bg-amber-50/70 rounded-3xl p-4 border-2 border-amber-200">
+            <div class="flex items-center justify-between px-2">
+              <h3 class="text-xl font-display font-bold text-amber-900">🟠 Should · Compound Shapes</h3>
+              <span class="text-xs font-extrabold bg-amber-200 text-amber-900 px-2.5 py-0.5 rounded-full">3 tasks</span>
+            </div>
+            <div id="cards-should" class="space-y-3"></div>
+          </div>
+
+          <!-- Column 3: Could -->
+          <div id="col-could" class="space-y-3 bg-purple-50/70 rounded-3xl p-4 border-2 border-purple-200">
+            <div class="flex items-center justify-between px-2">
+              <h3 class="text-xl font-display font-bold text-purple-900">🟣 Could · Missing Lengths</h3>
+              <span class="text-xs font-extrabold bg-purple-200 text-purple-900 px-2.5 py-0.5 rounded-full">3 tasks</span>
+            </div>
+            <div id="cards-could" class="space-y-3"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         STATION 5: REASONING & JUSTIFICATION LAB (TWM)
+         ===================================================================== -->
+    <section id="station-5" class="station-section hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-2xl p-5 border border-indigo-100 shadow-sm">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-fuchsia-600">Thinking &amp; Working Mathematically (TWM)</span>
+          <h2 class="text-3xl font-display font-bold text-slate-900">🧠 Reasoning &amp; Justification Lab</h2>
+        </div>
+
+        <!-- Part A: True or False Matrix (4 Cards) -->
+        <div>
+          <h3 class="text-xl font-display font-bold text-slate-800 mb-3">Part A · True or False? Discuss, Then Tap to Reveal Proof!</h3>
+          <div id="tfGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+
+        <!-- Part B: TWM Deep Reasoning Challenges -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <!-- Who is Correct? -->
+          <div class="bg-white rounded-3xl p-5 border-2 border-indigo-200 shadow-md flex flex-col justify-between">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-extrabold text-xs">👥 Who Is Correct?</span>
+              <h4 class="text-xl font-display font-bold text-slate-900 mt-2 mb-2">Linh vs Nam</h4>
+              <p class="text-sm font-bold text-slate-700 leading-relaxed">
+                A compound sign is a <strong>8 cm × 5 cm</strong> rectangle with a right-angled triangle (<strong>base 4 cm, height 5 cm</strong>) joined to its side.
+              </p>
+              <div class="mt-3 space-y-2 text-sm font-bold">
+                <div class="bg-rose-50 border border-rose-200 rounded-xl p-2.5 text-rose-900">
+                  <strong>Linh:</strong> "Total area = 8 × 5 + 4 × 5 = 60 cm²."
+                </div>
+                <div class="bg-sky-50 border border-sky-200 rounded-xl p-2.5 text-sky-900">
+                  <strong>Nam:</strong> "Total area = 8 × 5 + (4 × 5 ÷ 2) = 50 cm²."
+                </div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <button type="button" onclick="toggleReveal('twm1')" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm transition">Reveal Proof</button>
+              <div id="twm1" class="hidden mt-3 bg-emerald-50 border-2 border-emerald-300 rounded-xl p-3 text-sm font-bold text-emerald-950">
+                ✅ <strong>Nam is correct!</strong> Linh forgot to halve the triangle. Rectangle = 40 cm²; Triangle = 4 × 5 ÷ 2 = 10 cm². Total = 50 cm².
+              </div>
+            </div>
+          </div>
+
+          <!-- Always, Sometimes, or Never True -->
+          <div class="bg-white rounded-3xl p-5 border-2 border-amber-200 shadow-md flex flex-col justify-between">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-extrabold text-xs">⚖️ Always · Sometimes · Never</span>
+              <h4 class="text-xl font-display font-bold text-slate-900 mt-2 mb-2">Scaling a Triangle</h4>
+              <p class="text-base font-bold text-slate-800 leading-relaxed bg-amber-50 rounded-2xl p-4 border border-amber-200">
+                "Doubling the base of a right-angled triangle while keeping the height fixed doubles its area."
+              </p>
+              <p class="text-xs font-bold text-slate-500 mt-2">Test with numbers on your whiteboard first!</p>
+            </div>
+            <div class="mt-4">
+              <button type="button" onclick="toggleReveal('twm2')" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm transition">Reveal Proof</button>
+              <div id="twm2" class="hidden mt-3 bg-emerald-50 border-2 border-emerald-300 rounded-xl p-3 text-sm font-bold text-emerald-950">
+                ✅ <strong>ALWAYS TRUE!</strong> Example: b = 4, h = 5 → Area = 10 cm². Double base to b = 8, h = 5 → Area = 20 cm² (exact double!).
+              </div>
+            </div>
+          </div>
+
+          <!-- Convince Me -->
+          <div class="bg-white rounded-3xl p-5 border-2 border-purple-200 shadow-md flex flex-col justify-between">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-800 font-extrabold text-xs">💡 Convince Me!</span>
+              <h4 class="text-xl font-display font-bold text-slate-900 mt-2 mb-2">Same Area, Different Shapes</h4>
+              <p class="text-base font-bold text-slate-800 leading-relaxed bg-purple-50 rounded-2xl p-4 border border-purple-200">
+                Can two different compound shapes (each made from 1 rectangle + 1 right-angled triangle) both have total area <strong>44 cm²</strong>?
+              </p>
+            </div>
+            <div class="mt-4">
+              <button type="button" onclick="toggleReveal('twm3')" class="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-sm transition">Reveal Examples</button>
+              <div id="twm3" class="hidden mt-3 bg-emerald-50 border-2 border-emerald-300 rounded-xl p-3 text-sm font-bold text-emerald-950">
+                ✅ <strong>YES!</strong><br>
+                Shape 1: Rect 8×4 (32) + Tri 6×4÷2 (12) = 44 cm².<br>
+                Shape 2: Rect 7×5 (35) + Tri 6×3÷2 (9) = 44 cm².
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EAL English Sentence Stems -->
+        <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white rounded-3xl p-6 shadow-lg">
+          <h3 class="text-xl font-display font-bold mb-3">🗣️ Mathematical Talk Stems (Speak in Full Sentences)</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm sm:text-base font-bold">
+            <div class="bg-white/10 rounded-xl p-3">"I decomposed the compound shape into a rectangle of ___ and a triangle of ___."</div>
+            <div class="bg-white/10 rounded-xl p-3">"I know this statement is false because we must double the triangle's area first."</div>
+            <div class="bg-white/10 rounded-xl p-3">"I ignored the sloping side because area only uses perpendicular sides."</div>
+            <div class="bg-white/10 rounded-xl p-3">"To check my missing length, I used base × height ÷ 2 and got ___."</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         STATION 6: SUCCESS CRITERIA WHITEBOARD CHECK (AfL GATE)
+         ===================================================================== -->
+    <section id="station-6" class="station-section hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 border-2 border-emerald-200 shadow-md flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-600">Mini-Whiteboard Diagnostic Gate</span>
+            <h2 class="text-3xl font-display font-bold text-slate-900">✅ Success Criteria Check</h2>
+            <p class="text-sm font-bold text-slate-600">Hold up mini-whiteboards for all 3 checks before unlocking Quickfire!</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <div id="criteriaBadge" class="px-5 py-2.5 rounded-2xl bg-slate-100 border-2 border-slate-300 font-display font-bold text-xl text-slate-800">
+              0 / 3 Met
+            </div>
+            <button type="button" onclick="switchStation(7)" class="px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-display font-bold text-lg shadow transition">
+              Go to Quickfire 🏆 →
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <!-- Check 1: Must -->
+          <div class="bg-white rounded-3xl p-6 border-2 border-emerald-300 shadow-md flex flex-col justify-between space-y-4">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs">🟢 MUST CHECK</span>
+              <h3 class="text-xl font-display font-bold text-slate-900 mt-2">Decimal Triangle</h3>
+              <p class="text-lg font-extrabold text-slate-800 mt-2 bg-emerald-50 rounded-2xl p-4 border border-emerald-200">
+                Find the area of a right-angled triangle with base <strong>6 cm</strong> and perpendicular height <strong>4.5 cm</strong>.
+              </p>
+            </div>
+            <div class="space-y-2.5">
+              <button type="button" onclick="toggleReveal('scAns1')" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm">👁 Reveal Answer</button>
+              <div id="scAns1" class="hidden bg-emerald-100 border border-emerald-300 rounded-xl p-3 text-center font-extrabold text-emerald-950">
+                6 × 4.5 ÷ 2 = 3 × 4.5 = <span class="text-xl">13.5 cm²</span>
+              </div>
+              <label class="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer font-extrabold text-sm text-slate-800 hover:bg-emerald-50">
+                <input type="checkbox" class="sc-checkbox w-5 h-5 accent-emerald-600" onchange="updateCriteriaTracker()">
+                <span>Tick as Met</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Check 2: Should -->
+          <div class="bg-white rounded-3xl p-6 border-2 border-amber-300 shadow-md flex flex-col justify-between space-y-4">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-extrabold text-xs">🟠 SHOULD CHECK</span>
+              <h3 class="text-xl font-display font-bold text-slate-900 mt-2">Compound Shape</h3>
+              <p class="text-lg font-extrabold text-slate-800 mt-2 bg-amber-50 rounded-2xl p-4 border border-amber-200">
+                A courtyard combines a <strong>7 m × 4 m</strong> rectangle and a right-angled triangle (<strong>base 5 m, height 4 m</strong>). Find total area.
+              </p>
+            </div>
+            <div class="space-y-2.5">
+              <button type="button" onclick="toggleReveal('scAns2')" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm">👁 Reveal Answer</button>
+              <div id="scAns2" class="hidden bg-amber-100 border border-amber-300 rounded-xl p-3 text-center font-extrabold text-amber-950">
+                Rect 28 m² + Tri (5 × 4 ÷ 2 = 10 m²) = <span class="text-xl">38 m²</span>
+              </div>
+              <label class="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer font-extrabold text-sm text-slate-800 hover:bg-amber-50">
+                <input type="checkbox" class="sc-checkbox w-5 h-5 accent-amber-600" onchange="updateCriteriaTracker()">
+                <span>Tick as Met</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Check 3: Could -->
+          <div class="bg-white rounded-3xl p-6 border-2 border-purple-300 shadow-md flex flex-col justify-between space-y-4">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-800 font-extrabold text-xs">🟣 COULD CHECK</span>
+              <h3 class="text-xl font-display font-bold text-slate-900 mt-2">Missing Height</h3>
+              <p class="text-lg font-extrabold text-slate-800 mt-2 bg-purple-50 rounded-2xl p-4 border border-purple-200">
+                A right-angled triangle has Area = <strong>27 cm²</strong> and base = <strong>9 cm</strong>. Find its perpendicular height.
+              </p>
+            </div>
+            <div class="space-y-2.5">
+              <button type="button" onclick="toggleReveal('scAns3')" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm">👁 Reveal Answer</button>
+              <div id="scAns3" class="hidden bg-purple-100 border border-purple-300 rounded-xl p-3 text-center font-extrabold text-purple-950">
+                Double: 27 × 2 = 54 ➔ 54 ÷ 9 = <span class="text-xl">6 cm</span>
+              </div>
+              <label class="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer font-extrabold text-sm text-slate-800 hover:bg-purple-50">
+                <input type="checkbox" class="sc-checkbox w-5 h-5 accent-purple-600" onchange="updateCriteriaTracker()">
+                <span>Tick as Met</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         STATION 7: QUICKFIRE ENGINE (10 RAPID QUESTIONS)
+         ===================================================================== -->
+    <section id="station-7" class="station-section hidden">
+      <div class="space-y-5">
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-2xl">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-white/15">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-widest text-amber-300">Automaticity Sprint · 10 Questions</span>
+              <h2 class="text-3xl sm:text-4xl font-display font-bold">🏆 Quickfire Engine</h2>
+            </div>
+
+            <!-- Team Scoreboards -->
+            <div class="flex items-center gap-3">
+              <div class="bg-rose-500/20 border-2 border-rose-400 rounded-2xl px-4 py-2 text-center">
+                <p class="text-xs font-extrabold text-rose-200 uppercase">🔴 Team Red</p>
+                <p id="qfScoreRed" class="text-3xl font-display font-bold">0</p>
+              </div>
+              <div class="bg-sky-500/20 border-2 border-sky-400 rounded-2xl px-4 py-2 text-center">
+                <p class="text-xs font-extrabold text-sky-200 uppercase">🔵 Team Blue</p>
+                <p id="qfScoreBlue" class="text-3xl font-display font-bold">0</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timer & Question Controls -->
+          <div class="flex flex-wrap items-center justify-between gap-4 py-4">
+            <div class="flex items-center gap-2">
+              <span id="qfProgress" class="px-4 py-1.5 rounded-full bg-white/15 font-extrabold text-sm">Question 1 / 10</span>
+              <span id="qfTag" class="px-3 py-1.5 rounded-full bg-indigo-500/40 font-bold text-xs text-indigo-100">Decimal Triangle</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-300">Timer:</span>
+              <button type="button" onclick="setQfDuration(10)" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-bold">10s</button>
+              <button type="button" onclick="setQfDuration(15)" class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 text-xs font-extrabold">15s</button>
+              <button type="button" onclick="setQfDuration(20)" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-bold">20s</button>
+              <div id="qfTimerDisplay" class="ml-2 px-4 py-1.5 rounded-xl bg-amber-400 text-slate-950 font-display font-bold text-2xl min-w-[76px] text-center">
+                15s
+              </div>
+            </div>
+          </div>
+
+          <!-- Giant Question Stage -->
+          <div class="bg-white text-slate-900 rounded-3xl p-8 sm:p-10 text-center my-4 min-h-[240px] flex flex-col items-center justify-center relative overflow-hidden">
+            <div id="boardsUpBanner" class="hidden absolute inset-x-0 top-0 bg-rose-600 text-white py-2.5 font-display font-bold text-2xl tracking-wider animate-pop">
+              🚨 TIME'S UP — BOARDS UP! 🚨
+            </div>
+            <p id="qfQuestionText" class="text-3xl sm:text-5xl font-display font-bold leading-snug max-w-3xl mt-4">
+              Right-angled triangle: base = 4 cm, height = 3.5 cm. Find the area.
+            </p>
+            <div id="qfAnswerBox" class="hidden mt-6 bg-emerald-100 border-2 border-emerald-400 rounded-2xl px-8 py-4">
+              <p id="qfAnswerText" class="text-3xl sm:text-4xl font-display font-bold text-emerald-900">7 cm²</p>
+              <p id="qfWorkText" class="text-base font-bold text-emerald-800 mt-1">4 × 3.5 ÷ 2 = 2 × 3.5 = 7 cm²</p>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div class="flex flex-wrap gap-2">
+              <button type="button" onclick="startQfTimer()" class="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm shadow">▶ Start Timer</button>
+              <button type="button" onclick="stopQfTimer()" class="px-4 py-3 rounded-xl bg-white/15 hover:bg-white/25 text-white font-bold text-sm">⏸ Pause</button>
+              <button type="button" onclick="revealQfAnswer()" class="px-5 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-sm shadow">👁 Reveal Answer</button>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <button type="button" onclick="awardTeam('red', 1)" class="px-4 py-3 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-sm shadow">+1 🔴 Red</button>
+              <button type="button" onclick="awardTeam('blue', 1)" class="px-4 py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-sm shadow">+1 🔵 Blue</button>
+              <button type="button" onclick="prevQf()" class="px-4 py-3 rounded-xl bg-white/15 hover:bg-white/25 text-white font-bold text-sm">← Prev</button>
+              <button type="button" onclick="nextQf()" class="px-5 py-3 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-extrabold text-sm shadow">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =======================================================================
+       VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION — z-[80])
+       ======================================================================= -->
+  <div id="vocabModal" class="hidden fixed inset-0 z-[80] bg-slate-950/65 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border-4 border-indigo-200 relative">
+      <button type="button" onclick="closeVocabModal()" aria-label="Close modal" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 font-black text-slate-700 text-lg">✕</button>
+      <div class="space-y-4">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase">Bilingual Maths Dictionary</span>
+          <h3 id="vmEn" class="text-3xl sm:text-4xl font-display font-bold text-slate-900 mt-2">compound shape</h3>
+          <p id="vmVn" class="text-2xl font-display font-bold text-violet-700">hình ghép</p>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <button type="button" onclick="speakVocab('en-GB')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm shadow">🔊 Listen EN (British)</button>
+          <button type="button" onclick="speakVocab('vi-VN')" class="px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-extrabold text-sm shadow">🔊 Nghe tiếng Việt</button>
+        </div>
+
+        <div id="vmSvg" class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex items-center justify-center min-h-[135px]"></div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="bg-indigo-50 rounded-2xl p-3.5 border border-indigo-200">
+            <p class="text-xs font-extrabold uppercase text-indigo-700 mb-1">🇬🇧 English Meaning</p>
+            <p id="vmDefEn" class="text-sm font-bold text-slate-800 leading-snug"></p>
+          </div>
+          <div class="bg-violet-50 rounded-2xl p-3.5 border border-violet-200">
+            <p class="text-xs font-extrabold uppercase text-violet-700 mb-1">🇻🇳 Nghĩa tiếng Việt</p>
+            <p id="vmDefVn" class="text-sm font-bold text-slate-800 leading-snug"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       GIANT PROJECTION MODAL FOR STATION 4 (z-[80])
+       ======================================================================= -->
+  <div id="projModal" class="hidden fixed inset-0 z-[80] bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-8 sm:p-10 shadow-2xl border-4 border-indigo-300 relative text-center space-y-6">
+      <button type="button" onclick="closeProjModal()" aria-label="Close projection" class="absolute top-5 right-5 w-11 h-11 rounded-full bg-slate-100 hover:bg-slate-200 font-black text-slate-700 text-xl">✕</button>
+      <div class="flex items-center justify-center gap-3">
+        <span id="projTierBadge" class="px-4 py-1.5 rounded-full font-extrabold text-sm uppercase">🟢 Must</span>
+        <span id="projIndex" class="text-sm font-bold text-slate-500">Card 1 / 9</span>
+      </div>
+      <div id="projVisual" class="flex justify-center"></div>
+      <p id="projPrompt" class="text-4xl sm:text-5xl font-display font-bold text-slate-900 leading-tight"></p>
+      <div id="projAnswerBox" class="hidden bg-emerald-100 border-2 border-emerald-400 rounded-2xl p-5">
+        <p id="projAnswer" class="text-4xl font-display font-bold text-emerald-900"></p>
+        <p id="projWork" class="text-lg font-bold text-emerald-800 mt-1"></p>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <button type="button" onclick="navProj(-1)" class="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 font-extrabold text-slate-800">← Prev</button>
+        <button type="button" onclick="toggleProjAnswer()" class="px-7 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold shadow">👁 Toggle Answer</button>
+        <button type="button" onclick="navProj(1)" class="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 font-extrabold text-slate-800">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       TEACHER PROMPT DRAWER (HIDDEN BY DEFAULT — z-[70])
+       ======================================================================= -->
+  <aside id="teacherDrawer" class="hidden fixed top-0 right-0 bottom-0 w-full max-w-md bg-white z-[70] shadow-2xl border-l-4 border-amber-400 p-6 overflow-y-auto">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+      <div>
+        <span class="text-xs font-extrabold uppercase text-amber-600">Teacher Support (Press T)</span>
+        <h3 class="text-2xl font-display font-bold text-slate-900">Lesson 2 Prompt Drawer</h3>
+      </div>
+      <button type="button" onclick="toggleTeacherDrawer()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 font-black">✕</button>
+    </div>
+    <div class="space-y-4 text-sm font-semibold text-slate-700">
+      <div class="bg-rose-50 border border-rose-200 rounded-2xl p-4">
+        <h4 class="font-extrabold text-rose-900 mb-1">🚨 Top Misconception Alert</h4>
+        <p>When finding a missing side from triangle area (e.g. Area = 24 cm², base = 8 cm), pupils divide directly (24 ÷ 8 = 3 cm). Always chant: <strong>"Rebuild the rectangle first — DOUBLE, then DIVIDE!"</strong></p>
+      </div>
+      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+        <h4 class="font-extrabold text-amber-900 mb-1">🎯 Hinge Question (After Model 3)</h4>
+        <p>"A right-angled triangle has Area = 15 cm² and base = 5 cm. Show on mini-whiteboards: A) 3 cm, B) 6 cm, C) 10 cm." If &gt;20% show A (3 cm), snap two identical paper triangles together live on the visualiser.</p>
+      </div>
+      <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4">
+        <h4 class="font-extrabold text-sky-900 mb-1">💡 Decimal Strategy Tip</h4>
+        <p>For 6.5 × 4 ÷ 2 or 8 × 4.5 ÷ 2, encourage pupils to halve the <em>even</em> whole number first (6.5 × 2 = 13; 4 × 4.5 = 18) to avoid messy decimal division.</p>
+      </div>
+      <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+        <h4 class="font-extrabold text-emerald-900 mb-1">⌨️ Keyboard Shortcuts</h4>
+        <ul class="space-y-1 text-xs font-bold">
+          <li>• <strong>← / →</strong> : Previous / Next Station</li>
+          <li>• <strong>W</strong> : Open / Close David's Board</li>
+          <li>• <strong>T</strong> : Toggle Teacher Prompt Drawer</li>
+          <li>• <strong>M</strong> : Mute / Unmute Web Audio</li>
+          <li>• <strong>Esc</strong> : Close Modals or Fullscreen I Do</li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+  <!-- =======================================================================
+       DAVID'S BOARD FULL-SCREEN WHITEBOARD MODAL (z-[80])
+       ======================================================================= -->
+  <div id="davidsModal" class="hidden fixed inset-0 z-[80] bg-slate-900/80 flex flex-col p-3 sm:p-5">
+    <div class="bg-white rounded-t-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-2 border-b-2 border-indigo-200">
+      <div class="flex items-center gap-2">
+        <span class="font-display font-bold text-lg text-indigo-900">✏️ David's Board</span>
+        <span class="text-xs font-bold text-slate-500 hidden sm:inline">32px Squared Grid</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- 5 ink colours -->
+        <button type="button" onclick="setInk('#0f172a')" class="w-7 h-7 rounded-full bg-slate-900 border-2 border-slate-300" title="Black"></button>
+        <button type="button" onclick="setInk('#2563eb')" class="w-7 h-7 rounded-full bg-blue-600 border-2 border-white shadow" title="Blue"></button>
+        <button type="button" onclick="setInk('#dc2626')" class="w-7 h-7 rounded-full bg-red-600 border-2 border-white shadow" title="Red"></button>
+        <button type="button" onclick="setInk('#059669')" class="w-7 h-7 rounded-full bg-emerald-600 border-2 border-white shadow" title="Green"></button>
+        <button type="button" onclick="setInk('#7c3aed')" class="w-7 h-7 rounded-full bg-violet-600 border-2 border-white shadow" title="Purple"></button>
+        <span class="mx-1 text-slate-300">|</span>
+        <!-- 3 pen weights -->
+        <button type="button" onclick="setPenSize(3)" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-extrabold">Thin</button>
+        <button type="button" onclick="setPenSize(6)" class="px-2.5 py-1 rounded-lg bg-indigo-100 text-indigo-900 text-xs font-extrabold">Medium</button>
+        <button type="button" onclick="setPenSize(11)" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-extrabold">Thick</button>
+        <span class="mx-1 text-slate-300">|</span>
+        <button type="button" id="eraserBtn" onclick="toggleEraser()" class="px-3 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-extrabold">🧽 Eraser</button>
+        <button type="button" onclick="clearDavidsBoard()" class="px-3 py-1 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-extrabold">🗑 Clear</button>
+        <button type="button" onclick="closeDavidsBoard()" class="px-4 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold">✕ Close (W)</button>
+      </div>
+    </div>
+    <div id="davidsCanvasWrap" class="flex-1 rounded-b-2xl overflow-hidden relative shadow-2xl">
+      <canvas id="davidsCanvas" class="w-full h-full touch-none cursor-crosshair block"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // STATE & WEB AUDIO ENGINE (100% OFFLINE)
+    // =========================================================================
+    let currentStation = 0;
+    let isMuted = false;
+    let scoreRed = 0;
+    let scoreBlue = 0;
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) audioCtx = new Ctx();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playTone(freq, dur = 0.14, type = 'sine', vol = 0.12) {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(vol, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + dur);
+    }
+
+    function playChime() {
+      playTone(523.25, 0.12, 'triangle', 0.14);
+      setTimeout(() => playTone(659.25, 0.14, 'triangle', 0.14), 90);
+      setTimeout(() => playTone(783.99, 0.22, 'triangle', 0.14), 180);
+    }
+
+    function playBuzzer() {
+      playTone(220, 0.25, 'sawtooth', 0.14);
+      setTimeout(() => playTone(185, 0.35, 'sawtooth', 0.14), 180);
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('muteBtn').textContent = isMuted ? '🔇 Muted (M)' : '🔊 Sound (M)';
+    }
+
+    // =========================================================================
+    // AUTO-HIDING HEADER ON SCROLL
+    // =========================================================================
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+      const header = document.getElementById('topHeader');
+      if (currentScroll > lastScroll && currentScroll > 60) {
+        header.classList.add('header-hidden');
+      } else {
+        header.classList.remove('header-hidden');
+      }
+      lastScroll = Math.max(0, currentScroll);
+    });
+
+    // =========================================================================
+    // CONFETTI BURST
+    // =========================================================================
+    function launchConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const cols = ['#4f46e5', '#f59e0b', '#10b981', '#ec4899', '#0ea5e9', '#a855f7'];
+      const parts = Array.from({ length: 70 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -15 - Math.random() * 80,
+        r: 4 + Math.random() * 5,
+        dx: (Math.random() - 0.5) * 5,
+        dy: 3 + Math.random() * 4,
+        rot: Math.random() * Math.PI * 2,
+        drot: (Math.random() - 0.5) * 0.2,
+        col: cols[Math.floor(Math.random() * cols.length)]
+      }));
+      let frame = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        parts.forEach(p => {
+          p.x += p.dx;
+          p.y += p.dy;
+          p.rot += p.drot;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = p.col;
+          ctx.fillRect(-p.r, -p.r / 2, p.r * 2, p.r);
+          ctx.restore();
+        });
+        frame++;
+        if (frame < 95) requestAnimationFrame(draw);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      draw();
+    }
+
+    // =========================================================================
+    // TEAM SCOREBOARD SYNC
+    // =========================================================================
+    function awardTeam(team, pts) {
+      if (team === 'red') scoreRed += pts;
+      else scoreBlue += pts;
+      document.getElementById('headerScoreRed').textContent = scoreRed;
+      document.getElementById('headerScoreBlue').textContent = scoreBlue;
+      document.getElementById('qfScoreRed').textContent = scoreRed;
+      document.getElementById('qfScoreBlue').textContent = scoreBlue;
+      playChime();
+      launchConfetti();
+    }
+
+    // =========================================================================
+    // STATION NAVIGATION
+    // =========================================================================
+    function switchStation(idx) {
+      if (idx < 0 || idx > 7) return;
+      currentStation = idx;
+      document.querySelectorAll('.station-section').forEach((sec, i) => {
+        sec.classList.toggle('hidden', i !== idx);
+      });
+      document.querySelectorAll('.station-tab').forEach((btn, i) => {
+        if (i === idx) {
+          btn.className = 'station-tab px-3 py-2 rounded-xl font-extrabold text-xs sm:text-sm bg-indigo-600 text-white shadow-md transition';
+        } else {
+          btn.className = 'station-tab px-3 py-2 rounded-xl font-bold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-indigo-100 hover:text-indigo-900 transition';
+        }
+      });
+      playTone(440 + idx * 35, 0.08, 'sine', 0.08);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =========================================================================
+    // STATION 1: FLASHBACK 3
+    // =========================================================================
+    function flipCard(id) {
+      document.getElementById(id).classList.toggle('flipped');
+      playTone(540, 0.09, 'triangle', 0.1);
+    }
+    function resetFlashbacks() {
+      ['fb-card-1', 'fb-card-2', 'fb-card-3'].forEach(id => {
+        document.getElementById(id).classList.remove('flipped');
+      });
+    }
+
+    // =========================================================================
+    // STATION 2: VOCABULARY DATA & MODAL (SOLE VN EXCEPTION)
+    // =========================================================================
+    const vocabList = [
+      {
+        en: 'compound shape',
+        vn: 'hình ghép',
+        defEn: 'A shape made by joining two or more simpler shapes (like a rectangle and a triangle) with no overlaps.',
+        defVn: 'Hình được tạo thành bằng cách ghép hai hay nhiều hình đơn giản (như hình chữ nhật và hình tam giác) không chồng lên nhau.',
+        colour: 'from-indigo-500 to-blue-600',
+        svg: `<svg viewBox="0 0 220 110" class="h-28"><rect x="30" y="45" width="95" height="50" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="3"/><polygon points="125,45 125,95 190,95" fill="#fde68a" stroke="#b45309" stroke-width="3"/><line x1="125" y1="45" x2="125" y2="95" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5 3"/><text x="77" y="75" text-anchor="middle" font-size="12" font-weight="800" fill="#1e3a8a">Rect</text><text x="148" y="86" text-anchor="middle" font-size="11" font-weight="800" fill="#92400e">Tri</text></svg>`
+      },
+      {
+        en: 'decompose',
+        vn: 'tách hình',
+        defEn: 'To split a compound shape into smaller, easier shapes so we can calculate each area separately.',
+        defVn: 'Chia một hình ghép thành các hình nhỏ hơn, dễ tính hơn để tính diện tích từng phần rồi cộng lại.',
+        colour: 'from-amber-500 to-orange-600',
+        svg: `<svg viewBox="0 0 220 110" class="h-28"><rect x="20" y="48" width="80" height="48" fill="#dbeafe" stroke="#1d4ed8" stroke-width="3"/><polygon points="128,48 128,96 196,96" fill="#fef3c7" stroke="#b45309" stroke-width="3"/><text x="114" y="76" text-anchor="middle" font-size="22" font-weight="900" fill="#dc2626">+</text></svg>`
+      },
+      {
+        en: 'perpendicular height',
+        vn: 'chiều cao vuông góc',
+        defEn: 'The straight height that meets the base at a 90° right angle — always used for triangle area.',
+        defVn: 'Độ dài thẳng đứng tạo với cạnh đáy một góc vuông 90° — luôn được dùng để tính diện tích hình tam giác.',
+        colour: 'from-emerald-500 to-teal-600',
+        svg: `<svg viewBox="0 0 220 110" class="h-28"><polygon points="45,92 175,92 45,22" fill="#d1fae5" stroke="#047857" stroke-width="3"/><rect x="45" y="76" width="16" height="16" fill="none" stroke="#dc2626" stroke-width="2.5"/><line x1="45" y1="22" x2="45" y2="92" stroke="#dc2626" stroke-width="4"/><text x="26" y="60" text-anchor="middle" font-size="12" font-weight="900" fill="#dc2626">h</text><text x="110" y="106" text-anchor="middle" font-size="12" font-weight="800" fill="#065f46">base</text></svg>`
+      },
+      {
+        en: 'sloping side',
+        vn: 'cạnh xiên (cạnh huyền)',
+        defEn: 'The slanted longest side opposite the right angle. Do NOT multiply by the sloping side to find area!',
+        defVn: 'Cạnh nghiêng dài nhất đối diện góc vuông. KHÔNG nhân với cạnh xiên này khi tính diện tích!',
+        colour: 'from-rose-500 to-pink-600',
+        svg: `<svg viewBox="0 0 220 110" class="h-28"><polygon points="45,92 175,92 45,22" fill="#ffe4e6" stroke="#be123c" stroke-width="2.5"/><line x1="45" y1="22" x2="175" y2="92" stroke="#e11d48" stroke-width="5"/><text x="128" y="48" text-anchor="middle" font-size="12" font-weight="900" fill="#be123c">sloping side ✗</text></svg>`
+      },
+      {
+        en: 'missing length',
+        vn: 'độ dài còn thiếu',
+        defEn: 'An unknown base or height that we find by working backwards from the given area.',
+        defVn: 'Độ dài cạnh đáy hoặc chiều cao chưa biết mà ta tìm bằng cách tính ngược từ diện tích đã cho.',
+        colour: 'from-purple-500 to-violet-600',
+        svg: `<svg viewBox="0 0 220 110" class="h-28"><polygon points="50,90 175,90 50,25" fill="#ede9fe" stroke="#6d28d9" stroke-width="3"/><text x="95" y="75" text-anchor="middle" font-size="12" font-weight="900" fill="#4c1d95">Area = 24</text><text x="28" y="60" text-anchor="middle" font-size="16" font-weight="900" fill="#dc2626">?</text><text x="112" y="105" text-anchor="middle" font-size="12" font-weight="800" fill="#4c1d95">8 cm</text></svg>`
+      },
+      {
+        en: 'inverse operation',
+        vn: 'phép tính ngược',
+        defEn: 'An opposite operation that undoes another: ×2 undoes ÷2, and ÷ undoes ×.',
+        defVn: 'Phép tính ngược lại để đảo chiều bước tính: nhân 2 ngược với chia 2, và chia ngược với nhân.',
+        colour: 'from-sky-500 to-cyan-600',
+        svg: `<svg viewBox="0 0 220 100" class="h-24"><rect x="14" y="28" width="62" height="40" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.5"/><text x="45" y="53" text-anchor="middle" font-size="13" font-weight="900" fill="#0369a1">Area</text><rect x="144" y="28" width="62" height="40" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/><text x="175" y="53" text-anchor="middle" font-size="13" font-weight="900" fill="#5b21b6">Side</text><text x="110" y="34" text-anchor="middle" font-size="12" font-weight="900" fill="#059669">× 2 then ÷ →</text><text x="110" y="74" text-anchor="middle" font-size="12" font-weight="900" fill="#0284c7">← × then ÷ 2</text></svg>`
+      },
+      {
+        en: 'double',
+        vn: 'gấp đôi (nhân 2)',
+        defEn: 'To multiply by 2. Doubling a right-angled triangle rebuilds its full rectangle!',
+        defVn: 'Nhân một số với 2. Gấp đôi diện tích hình tam giác vuông sẽ tạo lại hình chữ nhật đầy đủ!',
+        colour: 'from-fuchsia-500 to-purple-600',
+        svg: `<svg viewBox="0 0 220 110" class="h-28"><polygon points="45,92 175,92 45,25" fill="#c084fc" stroke="#6b21a8" stroke-width="3"/><polygon points="45,25 175,25 175,92" fill="#f3e8ff" stroke="#7e22ce" stroke-width="2.5" stroke-dasharray="5 4"/><text x="110" y="64" text-anchor="middle" font-size="14" font-weight="900" fill="#4c1d95">× 2 = Full Rect</text></svg>`
+      },
+      {
+        en: 'unit squared',
+        vn: 'đơn vị vuông (cm², m²)',
+        defEn: 'The unit used to measure flat surface area, written with a small 2: cm² or m².',
+        defVn: 'Đơn vị dùng để đo diện tích bề mặt phẳng, viết với số 2 nhỏ ở trên: cm² hoặc m².',
+        colour: 'from-teal-500 to-emerald-600',
+        svg: `<svg viewBox="0 0 220 105" class="h-24"><rect x="75" y="18" width="66" height="66" fill="#ccfbf1" stroke="#0f766e" stroke-width="3"/><text x="108" y="57" text-anchor="middle" font-size="18" font-weight="900" fill="#0f766e">1 cm²</text><text x="108" y="98" text-anchor="middle" font-size="12" font-weight="800" fill="#115e59">1 cm × 1 cm</text></svg>`
+      },
+      {
+        en: 'cut-out',
+        vn: 'phần cắt bỏ',
+        defEn: 'A smaller triangle or rectangle removed from a larger rectangle — subtract its area to find the shaded part.',
+        defVn: 'Một hình tam giác hoặc hình chữ nhật nhỏ bị cắt khỏi hình lớn — lấy diện tích hình lớn trừ phần cắt bỏ.',
+        colour: 'from-orange-500 to-red-500',
+        svg: `<svg viewBox="0 0 220 110" class="h-28"><rect x="35" y="20" width="150" height="72" fill="#fed7aa" stroke="#c2410c" stroke-width="3"/><polygon points="135,20 185,20 185,68" fill="#ffffff" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5 3"/><text x="88" y="62" text-anchor="middle" font-size="12" font-weight="900" fill="#9a3412">Shaded</text><text x="166" y="38" text-anchor="middle" font-size="10" font-weight="900" fill="#dc2626">−Cut</text></svg>`
+      }
+    ];
+
+    let activeVocabIndex = 0;
+
+    function renderVocabTiles() {
+      const grid = document.getElementById('vocabGrid');
+      grid.innerHTML = vocabList.map((v, i) => `
+        <button type="button" onclick="openVocabModal(${i})" class="group text-left rounded-2xl bg-gradient-to-br ${v.colour} text-white p-5 shadow-md hover:shadow-xl hover:-translate-y-1 transition">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-extrabold uppercase bg-white/20 px-2.5 py-0.5 rounded-full">Word ${i + 1}</span>
+            <span class="text-lg group-hover:scale-125 transition">🔊</span>
+          </div>
+          <p class="text-xl sm:text-2xl font-display font-bold leading-snug">${v.en}</p>
+          <p class="text-xs font-bold text-white/85 mt-1">Tap for visual &amp; audio</p>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(idx) {
+      activeVocabIndex = idx;
+      const v = vocabList[idx];
+      document.getElementById('vmEn').textContent = v.en;
+      document.getElementById('vmVn').textContent = v.vn;
+      document.getElementById('vmDefEn').textContent = v.defEn;
+      document.getElementById('vmDefVn').textContent = v.defVn;
+      document.getElementById('vmSvg').innerHTML = v.svg;
+      document.getElementById('vocabModal').classList.remove('hidden');
+      playTone(620, 0.08, 'sine', 0.09);
+    }
+
+    function closeVocabModal() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('vocabModal').classList.add('hidden');
+    }
+
+    function speakVocab(lang) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const v = vocabList[activeVocabIndex];
+      const text = lang === 'vi-VN' ? `${v.vn}. ${v.defVn}` : `${v.en}. ${v.defEn}`;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = lang;
+      utter.rate = 0.94;
+      window.speechSynthesis.speak(utter);
+    }
+
+    // =========================================================================
+    // STATION 3: VISUAL ANIMATED I DO + INTERACTIVE CPA LABS
+    // =========================================================================
+    function selectIDoModel(num) {
+      [1, 2, 3].forEach(n => {
+        document.getElementById(`idoModel${n}`).classList.toggle('hidden', n !== num);
+        const btn = document.getElementById(`idoBtn${n}`);
+        if (n === num) {
+          btn.className = 'ido-tab px-4 py-2 rounded-xl font-extrabold text-sm bg-indigo-600 text-white shadow transition';
+        } else {
+          btn.className = 'ido-tab px-4 py-2 rounded-xl font-bold text-sm bg-slate-100 text-slate-700 hover:bg-indigo-100 transition';
+        }
+      });
+      playTone(500 + num * 40, 0.08, 'triangle', 0.09);
+    }
+
+    function toggleStepsChecklist() {
+      document.getElementById('stepsChecklistBar').classList.toggle('hidden');
+    }
+
+    function toggleFullscreenIDo() {
+      const card = document.getElementById('iDoStageCard');
+      const btn = document.getElementById('fsIDoBtn');
+      const isFs = card.classList.toggle('fullscreen-ido');
+      btn.textContent = isFs ? '✕ Exit Full Screen (Esc)' : '⛶ Full Screen I Do';
+    }
+
+    function toggleM1Ghost(which) {
+      const el = document.getElementById(`m1Ghost${which}`);
+      el.style.opacity = el.style.opacity === '0' ? '1' : '0';
+      playTone(580, 0.07, 'sine', 0.08);
+    }
+
+    let isHouseSplit = false;
+    function toggleHouseSplit() {
+      isHouseSplit = !isHouseSplit;
+      const roof = document.getElementById('m2RoofGroup');
+      const wall = document.getElementById('m2WallGroup');
+      const baseLbl = document.getElementById('m2RoofBaseLbl');
+      const btn = document.getElementById('m2SplitBtn');
+      if (isHouseSplit) {
+        roof.style.transform = 'translateY(-22px)';
+        wall.style.transform = 'translateY(14px)';
+        baseLbl.style.opacity = '1';
+        btn.textContent = '🔗 Rejoin House Shape';
+      } else {
+        roof.style.transform = 'translateY(0)';
+        wall.style.transform = 'translateY(0)';
+        baseLbl.style.opacity = '0';
+        btn.textContent = '✂️ Animate Colour-Split!';
+      }
+      playChime();
+    }
+
+    function setM3Step(step) {
+      const twin = document.getElementById('m3TwinTri');
+      const hLbl = document.getElementById('m3HeightLbl');
+      const c1 = document.getElementById('m3Card1');
+      const c2 = document.getElementById('m3Card2');
+      if (step === 0) {
+        twin.style.opacity = '0';
+        twin.style.transform = 'translate(35px, -28px)';
+        hLbl.textContent = 'h = ?';
+        hLbl.setAttribute('fill', '#b91c1c');
+        c1.classList.add('opacity-40');
+        c2.classList.add('opacity-40');
+      } else if (step === 1) {
+        twin.style.opacity = '1';
+        twin.style.transform = 'translate(0, 0)';
+        hLbl.textContent = 'h = ?';
+        c1.classList.remove('opacity-40');
+        c2.classList.add('opacity-40');
+        playTone(520, 0.12, 'triangle', 0.12);
+      } else {
+        twin.style.opacity = '1';
+        twin.style.transform = 'translate(0, 0)';
+        hLbl.textContent = 'h = 6 cm';
+        hLbl.setAttribute('fill', '#047857');
+        c1.classList.remove('opacity-40');
+        c2.classList.remove('opacity-40');
+        playChime();
+      }
+    }
+
+    // Lab A: Smooth targeted DOM updates for House-Gable Area Builder
+    function fmtNum(n) {
+      return Number.isInteger(n) ? String(n) : String(Number(n.toFixed(2)));
+    }
+
+    function updateHouseLab() {
+      const w = parseFloat(document.getElementById('sliderW').value);
+      const h = parseFloat(document.getElementById('sliderH').value);
+      const r = parseFloat(document.getElementById('sliderR').value);
+
+      const rectArea = w * h;
+      const triArea = (w * r) / 2;
+      const total = rectArea + triArea;
+
+      document.getElementById('valW').textContent = `${fmtNum(w)} m`;
+      document.getElementById('valH').textContent = `${fmtNum(h)} m`;
+      document.getElementById('valR').textContent = `${fmtNum(r)} m`;
+
+      document.getElementById('outRectCalc').textContent = `${fmtNum(w)} × ${fmtNum(h)}`;
+      document.getElementById('outRectArea').textContent = `${fmtNum(rectArea)} m²`;
+      document.getElementById('outTriCalc').textContent = `${fmtNum(w)} × ${fmtNum(r)} ÷ 2`;
+      document.getElementById('outTriArea').textContent = `${fmtNum(triArea)} m²`;
+      document.getElementById('outTotalArea').textContent = `${fmtNum(total)} m²`;
+
+      // Scale geometry cleanly inside SVG viewBox 360x220
+      const pxW = 80 + ((w - 4) / 10) * 140; // 80..220
+      const pxH = 36 + ((h - 2) / 6) * 64;   // 36..100
+      const pxR = 28 + ((r - 2) / 6) * 58;   // 28..86
+
+      const x0 = 175 - pxW / 2;
+      const x1 = x0 + pxW;
+      const yBottom = 192;
+      const yMid = yBottom - pxH;
+      const yTop = Math.max(12, yMid - pxR);
+
+      const wallRect = document.getElementById('labWallRect');
+      wallRect.setAttribute('x', x0);
+      wallRect.setAttribute('y', yMid);
+      wallRect.setAttribute('width', pxW);
+      wallRect.setAttribute('height', pxH);
+
+      document.getElementById('labRoofPoly').setAttribute('points', `${x0},${yMid} ${x1},${yMid} ${x1},${yTop}`);
+      const sq = document.getElementById('labRoofSq');
+      sq.setAttribute('x', x1 - 12);
+      sq.setAttribute('y', yMid - 12);
+
+      const splitLine = document.getElementById('labSplitLine');
+      splitLine.setAttribute('x1', x0 - 6);
+      splitLine.setAttribute('y1', yMid);
+      splitLine.setAttribute('x2', x1 + 6);
+      splitLine.setAttribute('y2', yMid);
+
+      document.getElementById('labLblW').textContent = `Width = ${fmtNum(w)} m`;
+      const lblH = document.getElementById('labLblH');
+      lblH.setAttribute('x', Math.max(28, x0 - 26));
+      lblH.setAttribute('y', yMid + pxH / 2 + 4);
+      lblH.textContent = `${fmtNum(h)} m`;
+
+      const lblR = document.getElementById('labLblR');
+      lblR.setAttribute('x', Math.min(334, x1 + 26));
+      lblR.setAttribute('y', (yTop + yMid) / 2 + 4);
+      lblR.textContent = `${fmtNum(r)} m`;
+
+      const wTxt = document.getElementById('labWallAreaTxt');
+      wTxt.setAttribute('x', (x0 + x1) / 2);
+      wTxt.setAttribute('y', yMid + pxH / 2 + 5);
+      wTxt.textContent = `${fmtNum(rectArea)} m²`;
+
+      const rTxt = document.getElementById('labRoofAreaTxt');
+      rTxt.setAttribute('x', x0 + pxW * 0.68);
+      rTxt.setAttribute('y', yMid - Math.min(18, pxR * 0.34));
+      rTxt.textContent = `${fmtNum(triArea)} m²`;
+    }
+
+    function resetHouseLab() {
+      document.getElementById('sliderW').value = 8;
+      document.getElementById('sliderH').value = 5;
+      document.getElementById('sliderR').value = 3;
+      updateHouseLab();
+    }
+
+    // Lab B: Reverse Missing-Side Solver
+    let revDoubled = false;
+    function updateRevLab() {
+      const area = parseFloat(document.getElementById('revSliderArea').value);
+      const base = parseFloat(document.getElementById('revSliderBase').value);
+      const dbl = area * 2;
+      const h = dbl / base;
+
+      document.getElementById('revValArea').textContent = `${fmtNum(area)} cm²`;
+      document.getElementById('revValBase').textContent = `${fmtNum(base)} cm`;
+      document.getElementById('revAreaLbl').textContent = `Area = ${fmtNum(area)} cm²`;
+      document.getElementById('revTwinLbl').textContent = `+ ${fmtNum(area)} cm²`;
+      document.getElementById('revBaseLbl').textContent = `Base = ${fmtNum(base)} cm`;
+      document.getElementById('revOutDouble').textContent = `${fmtNum(area)} × 2 = ${fmtNum(dbl)} cm²`;
+      document.getElementById('revOutHeight').textContent = `${fmtNum(dbl)} ÷ ${fmtNum(base)} = ${fmtNum(h)} cm`;
+      document.getElementById('revHeightLbl').textContent = revDoubled ? `h = ${fmtNum(h)} cm` : 'h = ?';
+      document.getElementById('revHeightLbl').setAttribute('fill', revDoubled ? '#047857' : '#b91c1c');
+    }
+
+    function toggleRevDouble() {
+      revDoubled = !revDoubled;
+      const g = document.getElementById('revTwinGroup');
+      const btn = document.getElementById('revToggleBtn');
+      if (revDoubled) {
+        g.style.opacity = '1';
+        g.style.transform = 'translate(0, 0)';
+        btn.textContent = '↺ Hide Twin Triangle';
+        playChime();
+      } else {
+        g.style.opacity = '0.08';
+        g.style.transform = 'translate(24px, -18px)';
+        btn.textContent = '×2 Rebuild Rectangle';
+      }
+      updateRevLab();
+    }
+
+    // =========================================================================
+    // STATION 4: ALL-TIERS BOARD VIEW (9 CARDS) + GIANT PROJECTION
+    // =========================================================================
+    const practiceCards = [
+      // Must
+      { tier: 'must', label: '🟢 Must 1', prompt: 'Right-angled triangle: base = 10 cm, perpendicular height = 3.5 cm. Find the area.', answer: '17.5 cm²', work: '10 × 3.5 ÷ 2 = 5 × 3.5 = 17.5 cm²' },
+      { tier: 'must', label: '🟢 Must 2', prompt: 'Right-angled triangle: base = 6 cm, perpendicular height = 5.5 cm. Find the area.', answer: '16.5 cm²', work: '6 × 5.5 ÷ 2 = 3 × 5.5 = 16.5 cm²' },
+      { tier: 'must', label: '🟢 Must 3', prompt: 'Right-angled triangle: base = 8.5 cm, perpendicular height = 4 cm. Find the area.', answer: '17 cm²', work: '8.5 × 4 ÷ 2 = 8.5 × 2 = 17 cm²' },
+      // Should
+      { tier: 'should', label: '🟠 Should 1', prompt: 'Compound shape: Rectangle 9 cm × 4 cm + Right-angled triangle (base 6 cm, height 4 cm). Total area?', answer: '48 cm²', work: 'Rect 9 × 4 = 36 cm²; Tri 6 × 4 ÷ 2 = 12 cm²; Total = 36 + 12 = 48 cm²' },
+      { tier: 'should', label: '🟠 Should 2', prompt: 'Compound shape: Rectangle 10 cm × 5 cm + Right-angled triangle (base 4 cm, height 5 cm). Total area?', answer: '60 cm²', work: 'Rect 10 × 5 = 50 cm²; Tri 4 × 5 ÷ 2 = 10 cm²; Total = 50 + 10 = 60 cm²' },
+      { tier: 'should', label: '🟠 Should 3', prompt: 'Cut-out shape: Rectangle 12 cm × 4 cm minus corner right-angled triangle (base 4 cm, height 4 cm). Shaded area?', answer: '40 cm²', work: 'Rect 12 × 4 = 48 cm²; Cut-out Tri 4 × 4 ÷ 2 = 8 cm²; Shaded = 48 − 8 = 40 cm²' },
+      // Could
+      { tier: 'could', label: '🟣 Could 1', prompt: 'Right-angled triangle: Area = 30 cm², perpendicular height = 5 cm. Find the missing base.', answer: '12 cm', work: 'Double first: 30 × 2 = 60 cm² ➔ Base = 60 ÷ 5 = 12 cm' },
+      { tier: 'could', label: '🟣 Could 2', prompt: 'Right-angled triangle: Area = 21 cm², base = 7 cm. Find the missing height.', answer: '6 cm', work: 'Double first: 21 × 2 = 42 cm² ➔ Height = 42 ÷ 7 = 6 cm' },
+      { tier: 'could', label: '🟣 Could 3', prompt: 'Right-angled triangle: Area = 33 cm², base = 11 cm. Find the missing height.', answer: '6 cm', work: 'Double first: 33 × 2 = 66 cm² ➔ Height = 66 ÷ 11 = 6 cm' }
+    ];
+
+    function renderPracticeBoard() {
+      const borderMap = { must: 'border-emerald-300 hover:border-emerald-500', should: 'border-amber-300 hover:border-amber-500', could: 'border-purple-300 hover:border-purple-500' };
+      const tagMap = { must: 'bg-emerald-100 text-emerald-800', should: 'bg-amber-100 text-amber-800', could: 'bg-purple-100 text-purple-800' };
+
+      ['must', 'should', 'could'].forEach(t => {
+        const container = document.getElementById(`cards-${t}`);
+        container.innerHTML = practiceCards
+          .map((c, idx) => ({ ...c, idx }))
+          .filter(c => c.tier === t)
+          .map(c => `
+            <button type="button" onclick="openProjModal(${c.idx})" class="w-full text-left bg-white rounded-2xl p-4 border-2 ${borderMap[t]} shadow-sm hover:shadow-md transition">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold ${tagMap[t]}">${c.label}</span>
+                <span class="text-xs font-bold text-slate-400">🔍 Project</span>
+              </div>
+              <p class="text-base font-extrabold text-slate-900 leading-snug">${c.prompt}</p>
+            </button>
+          `).join('');
+      });
+    }
+
+    function filterTier(tier) {
+      const grid = document.getElementById('practiceColumns');
+      ['must', 'should', 'could'].forEach(t => {
+        document.getElementById(`col-${t}`).classList.toggle('hidden', tier !== 'all' && tier !== t);
+      });
+      grid.className = tier === 'all' ? 'grid grid-cols-1 lg:grid-cols-3 gap-5' : 'grid grid-cols-1 max-w-2xl mx-auto gap-5';
+      document.querySelectorAll('.tier-filter-btn').forEach(btn => {
+        const active = btn.getAttribute('data-tier-btn') === tier;
+        btn.classList.toggle('ring-4', active);
+        btn.classList.toggle('ring-indigo-300', active);
+      });
+    }
+
+    let projIdx = 0;
+    function openProjModal(idx) {
+      projIdx = idx;
+      renderProjCard();
+      document.getElementById('projModal').classList.remove('hidden');
+      playTone(540, 0.08, 'sine', 0.08);
+    }
+    function closeProjModal() {
+      document.getElementById('projModal').classList.add('hidden');
+    }
+    function navProj(delta) {
+      projIdx = (projIdx + delta + practiceCards.length) % practiceCards.length;
+      renderProjCard();
+    }
+    function renderProjCard() {
+      const c = practiceCards[projIdx];
+      const badgeStyles = { must: 'bg-emerald-100 text-emerald-900', should: 'bg-amber-100 text-amber-900', could: 'bg-purple-100 text-purple-900' };
+      const badge = document.getElementById('projTierBadge');
+      badge.className = `px-4 py-1.5 rounded-full font-extrabold text-sm uppercase ${badgeStyles[c.tier]}`;
+      badge.textContent = c.label;
+      document.getElementById('projIndex').textContent = `Card ${projIdx + 1} / ${practiceCards.length}`;
+      document.getElementById('projPrompt').textContent = c.prompt;
+      document.getElementById('projAnswer').textContent = c.answer;
+      document.getElementById('projWork').textContent = c.work;
+      document.getElementById('projAnswerBox').classList.add('hidden');
+    }
+    function toggleProjAnswer() {
+      const box = document.getElementById('projAnswerBox');
+      box.classList.toggle('hidden');
+      if (!box.classList.contains('hidden')) playChime();
+    }
+
+    // =========================================================================
+    // STATION 5: TRUE / FALSE MATRIX
+    // =========================================================================
+    const tfStatements = [
+      {
+        text: 'If a right-angled triangle has Area = 18 cm² and base = 6 cm, its height is 18 ÷ 6 = 3 cm.',
+        isTrue: false,
+        proof: 'FALSE! You must double the triangle area first to rebuild the rectangle: 18 × 2 = 36 cm², then 36 ÷ 6 = 6 cm.'
+      },
+      {
+        text: "A compound shape's area equals the sum of its non-overlapping parts.",
+        isTrue: true,
+        proof: 'TRUE! Splitting a shape with zero gaps and zero overlaps keeps the exact same total area.'
+      },
+      {
+        text: 'Rotating a right-angled triangle changes its area.',
+        isTrue: false,
+        proof: 'FALSE! Rotating a shape only turns its direction — its perpendicular base, height, and enclosed area stay identical.'
+      },
+      {
+        text: 'A right-angled triangle with base 5 cm and height 4.4 cm has area 11 cm².',
+        isTrue: true,
+        proof: 'TRUE! 5 × 4.4 = 22 cm², and 22 ÷ 2 = 11 cm² (or halve 4.4 first: 5 × 2.2 = 11 cm²).'
+      }
+    ];
+
+    function renderTfGrid() {
+      const grid = document.getElementById('tfGrid');
+      grid.innerHTML = tfStatements.map((s, i) => `
+        <div class="bg-white rounded-3xl p-5 border-2 border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="flex items-start gap-3">
+            <span class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-800 font-black flex items-center justify-center shrink-0">${i + 1}</span>
+            <p class="text-lg font-extrabold text-slate-900 leading-snug">"${s.text}"</p>
+          </div>
+          <div>
+            <button type="button" onclick="toggleReveal('tfProof${i}')" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">
+              Reveal True / False Proof
+            </button>
+            <div id="tfProof${i}" class="hidden mt-3 rounded-2xl p-3.5 text-sm font-extrabold border-2 ${s.isTrue ? 'bg-emerald-50 border-emerald-400 text-emerald-950' : 'bg-rose-50 border-rose-400 text-rose-950'}">
+              ${s.isTrue ? '✅ ' : '❌ '}${s.proof}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleReveal(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('hidden');
+      if (!el.classList.contains('hidden')) playTone(600, 0.1, 'triangle', 0.1);
+    }
+
+    // =========================================================================
+    // STATION 6: SUCCESS CRITERIA TRACKER
+    // =========================================================================
+    function updateCriteriaTracker() {
+      const boxes = Array.from(document.querySelectorAll('.sc-checkbox'));
+      const met = boxes.filter(b => b.checked).length;
+      const badge = document.getElementById('criteriaBadge');
+      badge.textContent = `${met} / 3 Met`;
+      if (met === 3) {
+        badge.className = 'px-5 py-2.5 rounded-2xl bg-emerald-500 border-2 border-emerald-600 font-display font-bold text-xl text-white shadow-lg';
+        playChime();
+        launchConfetti();
+      } else {
+        badge.className = 'px-5 py-2.5 rounded-2xl bg-slate-100 border-2 border-slate-300 font-display font-bold text-xl text-slate-800';
+      }
+    }
+
+    // =========================================================================
+    // STATION 7: QUICKFIRE ENGINE (10 QUESTIONS)
+    // =========================================================================
+    const qfQuestions = [
+      { tag: 'Decimal Triangle', q: 'Right-angled triangle: base = 4 cm, height = 3.5 cm. Find the area.', a: '7 cm²', w: '4 × 3.5 ÷ 2 = 2 × 3.5 = 7 cm²' },
+      { tag: 'Decimal Triangle', q: 'Right-angled triangle: base = 10 cm, height = 2.6 cm. Find the area.', a: '13 cm²', w: '10 × 2.6 ÷ 2 = 26 ÷ 2 = 13 cm²' },
+      { tag: 'Missing Length', q: 'Right-angled triangle: Area = 16 cm², base = 8 cm. Find the height.', a: '4 cm', w: 'Double: 16 × 2 = 32 ➔ 32 ÷ 8 = 4 cm' },
+      { tag: 'Missing Length', q: 'Right-angled triangle: Area = 25 cm², height = 5 cm. Find the base.', a: '10 cm', w: 'Double: 25 × 2 = 50 ➔ 50 ÷ 5 = 10 cm' },
+      { tag: 'Compound Add', q: 'Rectangle 6 cm × 4 cm + right-angled triangle (b = 3 cm, h = 4 cm). Total area?', a: '30 cm²', w: 'Rect 24 + Tri 6 = 30 cm²' },
+      { tag: 'Decimal Triangle', q: 'Right-angled triangle: base = 8 cm, height = 2.5 cm. Find the area.', a: '10 cm²', w: '8 × 2.5 ÷ 2 = 4 × 2.5 = 10 cm²' },
+      { tag: 'Missing Length', q: 'Right-angled triangle: Area = 14 cm², base = 4 cm. Find the height.', a: '7 cm', w: 'Double: 14 × 2 = 28 ➔ 28 ÷ 4 = 7 cm' },
+      { tag: 'Compound Cut-Out', q: 'Rectangle 9 cm × 3 cm minus corner triangle (b = 2 cm, h = 3 cm). Shaded area?', a: '24 cm²', w: 'Rect 27 − Tri 3 = 24 cm²' },
+      { tag: 'Decimal Triangle', q: 'Right-angled triangle: base = 5 cm, height = 6.4 cm. Find the area.', a: '16 cm²', w: '5 × 6.4 ÷ 2 = 5 × 3.2 = 16 cm²' },
+      { tag: 'Missing Length', q: 'Right-angled triangle: Area = 39 cm², base = 13 cm. Find the height.', a: '6 cm', w: 'Double: 39 × 2 = 78 ➔ 78 ÷ 13 = 6 cm' }
+    ];
+
+    let qfIdx = 0;
+    let qfDuration = 15;
+    let qfRemaining = 15;
+    let qfInterval = null;
+
+    function renderQf() {
+      stopQfTimer();
+      qfRemaining = qfDuration;
+      const item = qfQuestions[qfIdx];
+      document.getElementById('qfProgress').textContent = `Question ${qfIdx + 1} / ${qfQuestions.length}`;
+      document.getElementById('qfTag').textContent = item.tag;
+      document.getElementById('qfQuestionText').textContent = item.q;
+      document.getElementById('qfAnswerText').textContent = item.a;
+      document.getElementById('qfWorkText').textContent = item.w;
+      document.getElementById('qfAnswerBox').classList.add('hidden');
+      document.getElementById('boardsUpBanner').classList.add('hidden');
+      document.getElementById('qfTimerDisplay').textContent = `${qfRemaining}s`;
+    }
+
+    function setQfDuration(sec) {
+      qfDuration = sec;
+      qfRemaining = sec;
+      stopQfTimer();
+      document.getElementById('qfTimerDisplay').textContent = `${qfRemaining}s`;
+      document.getElementById('boardsUpBanner').classList.add('hidden');
+    }
+
+    function startQfTimer() {
+      stopQfTimer();
+      if (qfRemaining <= 0) qfRemaining = qfDuration;
+      document.getElementById('boardsUpBanner').classList.add('hidden');
+      qfInterval = setInterval(() => {
+        qfRemaining--;
+        document.getElementById('qfTimerDisplay').textContent = `${qfRemaining}s`;
+        if (qfRemaining > 0 && qfRemaining <= 3) {
+          playTone(740, 0.08, 'square', 0.09);
+        }
+        if (qfRemaining <= 0) {
+          stopQfTimer();
+          document.getElementById('boardsUpBanner').classList.remove('hidden');
+          playBuzzer();
+        }
+      }, 1000);
+    }
+
+    function stopQfTimer() {
+      if (qfInterval) {
+        clearInterval(qfInterval);
+        qfInterval = null;
+      }
+    }
+
+    function revealQfAnswer() {
+      stopQfTimer();
+      document.getElementById('qfAnswerBox').classList.remove('hidden');
+      playChime();
+    }
+
+    function nextQf() {
+      qfIdx = (qfIdx + 1) % qfQuestions.length;
+      renderQf();
+    }
+
+    function prevQf() {
+      qfIdx = (qfIdx - 1 + qfQuestions.length) % qfQuestions.length;
+      renderQf();
+    }
+
+    // =========================================================================
+    // TEACHER DRAWER & DAVID'S BOARD WHITEBOARD (with getBoundingClientRect)
+    // =========================================================================
+    function toggleTeacherDrawer() {
+      document.getElementById('teacherDrawer').classList.toggle('hidden');
+    }
+
+    const dCanvas = document.getElementById('davidsCanvas');
+    const dCtx = dCanvas.getContext('2d');
+    let drawing = false;
+    let inkColour = '#0f172a';
+    let penWidth = 6;
+    let isEraser = false;
+
+    function resizeDavidsCanvas() {
+      const wrap = document.getElementById('davidsCanvasWrap');
+      const rect = wrap.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      const snapshot = dCanvas.width > 0 && dCanvas.height > 0 ? dCanvas.toDataURL() : null;
+      dCanvas.width = Math.floor(rect.width);
+      dCanvas.height = Math.floor(rect.height);
+      if (snapshot) {
+        const img = new Image();
+        img.onload = () => dCtx.drawImage(img, 0, 0);
+        img.src = snapshot;
+      }
+    }
+
+    function openDavidsBoard() {
+      document.getElementById('davidsModal').classList.remove('hidden');
+      requestAnimationFrame(resizeDavidsCanvas);
+    }
+
+    function closeDavidsBoard() {
+      document.getElementById('davidsModal').classList.add('hidden');
+    }
+
+    function setInk(col) {
+      isEraser = false;
+      inkColour = col;
+      document.getElementById('eraserBtn').classList.remove('ring-2', 'ring-amber-600');
+    }
+
+    function setPenSize(sz) {
+      penWidth = sz;
+    }
+
+    function toggleEraser() {
+      isEraser = !isEraser;
+      document.getElementById('eraserBtn').classList.toggle('ring-2', isEraser);
+      document.getElementById('eraserBtn').classList.toggle('ring-amber-600', isEraser);
+    }
+
+    function clearDavidsBoard() {
+      dCtx.clearRect(0, 0, dCanvas.width, dCanvas.height);
+    }
+
+    function getPointerPos(e) {
+      const rect = dCanvas.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    dCanvas.addEventListener('pointerdown', e => {
+      drawing = true;
+      dCanvas.setPointerCapture(e.pointerId);
+      const pos = getPointerPos(e);
+      dCtx.beginPath();
+      dCtx.moveTo(pos.x, pos.y);
+    });
+
+    dCanvas.addEventListener('pointermove', e => {
+      if (!drawing) return;
+      const pos = getPointerPos(e);
+      dCtx.lineCap = 'round';
+      dCtx.lineJoin = 'round';
+      if (isEraser) {
+        dCtx.globalCompositeOperation = 'destination-out';
+        dCtx.lineWidth = penWidth * 3.5;
+      } else {
+        dCtx.globalCompositeOperation = 'source-over';
+        dCtx.strokeStyle = inkColour;
+        dCtx.lineWidth = penWidth;
+      }
+      dCtx.lineTo(pos.x, pos.y);
+      dCtx.stroke();
+    });
+
+    dCanvas.addEventListener('pointerup', () => { drawing = false; });
+    dCanvas.addEventListener('pointercancel', () => { drawing = false; });
+    window.addEventListener('resize', () => {
+      if (!document.getElementById('davidsModal').classList.contains('hidden')) {
+        resizeDavidsCanvas();
+      }
+    });
+
+    // =========================================================================
+    // KEYBOARD SHORTCUTS (GUARDED WHEN MODALS ARE OPEN)
+    // =========================================================================
+    function anyModalOpen() {
+      return !document.getElementById('vocabModal').classList.contains('hidden') ||
+             !document.getElementById('projModal').classList.contains('hidden') ||
+             !document.getElementById('davidsModal').classList.contains('hidden');
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.key === 'Escape') {
+        closeVocabModal();
+        closeProjModal();
+        closeDavidsBoard();
+        document.getElementById('teacherDrawer').classList.add('hidden');
+        const card = document.getElementById('iDoStageCard');
+        if (card.classList.contains('fullscreen-ido')) toggleFullscreenIDo();
+        return;
+      }
+
+      if (e.key.toLowerCase() === 'w') {
+        const dm = document.getElementById('davidsModal');
+        if (dm.classList.contains('hidden')) openDavidsBoard();
+        else closeDavidsBoard();
+        return;
+      }
+      if (e.key.toLowerCase() === 't') {
+        toggleTeacherDrawer();
+        return;
+      }
+      if (e.key.toLowerCase() === 'm') {
+        toggleMute();
+        return;
+      }
+
+      if (!anyModalOpen()) {
+        if (e.key === 'ArrowRight') switchStation(currentStation + 1);
+        if (e.key === 'ArrowLeft') switchStation(currentStation - 1);
+      }
+    });
+
+    // =========================================================================
+    // INIT
+    // =========================================================================
+    renderVocabTiles();
+    renderPracticeBoard();
+    renderTfGrid();
+    selectIDoModel(1);
+    updateHouseLab();
+    updateRevLab();
+    renderQf();
+    switchStation(0);
+  </script>
+</body>
+</html>

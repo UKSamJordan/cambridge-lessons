@@ -1,0 +1,2064 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 5 Science — Week 17 Lesson 1: Circuit Diagrams &amp; Cambridge Symbols</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-display: 'Fredoka', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+  }
+  body {
+    font-family: var(--font-body);
+    background: linear-gradient(135deg, #f0f9ff 0%, #eef2ff 50%, #fefce8 100%);
+    color: #0f172a;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, .font-display { font-family: var(--font-display); }
+
+  /* Auto-hiding header */
+  #topHeader {
+    transition: transform 0.3s ease-in-out;
+    z-index: 50;
+  }
+  #topHeader.header-hidden {
+    transform: translateY(-100%);
+  }
+
+  /* 3D Flip Cards for Station 1 Flashback 3 */
+  .flip-card {
+    perspective: 1200px;
+    cursor: pointer;
+  }
+  .flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    transform-style: preserve-3d;
+  }
+  .flip-card.flipped .flip-inner {
+    transform: rotateY(180deg);
+  }
+  .flip-front, .flip-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 1.5rem;
+  }
+  .flip-back {
+    transform: rotateY(180deg);
+  }
+
+  /* Animated electron flow along circuit path */
+  @keyframes dashFlow {
+    from { stroke-dashoffset: 48; }
+    to { stroke-dashoffset: 0; }
+  }
+  .electron-flow {
+    stroke-dasharray: 8 16;
+    animation: dashFlow 0.9s linear infinite;
+  }
+  .electron-flow-fast {
+    stroke-dasharray: 8 16;
+    animation: dashFlow 0.45s linear infinite;
+  }
+  @keyframes pulseGlow {
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.85)); }
+    50% { filter: drop-shadow(0 0 22px rgba(250, 204, 21, 1)); }
+  }
+  .lamp-lit {
+    animation: pulseGlow 1.3s ease-in-out infinite;
+  }
+  @keyframes buzzShake {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(-2px, 1px); }
+    50% { transform: translate(2px, -1px); }
+    75% { transform: translate(-1px, -2px); }
+  }
+  .buzzer-active {
+    transform-origin: center;
+    animation: buzzShake 0.12s linear infinite;
+  }
+
+  /* Confetti Canvas */
+  #confettiCanvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 90;
+  }
+
+  /* Full Screen I Do mode */
+  .fullscreen-ido {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 65 !important;
+    background: #f8fafc !important;
+    overflow-y: auto !important;
+    padding: 1.5rem !important;
+    border-radius: 0 !important;
+  }
+</style>
+</head>
+<body class="min-h-screen pb-12">
+
+<canvas id="confettiCanvas"></canvas>
+
+<!-- AUTO-HIDING FIXED TOP HEADER -->
+<header id="topHeader" class="fixed top-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md text-white shadow-xl border-b-4 border-amber-400">
+  <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-3 min-w-0">
+      <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-display font-bold text-xl shrink-0 shadow">
+        ⚡
+      </div>
+      <div class="min-w-0">
+        <div class="text-[11px] uppercase tracking-wider text-amber-300 font-bold leading-tight">
+          Stage 6 Science · Unit 5.4 · Enquiry: Why do scientists worldwide use circuit symbols instead of messy drawings?
+        </div>
+        <div class="font-display text-base md:text-lg font-bold text-white truncate">
+          LO: Draw accurate circuit diagrams using conventional symbols.
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2">
+      <!-- Live Team Red vs Blue Scoreboard -->
+      <div class="flex items-center gap-1.5 bg-slate-800 px-2.5 py-1 rounded-xl border border-slate-700">
+        <button onclick="addScore('red', 1)" class="px-2 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-500 font-bold text-xs transition" title="Add point to Team Red">
+          🔴 <span id="hdrRedScore">0</span>
+        </button>
+        <span class="text-slate-400 text-xs font-bold">vs</span>
+        <button onclick="addScore('blue', 1)" class="px-2 py-0.5 rounded-lg bg-sky-600 hover:bg-sky-500 font-bold text-xs transition" title="Add point to Team Blue">
+          🔵 <span id="hdrBlueScore">0</span>
+        </button>
+        <button onclick="resetScores()" class="text-slate-400 hover:text-white text-xs px-1" title="Reset scores">↺</button>
+      </div>
+
+      <!-- Tool Buttons -->
+      <button id="btnWhiteboard" onclick="toggleWhiteboard()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-bold text-xs flex items-center gap-1.5 shadow transition" title="David's Board Whiteboard (W)">
+        ✏️ David's Board <kbd class="bg-indigo-800 px-1.5 py-0.5 rounded text-[10px]">W</kbd>
+      </button>
+      <button id="btnTeacherDrawer" onclick="toggleTeacherDrawer()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-bold text-xs flex items-center gap-1.5 shadow transition" title="Teacher Prompts (T)">
+        👩‍🏫 Prompts <kbd class="bg-emerald-800 px-1.5 py-0.5 rounded text-[10px]">T</kbd>
+      </button>
+      <button id="btnMute" onclick="toggleMute()" class="px-3 py-1.5 rounded-xl bg-slate-700 hover:bg-slate-600 font-bold text-xs flex items-center gap-1 shadow transition" title="Mute / Unmute Audio (M)">
+        <span id="muteIcon">🔊</span> <kbd class="bg-slate-900 px-1.5 py-0.5 rounded text-[10px]">M</kbd>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN CONTAINER -->
+<main class="max-w-7xl mx-auto px-4 pt-24">
+
+  <!-- STATION NAVIGATION BAR (flex-wrap so tabs never squash) -->
+  <nav aria-label="Lesson Stations" class="bg-white/90 backdrop-blur rounded-2xl p-2 shadow-lg border border-slate-200 mb-6 flex flex-wrap gap-2 justify-center">
+    <button data-station="0" onclick="goStation(0)" class="station-tab px-3.5 py-2 rounded-xl font-bold text-sm transition flex items-center gap-1.5">🎯 0. LO &amp; Kit</button>
+    <button data-station="1" onclick="goStation(1)" class="station-tab px-3.5 py-2 rounded-xl font-bold text-sm transition flex items-center gap-1.5">⚡ 1. Flashback 3</button>
+    <button data-station="2" onclick="goStation(2)" class="station-tab px-3.5 py-2 rounded-xl font-bold text-sm transition flex items-center gap-1.5">🔤 2. Symbol Gallery</button>
+    <button data-station="3" onclick="goStation(3)" class="station-tab px-3.5 py-2 rounded-xl font-bold text-sm transition flex items-center gap-1.5">🔬 3. I Do &amp; Safety</button>
+    <button data-station="4" onclick="goStation(4)" class="station-tab px-3.5 py-2 rounded-xl font-bold text-sm transition flex items-center gap-1.5">🔌 4. Virtual Circuit Builder</button>
+    <button data-station="5" onclick="goStation(5)" class="station-tab px-3.5 py-2 rounded-xl font-bold text-sm transition flex items-center gap-1.5">✅ 5. Whiteboard Check</button>
+    <button data-station="6" onclick="goStation(6)" class="station-tab px-3.5 py-2 rounded-xl font-bold text-sm transition flex items-center gap-1.5">🏆 6. Quickfire</button>
+  </nav>
+
+  <!-- ===================================================================== -->
+  <!-- STATION 0: LO, MUST/SHOULD/COULD & CLASSROOM KIT CHECKLIST            -->
+  <!-- [SoL: Cognitive Load Management] [SoL: Schema Building]               -->
+  <!-- ===================================================================== -->
+  <section id="station-0" class="station-panel">
+    <div class="space-y-6">
+      <!-- Simplified LO Banner -->
+      <div class="bg-gradient-to-r from-indigo-600 via-blue-600 to-sky-500 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <span class="inline-block bg-amber-400 text-slate-950 font-extrabold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-3">
+              Cambridge Stage 6 · 6Pe.01 · 6TWSm.02 · 6TWSp.05 · 6TWSc.06
+            </span>
+            <h1 class="font-display text-4xl md:text-5xl font-bold leading-tight">
+              Draw accurate circuit diagrams using conventional symbols.
+            </h1>
+            <p class="mt-3 text-sky-100 text-lg font-medium">
+              Big Enquiry: <em>Why do scientists worldwide use circuit symbols instead of messy drawings?</em>
+            </p>
+          </div>
+          <!-- Mini Official Circuit Icon -->
+          <div class="bg-white/15 backdrop-blur rounded-2xl p-4 shrink-0 border border-white/30">
+            <svg width="160" height="105" viewBox="0 0 160 105" aria-label="Official simple circuit diagram">
+              <rect x="20" y="20" width="120" height="65" fill="none" stroke="#ffffff" stroke-width="3"/>
+              <!-- Cell on top wire -->
+              <rect x="74" y="8" width="12" height="24" fill="#2563eb"/>
+              <line x1="74" y1="6" x2="74" y2="34" stroke="#fde047" stroke-width="3"/>
+              <line x1="86" y1="12" x2="86" y2="28" stroke="#fde047" stroke-width="6"/>
+              <!-- Lamp on bottom wire -->
+              <circle cx="80" cy="85" r="14" fill="#1e3a8a" stroke="#fde047" stroke-width="3"/>
+              <line x1="70.1" y1="75.1" x2="89.9" y2="94.9" stroke="#fde047" stroke-width="2.5"/>
+              <line x1="89.9" y1="75.1" x2="70.1" y2="94.9" stroke="#fde047" stroke-width="2.5"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Must / Should / Could Criteria (Bite-sized <= 10 words each) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-white rounded-3xl p-6 shadow-md border-t-8 border-emerald-500">
+          <div class="inline-flex items-center gap-2 bg-emerald-100 text-emerald-900 font-extrabold text-sm px-3 py-1 rounded-full mb-3">
+            🟢 MUST
+          </div>
+          <p class="font-display text-2xl font-bold text-slate-800">
+            Recognise and draw 6 official Cambridge circuit symbols accurately.
+          </p>
+        </div>
+        <div class="bg-white rounded-3xl p-6 shadow-md border-t-8 border-amber-500">
+          <div class="inline-flex items-center gap-2 bg-amber-100 text-amber-900 font-extrabold text-sm px-3 py-1 rounded-full mb-3">
+            🟡 SHOULD
+          </div>
+          <p class="font-display text-2xl font-bold text-slate-800">
+            Build working kit circuits and draw ruler-straight diagrams.
+          </p>
+        </div>
+        <div class="bg-white rounded-3xl p-6 shadow-md border-t-8 border-violet-500">
+          <div class="inline-flex items-center gap-2 bg-violet-100 text-violet-900 font-extrabold text-sm px-3 py-1 rounded-full mb-3">
+            🟣 COULD
+          </div>
+          <p class="font-display text-2xl font-bold text-slate-800">
+            Spot circuit diagram faults and explain electrical safety rules.
+          </p>
+        </div>
+      </div>
+
+      <!-- Hands-On Classroom Kit Tray Checklist [SoL: CPA Progression] -->
+      <div class="bg-white rounded-3xl p-6 shadow-lg border-2 border-amber-300">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h2 class="font-display text-2xl font-bold text-slate-900">🧰 Hands-On Classroom Kit Tray Check</h2>
+            <p class="text-slate-600 text-sm font-medium">Table partners: tap each item as you check your physical electricity tray!</p>
+          </div>
+          <span id="kitCounter" class="bg-amber-100 text-amber-900 font-extrabold px-4 py-1.5 rounded-full text-sm">0 / 6 Ready</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3" id="kitChecklistGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- STATION 1: SPACED FLASHBACK 3 (3 EARLIER UNITS)                       -->
+  <!-- [SoL: Retrieval Practice] [SoL: Spaced Practice] [SoL: Interleaving]  -->
+  <!-- ===================================================================== -->
+  <section id="station-1" class="station-panel hidden">
+    <div class="space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4 bg-white rounded-2xl p-5 shadow border border-slate-200">
+        <div>
+          <h2 class="font-display text-3xl font-bold text-slate-900">⚡ Spaced Flashback 3 — Recall from Earlier Units!</h2>
+          <p class="text-slate-600 font-medium">Think on mini-whiteboards first, then click each card to flip and check.</p>
+        </div>
+        <button onclick="resetFlashcards()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm shadow">
+          ↺ Flip All Back
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Card 1: Unit 5.3 Floating & Sinking (6Pf.05) -->
+        <div class="flip-card h-[360px]" onclick="toggleFlip(this)">
+          <div class="flip-inner shadow-xl">
+            <div class="flip-front bg-gradient-to-br from-sky-500 to-blue-700 text-white p-6 flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-extrabold uppercase">Unit 5.3 · Last Week (6Pf.05)</span>
+                <span class="text-3xl">⛵</span>
+              </div>
+              <div class="text-center my-auto">
+                <div class="text-5xl mb-3">🧱 ➔ 🥣</div>
+                <p class="font-display text-2xl font-bold leading-snug">
+                  A solid ball of clay sinks. Why does reshaping it into a hollow bowl make it float?
+                </p>
+              </div>
+              <div class="text-center text-xs uppercase tracking-widest text-sky-200 font-bold">Tap to reveal answer ↻</div>
+            </div>
+            <div class="flip-back bg-white border-4 border-sky-500 p-6 flex flex-col justify-between">
+              <span class="bg-sky-100 text-sky-900 px-3 py-1 rounded-full text-xs font-extrabold uppercase self-start">Answer · Upthrust &amp; Displacement</span>
+              <div class="my-auto text-center">
+                <p class="font-display text-2xl font-bold text-slate-900 leading-snug">
+                  The hollow bowl traps air and <span class="text-sky-600">displaces more water</span>, creating a <span class="text-emerald-600">bigger upthrust</span> that balances its weight!
+                </p>
+              </div>
+              <div class="text-center text-xs text-slate-500 font-bold">Tap to flip back ↺</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Unit 2.2 Electrical Conductors (6Cp.03) -->
+        <div class="flip-card h-[360px]" onclick="toggleFlip(this)">
+          <div class="flip-inner shadow-xl">
+            <div class="flip-front bg-gradient-to-br from-amber-500 to-orange-600 text-white p-6 flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-extrabold uppercase">Unit 2.2 · Earlier Term (6Cp.03)</span>
+                <span class="text-3xl">🔌</span>
+              </div>
+              <div class="text-center my-auto">
+                <div class="text-5xl mb-3">🟠 + 🟦</div>
+                <p class="font-display text-2xl font-bold leading-snug">
+                  Why do electrical wires have copper metal inside and plastic coating on the outside?
+                </p>
+              </div>
+              <div class="text-center text-xs uppercase tracking-widest text-amber-100 font-bold">Tap to reveal answer ↻</div>
+            </div>
+            <div class="flip-back bg-white border-4 border-amber-500 p-6 flex flex-col justify-between">
+              <span class="bg-amber-100 text-amber-900 px-3 py-1 rounded-full text-xs font-extrabold uppercase self-start">Answer · Conductors &amp; Insulators</span>
+              <div class="my-auto text-center">
+                <p class="font-display text-2xl font-bold text-slate-900 leading-snug">
+                  <span class="text-amber-600">Copper</span> is a good electrical <span class="text-amber-600">conductor</span>. <span class="text-indigo-600">Plastic</span> is an <span class="text-indigo-600">insulator</span> that keeps our hands safe!
+                </p>
+              </div>
+              <div class="text-center text-xs text-slate-500 font-bold">Tap to flip back ↺</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Unit 1.2 Respiratory System (6Bs.02) -->
+        <div class="flip-card h-[360px]" onclick="toggleFlip(this)">
+          <div class="flip-inner shadow-xl">
+            <div class="flip-front bg-gradient-to-br from-emerald-500 to-teal-700 text-white p-6 flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-extrabold uppercase">Unit 1.2 · Start of Year (6Bs.02)</span>
+                <span class="text-3xl">🫁</span>
+              </div>
+              <div class="text-center my-auto">
+                <div class="text-5xl mb-3">💨 ➔ 🫁 ➔ 🩸</div>
+                <p class="font-display text-2xl font-bold leading-snug">
+                  Which gas moves from the air in our lungs into our blood when we breathe in?
+                </p>
+              </div>
+              <div class="text-center text-xs uppercase tracking-widest text-emerald-100 font-bold">Tap to reveal answer ↻</div>
+            </div>
+            <div class="flip-back bg-white border-4 border-emerald-500 p-6 flex flex-col justify-between">
+              <span class="bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full text-xs font-extrabold uppercase self-start">Answer · Gas Exchange</span>
+              <div class="my-auto text-center">
+                <p class="font-display text-3xl font-bold text-emerald-700 mb-2">Oxygen!</p>
+                <p class="font-display text-xl font-bold text-slate-700">
+                  Oxygen passes from the lungs into the blood to be carried around the body.
+                </p>
+              </div>
+              <div class="text-center text-xs text-slate-500 font-bold">Tap to flip back ↺</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- STATION 2: OFFICIAL CAMBRIDGE SYMBOL GALLERY & BILINGUAL VOCAB MODAL  -->
+  <!-- [SoL: Dual Coding] [SoL: Schema Building]                             -->
+  <!-- ===================================================================== -->
+  <section id="station-2" class="station-panel hidden">
+    <div class="space-y-6">
+      <div class="bg-white rounded-2xl p-5 shadow border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="font-display text-3xl font-bold text-slate-900">🔤 Official Cambridge Conventional Symbols &amp; Vocabulary</h2>
+          <p class="text-slate-600 font-medium">Click any tile to enlarge the official symbol, hear British English / Vietnamese pronunciation, and read the definition.</p>
+        </div>
+        <span class="bg-indigo-100 text-indigo-800 px-3.5 py-1.5 rounded-full font-extrabold text-xs uppercase">10 Core Terms · Exam Exact</span>
+      </div>
+
+      <!-- 10 Clickable Vocab & Symbol Tiles -->
+      <div id="vocabGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <!-- Populated by JS with exact Cambridge SVG symbols -->
+      </div>
+
+      <!-- Real-World Science Strip -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 shadow-xl border border-indigo-500/40">
+        <h3 class="font-display text-2xl font-bold text-amber-300 mb-4">🌍 Real-World Science: Circuit Diagrams Everywhere</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-white/10 rounded-2xl p-4 border border-white/15">
+            <div class="text-3xl mb-2">👷</div>
+            <div class="font-display font-bold text-lg text-white">Electricians</div>
+            <p class="text-slate-200 text-sm mt-1">An electrician in Hanoi, London, or Tokyo reads the exact same symbols to wire lights and sockets safely.</p>
+          </div>
+          <div class="bg-white/10 rounded-2xl p-4 border border-white/15">
+            <div class="text-3xl mb-2">📱</div>
+            <div class="font-display font-bold text-lg text-white">Smartphone Circuit Boards</div>
+            <p class="text-slate-200 text-sm mt-1">Engineers design tiny phone chips using neat circuit diagrams before building real hardware.</p>
+          </div>
+          <div class="bg-white/10 rounded-2xl p-4 border border-white/15">
+            <div class="text-3xl mb-2">🚦</div>
+            <div class="font-display font-bold text-lg text-white">Hanoi Streetlights &amp; Signals</div>
+            <p class="text-slate-200 text-sm mt-1">City engineers use circuit diagrams to find broken lamps or faulty switches quickly without guessing.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- STATION 3: FULL-SCREEN VISUAL I DO (MORPH + FAULT/SAFETY CHECK)       -->
+  <!-- [SoL: Worked Examples] [SoL: Misconceptions] [SoL: CPA Progression]   -->
+  <!-- ===================================================================== -->
+  <section id="station-3" class="station-panel hidden">
+    <div id="idoContainer" class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="btnMission1" onclick="selectMission(1)" class="px-4 py-2 rounded-xl font-bold text-sm bg-indigo-600 text-white shadow transition">
+            ✨ Mission 1: Picture ➔ Official Diagram
+          </button>
+          <button id="btnMission2" onclick="selectMission(2)" class="px-4 py-2 rounded-xl font-bold text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+            🚨 Mission 2: Spot 3 Faults &amp; Safety Rules
+          </button>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openGiantProjection()" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs shadow transition">
+            🔍 Giant Projection
+          </button>
+          <button id="btnFullscreenIdo" onclick="toggleFullscreenIdo()" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow transition">
+            ⛶ Full Screen I Do
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Split: Interactive Stage + Permanent Steps to Success & Safety Sidebar -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Left 8 cols: Active Mission Stage -->
+        <div class="lg:col-span-8 space-y-4">
+          <!-- MISSION 1: PICTURE-TO-SYMBOL MORPH -->
+          <div id="mission1Panel" class="space-y-4">
+            <div class="bg-slate-50 rounded-2xl border-2 border-indigo-200 p-4">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                <h3 class="font-display text-2xl font-bold text-indigo-900" id="morphTitle">Step 0: Messy Physical Kit Circuit</h3>
+                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-extrabold" id="morphBadge">Real Photo-Style Kit</span>
+              </div>
+
+              <!-- Morph SVG Canvas -->
+              <div class="bg-white rounded-2xl border border-slate-200 p-3 flex justify-center">
+                <svg id="morphSvg" viewBox="0 0 640 330" class="w-full max-w-[640px] h-auto" aria-label="Picture to official circuit diagram transformation">
+                  <!-- Rendered dynamically by JS for crisp animation steps 0..3 -->
+                </svg>
+              </div>
+
+              <!-- Step Controls -->
+              <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                <button onclick="setMorphStep(0)" id="mStep0" class="morph-btn px-3.5 py-2 rounded-xl font-bold text-sm transition">0. Messy Kit</button>
+                <button onclick="setMorphStep(1)" id="mStep1" class="morph-btn px-3.5 py-2 rounded-xl font-bold text-sm transition">1. Box with Ruler</button>
+                <button onclick="setMorphStep(2)" id="mStep2" class="morph-btn px-3.5 py-2 rounded-xl font-bold text-sm transition">2. Erase Slots</button>
+                <button onclick="setMorphStep(3)" id="mStep3" class="morph-btn px-3.5 py-2 rounded-xl font-bold text-sm transition">3. Drop Symbols!</button>
+                <button onclick="autoPlayMorph()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm shadow transition">▶ Animate Morph</button>
+              </div>
+            </div>
+
+            <!-- Anchored Telemetry Caption -->
+            <div id="morphCaption" class="bg-indigo-50 border-l-4 border-indigo-600 rounded-xl p-4 text-slate-800 font-semibold text-base">
+              Real wires curve and tangle. Let's turn this 1-cell lamp circuit into a clean official Cambridge diagram!
+            </div>
+          </div>
+
+          <!-- MISSION 2: SPOT THE 3 DIAGRAM FAULTS & CLASSROOM SAFETY -->
+          <div id="mission2Panel" class="hidden space-y-4">
+            <div class="bg-rose-50/70 rounded-2xl border-2 border-rose-200 p-4">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                <h3 class="font-display text-2xl font-bold text-rose-900">🚨 Spot the 3 Classic Exam Faults!</h3>
+                <button onclick="revealAllFaults()" class="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow">
+                  Reveal All 3 Faults
+                </button>
+              </div>
+
+              <div class="bg-white rounded-2xl border border-rose-200 p-3 flex justify-center">
+                <svg viewBox="0 0 640 310" class="w-full max-w-[640px] h-auto" aria-label="Faulty circuit diagram with three errors">
+                  <!-- Rectangle with gap at bottom right -->
+                  <line x1="90" y1="65" x2="220" y2="65" stroke="#0f172a" stroke-width="4"/>
+                  <!-- Wire crossing THROUGH cell 1 (FAULT 2) -->
+                  <line x1="220" y1="65" x2="430" y2="65" stroke="#0f172a" stroke-width="4"/>
+                  <!-- Cell 1 (tall thin left, short thick right) -->
+                  <line x1="255" y1="35" x2="255" y2="95" stroke="#0f172a" stroke-width="3"/>
+                  <line x1="275" y1="48" x2="275" y2="82" stroke="#0f172a" stroke-width="8"/>
+                  <text x="248" y="28" font-size="16" font-weight="800" fill="#0f172a">+</text>
+                  <text x="271" y="28" font-size="16" font-weight="800" fill="#0f172a">−</text>
+
+                  <!-- Cell 2 REVERSED: short thick left, tall thin right (FAULT 3: − facing −) -->
+                  <line x1="355" y1="48" x2="355" y2="82" stroke="#0f172a" stroke-width="8"/>
+                  <line x1="375" y1="35" x2="375" y2="95" stroke="#0f172a" stroke-width="3"/>
+                  <text x="351" y="28" font-size="16" font-weight="800" fill="#0f172a">−</text>
+                  <text x="369" y="28" font-size="16" font-weight="800" fill="#0f172a">+</text>
+
+                  <line x1="430" y1="65" x2="550" y2="65" stroke="#0f172a" stroke-width="4"/>
+                  <!-- Right side wire stops early leaving CORNER GAP (FAULT 1) -->
+                  <line x1="550" y1="65" x2="550" y2="210" stroke="#0f172a" stroke-width="4"/>
+                  <!-- Bottom wire stops short of corner -->
+                  <line x1="90" y1="245" x2="286" y2="245" stroke="#0f172a" stroke-width="4"/>
+                  <line x1="354" y1="245" x2="510" y2="245" stroke="#0f172a" stroke-width="4"/>
+                  <!-- Left vertical wire -->
+                  <line x1="90" y1="65" x2="90" y2="245" stroke="#0f172a" stroke-width="4"/>
+
+                  <!-- Lamp on bottom wire -->
+                  <circle cx="320" cy="245" r="34" fill="#ffffff" stroke="#0f172a" stroke-width="4"/>
+                  <line x1="296" y1="221" x2="344" y2="269" stroke="#0f172a" stroke-width="4"/>
+                  <line x1="344" y1="221" x2="296" y2="269" stroke="#0f172a" stroke-width="4"/>
+
+                  <!-- Clickable Fault Highlight Rings (hidden until revealed) -->
+                  <g id="faultRing1" class="hidden">
+                    <circle cx="545" cy="240" r="34" fill="rgba(239,68,68,0.18)" stroke="#dc2626" stroke-width="4" stroke-dasharray="6 4"/>
+                    <rect x="435" y="275" width="195" height="28" rx="8" fill="#dc2626"/>
+                    <text x="532" y="294" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="800">1. Gap at corner!</text>
+                  </g>
+                  <g id="faultRing2" class="hidden">
+                    <circle cx="265" cy="65" r="38" fill="rgba(239,68,68,0.18)" stroke="#dc2626" stroke-width="4" stroke-dasharray="6 4"/>
+                    <rect x="135" y="108" width="210" height="28" rx="8" fill="#dc2626"/>
+                    <text x="240" y="127" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="800">2. Wire crosses cell gap!</text>
+                  </g>
+                  <g id="faultRing3" class="hidden">
+                    <circle cx="365" cy="65" r="38" fill="rgba(239,68,68,0.18)" stroke="#dc2626" stroke-width="4" stroke-dasharray="6 4"/>
+                    <rect x="330" y="108" width="215" height="28" rx="8" fill="#dc2626"/>
+                    <text x="437" y="127" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="800">3. Cell reversed (− faces −)!</text>
+                  </g>
+                </svg>
+              </div>
+
+              <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <button onclick="revealFault(1)" class="p-3 rounded-xl bg-white border-2 border-rose-300 hover:bg-rose-100 font-bold text-sm text-rose-900 transition">
+                  🔎 Check Fault 1 (Corner)
+                </button>
+                <button onclick="revealFault(2)" class="p-3 rounded-xl bg-white border-2 border-rose-300 hover:bg-rose-100 font-bold text-sm text-rose-900 transition">
+                  🔎 Check Fault 2 (Cell Gap)
+                </button>
+                <button onclick="revealFault(3)" class="p-3 rounded-xl bg-white border-2 border-rose-300 hover:bg-rose-100 font-bold text-sm text-rose-900 transition">
+                  🔎 Check Fault 3 (Battery +/−)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right 4 cols: Permanent Steps to Success & Safety Sidebar -->
+        <aside class="lg:col-span-4 space-y-4">
+          <div class="bg-indigo-950 text-white rounded-2xl p-5 shadow-lg">
+            <h4 class="font-display text-xl font-bold text-amber-300 mb-3">📏 Steps to Success</h4>
+            <ol class="space-y-2.5 text-sm font-medium">
+              <li class="flex gap-2.5"><span class="bg-amber-400 text-slate-950 w-6 h-6 rounded-full flex items-center justify-center font-extrabold shrink-0">1</span><span>Draw a neat rectangle with a <strong>ruler</strong> (90° corners, zero gaps).</span></li>
+              <li class="flex gap-2.5"><span class="bg-amber-400 text-slate-950 w-6 h-6 rounded-full flex items-center justify-center font-extrabold shrink-0">2</span><span>Rub out clean slots for each component.</span></li>
+              <li class="flex gap-2.5"><span class="bg-amber-400 text-slate-950 w-6 h-6 rounded-full flex items-center justify-center font-extrabold shrink-0">3</span><span>Drop in <strong>official Cambridge symbols</strong> (keep the cell gap empty!).</span></li>
+              <li class="flex gap-2.5"><span class="bg-amber-400 text-slate-950 w-6 h-6 rounded-full flex items-center justify-center font-extrabold shrink-0">4</span><span>Check battery order: <strong>+ to −</strong> in series.</span></li>
+            </ol>
+          </div>
+
+          <div class="bg-amber-50 border-2 border-amber-400 rounded-2xl p-5 shadow">
+            <h4 class="font-display text-xl font-bold text-amber-950 mb-2">⚠️ Classroom Safety Rules</h4>
+            <ul class="space-y-2 text-sm text-amber-950 font-semibold">
+              <li>✅ Keep hands and tables <strong>completely dry</strong>.</li>
+              <li>✅ Use <strong>low-voltage 1.5 V classroom cells</strong> only — NEVER touch wall mains sockets (220 V)!</li>
+              <li>✅ Never connect a wire straight from + to − with no lamp/buzzer (short circuit gets hot!).</li>
+              <li>✅ Disconnect immediately if any wire feels warm.</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- STATION 4: INTERACTIVE VIRTUAL CIRCUIT BUILDER                        -->
+  <!-- [SoL: CPA Progression] [SoL: Dual Coding] [SoL: Immediate Feedback]   -->
+  <!-- [SoL: Elaborative Interrogation]                                      -->
+  <!-- ===================================================================== -->
+  <section id="station-4" class="station-panel hidden">
+    <div class="space-y-5">
+      <!-- Presets & View Toggle Header -->
+      <div class="bg-white rounded-3xl p-5 shadow-lg border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+          <div>
+            <h2 class="font-display text-3xl font-bold text-slate-900">🔌 Interactive Virtual Circuit Builder</h2>
+            <p class="text-slate-600 font-medium text-sm">Test circuits here, switch between Real Kit Picture &amp; Official Cambridge Symbols, then build the same circuit on your desk!</p>
+          </div>
+          <button id="btnViewMode" onclick="toggleSimView()" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-display font-bold text-lg shadow-lg transition">
+            👁 Switch View: Real Kit Picture ⇄ Official Symbols
+          </button>
+        </div>
+
+        <!-- 4 Quick Presets -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-extrabold uppercase text-slate-500 mr-1">Quick Presets:</span>
+          <button onclick="applyPreset('lamp1')" class="px-3 py-1.5 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 font-bold text-xs transition">💡 1 Cell + Lamp + Switch</button>
+          <button onclick="applyPreset('buzzer2')" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs transition">🔔 2-Cell Battery + Buzzer + Switch</button>
+          <button onclick="applyPreset('openFault')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition">🔓 Faulty Open Circuit</button>
+          <button onclick="applyPreset('reversedTrap')" class="px-3 py-1.5 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-900 font-bold text-xs transition">⚠️ Reversed Cell Trap</button>
+        </div>
+      </div>
+
+      <!-- Simulator Main Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- Left 4 Cols: Component Controls -->
+        <div class="lg:col-span-4 bg-white rounded-3xl p-5 shadow-lg border border-slate-200 space-y-4">
+          <h3 class="font-display text-xl font-bold text-slate-900">🎛️ Build Your Circuit</h3>
+
+          <!-- Power Source -->
+          <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+            <div class="text-xs font-extrabold uppercase text-slate-500 mb-2">1. Power Source (Cells)</div>
+            <div class="grid grid-cols-2 gap-2">
+              <button id="ctlCell1" onclick="setSimState({cells: 1, reversed: false})" class="sim-btn py-2 px-3 rounded-xl font-bold text-sm transition">🔋 1 Cell (1.5 V)</button>
+              <button id="ctlCell2" onclick="setSimState({cells: 2, reversed: false})" class="sim-btn py-2 px-3 rounded-xl font-bold text-sm transition">🔋🔋 2 Cells (3 V)</button>
+            </div>
+            <button id="ctlReversed" onclick="toggleReversedCell()" class="mt-2 w-full py-2 px-3 rounded-xl font-bold text-xs border-2 transition">
+              🔄 Flip 2nd Cell Backwards (Trap Test)
+            </button>
+          </div>
+
+          <!-- Output Component -->
+          <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+            <div class="text-xs font-extrabold uppercase text-slate-500 mb-2">2. Output Component</div>
+            <div class="grid grid-cols-2 gap-2">
+              <button id="ctlLamp" onclick="setSimState({output: 'lamp'})" class="sim-btn py-2 px-3 rounded-xl font-bold text-sm transition">💡 Lamp (Bulb)</button>
+              <button id="ctlBuzzer" onclick="setSimState({output: 'buzzer'})" class="sim-btn py-2 px-3 rounded-xl font-bold text-sm transition">🔔 Buzzer</button>
+            </div>
+          </div>
+
+          <!-- Switch Toggle -->
+          <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+            <div class="text-xs font-extrabold uppercase text-slate-500 mb-2">3. Switch Control</div>
+            <button id="ctlSwitch" onclick="toggleSimSwitch()" class="w-full py-3 px-4 rounded-xl font-display font-bold text-lg shadow transition">
+              Switch: CLOSED (ON)
+            </button>
+          </div>
+
+          <!-- View Indicator Pill -->
+          <div class="text-center text-xs font-bold text-indigo-700 bg-indigo-50 rounded-xl p-2.5 border border-indigo-200" id="viewIndicatorText">
+            Currently viewing: Real Kit Picture Mode
+          </div>
+        </div>
+
+        <!-- Right 8 Cols: Interactive Circuit Canvas (No floating text overlays inside SVG) -->
+        <div class="lg:col-span-8 bg-white rounded-3xl p-5 shadow-lg border border-slate-200 flex flex-col justify-between">
+          <div class="bg-slate-50 rounded-2xl border-2 border-slate-200 p-3 flex items-center justify-center min-h-[340px]">
+            <svg id="simSvg" viewBox="0 0 680 340" class="w-full max-w-[680px] h-auto" aria-label="Interactive virtual circuit simulator">
+              <!-- Dynamically rendered by renderSim() -->
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANCHORED TELEMETRY & MECHANISM EXPLAINER PANEL BELOW CANVAS -->
+      <div class="bg-slate-900 text-white rounded-3xl p-5 shadow-xl grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+        <div class="bg-slate-800 rounded-2xl p-3.5 text-center">
+          <div class="text-xs uppercase text-slate-400 font-bold">Total Voltage</div>
+          <div id="telVoltage" class="font-display text-3xl font-bold text-amber-400 mt-1">1.5 V</div>
+        </div>
+        <div class="bg-slate-800 rounded-2xl p-3.5 text-center">
+          <div class="text-xs uppercase text-slate-400 font-bold">Circuit Path</div>
+          <div id="telPath" class="font-display text-2xl font-bold text-emerald-400 mt-1">Complete Loop</div>
+        </div>
+        <div class="bg-slate-800 rounded-2xl p-3.5 text-center">
+          <div class="text-xs uppercase text-slate-400 font-bold">Output Result</div>
+          <div id="telOutput" class="font-display text-2xl font-bold text-yellow-300 mt-1">Lamp Glows!</div>
+        </div>
+        <div class="bg-indigo-900/70 border border-indigo-500/40 rounded-2xl p-3.5">
+          <button onclick="toggleMechanism()" class="w-full text-left font-bold text-xs uppercase text-amber-300 flex items-center justify-between">
+            <span>🔬 Why? (Tap to Explain)</span>
+            <span id="mechArrow">▼</span>
+          </button>
+          <p id="telReason" class="text-xs text-slate-200 mt-2 leading-relaxed hidden">
+            The closed switch completes the metal loop, so electric current flows from the cell through the lamp!
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- STATION 5: SUCCESS CRITERIA WHITEBOARD CHECK (0/3 MET TRACKER)        -->
+  <!-- [SoL: Metacognition] [SoL: Immediate Feedback]                        -->
+  <!-- ===================================================================== -->
+  <section id="station-5" class="station-panel hidden">
+    <div class="space-y-6">
+      <div class="bg-white rounded-3xl p-6 shadow-lg border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 class="font-display text-3xl font-bold text-slate-900">✅ Success Criteria Mini-Whiteboard Check</h2>
+          <p class="text-slate-600 font-medium">3-2-1 Boards Up! Check every criterion before launching Quickfire.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="scProgressBadge" class="bg-emerald-100 text-emerald-900 font-extrabold px-5 py-2 rounded-full text-lg shadow-sm">
+            0 / 3 Met
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Check 1 -->
+        <div class="bg-white rounded-3xl p-6 shadow-lg border-2 border-slate-200 flex flex-col justify-between space-y-4">
+          <div>
+            <span class="bg-indigo-100 text-indigo-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase">Check 1 · Draw Symbols</span>
+            <h3 class="font-display text-2xl font-bold text-slate-900 mt-3">
+              Draw a closed switch + 2-cell battery + buzzer in a ruler rectangle.
+            </h3>
+          </div>
+          <div id="scAns1" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-3">
+            <svg viewBox="0 0 260 150" class="w-full h-auto" aria-label="Model answer for closed switch, 2-cell battery, buzzer">
+              <!-- Top wire with 2-cell battery -->
+              <line x1="25" y1="30" x2="95" y2="30" stroke="#000" stroke-width="2.5"/>
+              <line x1="95" y1="14" x2="95" y2="46" stroke="#000" stroke-width="2"/>
+              <line x1="107" y1="21" x2="107" y2="39" stroke="#000" stroke-width="5"/>
+              <line x1="107" y1="30" x2="145" y2="30" stroke="#000" stroke-width="2.5"/>
+              <line x1="145" y1="14" x2="145" y2="46" stroke="#000" stroke-width="2"/>
+              <line x1="157" y1="21" x2="157" y2="39" stroke="#000" stroke-width="5"/>
+              <line x1="157" y1="30" x2="235" y2="30" stroke="#000" stroke-width="2.5"/>
+              <!-- Side wires -->
+              <line x1="25" y1="30" x2="25" y2="120" stroke="#000" stroke-width="2.5"/>
+              <line x1="235" y1="30" x2="235" y2="120" stroke="#000" stroke-width="2.5"/>
+              <!-- Bottom wire: Closed switch on left, Buzzer on right -->
+              <line x1="25" y1="120" x2="60" y2="120" stroke="#000" stroke-width="2.5"/>
+              <circle cx="64" cy="120" r="4" fill="#fff" stroke="#000" stroke-width="2"/>
+              <line x1="68" y1="120" x2="102" y2="120" stroke="#000" stroke-width="2.5"/>
+              <circle cx="106" cy="120" r="4" fill="#fff" stroke="#000" stroke-width="2"/>
+              <line x1="110" y1="120" x2="164" y2="120" stroke="#000" stroke-width="2.5"/>
+              <!-- Official Buzzer (legs up to flat base, semicircle dome) -->
+              <line x1="164" y1="120" x2="164" y2="108" stroke="#000" stroke-width="2.5"/>
+              <line x1="186" y1="120" x2="186" y2="108" stroke="#000" stroke-width="2.5"/>
+              <path d="M 155 108 L 195 108 A 20 20 0 0 0 155 108 Z" fill="#fff" stroke="#000" stroke-width="2.5"/>
+              <line x1="186" y1="120" x2="235" y2="120" stroke="#000" stroke-width="2.5"/>
+            </svg>
+            <p class="text-xs font-bold text-emerald-900 mt-1 text-center">Check: empty cell gaps, 90° corners, closed bar!</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="revealSc(1)" class="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-sm">👁 Model Answer</button>
+            <button id="scMet1" onclick="toggleScMet(1)" class="flex-1 py-2 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-bold text-sm">☐ Mark Met</button>
+          </div>
+        </div>
+
+        <!-- Check 2 -->
+        <div class="bg-white rounded-3xl p-6 shadow-lg border-2 border-slate-200 flex flex-col justify-between space-y-4">
+          <div>
+            <span class="bg-amber-100 text-amber-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase">Check 2 · Spot the Fault</span>
+            <h3 class="font-display text-xl font-bold text-slate-900 mt-3 mb-2">
+              Why won't this lamp light up?
+            </h3>
+            <div class="bg-slate-50 rounded-xl p-2 border border-slate-200">
+              <svg viewBox="0 0 240 120" class="w-full h-auto" aria-label="Circuit with missing corner wire gap">
+                <!-- Gap at top-left corner -->
+                <line x1="55" y1="22" x2="105" y2="22" stroke="#000" stroke-width="2.5"/>
+                <line x1="105" y1="8" x2="105" y2="36" stroke="#000" stroke-width="2"/>
+                <line x1="118" y1="14" x2="118" y2="30" stroke="#000" stroke-width="5"/>
+                <line x1="118" y1="22" x2="215" y2="22" stroke="#000" stroke-width="2.5"/>
+                <line x1="215" y1="22" x2="215" y2="98" stroke="#000" stroke-width="2.5"/>
+                <line x1="25" y1="98" x2="104" y2="98" stroke="#000" stroke-width="2.5"/>
+                <circle cx="120" cy="98" r="16" fill="#fff" stroke="#000" stroke-width="2.5"/>
+                <line x1="108.7" y1="86.7" x2="131.3" y2="109.3" stroke="#000" stroke-width="2"/>
+                <line x1="131.3" y1="86.7" x2="108.7" y2="109.3" stroke="#000" stroke-width="2"/>
+                <line x1="136" y1="98" x2="215" y2="98" stroke="#000" stroke-width="2.5"/>
+                <line x1="25" y1="50" x2="25" y2="98" stroke="#000" stroke-width="2.5"/>
+              </svg>
+            </div>
+          </div>
+          <div id="scAns2" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-3 text-sm font-bold text-emerald-900">
+            There is a <strong>gap at the top-left corner</strong>! Electricity cannot jump across the break in the wire.
+          </div>
+          <div class="flex gap-2">
+            <button onclick="revealSc(2)" class="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-sm">👁 Model Answer</button>
+            <button id="scMet2" onclick="toggleScMet(2)" class="flex-1 py-2 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-bold text-sm">☐ Mark Met</button>
+          </div>
+        </div>
+
+        <!-- Check 3 -->
+        <div class="bg-white rounded-3xl p-6 shadow-lg border-2 border-slate-200 flex flex-col justify-between space-y-4">
+          <div>
+            <span class="bg-rose-100 text-rose-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase">Check 3 · Electrical Safety</span>
+            <h3 class="font-display text-2xl font-bold text-slate-900 mt-3">
+              Write TWO electrical safety rules for our science lab today.
+            </h3>
+          </div>
+          <div id="scAns3" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-3 text-sm font-bold text-emerald-900 space-y-1">
+            <div>1. Keep hands dry / water away from circuits.</div>
+            <div>2. Only use safe 1.5 V cells (never wall mains sockets).</div>
+            <div>3. Disconnect immediately if wires feel hot.</div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="revealSc(3)" class="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-sm">👁 Model Answer</button>
+            <button id="scMet3" onclick="toggleScMet(3)" class="flex-1 py-2 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-bold text-sm">☐ Mark Met</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- STATION 6: QUICKFIRE CHECKPOINT CHALLENGE                             -->
+  <!-- [SoL: Automaticity] [SoL: Retrieval Practice] [SoL: Immediate Feedback]-->
+  <!-- ===================================================================== -->
+  <section id="station-6" class="station-panel hidden">
+    <div class="max-w-4xl mx-auto space-y-5">
+      <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-3xl p-6 shadow-xl flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-amber-300 font-extrabold text-xs uppercase tracking-wider">Cambridge Checkpoint Sprint</span>
+          <h2 class="font-display text-3xl font-bold">🏆 Quickfire Symbol Challenge</h2>
+        </div>
+        <div class="flex items-center gap-3">
+          <div id="qfTimerDisplay" class="font-display text-4xl font-bold bg-slate-800 px-5 py-2 rounded-2xl border-2 border-amber-400 text-amber-300">
+            15s
+          </div>
+          <button onclick="startQfTimer()" class="px-4 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-sm shadow">
+            ⏱ Start 15s
+          </button>
+        </div>
+      </div>
+
+      <!-- BOARDS UP Banner -->
+      <div id="boardsUpBanner" class="hidden bg-rose-600 text-white text-center py-4 rounded-2xl font-display text-4xl font-bold tracking-wider shadow-xl animate-bounce">
+        📣 BOARDS UP! SHOW YOUR ANSWERS!
+      </div>
+
+      <!-- Question Card -->
+      <div class="bg-white rounded-3xl p-8 shadow-xl border-2 border-indigo-100 text-center space-y-5">
+        <div class="flex items-center justify-between text-sm font-bold text-slate-500">
+          <span id="qfCounter">Question 1 of 8</span>
+          <div class="flex gap-2">
+            <button onclick="prevQf()" class="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800">← Prev</button>
+            <button onclick="nextQf()" class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white">Next →</button>
+          </div>
+        </div>
+
+        <div id="qfVisual" class="flex justify-center py-2"></div>
+
+        <h3 id="qfQuestion" class="font-display text-3xl md:text-4xl font-bold text-slate-900">
+          Loading question...
+        </h3>
+
+        <div id="qfAnswerBox" class="hidden bg-emerald-50 border-4 border-emerald-400 rounded-2xl p-5">
+          <div class="text-xs font-extrabold uppercase text-emerald-700 mb-1">Official Cambridge Answer</div>
+          <div id="qfAnswerText" class="font-display text-3xl font-bold text-emerald-900"></div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <button onclick="revealQfAnswer()" class="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold text-xl shadow-lg">
+            👁 Reveal Answer
+          </button>
+          <button onclick="awardTeam('red')" class="px-5 py-3 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-base shadow">
+            🔴 +1 Team Red (<span id="qfRedScore">0</span>)
+          </button>
+          <button onclick="awardTeam('blue')" class="px-5 py-3 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-base shadow">
+            🔵 +1 Team Blue (<span id="qfBlueScore">0</span>)
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ======================================================================= -->
+<!-- STATION 2 BILINGUAL VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION) z-[70] -->
+<!-- ======================================================================= -->
+<div id="vocabModal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm hidden items-center justify-center p-4 z-[70]" onclick="if(event.target===this) closeVocabModal()">
+  <div class="bg-white rounded-3xl max-w-2xl w-full p-7 shadow-2xl border-4 border-indigo-500 relative">
+    <button onclick="closeVocabModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 font-extrabold text-xl">✕</button>
+    <div class="flex flex-col items-center text-center space-y-4">
+      <div id="vmSvg" class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 w-full flex justify-center"></div>
+      <div>
+        <h3 id="vmEn" class="font-display text-4xl font-bold text-slate-900"></h3>
+        <div id="vmVn" class="font-display text-2xl font-bold text-indigo-600 mt-1"></div>
+      </div>
+      <p id="vmDef" class="text-slate-700 text-lg font-medium max-w-lg"></p>
+      <div class="flex flex-wrap gap-3 justify-center pt-2">
+        <button id="vmBtnEn" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold shadow flex items-center gap-2">
+          🔊 Listen (British English)
+        </button>
+        <button id="vmBtnVn" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold shadow flex items-center gap-2">
+          🔊 Nghe (Tiếng Việt)
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================================= -->
+<!-- GIANT PROJECTION MODAL (z-[70])                                         -->
+<!-- ======================================================================= -->
+<div id="giantModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur hidden items-center justify-center p-6 z-[70]" onclick="if(event.target===this) closeGiantProjection()">
+  <div class="bg-white rounded-3xl max-w-5xl w-full p-8 shadow-2xl relative text-center space-y-6">
+    <button onclick="closeGiantProjection()" class="absolute top-5 right-5 w-12 h-12 rounded-full bg-slate-200 hover:bg-slate-300 font-extrabold text-2xl">✕</button>
+    <div class="text-sm uppercase tracking-widest font-extrabold text-indigo-600">Giant Board Projection</div>
+    <div id="giantContent" class="flex flex-col items-center justify-center"></div>
+  </div>
+</div>
+
+<!-- ======================================================================= -->
+<!-- DAVID'S BOARD WHITEBOARD OVERLAY (W) (z-[80])                           -->
+<!-- ======================================================================= -->
+<div id="whiteboardOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden flex-col p-4 z-[80]">
+  <div class="bg-slate-900 text-white rounded-t-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3 border-b border-slate-700">
+    <div class="font-display text-xl font-bold text-amber-300">✏️ David's Board — Live Circuit Sketchpad</div>
+    <div class="flex flex-wrap items-center gap-2">
+      <button onclick="setPenColor('#0f172a')" class="w-7 h-7 rounded-full bg-slate-900 border-2 border-white" title="Black ink"></button>
+      <button onclick="setPenColor('#dc2626')" class="w-7 h-7 rounded-full bg-red-600 border-2 border-white" title="Red ink"></button>
+      <button onclick="setPenColor('#2563eb')" class="w-7 h-7 rounded-full bg-blue-600 border-2 border-white" title="Blue ink"></button>
+      <button onclick="setPenColor('#16a34a')" class="w-7 h-7 rounded-full bg-green-600 border-2 border-white" title="Green ink"></button>
+      <button onclick="setPenColor('#ffffff')" class="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold">Eraser</button>
+      <button onclick="clearWhiteboard()" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-xs font-bold">Clear All</button>
+      <button onclick="toggleWhiteboard()" class="px-3 py-1 rounded-lg bg-amber-400 text-slate-950 text-xs font-extrabold">Close (Esc)</button>
+    </div>
+  </div>
+  <div id="wbCanvasWrap" class="flex-1 bg-white rounded-b-2xl overflow-hidden relative" style="background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 24px 24px;">
+    <canvas id="wbCanvas" class="w-full h-full touch-none cursor-crosshair"></canvas>
+  </div>
+</div>
+
+<!-- ======================================================================= -->
+<!-- TEACHER PROMPT DRAWER (T) (z-[80])                                      -->
+<!-- ======================================================================= -->
+<div id="teacherDrawer" class="fixed top-0 right-0 bottom-0 w-full max-w-md bg-slate-900 text-white shadow-2xl transform translate-x-full transition-transform duration-300 z-[80] flex flex-col">
+  <div class="p-5 border-b border-slate-700 flex items-center justify-between">
+    <h3 class="font-display text-2xl font-bold text-emerald-400">👩‍🏫 Teacher Prompts &amp; Script</h3>
+    <button onclick="toggleTeacherDrawer()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 font-bold">✕</button>
+  </div>
+  <div class="p-5 overflow-y-auto space-y-4 text-sm">
+    <div class="bg-slate-800 rounded-2xl p-4">
+      <div class="font-bold text-amber-300 mb-1">1. EAL Hinge Check (Cell vs Battery)</div>
+      <p class="text-slate-200">Hold up 1 AA cell: "One unit = <strong>cell</strong> (1.5 V). Two or more joined + to − = <strong>battery</strong> (3 V)." Check pupils leave a clean empty gap between the tall thin (+) and short thick (−) lines!</p>
+    </div>
+    <div class="bg-slate-800 rounded-2xl p-4">
+      <div class="font-bold text-amber-300 mb-1">2. Hands-On Physical Kit Bridge</div>
+      <p class="text-slate-200">Run Station 4 first so pupils predict what happens when opening the switch or flipping cell 2. Then hand out trays for Worksheet 1 Page 2: Circuit A (1 cell + closed switch + lamp) and Circuit B (2 cells + open switch + buzzer + lamp).</p>
+    </div>
+    <div class="bg-slate-800 rounded-2xl p-4">
+      <div class="font-bold text-rose-300 mb-1">3. Red-Flag Misconception Watch</div>
+      <p class="text-slate-200">Watch for pupils drawing the horizontal wire straight across the cell symbol, or confusing the Lamp (× inside circle) with the Buzzer (semicircle D-cup with 2 parallel legs). Use David's Board (W) to model erasing slots first.</p>
+    </div>
+    <div class="bg-slate-800 rounded-2xl p-4">
+      <div class="font-bold text-sky-300 mb-1">4. Keyboard Shortcuts</div>
+      <p class="text-slate-200"><strong>← / →</strong> Switch Stations · <strong>W</strong> David's Board · <strong>T</strong> Prompts · <strong>M</strong> Mute · <strong>Esc</strong> Close modals / Full Screen</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// =========================================================================
+// STATE & AUDIO ENGINE (Offline Web Audio API + Buzzer Hum)
+// =========================================================================
+let currentStation = 0;
+let isMuted = false;
+let scores = { red: 0, blue: 0 };
+let audioCtx = null;
+let buzzerOsc = null;
+let buzzerGain = null;
+
+function getAudioCtx() {
+  if (!audioCtx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) audioCtx = new AC();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playTone(freq, duration = 0.14, type = 'sine', vol = 0.12) {
+  if (isMuted) return;
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, ctx.currentTime);
+  gain.gain.setValueAtTime(vol, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + duration);
+}
+
+function playSuccessChime() {
+  playTone(523.25, 0.12, 'triangle', 0.14);
+  setTimeout(() => playTone(659.25, 0.12, 'triangle', 0.14), 90);
+  setTimeout(() => playTone(783.99, 0.22, 'triangle', 0.14), 180);
+}
+
+function playAlertHorn() {
+  playTone(440, 0.18, 'sawtooth', 0.12);
+  setTimeout(() => playTone(587.33, 0.28, 'sawtooth', 0.14), 170);
+}
+
+function updateBuzzerSound(active, voltage) {
+  if (buzzerOsc) {
+    try { buzzerOsc.stop(); buzzerOsc.disconnect(); } catch(e) {}
+    buzzerOsc = null;
+    buzzerGain = null;
+  }
+  if (!active || isMuted || currentStation !== 4) return;
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  buzzerOsc = ctx.createOscillator();
+  buzzerGain = ctx.createGain();
+  buzzerOsc.type = 'sawtooth';
+  buzzerOsc.frequency.setValueAtTime(voltage >= 3 ? 290 : 210, ctx.currentTime);
+  buzzerGain.gain.setValueAtTime(voltage >= 3 ? 0.055 : 0.025, ctx.currentTime);
+  buzzerOsc.connect(buzzerGain);
+  buzzerGain.connect(ctx.destination);
+  buzzerOsc.start();
+}
+
+function toggleMute() {
+  isMuted = !isMuted;
+  document.getElementById('muteIcon').textContent = isMuted ? '🔇' : '🔊';
+  if (isMuted) {
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    updateBuzzerSound(false, 0);
+  } else {
+    renderSim();
+  }
+}
+
+// =========================================================================
+// AUTO-HIDING HEADER
+// =========================================================================
+let lastScrollY = window.scrollY;
+window.addEventListener('scroll', () => {
+  const hdr = document.getElementById('topHeader');
+  const cur = window.scrollY;
+  if (cur > lastScrollY && cur > 60) {
+    hdr.classList.add('header-hidden');
+  } else {
+    hdr.classList.remove('header-hidden');
+  }
+  lastScrollY = cur;
+});
+
+// =========================================================================
+// SCOREBOARD & CONFETTI
+// =========================================================================
+function updateScoreUI() {
+  document.getElementById('hdrRedScore').textContent = scores.red;
+  document.getElementById('hdrBlueScore').textContent = scores.blue;
+  document.getElementById('qfRedScore').textContent = scores.red;
+  document.getElementById('qfBlueScore').textContent = scores.blue;
+}
+
+function addScore(team, pts) {
+  scores[team] += pts;
+  updateScoreUI();
+  playSuccessChime();
+  launchConfetti();
+}
+
+function awardTeam(team) {
+  addScore(team, 1);
+}
+
+function resetScores() {
+  scores = { red: 0, blue: 0 };
+  updateScoreUI();
+}
+
+function launchConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const pieces = Array.from({length: 60}, () => ({
+    x: Math.random() * canvas.width,
+    y: -15 - Math.random() * 100,
+    w: 8 + Math.random() * 6,
+    h: 5 + Math.random() * 5,
+    color: ['#f59e0b','#ef4444','#3b82f6','#10b981','#8b5cf6'][Math.floor(Math.random()*5)],
+    vx: (Math.random() - 0.5) * 5,
+    vy: 3 + Math.random() * 4,
+    rot: Math.random() * 360,
+    vr: (Math.random() - 0.5) * 10
+  }));
+  let frame = 0;
+  function step() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+    if (++frame < 75) requestAnimationFrame(step);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  requestAnimationFrame(step);
+}
+
+// =========================================================================
+// STATION NAVIGATION
+// =========================================================================
+function goStation(idx) {
+  currentStation = Math.max(0, Math.min(6, idx));
+  document.querySelectorAll('.station-panel').forEach((sec, i) => {
+    sec.classList.toggle('hidden', i !== currentStation);
+  });
+  document.querySelectorAll('.station-tab').forEach((btn, i) => {
+    if (i === currentStation) {
+      btn.className = 'station-tab px-3.5 py-2 rounded-xl font-bold text-sm transition flex items-center gap-1.5 bg-indigo-600 text-white shadow-md';
+    } else {
+      btn.className = 'station-tab px-3.5 py-2 rounded-xl font-bold text-sm transition flex items-center gap-1.5 bg-slate-100 text-slate-700 hover:bg-indigo-100';
+    }
+  });
+  if (currentStation === 4) {
+    renderSim();
+  } else {
+    updateBuzzerSound(false, 0);
+  }
+  playTone(440 + currentStation * 40, 0.08, 'sine', 0.07);
+}
+
+// =========================================================================
+// STATION 0: CLASSROOM KIT CHECKLIST
+// =========================================================================
+const kitItems = [
+  { id: 'cells', icon: '🔋', label: '2 × 1.5 V Cells' },
+  { id: 'holders', icon: '📦', label: 'Cell Holders' },
+  { id: 'wires', icon: '〰️', label: 'Crocodile Wires' },
+  { id: 'switch', icon: '🎚️', label: 'Switch' },
+  { id: 'lamp', icon: '💡', label: 'Lamp & Holder' },
+  { id: 'buzzer', icon: '🔔', label: 'Buzzer' }
+];
+const kitChecked = new Set();
+
+function renderKitChecklist() {
+  const grid = document.getElementById('kitChecklistGrid');
+  grid.innerHTML = kitItems.map(item => {
+    const done = kitChecked.has(item.id);
+    return `
+      <button onclick="toggleKit('${item.id}')" class="p-3.5 rounded-2xl border-2 text-center transition ${done ? 'bg-emerald-50 border-emerald-500 shadow-sm' : 'bg-slate-50 border-slate-200 hover:border-amber-400'}">
+        <div class="text-3xl mb-1">${item.icon}</div>
+        <div class="font-bold text-sm text-slate-800">${item.label}</div>
+        <div class="text-xs font-extrabold mt-1 ${done ? 'text-emerald-600' : 'text-slate-400'}">${done ? '✓ Checked' : 'Tap to check'}</div>
+      </button>
+    `;
+  }).join('');
+  document.getElementById('kitCounter').textContent = `${kitChecked.size} / ${kitItems.length} Ready`;
+}
+
+function toggleKit(id) {
+  if (kitChecked.has(id)) kitChecked.delete(id);
+  else {
+    kitChecked.add(id);
+    playTone(620, 0.09, 'triangle', 0.1);
+  }
+  renderKitChecklist();
+  if (kitChecked.size === kitItems.length) playSuccessChime();
+}
+
+// =========================================================================
+// STATION 1: FLASHBACK 3 FLIP CARDS
+// =========================================================================
+function toggleFlip(card) {
+  card.classList.toggle('flipped');
+  playTone(540, 0.08, 'sine', 0.08);
+}
+function resetFlashcards() {
+  document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
+}
+
+// =========================================================================
+// OFFICIAL CAMBRIDGE CONVENTIONAL SYMBOL SVG GENERATORS (100% EXACT)
+// =========================================================================
+function officialSymbolSvg(key, w = 150, h = 76) {
+  const s = '#0f172a';
+  switch (key) {
+    case 'cell':
+      return `<svg width="${w}" height="${h}" viewBox="0 0 150 76" aria-label="Official Cambridge cell symbol">
+        <line x1="12" y1="38" x2="66" y2="38" stroke="${s}" stroke-width="3"/>
+        <line x1="66" y1="14" x2="66" y2="62" stroke="${s}" stroke-width="2.5"/>
+        <line x1="84" y1="24" x2="84" y2="52" stroke="${s}" stroke-width="7"/>
+        <line x1="84" y1="38" x2="138" y2="38" stroke="${s}" stroke-width="3"/>
+        <text x="54" y="18" font-size="13" font-weight="800" fill="${s}">+</text>
+        <text x="90" y="18" font-size="13" font-weight="800" fill="${s}">−</text>
+      </svg>`;
+    case 'battery':
+      return `<svg width="${w}" height="${h}" viewBox="0 0 150 76" aria-label="Official Cambridge 2-cell battery symbol">
+        <line x1="10" y1="38" x2="46" y2="38" stroke="${s}" stroke-width="3"/>
+        <line x1="46" y1="14" x2="46" y2="62" stroke="${s}" stroke-width="2.5"/>
+        <line x1="62" y1="24" x2="62" y2="52" stroke="${s}" stroke-width="7"/>
+        <line x1="62" y1="38" x2="88" y2="38" stroke="${s}" stroke-width="3"/>
+        <line x1="88" y1="14" x2="88" y2="62" stroke="${s}" stroke-width="2.5"/>
+        <line x1="104" y1="24" x2="104" y2="52" stroke="${s}" stroke-width="7"/>
+        <line x1="104" y1="38" x2="140" y2="38" stroke="${s}" stroke-width="3"/>
+        <text x="35" y="18" font-size="12" font-weight="800" fill="${s}">+</text>
+        <text x="110" y="18" font-size="12" font-weight="800" fill="${s}">−</text>
+      </svg>`;
+    case 'open_switch':
+      return `<svg width="${w}" height="${h}" viewBox="0 0 150 76" aria-label="Official Cambridge open switch symbol">
+        <line x1="12" y1="46" x2="50" y2="46" stroke="${s}" stroke-width="3"/>
+        <circle cx="54" cy="46" r="5" fill="#ffffff" stroke="${s}" stroke-width="3"/>
+        <line x1="58" y1="43" x2="94" y2="18" stroke="${s}" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="96" cy="46" r="5" fill="#ffffff" stroke="${s}" stroke-width="3"/>
+        <line x1="101" y1="46" x2="138" y2="46" stroke="${s}" stroke-width="3"/>
+      </svg>`;
+    case 'closed_switch':
+      return `<svg width="${w}" height="${h}" viewBox="0 0 150 76" aria-label="Official Cambridge closed switch symbol">
+        <line x1="12" y1="42" x2="50" y2="42" stroke="${s}" stroke-width="3"/>
+        <circle cx="54" cy="42" r="5" fill="#ffffff" stroke="${s}" stroke-width="3"/>
+        <line x1="59" y1="42" x2="91" y2="42" stroke="${s}" stroke-width="3"/>
+        <circle cx="96" cy="42" r="5" fill="#ffffff" stroke="${s}" stroke-width="3"/>
+        <line x1="101" y1="42" x2="138" y2="42" stroke="${s}" stroke-width="3"/>
+      </svg>`;
+    case 'lamp':
+      return `<svg width="${w}" height="${h}" viewBox="0 0 150 76" aria-label="Official Cambridge lamp symbol">
+        <line x1="12" y1="38" x2="53" y2="38" stroke="${s}" stroke-width="3"/>
+        <circle cx="75" cy="38" r="22" fill="#ffffff" stroke="${s}" stroke-width="3"/>
+        <line x1="59.4" y1="22.4" x2="90.6" y2="53.6" stroke="${s}" stroke-width="3"/>
+        <line x1="90.6" y1="22.4" x2="59.4" y2="53.6" stroke="${s}" stroke-width="3"/>
+        <line x1="97" y1="38" x2="138" y2="38" stroke="${s}" stroke-width="3"/>
+      </svg>`;
+    case 'buzzer':
+      return `<svg width="${w}" height="${h}" viewBox="0 0 150 76" aria-label="Official Cambridge buzzer symbol">
+        <line x1="12" y1="56" x2="62" y2="56" stroke="${s}" stroke-width="3"/>
+        <line x1="62" y1="56" x2="62" y2="42" stroke="${s}" stroke-width="3"/>
+        <line x1="88" y1="56" x2="88" y2="42" stroke="${s}" stroke-width="3"/>
+        <line x1="88" y1="56" x2="138" y2="56" stroke="${s}" stroke-width="3"/>
+        <path d="M 50 42 L 100 42 A 25 25 0 0 0 50 42 Z" fill="#ffffff" stroke="${s}" stroke-width="3"/>
+      </svg>`;
+    case 'circuit_diagram':
+      return `<svg width="${w}" height="${h}" viewBox="0 0 150 76" aria-label="Official simple circuit diagram">
+        <line x1="22" y1="16" x2="65" y2="16" stroke="${s}" stroke-width="2.5"/>
+        <line x1="65" y1="6" x2="65" y2="26" stroke="${s}" stroke-width="2"/>
+        <line x1="77" y1="10" x2="77" y2="22" stroke="${s}" stroke-width="5"/>
+        <line x1="77" y1="16" x2="128" y2="16" stroke="${s}" stroke-width="2.5"/>
+        <line x1="22" y1="16" x2="22" y2="60" stroke="${s}" stroke-width="2.5"/>
+        <line x1="128" y1="16" x2="128" y2="60" stroke="${s}" stroke-width="2.5"/>
+        <line x1="22" y1="60" x2="63" y2="60" stroke="${s}" stroke-width="2.5"/>
+        <circle cx="75" cy="60" r="12" fill="#ffffff" stroke="${s}" stroke-width="2.5"/>
+        <line x1="66.5" y1="51.5" x2="83.5" y2="68.5" stroke="${s}" stroke-width="2"/>
+        <line x1="83.5" y1="51.5" x2="66.5" y2="68.5" stroke="${s}" stroke-width="2"/>
+        <line x1="87" y1="60" x2="128" y2="60" stroke="${s}" stroke-width="2.5"/>
+      </svg>`;
+    case 'conventional_symbol':
+      return `<svg width="${w}" height="${h}" viewBox="0 0 150 76" aria-label="Universal conventional symbols">
+        <circle cx="42" cy="38" r="16" fill="#fef9c3" stroke="${s}" stroke-width="2.5"/>
+        <line x1="30.7" y1="26.7" x2="53.3" y2="49.3" stroke="${s}" stroke-width="2.5"/>
+        <line x1="53.3" y1="26.7" x2="30.7" y2="49.3" stroke="${s}" stroke-width="2.5"/>
+        <line x1="84" y1="20" x2="84" y2="56" stroke="${s}" stroke-width="2.5"/>
+        <line x1="96" y1="28" x2="96" y2="48" stroke="${s}" stroke-width="6"/>
+        <circle cx="116" cy="44" r="4" fill="#fff" stroke="${s}" stroke-width="2.5"/>
+        <line x1="120" y1="42" x2="138" y2="26" stroke="${s}" stroke-width="2.5"/>
+      </svg>`;
+    case 'volt':
+      return `<svg width="${w}" height="${h}" viewBox="0 0 150 76" aria-label="Unit of voltage Volt">
+        <rect x="25" y="14" width="100" height="48" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="3"/>
+        <text x="75" y="47" text-anchor="middle" font-size="26" font-weight="800" fill="#92400e">1.5 V</text>
+      </svg>`;
+    case 'voltage':
+      return `<svg width="${w}" height="${h}" viewBox="0 0 150 76" aria-label="Voltage push of cells">
+        <rect x="14" y="16" width="52" height="44" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.5"/>
+        <text x="40" y="43" text-anchor="middle" font-size="16" font-weight="800" fill="#0369a1">1.5 V</text>
+        <text x="75" y="44" text-anchor="middle" font-size="18" font-weight="800" fill="${s}">➔</text>
+        <rect x="86" y="16" width="52" height="44" rx="8" fill="#fef08a" stroke="#ca8a04" stroke-width="2.5"/>
+        <text x="112" y="43" text-anchor="middle" font-size="16" font-weight="800" fill="#854d0e">3.0 V</text>
+      </svg>`;
+  }
+}
+
+// =========================================================================
+// STATION 2: VOCABULARY GALLERY & BILINGUAL MODAL (SOLE VN EXCEPTION)
+// =========================================================================
+const vocabList = [
+  { key: 'circuit_diagram', en: 'Circuit diagram', vn: 'Sơ đồ mạch điện', def: 'A neat ruler-drawn plan of a circuit using official conventional symbols instead of pictures.' },
+  { key: 'conventional_symbol', en: 'Conventional symbol', vn: 'Ký hiệu quy ước', def: 'A standard picture agreed by scientists worldwide to represent an electrical component.' },
+  { key: 'cell', en: 'Cell', vn: 'Pin đơn (1,5 V)', def: 'A single electrical power source (1.5 V). Drawn with a tall thin (+) line and a short thick (−) line.' },
+  { key: 'battery', en: 'Battery', vn: 'Bộ pin (nhiều pin)', def: 'Two or more cells joined together (+ to −) to give a bigger electrical push (e.g. 3 V).' },
+  { key: 'open_switch', en: 'Open switch', vn: 'Công tắc mở', def: 'A switch lifted open to create a gap so electricity cannot flow around the circuit.' },
+  { key: 'closed_switch', en: 'Closed switch', vn: 'Công tắc đóng', def: 'A switch closed shut to complete the circuit loop so electricity flows.' },
+  { key: 'lamp', en: 'Lamp (bulb)', vn: 'Bóng đèn', def: 'A component that lights up when electricity flows through it. Drawn as a circle with a diagonal ×.' },
+  { key: 'buzzer', en: 'Buzzer', vn: 'Còi điện', def: 'A component that makes a buzzing sound when electricity flows. Drawn as a D-cup with two parallel legs.' },
+  { key: 'volt', en: 'Volt (V)', vn: 'Vôn (V)', def: 'The standard scientific unit used to measure electrical voltage (for example, 1.5 V or 3 V).' },
+  { key: 'voltage', en: 'Voltage', vn: 'Hiệu điện thế', def: 'The strength of the electrical push provided by a cell or battery around a circuit.' }
+];
+
+function renderVocabGrid() {
+  const grid = document.getElementById('vocabGrid');
+  grid.innerHTML = vocabList.map((v, idx) => `
+    <button onclick="openVocabModal(${idx})" class="bg-white hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-500 rounded-2xl p-3.5 shadow-sm hover:shadow-md transition flex flex-col items-center text-center group">
+      <div class="w-full bg-slate-50 group-hover:bg-white rounded-xl py-2 flex justify-center mb-2 border border-slate-100">
+        ${officialSymbolSvg(v.key, 128, 64)}
+      </div>
+      <div class="font-display font-bold text-base text-slate-900">${v.en}</div>
+      <div class="text-[11px] font-bold text-indigo-600 mt-0.5">Tap for audio &amp; meaning</div>
+    </button>
+  `).join('');
+}
+
+function speakWord(text, lang) {
+  if (isMuted || !('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang;
+  u.rate = 0.92;
+  window.speechSynthesis.speak(u);
+}
+
+function openVocabModal(idx) {
+  const v = vocabList[idx];
+  document.getElementById('vmSvg').innerHTML = officialSymbolSvg(v.key, 240, 120);
+  document.getElementById('vmEn').textContent = v.en;
+  document.getElementById('vmVn').textContent = v.vn;
+  document.getElementById('vmDef').textContent = v.def;
+  document.getElementById('vmBtnEn').onclick = () => speakWord(v.en, 'en-GB');
+  document.getElementById('vmBtnVn').onclick = () => speakWord(v.vn, 'vi-VN');
+  const modal = document.getElementById('vocabModal');
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+  speakWord(v.en, 'en-GB');
+}
+
+function closeVocabModal() {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  const modal = document.getElementById('vocabModal');
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+}
+
+// =========================================================================
+// STATION 3: FULL-SCREEN VISUAL I DO (PICTURE -> DIAGRAM + FAULTS)
+// =========================================================================
+let activeMission = 1;
+let morphStep = 0;
+
+function selectMission(n) {
+  activeMission = n;
+  document.getElementById('mission1Panel').classList.toggle('hidden', n !== 1);
+  document.getElementById('mission2Panel').classList.toggle('hidden', n !== 2);
+  document.getElementById('btnMission1').className = n === 1
+    ? 'px-4 py-2 rounded-xl font-bold text-sm bg-indigo-600 text-white shadow transition'
+    : 'px-4 py-2 rounded-xl font-bold text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+  document.getElementById('btnMission2').className = n === 2
+    ? 'px-4 py-2 rounded-xl font-bold text-sm bg-rose-600 text-white shadow transition'
+    : 'px-4 py-2 rounded-xl font-bold text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+}
+
+const morphData = [
+  {
+    title: 'Step 0: Messy Physical Kit Circuit',
+    badge: 'Real Classroom Kit',
+    caption: 'Real kit wires curve and tangle on the table. Drawing this takes too long and looks different for every person!'
+  },
+  {
+    title: 'Step 1: Draw a Clean Rectangle with a Ruler',
+    badge: '90° Corners · Zero Gaps',
+    caption: 'First, use a ruler and sharp pencil to draw a crisp closed rectangle with sharp 90° corners.'
+  },
+  {
+    title: 'Step 2: Rub Out Clean Slots for Each Component',
+    badge: 'Make Space on Straight Sides',
+    caption: 'Next, rub out neat empty slots on the straight sides (never on corners!) for the cell, closed switch, and lamp.'
+  },
+  {
+    title: 'Step 3: Drop in the Official Cambridge Symbols!',
+    badge: '100% Exam-Ready Diagram',
+    caption: 'Finally, draw the exact Cambridge symbols into the slots: Cell (tall thin + / short thick − with empty gap), Closed Switch, and Lamp (circle with ×).'
+  }
+];
+
+function setMorphStep(step) {
+  morphStep = step;
+  const info = morphData[step];
+  document.getElementById('morphTitle').textContent = info.title;
+  document.getElementById('morphBadge').textContent = info.badge;
+  document.getElementById('morphCaption').textContent = info.caption;
+
+  for (let i = 0; i <= 3; i++) {
+    const btn = document.getElementById('mStep' + i);
+    btn.className = i === step
+      ? 'morph-btn px-3.5 py-2 rounded-xl font-bold text-sm bg-indigo-600 text-white shadow transition'
+      : 'morph-btn px-3.5 py-2 rounded-xl font-bold text-sm bg-white border border-slate-300 text-slate-700 hover:bg-indigo-50 transition';
+  }
+
+  const svg = document.getElementById('morphSvg');
+  if (step === 0) {
+    // Photo-style messy real classroom kit circuit
+    svg.innerHTML = `
+      <!-- Messy curved crocodile wires -->
+      <path d="M 275 72 C 130 40, 70 110, 95 190 C 110 245, 165 265, 250 250" fill="none" stroke="#dc2626" stroke-width="6" stroke-linecap="round"/>
+      <path d="M 375 72 C 520 55, 575 115, 535 170" fill="none" stroke="#2563eb" stroke-width="6" stroke-linecap="round"/>
+      <path d="M 525 225 C 510 285, 420 278, 365 250" fill="none" stroke="#16a34a" stroke-width="6" stroke-linecap="round"/>
+      <!-- Real 1.5 V AA Cell -->
+      <rect x="275" y="48" width="90" height="48" rx="8" fill="#f59e0b" stroke="#0f172a" stroke-width="3"/>
+      <rect x="275" y="48" width="28" height="48" rx="6" fill="#0f172a"/>
+      <rect x="365" y="61" width="12" height="22" rx="3" fill="#94a3b8" stroke="#0f172a" stroke-width="2"/>
+      <text x="330" y="77" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">1.5 V</text>
+      <text x="354" y="65" font-size="14" font-weight="800" fill="#0f172a">+</text>
+      <text x="285" y="77" font-size="16" font-weight="800" fill="#ffffff">−</text>
+      <!-- Real Plastic Switch on Right -->
+      <rect x="495" y="162" width="66" height="72" rx="10" fill="#e2e8f0" stroke="#0f172a" stroke-width="3"/>
+      <line x1="528" y1="178" x2="528" y2="218" stroke="#334155" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="528" cy="178" r="6" fill="#f59e0b" stroke="#0f172a" stroke-width="2"/>
+      <circle cx="528" cy="218" r="6" fill="#f59e0b" stroke="#0f172a" stroke-width="2"/>
+      <!-- Real Glowing Bulb in Holder on Bottom -->
+      <circle cx="310" cy="245" r="34" fill="#fef08a" stroke="#ca8a04" stroke-width="3" class="lamp-lit"/>
+      <path d="M 298 258 L 304 236 L 316 236 L 322 258" fill="none" stroke="#b45309" stroke-width="3"/>
+      <rect x="292" y="268" width="36" height="18" rx="4" fill="#475569" stroke="#0f172a" stroke-width="2"/>
+    `;
+  } else if (step === 1) {
+    // Clean ruler-drawn rectangle
+    svg.innerHTML = `
+      <rect x="110" y="65" width="420" height="200" fill="none" stroke="#0f172a" stroke-width="4"/>
+      <!-- 90-degree corner markers -->
+      <rect x="110" y="65" width="16" height="16" fill="none" stroke="#4f46e5" stroke-width="2"/>
+      <rect x="514" y="65" width="16" height="16" fill="none" stroke="#4f46e5" stroke-width="2"/>
+      <rect x="110" y="249" width="16" height="16" fill="none" stroke="#4f46e5" stroke-width="2"/>
+      <rect x="514" y="249" width="16" height="16" fill="none" stroke="#4f46e5" stroke-width="2"/>
+      <text x="320" y="172" text-anchor="middle" font-size="22" font-weight="800" fill="#4f46e5">Sharp 90° corners · Drawn with a ruler!</text>
+    `;
+  } else if (step === 2) {
+    // Rectangle with cleanly erased slots
+    svg.innerHTML = `
+      <!-- Top wire split -->
+      <line x1="110" y1="65" x2="292" y2="65" stroke="#0f172a" stroke-width="4"/>
+      <line x1="348" y1="65" x2="530" y2="65" stroke="#0f172a" stroke-width="4"/>
+      <rect x="292" y="42" width="56" height="46" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5 4"/>
+      <text x="320" y="70" text-anchor="middle" font-size="13" font-weight="800" fill="#b45309">Cell slot</text>
+      <!-- Right wire split -->
+      <line x1="530" y1="65" x2="530" y2="128" stroke="#0f172a" stroke-width="4"/>
+      <line x1="530" y1="202" x2="530" y2="265" stroke="#0f172a" stroke-width="4"/>
+      <rect x="504" y="128" width="52" height="74" rx="8" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2" stroke-dasharray="5 4"/>
+      <text x="530" y="169" text-anchor="middle" font-size="12" font-weight="800" fill="#3730a3">Switch</text>
+      <!-- Bottom wire split -->
+      <line x1="110" y1="265" x2="284" y2="265" stroke="#0f172a" stroke-width="4"/>
+      <line x1="356" y1="265" x2="530" y2="265" stroke="#0f172a" stroke-width="4"/>
+      <rect x="284" y="236" width="72" height="58" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2" stroke-dasharray="5 4"/>
+      <text x="320" y="270" text-anchor="middle" font-size="13" font-weight="800" fill="#166534">Lamp slot</text>
+      <!-- Left wire solid -->
+      <line x1="110" y1="65" x2="110" y2="265" stroke="#0f172a" stroke-width="4"/>
+    `;
+  } else {
+    // Official Cambridge Circuit Diagram!
+    svg.innerHTML = `
+      <!-- Top wire with exact Cell -->
+      <line x1="110" y1="65" x2="306" y2="65" stroke="#0f172a" stroke-width="4"/>
+      <line x1="306" y1="32" x2="306" y2="98" stroke="#0f172a" stroke-width="3"/>
+      <line x1="330" y1="47" x2="330" y2="83" stroke="#0f172a" stroke-width="9"/>
+      <line x1="330" y1="65" x2="530" y2="65" stroke="#0f172a" stroke-width="4"/>
+      <text x="292" y="34" font-size="18" font-weight="800" fill="#0f172a">+</text>
+      <text x="336" y="34" font-size="18" font-weight="800" fill="#0f172a">−</text>
+      <text x="320" y="116" text-anchor="middle" font-size="14" font-weight="800" fill="#4f46e5">Cell (1.5 V)</text>
+
+      <!-- Right wire with exact Closed Switch (vertical) -->
+      <line x1="530" y1="65" x2="530" y2="136" stroke="#0f172a" stroke-width="4"/>
+      <circle cx="530" cy="142" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="3.5"/>
+      <line x1="530" y1="148" x2="530" y2="188" stroke="#0f172a" stroke-width="4"/>
+      <circle cx="530" cy="194" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="3.5"/>
+      <line x1="530" y1="200" x2="530" y2="265" stroke="#0f172a" stroke-width="4"/>
+      <text x="582" y="172" text-anchor="middle" font-size="14" font-weight="800" fill="#4f46e5">Closed Switch</text>
+
+      <!-- Bottom wire with exact Lamp -->
+      <line x1="110" y1="265" x2="288" y2="265" stroke="#0f172a" stroke-width="4"/>
+      <circle cx="320" cy="265" r="32" fill="#ffffff" stroke="#0f172a" stroke-width="4"/>
+      <line x1="297.4" y1="242.4" x2="342.6" y2="287.6" stroke="#0f172a" stroke-width="4"/>
+      <line x1="342.6" y1="242.4" x2="297.4" y2="287.6" stroke="#0f172a" stroke-width="4"/>
+      <line x1="352" y1="265" x2="530" y2="265" stroke="#0f172a" stroke-width="4"/>
+      <text x="320" y="318" text-anchor="middle" font-size="14" font-weight="800" fill="#4f46e5">Lamp (Bulb)</text>
+
+      <!-- Left wire -->
+      <line x1="110" y1="65" x2="110" y2="265" stroke="#0f172a" stroke-width="4"/>
+    `;
+  }
+  playTone(460 + step * 70, 0.1, 'triangle', 0.1);
+}
+
+let morphTimer = null;
+function autoPlayMorph() {
+  if (morphTimer) clearInterval(morphTimer);
+  setMorphStep(0);
+  let s = 0;
+  morphTimer = setInterval(() => {
+    s++;
+    setMorphStep(s);
+    if (s >= 3) {
+      clearInterval(morphTimer);
+      playSuccessChime();
+    }
+  }, 1500);
+}
+
+function revealFault(n) {
+  document.getElementById('faultRing' + n).classList.remove('hidden');
+  playTone(320 + n * 80, 0.14, 'triangle', 0.12);
+}
+function revealAllFaults() {
+  revealFault(1); revealFault(2); revealFault(3);
+  playSuccessChime();
+}
+
+function toggleFullscreenIdo() {
+  const c = document.getElementById('idoContainer');
+  const btn = document.getElementById('btnFullscreenIdo');
+  const isFull = c.classList.toggle('fullscreen-ido');
+  btn.textContent = isFull ? '✕ Exit Full Screen' : '⛶ Full Screen I Do';
+}
+
+function openGiantProjection() {
+  const box = document.getElementById('giantContent');
+  if (activeMission === 1) {
+    box.innerHTML = `
+      <div class="font-display text-4xl font-bold text-slate-900">${morphData[morphStep].title}</div>
+      <div class="w-full max-w-3xl">${document.getElementById('morphSvg').outerHTML}</div>
+      <div class="text-2xl font-bold text-indigo-800">${morphData[morphStep].caption}</div>
+    `;
+  } else {
+    box.innerHTML = `
+      <div class="font-display text-4xl font-bold text-rose-800">3 Golden Rules of Cambridge Circuit Diagrams</div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left text-2xl font-bold text-slate-800 pt-4">
+        <div class="bg-rose-50 p-6 rounded-2xl border-2 border-rose-300">1. Zero corner gaps — always use a ruler!</div>
+        <div class="bg-amber-50 p-6 rounded-2xl border-2 border-amber-300">2. Leave a clean empty gap inside every cell symbol!</div>
+        <div class="bg-emerald-50 p-6 rounded-2xl border-2 border-emerald-300">3. Align battery cells + to − in series!</div>
+      </div>
+    `;
+  }
+  const m = document.getElementById('giantModal');
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+
+function closeGiantProjection() {
+  const m = document.getElementById('giantModal');
+  m.classList.add('hidden');
+  m.classList.remove('flex');
+}
+
+// =========================================================================
+// STATION 4: VIRTUAL CIRCUIT BUILDER (PICTURE <-> OFFICIAL SYMBOLS)
+// =========================================================================
+const simState = {
+  cells: 1,         // 1 or 2
+  reversed: false,  // true when 2 cells face + to +
+  output: 'lamp',   // 'lamp' or 'buzzer'
+  switchClosed: true,
+  view: 'picture'   // 'picture' or 'symbol'
+};
+
+function setSimState(patch) {
+  Object.assign(simState, patch);
+  if (simState.cells === 1) simState.reversed = false;
+  renderSim();
+  playTone(500, 0.08, 'sine', 0.08);
+}
+
+function toggleReversedCell() {
+  if (simState.cells === 1) {
+    simState.cells = 2;
+    simState.reversed = true;
+  } else {
+    simState.reversed = !simState.reversed;
+  }
+  renderSim();
+}
+
+function toggleSimSwitch() {
+  simState.switchClosed = !simState.switchClosed;
+  renderSim();
+  playTone(simState.switchClosed ? 680 : 340, 0.09, 'square', 0.07);
+}
+
+function toggleSimView() {
+  simState.view = simState.view === 'picture' ? 'symbol' : 'picture';
+  renderSim();
+  playTone(580, 0.1, 'triangle', 0.1);
+}
+
+function applyPreset(name) {
+  if (name === 'lamp1') setSimState({ cells: 1, reversed: false, output: 'lamp', switchClosed: true });
+  if (name === 'buzzer2') setSimState({ cells: 2, reversed: false, output: 'buzzer', switchClosed: true });
+  if (name === 'openFault') setSimState({ cells: 1, reversed: false, output: 'lamp', switchClosed: false });
+  if (name === 'reversedTrap') setSimState({ cells: 2, reversed: true, output: 'lamp', switchClosed: true });
+}
+
+function toggleMechanism() {
+  const el = document.getElementById('telReason');
+  const arr = document.getElementById('mechArrow');
+  const hidden = el.classList.toggle('hidden');
+  arr.textContent = hidden ? '▼' : '▲';
+}
+
+function renderSim() {
+  const effectiveVoltage = simState.reversed ? 0 : simState.cells * 1.5;
+  const isWorking = simState.switchClosed && effectiveVoltage > 0;
+
+  // Update control button styles
+  document.getElementById('ctlCell1').className = simState.cells === 1
+    ? 'sim-btn py-2 px-3 rounded-xl font-bold text-sm bg-indigo-600 text-white shadow'
+    : 'sim-btn py-2 px-3 rounded-xl font-bold text-sm bg-white border border-slate-300 text-slate-700';
+  document.getElementById('ctlCell2').className = simState.cells === 2
+    ? 'sim-btn py-2 px-3 rounded-xl font-bold text-sm bg-indigo-600 text-white shadow'
+    : 'sim-btn py-2 px-3 rounded-xl font-bold text-sm bg-white border border-slate-300 text-slate-700';
+  document.getElementById('ctlReversed').className = simState.reversed
+    ? 'mt-2 w-full py-2 px-3 rounded-xl font-bold text-xs border-2 bg-rose-600 border-rose-700 text-white shadow'
+    : 'mt-2 w-full py-2 px-3 rounded-xl font-bold text-xs border-2 bg-white border-rose-300 text-rose-700 hover:bg-rose-50';
+  document.getElementById('ctlReversed').textContent = simState.reversed
+    ? '⚠️ Cell 2 is BACKWARDS (− faces −)!'
+    : '🔄 Flip 2nd Cell Backwards (Trap Test)';
+
+  document.getElementById('ctlLamp').className = simState.output === 'lamp'
+    ? 'sim-btn py-2 px-3 rounded-xl font-bold text-sm bg-amber-500 text-white shadow'
+    : 'sim-btn py-2 px-3 rounded-xl font-bold text-sm bg-white border border-slate-300 text-slate-700';
+  document.getElementById('ctlBuzzer').className = simState.output === 'buzzer'
+    ? 'sim-btn py-2 px-3 rounded-xl font-bold text-sm bg-amber-500 text-white shadow'
+    : 'sim-btn py-2 px-3 rounded-xl font-bold text-sm bg-white border border-slate-300 text-slate-700';
+
+  const swBtn = document.getElementById('ctlSwitch');
+  swBtn.textContent = simState.switchClosed ? '🟢 Switch: CLOSED (ON)' : '🔴 Switch: OPEN (OFF)';
+  swBtn.className = simState.switchClosed
+    ? 'w-full py-3 px-4 rounded-xl font-display font-bold text-lg shadow bg-emerald-600 hover:bg-emerald-500 text-white transition'
+    : 'w-full py-3 px-4 rounded-xl font-display font-bold text-lg shadow bg-rose-600 hover:bg-rose-500 text-white transition';
+
+  document.getElementById('viewIndicatorText').textContent = simState.view === 'picture'
+    ? 'Currently viewing: Real Classroom Kit Picture Mode'
+    : 'Currently viewing: Official Cambridge Conventional Symbols Mode';
+
+  // Update anchored telemetry below canvas
+  document.getElementById('telVoltage').textContent = effectiveVoltage.toFixed(1).replace('.0', '') + ' V';
+  document.getElementById('telPath').textContent = simState.switchClosed ? 'Complete Loop' : 'Broken (Open Gap)';
+  document.getElementById('telPath').className = 'font-display text-2xl font-bold mt-1 ' + (simState.switchClosed ? 'text-emerald-400' : 'text-rose-400');
+
+  if (!simState.switchClosed) {
+    document.getElementById('telOutput').textContent = 'OFF (No Flow)';
+    document.getElementById('telOutput').className = 'font-display text-2xl font-bold text-slate-400 mt-1';
+    document.getElementById('telReason').textContent = 'The switch is OPEN, leaving an air gap. Electricity cannot jump across the gap, so nothing flows.';
+  } else if (simState.reversed) {
+    document.getElementById('telOutput').textContent = 'OFF (Cancelled!)';
+    document.getElementById('telOutput').className = 'font-display text-2xl font-bold text-rose-400 mt-1';
+    document.getElementById('telReason').textContent = 'Reversed Cell Trap! Both cells push in opposite directions (1.5 V − 1.5 V = 0 V), so no electricity flows.';
+  } else if (simState.output === 'lamp') {
+    document.getElementById('telOutput').textContent = effectiveVoltage >= 3 ? 'Lamp Glows BRIGHT!' : 'Lamp Glows!';
+    document.getElementById('telOutput').className = 'font-display text-2xl font-bold text-yellow-300 mt-1';
+    document.getElementById('telReason').textContent = effectiveVoltage >= 3
+      ? 'Two cells in series (+ to −) give 3 V — a stronger electrical push, so the lamp shines much brighter!'
+      : 'The closed switch completes the circuit loop, so electricity flows from the 1.5 V cell through the lamp.';
+  } else {
+    document.getElementById('telOutput').textContent = effectiveVoltage >= 3 ? 'Buzzer LOUD!' : 'Buzzer Buzzes!';
+    document.getElementById('telOutput').className = 'font-display text-2xl font-bold text-amber-300 mt-1';
+    document.getElementById('telReason').textContent = effectiveVoltage >= 3
+      ? 'Two cells in series (+ to −) give 3 V, making the buzzer sound louder and stronger!'
+      : 'The closed switch completes the loop, allowing electricity from the 1.5 V cell to sound the buzzer.';
+  }
+
+  // Trigger live buzzer audio when closed + buzzer + working
+  updateBuzzerSound(isWorking && simState.output === 'buzzer', effectiveVoltage);
+
+  // Render SVG Canvas
+  const svg = document.getElementById('simSvg');
+  const flowClass = effectiveVoltage >= 3 ? 'electron-flow-fast' : 'electron-flow';
+  const electronOverlay = isWorking
+    ? `<rect x="110" y="65" width="460" height="210" fill="none" stroke="#38bdf8" stroke-width="5" class="${flowClass}" opacity="0.85"/>`
+    : '';
+
+  if (simState.view === 'symbol') {
+    // OFFICIAL CAMBRIDGE CONVENTIONAL SYMBOLS VIEW
+    let powerSvg = '';
+    if (simState.cells === 1) {
+      powerSvg = `
+        <line x1="110" y1="65" x2="326" y2="65" stroke="#0f172a" stroke-width="4"/>
+        <line x1="326" y1="34" x2="326" y2="96" stroke="#0f172a" stroke-width="3"/>
+        <line x1="350" y1="48" x2="350" y2="82" stroke="#0f172a" stroke-width="8"/>
+        <line x1="350" y1="65" x2="570" y2="65" stroke="#0f172a" stroke-width="4"/>
+        <text x="310" y="34" font-size="16" font-weight="800" fill="#0f172a">+</text>
+        <text x="358" y="34" font-size="16" font-weight="800" fill="#0f172a">−</text>
+      `;
+    } else if (!simState.reversed) {
+      powerSvg = `
+        <line x1="110" y1="65" x2="285" y2="65" stroke="#0f172a" stroke-width="4"/>
+        <line x1="285" y1="34" x2="285" y2="96" stroke="#0f172a" stroke-width="3"/>
+        <line x1="307" y1="48" x2="307" y2="82" stroke="#0f172a" stroke-width="8"/>
+        <line x1="307" y1="65" x2="368" y2="65" stroke="#0f172a" stroke-width="4"/>
+        <line x1="368" y1="34" x2="368" y2="96" stroke="#0f172a" stroke-width="3"/>
+        <line x1="390" y1="48" x2="390" y2="82" stroke="#0f172a" stroke-width="8"/>
+        <line x1="390" y1="65" x2="570" y2="65" stroke="#0f172a" stroke-width="4"/>
+        <text x="270" y="34" font-size="16" font-weight="800" fill="#0f172a">+</text>
+        <text x="398" y="34" font-size="16" font-weight="800" fill="#0f172a">−</text>
+      `;
+    } else {
+      // Reversed 2nd cell (− facing −)
+      powerSvg = `
+        <line x1="110" y1="65" x2="285" y2="65" stroke="#0f172a" stroke-width="4"/>
+        <line x1="285" y1="34" x2="285" y2="96" stroke="#0f172a" stroke-width="3"/>
+        <line x1="307" y1="48" x2="307" y2="82" stroke="#0f172a" stroke-width="8"/>
+        <line x1="307" y1="65" x2="368" y2="65" stroke="#dc2626" stroke-width="4"/>
+        <line x1="368" y1="48" x2="368" y2="82" stroke="#dc2626" stroke-width="8"/>
+        <line x1="390" y1="34" x2="390" y2="96" stroke="#dc2626" stroke-width="3"/>
+        <line x1="390" y1="65" x2="570" y2="65" stroke="#0f172a" stroke-width="4"/>
+        <text x="270" y="34" font-size="16" font-weight="800" fill="#0f172a">+</text>
+        <text x="303" y="34" font-size="16" font-weight="800" fill="#dc2626">−</text>
+        <text x="364" y="34" font-size="16" font-weight="800" fill="#dc2626">−</text>
+        <text x="396" y="34" font-size="16" font-weight="800" fill="#dc2626">+</text>
+      `;
+    }
+
+    const switchSvg = simState.switchClosed
+      ? `<line x1="570" y1="65" x2="570" y2="140" stroke="#0f172a" stroke-width="4"/>
+         <circle cx="570" cy="146" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="3.5"/>
+         <line x1="570" y1="152" x2="570" y2="194" stroke="#0f172a" stroke-width="4"/>
+         <circle cx="570" cy="200" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="3.5"/>
+         <line x1="570" y1="206" x2="570" y2="275" stroke="#0f172a" stroke-width="4"/>`
+      : `<line x1="570" y1="65" x2="570" y2="140" stroke="#0f172a" stroke-width="4"/>
+         <circle cx="570" cy="146" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="3.5"/>
+         <line x1="575" y1="150" x2="606" y2="188" stroke="#dc2626" stroke-width="4" stroke-linecap="round"/>
+         <circle cx="570" cy="200" r="6" fill="#ffffff" stroke="#0f172a" stroke-width="3.5"/>
+         <line x1="570" y1="206" x2="570" y2="275" stroke="#0f172a" stroke-width="4"/>`;
+
+    let outputSvg = '';
+    if (simState.output === 'lamp') {
+      const fillCol = isWorking ? (effectiveVoltage >= 3 ? '#fde047' : '#fef9c3') : '#ffffff';
+      const glowCls = isWorking ? 'lamp-lit' : '';
+      outputSvg = `
+        <line x1="110" y1="275" x2="306" y2="275" stroke="#0f172a" stroke-width="4"/>
+        <circle cx="340" cy="275" r="34" fill="${fillCol}" stroke="#0f172a" stroke-width="4" class="${glowCls}"/>
+        <line x1="316" y1="251" x2="364" y2="299" stroke="#0f172a" stroke-width="4"/>
+        <line x1="364" y1="251" x2="316" y2="299" stroke="#0f172a" stroke-width="4"/>
+        <line x1="374" y1="275" x2="570" y2="275" stroke="#0f172a" stroke-width="4"/>
+      `;
+    } else {
+      const buzzCls = isWorking ? 'buzzer-active' : '';
+      const waves = isWorking
+        ? `<path d="M 300 218 Q 290 232 300 246" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
+           <path d="M 380 218 Q 390 232 380 246" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>`
+        : '';
+      outputSvg = `
+        <line x1="110" y1="275" x2="322" y2="275" stroke="#0f172a" stroke-width="4"/>
+        <line x1="358" y1="275" x2="570" y2="275" stroke="#0f172a" stroke-width="4"/>
+        <g class="${buzzCls}">
+          <line x1="322" y1="275" x2="322" y2="255" stroke="#0f172a" stroke-width="4"/>
+          <line x1="358" y1="275" x2="358" y2="255" stroke="#0f172a" stroke-width="4"/>
+          <path d="M 304 255 L 376 255 A 36 36 0 0 0 304 255 Z" fill="${isWorking ? '#fef08a' : '#ffffff'}" stroke="#0f172a" stroke-width="4"/>
+          ${waves}
+        </g>
+      `;
+    }
+
+    let symbolFlow = '';
+    if (isWorking) {
+      const topFlow = simState.cells === 1
+        ? `M 110 65 L 326 65 M 350 65 L 570 65`
+        : `M 110 65 L 285 65 M 307 65 L 368 65 M 390 65 L 570 65`;
+      const botFlow = simState.output === 'lamp'
+        ? `M 570 275 L 374 275 M 306 275 L 110 275`
+        : `M 570 275 L 358 275 M 322 275 L 110 275`;
+      symbolFlow = `<path d="${topFlow} M 570 65 L 570 275 ${botFlow} M 110 275 L 110 65" fill="none" stroke="#38bdf8" stroke-width="5" class="${flowClass}" opacity="0.85"/>`;
+    }
+
+    svg.innerHTML = `
+      ${symbolFlow}
+      <line x1="110" y1="65" x2="110" y2="275" stroke="#0f172a" stroke-width="4"/>
+      ${powerSvg}
+      ${switchSvg}
+      ${outputSvg}
+    `;
+  } else {
+    // REAL CLASSROOM KIT PICTURE VIEW (Polarity matched to Symbol View: + on LEFT, − on RIGHT)
+    const wireCol1 = '#dc2626';
+    const wireCol2 = '#2563eb';
+    let powerPic = '';
+    if (simState.cells === 1) {
+      powerPic = `
+        <rect x="292" y="54" width="12" height="22" rx="3" fill="#94a3b8" stroke="#0f172a" stroke-width="2"/>
+        <rect x="304" y="42" width="96" height="46" rx="8" fill="#f59e0b" stroke="#0f172a" stroke-width="3"/>
+        <rect x="372" y="42" width="28" height="46" rx="6" fill="#1e293b"/>
+        <text x="315" y="59" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">+</text>
+        <text x="342" y="70" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">1.5 V</text>
+        <text x="386" y="70" text-anchor="middle" font-size="16" font-weight="800" fill="#ffffff">−</text>
+      `;
+    } else if (!simState.reversed) {
+      powerPic = `
+        <!-- Cell 1 (+ left, − right) -->
+        <rect x="228" y="54" width="11" height="22" rx="3" fill="#94a3b8" stroke="#0f172a" stroke-width="2"/>
+        <rect x="239" y="42" width="94" height="46" rx="8" fill="#f59e0b" stroke="#0f172a" stroke-width="3"/>
+        <rect x="307" y="42" width="26" height="46" rx="6" fill="#1e293b"/>
+        <text x="249" y="58" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">+</text>
+        <text x="276" y="70" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">1.5 V</text>
+        <text x="320" y="70" text-anchor="middle" font-size="15" font-weight="800" fill="#ffffff">−</text>
+        <!-- Cell 2 (+ left, − right) -->
+        <rect x="348" y="54" width="11" height="22" rx="3" fill="#94a3b8" stroke="#0f172a" stroke-width="2"/>
+        <rect x="359" y="42" width="94" height="46" rx="8" fill="#f59e0b" stroke="#0f172a" stroke-width="3"/>
+        <rect x="427" y="42" width="26" height="46" rx="6" fill="#1e293b"/>
+        <text x="369" y="58" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">+</text>
+        <text x="396" y="70" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">1.5 V</text>
+        <text x="440" y="70" text-anchor="middle" font-size="15" font-weight="800" fill="#ffffff">−</text>
+        <line x1="333" y1="65" x2="348" y2="65" stroke="#0f172a" stroke-width="5"/>
+      `;
+    } else {
+      // Cell 2 flipped backwards (− faces −, matching Symbol View!)
+      powerPic = `
+        <rect x="228" y="54" width="11" height="22" rx="3" fill="#94a3b8" stroke="#0f172a" stroke-width="2"/>
+        <rect x="239" y="42" width="94" height="46" rx="8" fill="#f59e0b" stroke="#0f172a" stroke-width="3"/>
+        <rect x="307" y="42" width="26" height="46" rx="6" fill="#1e293b"/>
+        <text x="249" y="58" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">+</text>
+        <text x="276" y="70" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">1.5 V</text>
+        <text x="320" y="70" text-anchor="middle" font-size="15" font-weight="800" fill="#ffffff">−</text>
+        <!-- Reversed Cell 2 (− on left facing Cell 1's −, + nub on right) -->
+        <rect x="348" y="42" width="94" height="46" rx="8" fill="#fca5a5" stroke="#dc2626" stroke-width="3"/>
+        <rect x="348" y="42" width="26" height="46" rx="6" fill="#991b1b"/>
+        <rect x="442" y="54" width="11" height="22" rx="3" fill="#fca5a5" stroke="#dc2626" stroke-width="2"/>
+        <text x="361" y="70" text-anchor="middle" font-size="15" font-weight="800" fill="#ffffff">−</text>
+        <text x="408" y="70" text-anchor="middle" font-size="12" font-weight="800" fill="#7f1d1d">FLIPPED!</text>
+        <text x="434" y="58" text-anchor="middle" font-size="13" font-weight="800" fill="#7f1d1d">+</text>
+        <line x1="333" y1="65" x2="348" y2="65" stroke="#dc2626" stroke-width="5"/>
+      `;
+    }
+
+    const switchPic = `
+      <rect x="536" y="132" width="68" height="82" rx="12" fill="#e2e8f0" stroke="#334155" stroke-width="3"/>
+      <circle cx="570" cy="148" r="7" fill="#f59e0b" stroke="#0f172a" stroke-width="2.5"/>
+      <circle cx="570" cy="198" r="7" fill="#f59e0b" stroke="#0f172a" stroke-width="2.5"/>
+      ${simState.switchClosed
+        ? `<line x1="570" y1="148" x2="570" y2="198" stroke="#16a34a" stroke-width="9" stroke-linecap="round"/>`
+        : `<line x1="570" y1="148" x2="612" y2="188" stroke="#dc2626" stroke-width="9" stroke-linecap="round"/>`
+      }
+    `;
+
+    let outputPic = '';
+    if (simState.output === 'lamp') {
+      const rays = isWorking
+        ? Array.from({length: 8}, (_, i) => {
+            const a = (i * 45) * Math.PI / 180;
+            const r1 = 38, r2 = effectiveVoltage >= 3 ? 58 : 48;
+            return `<line x1="${340 + Math.cos(a)*r1}" y1="${255 + Math.sin(a)*r1}" x2="${340 + Math.cos(a)*r2}" y2="${255 + Math.sin(a)*r2}" stroke="#eab308" stroke-width="4" stroke-linecap="round"/>`;
+          }).join('')
+        : '';
+      outputPic = `
+        ${rays}
+        <circle cx="340" cy="255" r="32" fill="${isWorking ? (effectiveVoltage >= 3 ? '#fde047' : '#fef08a') : '#f1f5f9'}" stroke="#475569" stroke-width="3" class="${isWorking ? 'lamp-lit' : ''}"/>
+        <path d="M 328 270 L 334 246 L 346 246 L 352 270" fill="none" stroke="${isWorking ? '#b45309' : '#94a3b8'}" stroke-width="3"/>
+        <rect x="320" y="280" width="40" height="22" rx="5" fill="#334155" stroke="#0f172a" stroke-width="2.5"/>
+      `;
+    } else {
+      const buzzCls = isWorking ? 'buzzer-active' : '';
+      outputPic = `
+        <g class="${buzzCls}">
+          <rect x="305" y="232" width="70" height="58" rx="14" fill="#1e293b" stroke="#0f172a" stroke-width="3"/>
+          <circle cx="340" cy="261" r="17" fill="#475569" stroke="#94a3b8" stroke-width="2.5"/>
+          <circle cx="340" cy="261" r="6" fill="#0f172a"/>
+          ${isWorking ? `<text x="274" y="266" font-size="22" font-weight="800" fill="#f59e0b">((</text><text x="384" y="266" font-size="22" font-weight="800" fill="#f59e0b">))</text>` : ''}
+        </g>
+      `;
+    }
+
+    svg.innerHTML = `
+      <!-- Insulated Classroom Wires -->
+      <path d="M 292 65 L 110 65 L 110 275 L 320 275" fill="none" stroke="${wireCol1}" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M 390 65 L 570 65 L 570 140" fill="none" stroke="${wireCol2}" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M 570 206 L 570 275 L 360 275" fill="none" stroke="#16a34a" stroke-width="7" stroke-linejoin="round"/>
+      ${electronOverlay}
+      ${powerPic}
+      ${switchPic}
+      ${outputPic}
+    `;
+  }
+}
+
+// =========================================================================
+// STATION 5: SUCCESS CRITERIA CHECKLIST
+// =========================================================================
+const scMetSet = new Set();
+function revealSc(n) {
+  document.getElementById('scAns' + n).classList.remove('hidden');
+  playTone(540, 0.1, 'triangle', 0.1);
+}
+function toggleScMet(n) {
+  const btn = document.getElementById('scMet' + n);
+  if (scMetSet.has(n)) {
+    scMetSet.delete(n);
+    btn.textContent = '☐ Mark Met';
+    btn.className = 'flex-1 py-2 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-bold text-sm';
+  } else {
+    scMetSet.add(n);
+    btn.textContent = '✅ Met!';
+    btn.className = 'flex-1 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm shadow';
+    playTone(660, 0.1, 'triangle', 0.12);
+  }
+  document.getElementById('scProgressBadge').textContent = `${scMetSet.size} / 3 Met`;
+  if (scMetSet.size === 3) {
+    playSuccessChime();
+    launchConfetti();
+  }
+}
+
+// =========================================================================
+// STATION 6: QUICKFIRE CHECKPOINT CHALLENGE (8 QUESTIONS)
+// =========================================================================
+const qfQuestions = [
+  { visual: officialSymbolSvg('lamp', 180, 90), q: 'Which official Cambridge component is shown here?', a: 'A Lamp (Bulb)' },
+  { visual: officialSymbolSvg('buzzer', 180, 90), q: 'Name this official Cambridge circuit symbol!', a: 'A Buzzer' },
+  { visual: officialSymbolSvg('open_switch', 180, 90), q: 'Is this switch OPEN or CLOSED? Will electricity flow?', a: 'OPEN switch — electricity will NOT flow (there is a gap).' },
+  { visual: officialSymbolSvg('battery', 180, 90), q: 'Each cell is 1.5 V. What is the total voltage of this 2-cell battery?', a: '3 V (1.5 V + 1.5 V = 3 V)' },
+  { visual: officialSymbolSvg('cell', 180, 90), q: 'In a cell symbol, does the TALL THIN line show positive (+) or negative (−)?', a: 'Positive (+) terminal!' },
+  { visual: '', q: 'A pupil leaves a small gap at the corner of their circuit diagram. What happens?', a: 'The circuit is incomplete — electricity cannot flow across the gap!' },
+  { visual: '', q: 'Two 1.5 V cells are placed in a holder facing + to +. Will the lamp light?', a: 'No! The cells cancel each other out (0 V). Cells must face + to −.' },
+  { visual: officialSymbolSvg('conventional_symbol', 180, 90), q: 'Why do scientists worldwide use conventional circuit symbols?', a: 'They are quick to draw, clear, and understood in every country and language!' }
+];
+let qfIndex = 0;
+let qfTimerInterval = null;
+let qfSeconds = 15;
+
+function renderQf() {
+  const item = qfQuestions[qfIndex];
+  document.getElementById('qfCounter').textContent = `Question ${qfIndex + 1} of ${qfQuestions.length}`;
+  document.getElementById('qfVisual').innerHTML = item.visual;
+  document.getElementById('qfQuestion').textContent = item.q;
+  document.getElementById('qfAnswerText').textContent = item.a;
+  document.getElementById('qfAnswerBox').classList.add('hidden');
+  document.getElementById('boardsUpBanner').classList.add('hidden');
+  clearInterval(qfTimerInterval);
+  qfSeconds = 15;
+  document.getElementById('qfTimerDisplay').textContent = '15s';
+}
+
+function startQfTimer() {
+  clearInterval(qfTimerInterval);
+  qfSeconds = 15;
+  document.getElementById('boardsUpBanner').classList.add('hidden');
+  document.getElementById('qfTimerDisplay').textContent = qfSeconds + 's';
+  qfTimerInterval = setInterval(() => {
+    qfSeconds--;
+    document.getElementById('qfTimerDisplay').textContent = qfSeconds + 's';
+    if (qfSeconds <= 3 && qfSeconds > 0) playTone(520, 0.08, 'sine', 0.1);
+    if (qfSeconds <= 0) {
+      clearInterval(qfTimerInterval);
+      document.getElementById('boardsUpBanner').classList.remove('hidden');
+      playAlertHorn();
+    }
+  }, 1000);
+}
+
+function revealQfAnswer() {
+  document.getElementById('qfAnswerBox').classList.remove('hidden');
+  playSuccessChime();
+}
+function nextQf() {
+  qfIndex = (qfIndex + 1) % qfQuestions.length;
+  renderQf();
+}
+function prevQf() {
+  qfIndex = (qfIndex - 1 + qfQuestions.length) % qfQuestions.length;
+  renderQf();
+}
+
+// =========================================================================
+// DAVID'S BOARD WHITEBOARD (W) — PROPER getBoundingClientRect() RESIZE
+// =========================================================================
+let wbOpen = false;
+let wbDrawing = false;
+let wbColor = '#0f172a';
+let wbCtx = null;
+
+function resizeWhiteboard() {
+  const wrap = document.getElementById('wbCanvasWrap');
+  const canvas = document.getElementById('wbCanvas');
+  const rect = wrap.getBoundingClientRect();
+  if (rect.width === 0 || rect.height === 0) return;
+  const imgData = wbCtx ? canvas.toDataURL() : null;
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+  wbCtx = canvas.getContext('2d');
+  wbCtx.lineCap = 'round';
+  wbCtx.lineJoin = 'round';
+  if (imgData) {
+    const img = new Image();
+    img.onload = () => wbCtx.drawImage(img, 0, 0);
+    img.src = imgData;
+  }
+}
+
+function toggleWhiteboard() {
+  const overlay = document.getElementById('whiteboardOverlay');
+  wbOpen = !wbOpen;
+  overlay.classList.toggle('hidden', !wbOpen);
+  overlay.classList.toggle('flex', wbOpen);
+  if (wbOpen) {
+    requestAnimationFrame(resizeWhiteboard);
+  }
+}
+
+function setPenColor(c) { wbColor = c; }
+function clearWhiteboard() {
+  const canvas = document.getElementById('wbCanvas');
+  if (wbCtx) wbCtx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function initWhiteboardEvents() {
+  const canvas = document.getElementById('wbCanvas');
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  }
+  function start(e) {
+    wbDrawing = true;
+    const p = getPos(e);
+    wbCtx.beginPath();
+    wbCtx.moveTo(p.x, p.y);
+  }
+  function move(e) {
+    if (!wbDrawing) return;
+    e.preventDefault();
+    const p = getPos(e);
+    wbCtx.strokeStyle = wbColor;
+    wbCtx.lineWidth = wbColor === '#ffffff' ? 24 : 4;
+    wbCtx.lineTo(p.x, p.y);
+    wbCtx.stroke();
+  }
+  function end() { wbDrawing = false; }
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', end);
+  canvas.addEventListener('touchstart', start, { passive: false });
+  canvas.addEventListener('touchmove', move, { passive: false });
+  window.addEventListener('touchend', end);
+  window.addEventListener('resize', () => { if (wbOpen) resizeWhiteboard(); });
+}
+
+// =========================================================================
+// TEACHER DRAWER (T)
+// =========================================================================
+let drawerOpen = false;
+function toggleTeacherDrawer() {
+  drawerOpen = !drawerOpen;
+  const d = document.getElementById('teacherDrawer');
+  d.classList.toggle('translate-x-full', !drawerOpen);
+}
+
+// =========================================================================
+// KEYBOARD SHORTCUTS (GUARDED WHEN MODALS ARE OPEN)
+// =========================================================================
+function anyModalOpen() {
+  const vm = !document.getElementById('vocabModal').classList.contains('hidden');
+  const gm = !document.getElementById('giantModal').classList.contains('hidden');
+  return vm || gm || wbOpen || drawerOpen;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeVocabModal();
+    closeGiantProjection();
+    if (wbOpen) toggleWhiteboard();
+    if (drawerOpen) toggleTeacherDrawer();
+    const ido = document.getElementById('idoContainer');
+    if (ido.classList.contains('fullscreen-ido')) toggleFullscreenIdo();
+    return;
+  }
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  const k = e.key.toLowerCase();
+  if (k === 'w') { toggleWhiteboard(); return; }
+  if (k === 't') { toggleTeacherDrawer(); return; }
+  if (k === 'm') { toggleMute(); return; }
+  if (anyModalOpen()) return;
+  if (e.key === 'ArrowRight') goStation(currentStation + 1);
+  if (e.key === 'ArrowLeft') goStation(currentStation - 1);
+});
+
+// =========================================================================
+// INITIALISE APP
+// =========================================================================
+document.addEventListener('DOMContentLoaded', () => {
+  renderKitChecklist();
+  renderVocabGrid();
+  setMorphStep(0);
+  renderSim();
+  renderQf();
+  initWhiteboardEvents();
+  goStation(0);
+});
+</script>
+</body>
+</html>

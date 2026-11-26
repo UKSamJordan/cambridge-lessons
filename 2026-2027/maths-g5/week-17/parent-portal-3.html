@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parent Portal 3 — Hanoi Eco-Park Architecture Project (Stage 6 Maths)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap');
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background-color: #faf7f0;
+      background-image:
+        linear-gradient(to right, rgba(6, 78, 59, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(6, 78, 59, 0.04) 1px, transparent 1px);
+      background-size: 26px 26px;
+      color: #1c2826;
+    }
+
+    .font-serif-studio { font-family: 'DM Serif Display', Georgia, serif; }
+    .font-mono-tech { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+    .hero-studio {
+      background: linear-gradient(135deg, #052e2b 0%, #064e3b 60%, #047857 100%);
+    }
+
+    .lang-vn { display: none; }
+    body.vn-mode .lang-en { display: none; }
+    body.vn-mode .lang-vn { display: inline; }
+    body.vn-mode .lang-vn-block { display: block; }
+    body.vn-mode .lang-en-block { display: none; }
+    .lang-vn-block { display: none; }
+    .lang-en-block { display: block; }
+
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-16">
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- STICKY BILINGUAL TOP BAR -->
+  <header class="sticky top-0 z-50 bg-[#052e2b]/95 backdrop-blur-md text-white border-b-2 border-amber-400 shadow-lg">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-amber-400 text-emerald-950 font-extrabold flex items-center justify-center text-lg shadow">🌿</div>
+        <div>
+          <div class="text-[11px] font-extrabold uppercase tracking-wider text-amber-300">
+            <span class="lang-en">Grade 5 Maths • Week 17 Lesson 3</span>
+            <span class="lang-vn">Toán Lớp 5 • Tuần 17 Bài 3</span>
+          </div>
+          <h1 class="text-sm sm:text-base font-extrabold leading-tight">
+            <span class="lang-en">Parent Project Showcase Portal</span>
+            <span class="lang-vn">Cổng Thông Tin Dự Án Cho Phụ Huynh</span>
+          </h1>
+        </div>
+      </div>
+
+      <!-- Sticky EN / VN Toggle -->
+      <button id="lang-toggle-btn" onclick="toggleLanguage()" class="px-3.5 py-2 rounded-full bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-xs sm:text-sm shadow transition flex items-center gap-1.5">
+        <span id="lang-toggle-label">🇻🇳 Chuyển sang Tiếng Việt</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 pt-6 space-y-7">
+
+    <!-- HERO SHOWCASE BANNER -->
+    <section class="hero-studio rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-400/80 shadow-xl">
+      <div class="inline-block px-3 py-1 rounded-full bg-amber-400/20 border border-amber-300/60 text-amber-200 text-xs font-extrabold uppercase tracking-wider mb-3">
+        <span class="lang-en">Special Team Architecture Project • Cambridge 6Gg.03</span>
+        <span class="lang-vn">Dự Án Kiến Trúc Theo Nhóm Đặc Biệt • Cambridge 6Gg.03</span>
+      </div>
+      <h2 class="font-serif-studio text-3xl sm:text-4xl leading-tight">
+        <span class="lang-en">The Hanoi Eco-Park Blueprint Challenge (120 m²)</span>
+        <span class="lang-vn">Thử Thách Bản Thiết Kế Công Viên Sinh Thái Hà Nội (120 m²)</span>
+      </h2>
+      <p class="mt-3 text-emerald-100 text-sm sm:text-base leading-relaxed">
+        <span class="lang-en">Today in maths, your child stepped into a real landscape architecture studio! Working in a 4-role team, pupils designed a <strong>12 m × 10 m (120 m²)</strong> Hanoi Eco-Park using rectangles and right-angled triangles, kept total building costs under <strong>600 Eco-Credits</strong>, built a team poster, and justified their choices in a 60-second pitch!</span>
+        <span class="lang-vn">Hôm nay trong giờ Toán, con đã hóa thân thành kiến trúc sư cảnh quan thực thụ! Làm việc theo nhóm 4 vai trò, các con thiết kế Công viên Sinh thái Hà Nội rộng <strong>12 m × 10 m (120 m²)</strong> bằng hình chữ nhật và tam giác vuông, giữ tổng chi phí dưới <strong>600 Tín chỉ Sinh thái</strong>, hoàn thiện áp phích nhóm và thuyết trình bảo vệ ý tưởng trong 60 giây!</span>
+      </p>
+      <div class="grid grid-cols-3 gap-2.5 mt-5">
+        <div class="bg-emerald-950/70 border border-emerald-600 rounded-2xl p-3 text-center">
+          <div class="font-mono-tech text-xl font-extrabold text-amber-300">b × h</div>
+          <div class="text-xs text-emerald-100 mt-0.5"><span class="lang-en">Rectangle Area</span><span class="lang-vn">DT Hình Chữ Nhật</span></div>
+        </div>
+        <div class="bg-emerald-950/70 border border-emerald-600 rounded-2xl p-3 text-center">
+          <div class="font-mono-tech text-xl font-extrabold text-amber-300">(b × h) ÷ 2</div>
+          <div class="text-xs text-emerald-100 mt-0.5"><span class="lang-en">90° Triangle Area</span><span class="lang-vn">DT Tam Giác Vuông</span></div>
+        </div>
+        <div class="bg-emerald-950/70 border border-emerald-600 rounded-2xl p-3 text-center">
+          <div class="font-mono-tech text-xl font-extrabold text-emerald-300">≤ 600 cr</div>
+          <div class="text-xs text-emerald-100 mt-0.5"><span class="lang-en">Eco-Park Budget</span><span class="lang-vn">Ngân Sách Công Viên</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE MODEL A: LIVE MINI ECO-PARK AREA & BUDGET SIMULATOR -->
+    <section class="bg-[#fffdf8] border-2 border-emerald-900/20 rounded-3xl p-5 sm:p-6 shadow-md space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-stone-200 pb-3">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">
+            <span class="lang-en">Interactive Family Lab 1 • Explore Together!</span>
+            <span class="lang-vn">Phòng Thí Nghiệm Gia Đình 1 • Cùng Khám Phá!</span>
+          </span>
+          <h3 class="font-serif-studio text-2xl sm:text-3xl text-emerald-950">
+            <span class="lang-en">🗺️ Mini Eco-Park Area &amp; Budget Simulator</span>
+            <span class="lang-vn">🗺️ Mô Phỏng Diện Tích &amp; Ngân Sách Công Viên</span>
+          </h3>
+        </div>
+        <span id="sim-status-pill" class="px-3.5 py-1.5 rounded-full text-xs font-extrabold"></span>
+      </div>
+
+      <p class="text-sm text-slate-600">
+        <span class="lang-en">Slide the dimensions below to resize the rectangular Sports Court, triangular Koi Pond, and triangular Flowerbed inside a <strong>120 m²</strong> park. Any leftover area automatically becomes budget-friendly <strong>Grass Lawn (3 cr/m²)</strong>!</span>
+        <span class="lang-vn">Kéo các thanh trượt bên dưới để điều chỉnh kích thước Sân Thể Thao (hình chữ nhật), Hồ Cá Koi (tam giác vuông) và Vườn Hoa (tam giác vuông) trong công viên <strong>120 m²</strong>. Phần diện tích còn lại sẽ tự động là <strong>Thảm Cỏ tiết kiệm (3 tín chỉ/m²)</strong>!</span>
+      </p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+        <!-- Sliders -->
+        <div class="lg:col-span-5 space-y-3">
+          <!-- Sports Court -->
+          <div class="p-3.5 rounded-2xl bg-rose-50 border-2 border-rose-200 space-y-2">
+            <div class="flex justify-between items-center text-xs font-extrabold text-rose-950">
+              <span>🏀 <span class="lang-en">Sports Court (Rect • 8 cr/m²)</span><span class="lang-vn">Sân Thể Thao (HCN • 8 tc/m²)</span></span>
+              <span id="sim-sports-out" class="font-mono-tech text-rose-700">24 m² • 192 cr</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700">
+              <label>b: <span id="v-sb" class="font-mono-tech">6</span> m <input id="s-sb" type="range" min="4" max="8" value="6" oninput="updateParkSim()" class="w-full accent-rose-600" /></label>
+              <label>h: <span id="v-sh" class="font-mono-tech">4</span> m <input id="s-sh" type="range" min="3" max="6" value="4" oninput="updateParkSim()" class="w-full accent-rose-600" /></label>
+            </div>
+          </div>
+
+          <!-- Koi Pond -->
+          <div class="p-3.5 rounded-2xl bg-cyan-50 border-2 border-cyan-200 space-y-2">
+            <div class="flex justify-between items-center text-xs font-extrabold text-cyan-950">
+              <span>🐟 <span class="lang-en">Koi Pond (90° △ • 6 cr/m²)</span><span class="lang-vn">Hồ Cá Koi (Tam giác vuông • 6 tc/m²)</span></span>
+              <span id="sim-pond-out" class="font-mono-tech text-cyan-800">18 m² • 108 cr</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700">
+              <label>b: <span id="v-pb" class="font-mono-tech">6</span> m <input id="s-pb" type="range" min="4" max="8" value="6" oninput="updateParkSim()" class="w-full accent-cyan-600" /></label>
+              <label>h: <span id="v-ph" class="font-mono-tech">6</span> m <input id="s-ph" type="range" min="4" max="6" value="6" oninput="updateParkSim()" class="w-full accent-cyan-600" /></label>
+            </div>
+          </div>
+
+          <!-- Flowerbed -->
+          <div class="p-3.5 rounded-2xl bg-amber-50 border-2 border-amber-200 space-y-2">
+            <div class="flex justify-between items-center text-xs font-extrabold text-amber-950">
+              <span>🌼 <span class="lang-en">Flowerbed (90° △ • 4 cr/m²)</span><span class="lang-vn">Vườn Hoa (Tam giác vuông • 4 tc/m²)</span></span>
+              <span id="sim-flower-out" class="font-mono-tech text-amber-800">12 m² • 48 cr</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700">
+              <label>b: <span id="v-fb" class="font-mono-tech">6</span> m <input id="s-fb" type="range" min="4" max="6" value="6" oninput="updateParkSim()" class="w-full accent-amber-600" /></label>
+              <label>h: <span id="v-fh" class="font-mono-tech">4</span> m <input id="s-fh" type="range" min="3" max="6" value="4" oninput="updateParkSim()" class="w-full accent-amber-600" /></label>
+            </div>
+          </div>
+
+          <!-- Live Grass Lawn & Total Budget Bar -->
+          <div class="p-4 rounded-2xl bg-emerald-950 text-white space-y-2">
+            <div class="flex justify-between text-xs font-bold text-emerald-200">
+              <span>🌱 <span class="lang-en">Remaining Grass Lawn (3 cr/m²):</span><span class="lang-vn">Thảm Cỏ Còn Lại (3 tc/m²):</span></span>
+              <span id="sim-grass-out" class="font-mono-tech text-white">66 m² • 198 cr</span>
+            </div>
+            <div class="flex justify-between items-baseline pt-1 border-t border-emerald-800">
+              <span class="text-xs font-extrabold uppercase text-amber-300">
+                <span class="lang-en">Total Budget (Cap: 600 cr)</span>
+                <span class="lang-vn">Tổng Ngân Sách (Tối đa 600 tc)</span>
+              </span>
+              <span id="sim-total-cost" class="font-mono-tech text-2xl font-extrabold text-amber-300">546 cr</span>
+            </div>
+            <div class="w-full h-3 bg-emerald-900 rounded-full overflow-hidden">
+              <div id="sim-budget-bar" class="h-full bg-emerald-400 transition-all duration-300" style="width: 91%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live SVG Visual Park Map -->
+        <div class="lg:col-span-7 bg-[#062e26] p-4 rounded-2xl border-4 border-amber-400/70">
+          <div class="text-xs font-mono-tech text-amber-200 mb-2 flex justify-between">
+            <span>LIVE ECO-PARK MAP (120 m²)</span>
+            <span id="sim-area-check">120 / 120 m² ✓</span>
+          </div>
+          <svg id="sim-svg" viewBox="0 0 480 340" class="w-full h-auto bg-[#10b981]/25 rounded-xl border border-emerald-400/50"></svg>
+          <div id="sim-formula-strip" class="mt-2.5 text-xs font-mono-tech text-emerald-100 text-center bg-emerald-950/70 rounded-xl py-2 px-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE MODEL B: 4-ROLE ARCHITECT EXPLORER -->
+    <section class="bg-[#fffdf8] border-2 border-emerald-900/20 rounded-3xl p-5 sm:p-6 shadow-md space-y-4">
+      <div>
+        <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">
+          <span class="lang-en">Interactive Family Lab 2 • Ask Your Child!</span>
+          <span class="lang-vn">Hoạt Động Tương Tác 2 • Hỏi Con Tối Nay!</span>
+        </span>
+        <h3 class="font-serif-studio text-2xl sm:text-3xl text-emerald-950">
+          <span class="lang-en">👷‍♂️ Which of the 4 Architect Roles Did Your Child Play Today?</span>
+          <span class="lang-vn">👷‍♂️ Con Đảm Nhận Vai Trò Kiến Trúc Sư Nào Hôm Nay?</span>
+        </h3>
+        <p class="text-sm text-slate-600 mt-1">
+          <span class="lang-en">Tap a role badge below to discover what your child was responsible for and a fun question to ask them tonight!</span>
+          <span class="lang-vn">Chạm vào một vai trò bên dưới để xem nhiệm vụ của con trong lớp và câu hỏi gợi mở thú vị cho bữa tối hôm nay!</span>
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="role-tabs">
+        <button onclick="selectParentRole(0)" data-r="0" class="pr-btn p-3 rounded-2xl border-2 text-center font-extrabold text-xs sm:text-sm transition">📐 <span class="lang-en">Chief Architect</span><span class="lang-vn">Kiến Trúc Sư Trưởng</span></button>
+        <button onclick="selectParentRole(1)" data-r="1" class="pr-btn p-3 rounded-2xl border-2 text-center font-extrabold text-xs sm:text-sm transition">🧮 <span class="lang-en">Area Accountant</span><span class="lang-vn">Kế Toán Diện Tích</span></button>
+        <button onclick="selectParentRole(2)" data-r="2" class="pr-btn p-3 rounded-2xl border-2 text-center font-extrabold text-xs sm:text-sm transition">💰 <span class="lang-en">Budget Director</span><span class="lang-vn">Giám Đốc Ngân Sách</span></button>
+        <button onclick="selectParentRole(3)" data-r="3" class="pr-btn p-3 rounded-2xl border-2 text-center font-extrabold text-xs sm:text-sm transition">✍️ <span class="lang-en">Reasoning Writer</span><span class="lang-vn">Trưởng Nhóm Thuyết Trình</span></button>
+      </div>
+
+      <div id="role-detail-card" class="rounded-2xl bg-emerald-50 border-2 border-emerald-300 p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Populated dynamically -->
+      </div>
+    </section>
+
+    <!-- 8 VISUAL SVG BILINGUAL VOCABULARY CARDS WITH AUDIO -->
+    <section class="bg-[#fffdf8] border-2 border-emerald-900/20 rounded-3xl p-5 sm:p-6 shadow-md space-y-4">
+      <div>
+        <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">
+          <span class="lang-en">Key Studio Vocabulary • Listen &amp; Practise Together</span>
+          <span class="lang-vn">Từ Vựng Chủ Đề • Nghe Và Luyện Tập Cùng Con</span>
+        </span>
+        <h3 class="font-serif-studio text-2xl sm:text-3xl text-emerald-950">
+          <span class="lang-en">📖 8 Bilingual Architecture &amp; Maths Words</span>
+          <span class="lang-vn">📖 8 Thuật Ngữ Kiến Trúc &amp; Toán Học Song Ngữ</span>
+        </h3>
+      </div>
+
+      <div id="portal-vocab-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- 3-TIER DINNER TABLE TALKS -->
+    <section class="bg-[#fffdf8] border-2 border-emerald-900/20 rounded-3xl p-5 sm:p-6 shadow-md space-y-4">
+      <div>
+        <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">
+          <span class="lang-en">5-Minute Family Conversation</span>
+          <span class="lang-vn">Trò Chuyện 5 Phút Trên Bàn Ăn</span>
+        </span>
+        <h3 class="font-serif-studio text-2xl sm:text-3xl text-emerald-950">
+          <span class="lang-en">🍽️ 3-Tier Dinner Table Talks</span>
+          <span class="lang-vn">🍽️ 3 Cấp Độ Thảo Luận Cùng Gia Đình</span>
+        </h3>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="rounded-2xl bg-emerald-50 border-2 border-emerald-300 p-4 space-y-2">
+          <span class="px-2.5 py-0.5 rounded-full bg-emerald-700 text-white text-xs font-extrabold">🟢 <span class="lang-en">Tier 1 • Starter</span><span class="lang-vn">Cấp 1 • Khởi Động</span></span>
+          <h4 class="font-extrabold text-emerald-950 text-base">
+            <span class="lang-en">Measure Your Dream Balcony!</span>
+            <span class="lang-vn">Đo Ban Công Mơ Ước!</span>
+          </h4>
+          <p class="text-xs sm:text-sm text-slate-700">
+            <span class="lang-en">"If our balcony or bedroom were 4 m × 3 m (12 m²), how many square metres would a triangular plant corner take if its base is 2 m and height is 2 m?" (Answer: (2 × 2) ÷ 2 = 2 m²!)</span>
+            <span class="lang-vn">"Nếu ban công hoặc phòng ngủ nhà mình rộng 4 m × 3 m (12 m²), một góc trồng cây hình tam giác vuông đáy 2 m và cao 2 m sẽ chiếm bao nhiêu mét vuông?" (Đáp án: (2 × 2) ÷ 2 = 2 m²!)</span>
+          </p>
+        </div>
+        <div class="rounded-2xl bg-amber-50 border-2 border-amber-300 p-4 space-y-2">
+          <span class="px-2.5 py-0.5 rounded-full bg-amber-600 text-white text-xs font-extrabold">🟠 <span class="lang-en">Tier 2 • Builder</span><span class="lang-vn">Cấp 2 • Vận Dụng</span></span>
+          <h4 class="font-extrabold text-amber-950 text-base">
+            <span class="lang-en">Smart Family Budget Trade-Off</span>
+            <span class="lang-vn">Lựa Chọn Ngân Sách Thông Minh</span>
+          </h4>
+          <p class="text-xs sm:text-sm text-slate-700">
+            <span class="lang-en">"Tell me about one swap your team made today to save Eco-Credits! Why is grass (3 cr/m²) helpful when you also want a big sports court (8 cr/m²)?"</span>
+            <span class="lang-vn">"Kể cho bố mẹ nghe một lần nhóm con đổi loại mặt sân để tiết kiệm Tín chỉ nhé! Vì sao thảm cỏ (3 tc/m²) lại giúp ích khi nhóm muốn làm sân thể thao lớn (8 tc/m²)?"</span>
+          </p>
+        </div>
+        <div class="rounded-2xl bg-teal-50 border-2 border-teal-300 p-4 space-y-2">
+          <span class="px-2.5 py-0.5 rounded-full bg-teal-700 text-white text-xs font-extrabold">🟣 <span class="lang-en">Tier 3 • Deep Thinker</span><span class="lang-vn">Cấp 3 • Tư Duy Sâu</span></span>
+          <h4 class="font-extrabold text-teal-950 text-base">
+            <span class="lang-en">Why Divide Triangles by 2?</span>
+            <span class="lang-vn">Vì Sao Tam Giác Phải Chia 2?</span>
+          </h4>
+          <p class="text-xs sm:text-sm text-slate-700">
+            <span class="lang-en">"Show me using a folded napkin why a right-angled triangle is always half of a rectangle — and explain how your 4-role team checked each other's maths!"</span>
+            <span class="lang-vn">"Con hãy gấp đôi một chiếc khăn giấy để giải thích cho bố mẹ vì sao tam giác vuông luôn bằng một nửa hình chữ nhật — và kể cách nhóm 4 bạn kiểm tra chéo bài của nhau nhé!"</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAMIFIED 4-QUESTION INTERACTIVE QUIZ WITH CONFETTI -->
+    <section class="hero-studio rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-400 shadow-xl space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase">
+            <span class="lang-en">3-Minute Family Home Check</span>
+            <span class="lang-vn">Kiểm Tra Nhanh 3 Phút Tại Nhà</span>
+          </span>
+          <h3 class="font-serif-studio text-2xl sm:text-3xl mt-1">
+            <span class="lang-en">🏆 Eco-Park Junior Architect Quiz (4 Questions)</span>
+            <span class="lang-vn">🏆 Thử Thách Kiến Trúc Sư Nhí (4 Câu Hỏi)</span>
+          </h3>
+        </div>
+        <div class="px-4 py-2 rounded-2xl bg-emerald-950 border border-amber-400 font-mono-tech font-extrabold text-amber-300">
+          <span class="lang-en">Score:</span><span class="lang-vn">Điểm:</span> <span id="quiz-score">0</span> / 4
+        </div>
+      </div>
+
+      <div id="quiz-container" class="space-y-4">
+        <!-- Populated by JS -->
+      </div>
+
+      <div id="quiz-final-banner" class="hidden rounded-2xl bg-amber-400 text-emerald-950 p-4 text-center font-extrabold text-base sm:text-lg shadow-lg">
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let isVn = false;
+
+    function toggleLanguage() {
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      isVn = !isVn;
+      document.body.classList.toggle('vn-mode', isVn);
+      document.getElementById('lang-toggle-label').textContent = isVn
+        ? '🇬🇧 Switch to English'
+        : '🇻🇳 Chuyển sang Tiếng Việt';
+      renderParentRole(activeRoleIdx);
+      updateParkSim();
+      renderQuiz();
+    }
+
+    // =========================================================================
+    // MODEL A: LIVE ECO-PARK AREA & BUDGET SIMULATOR
+    // =========================================================================
+    function updateParkSim() {
+      const sb = Number(document.getElementById('s-sb').value);
+      const sh = Number(document.getElementById('s-sh').value);
+      const pb = Number(document.getElementById('s-pb').value);
+      const ph = Number(document.getElementById('s-ph').value);
+      const fb = Number(document.getElementById('s-fb').value);
+      const fh = Number(document.getElementById('s-fh').value);
+
+      document.getElementById('v-sb').textContent = sb;
+      document.getElementById('v-sh').textContent = sh;
+      document.getElementById('v-pb').textContent = pb;
+      document.getElementById('v-ph').textContent = ph;
+      document.getElementById('v-fb').textContent = fb;
+      document.getElementById('v-fh').textContent = fh;
+
+      const sArea = sb * sh, sCost = sArea * 8;
+      const pArea = (pb * ph) / 2, pCost = pArea * 6;
+      const fArea = (fb * fh) / 2, fCost = fArea * 4;
+      const grassArea = Math.max(0, 120 - sArea - pArea - fArea);
+      const grassCost = grassArea * 3;
+      const totalArea = sArea + pArea + fArea + grassArea;
+      const totalCost = sCost + pCost + fCost + grassCost;
+
+      const crLbl = isVn ? 'tc' : 'cr';
+      document.getElementById('sim-sports-out').textContent = `${sArea} m² • ${sCost} ${crLbl}`;
+      document.getElementById('sim-pond-out').textContent = `${pArea} m² • ${pCost} ${crLbl}`;
+      document.getElementById('sim-flower-out').textContent = `${fArea} m² • ${fCost} ${crLbl}`;
+      document.getElementById('sim-grass-out').textContent = `${grassArea} m² • ${grassCost} ${crLbl}`;
+      document.getElementById('sim-total-cost').textContent = `${totalCost} ${crLbl}`;
+
+      const bar = document.getElementById('sim-budget-bar');
+      bar.style.width = Math.min(100, (totalCost / 600) * 100) + '%';
+      bar.className = totalCost <= 600 ? 'h-full bg-emerald-400 transition-all duration-300' : 'h-full bg-rose-500 transition-all duration-300';
+
+      const pill = document.getElementById('sim-status-pill');
+      if (totalCost <= 600 && sArea >= 24 && pArea >= 15 && fArea >= 12) {
+        pill.className = 'px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-900 border border-emerald-400';
+        pill.textContent = isVn ? `✓ Hợp Lệ! Dư ${600 - totalCost} tín chỉ` : `✓ Valid Park! ${600 - totalCost} cr under budget`;
+      } else {
+        pill.className = 'px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-rose-100 text-rose-900 border border-rose-400';
+        pill.textContent = totalCost > 600
+          ? (isVn ? `⚠ Vượt ngân sách ${totalCost - 600} tín chỉ!` : `⚠ Over budget by ${totalCost - 600} cr!`)
+          : (isVn ? '⚠ Chưa đạt diện tích tối thiểu!' : '⚠ Check minimum zone sizes!');
+      }
+
+      document.getElementById('sim-area-check').textContent = `${totalArea} / 120 m² ✓`;
+      document.getElementById('sim-formula-strip').textContent =
+        `Court: ${sb}×${sh}=${sArea}m² | Pond: (${pb}×${ph})÷2=${pArea}m² | Flower: (${fb}×${fh})÷2=${fArea}m² | Grass: ${grassArea}m²`;
+
+      // Render dynamic scaled visual park SVG (480x340 representing park overview)
+      const svg = document.getElementById('sim-svg');
+      const sc = 22; // pixels per metre visually (max 12×22=264px < 288px usable height, zero overlap)
+      const sw = sb * sc, shPx = sh * sc;
+      const pw = pb * sc, phPx = ph * sc;
+      const fw = fb * sc, fhPx = fh * sc;
+
+      svg.innerHTML = `
+        <rect x="0" y="0" width="480" height="340" fill="rgba(16,185,129,0.22)"/>
+        <text x="240" y="325" text-anchor="middle" font-size="12" font-weight="800" fill="#a7f3d0">🌱 ${isVn ? 'Thảm Cỏ Xanh' : 'Grass Lawn'}: ${grassArea} m² (${grassCost} ${crLbl})</text>
+
+        <!-- Sports Court Rect (top-left) -->
+        <rect x="16" y="16" width="${sw}" height="${shPx}" rx="4" fill="rgba(244,63,94,0.8)" stroke="#ffe4e6" stroke-width="2.5"/>
+        <text x="${16 + sw / 2}" y="${16 + shPx / 2 - 4}" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">🏀 ${isVn ? 'Sân Thể Thao' : 'Sports Court'}</text>
+        <text x="${16 + sw / 2}" y="${16 + shPx / 2 + 13}" text-anchor="middle" font-size="11" font-weight="700" fill="#ffe4e6">${sb}×${sh} = ${sArea} m²</text>
+
+        <!-- Koi Pond Right-Angled Triangle (bottom-left) -->
+        <polygon points="16,${304 - phPx} 16,304 ${16 + pw},304" fill="rgba(6,182,212,0.82)" stroke="#cffafe" stroke-width="2.5"/>
+        <rect x="16" y="${304 - 12}" width="12" height="12" fill="none" stroke="#ffffff" stroke-width="2"/>
+        <text x="${16 + pw * 0.36}" y="${304 - phPx * 0.32}" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">🐟 ${pArea} m²</text>
+        <text x="${16 + pw * 0.36}" y="${304 - phPx * 0.32 + 13}" text-anchor="middle" font-size="10" font-weight="700" fill="#cffafe">(${pb}×${ph})÷2</text>
+
+        <!-- Flowerbed Right-Angled Triangle (top-right) -->
+        <polygon points="${464 - fw},16 464,16 464,${16 + fhPx}" fill="rgba(245,158,11,0.86)" stroke="#fef3c7" stroke-width="2.5"/>
+        <rect x="${464 - 12}" y="16" width="12" height="12" fill="none" stroke="#ffffff" stroke-width="2"/>
+        <text x="${464 - fw * 0.35}" y="${16 + fhPx * 0.36}" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">🌼 ${fArea} m²</text>
+        <text x="${464 - fw * 0.35}" y="${16 + fhPx * 0.36 + 13}" text-anchor="middle" font-size="10" font-weight="700" fill="#fef3c7">(${fb}×${fh})÷2</text>
+      `;
+    }
+
+    // =========================================================================
+    // MODEL B: 4-ROLE ARCHITECT EXPLORER
+    // =========================================================================
+    const PARENT_ROLES = [
+      {
+        icon: '📐',
+        enTitle: 'Chief Architect',
+        vnTitle: 'Kiến Trúc Sư Trưởng',
+        enDid: 'Drew every rectangle and right-angled triangle neatly with a ruler on the 12 × 10 scaled grid, making sure every triangle sat cleanly on two 90° grid lines with zero empty gaps.',
+        vnDid: 'Vẽ chính xác từng hình chữ nhật và tam giác vuông bằng thước kẻ trên lưới tỉ lệ 12 × 10, đảm bảo mọi tam giác vuông đều nằm trên hai cạnh vuông góc 90° và không để trống ô nào.',
+        enAsk: '"How did you use the diagonal of a rectangle to fit your Koi Pond and Flowerbed triangles with zero leftover space?"',
+        vnAsk: '"Con đã dùng đường chéo của hình chữ nhật như thế nào để ghép Hồ Cá Koi và Vườn Hoa mà không bị thừa khoảng trống?"'
+      },
+      {
+        icon: '🧮',
+        enTitle: 'Area Accountant',
+        vnTitle: 'Kế Toán Diện Tích',
+        enDid: 'Calculated every single zone area using b × h for rectangles and (b × h) ÷ 2 for right-angled triangles, proving mathematically that the whole park summed to exactly 120 m².',
+        vnDid: 'Tính toán chính xác diện tích từng khu bằng công thức b × h (hình chữ nhật) và (b × h) ÷ 2 (tam giác vuông), chứng minh tổng diện tích toàn công viên đúng bằng 120 m².',
+        enAsk: '"What happens to the area and the cost if someone forgets to divide a right-angled triangle by 2?"',
+        vnAsk: '"Điều gì xảy ra với diện tích và chi phí nếu ai đó quên chia 2 khi tính diện tích tam giác vuông hả con?"'
+      },
+      {
+        icon: '💰',
+        enTitle: 'Budget Director',
+        vnTitle: 'Giám Đốc Ngân Sách',
+        enDid: 'Multiplied each zone area by its surface price (3 to 8 Eco-Credits/m²), kept total cost at or below 600 Eco-Credits, and tested smart surface swaps to save extra credits.',
+        vnDid: 'Nhân diện tích từng khu với đơn giá vật liệu (3 đến 8 Tín chỉ/m²), giữ tổng chi phí không vượt quá 600 Tín chỉ và đề xuất đổi loại mặt sân thông minh để tiết kiệm.',
+        enAsk: '"Which surface swap saved your team the most Eco-Credits while still keeping the park fun?"',
+        vnAsk: '"Nhóm con đã thay đổi khu vực nào để tiết kiệm được nhiều Tín chỉ nhất mà công viên vẫn thật vui?"'
+      },
+      {
+        icon: '✍️',
+        enTitle: 'Lead Reasoning Writer & Presenter',
+        vnTitle: 'Trưởng Nhóm Viết Lập Luận & Thuyết Trình',
+        enDid: 'Wrote formal mathematical justifications on the Team Poster Panel explaining accuracy proofs and budget trade-offs, then led the team\'s 60-second presentation to Hanoi City Council!',
+        vnDid: 'Viết lập luận toán học chặt chẽ lên Áp phích Nhóm để chứng minh phép tính chia đôi và chiến lược ngân sách, sau đó dẫn dắt bài thuyết trình 60 giây trước Hội đồng Thành phố Hà Nội!',
+        enAsk: '"Can you give me your 30-second Eco-Park pitch right now using exact m² numbers?"',
+        vnAsk: '"Con có thể thuyết trình nhanh 30 giây về Công viên Sinh thái của nhóm bằng các số liệu m² thật ấn tượng cho bố mẹ nghe không?"'
+      }
+    ];
+
+    let activeRoleIdx = 0;
+
+    function selectParentRole(idx) {
+      activeRoleIdx = idx;
+      renderParentRole(idx);
+    }
+
+    function renderParentRole(idx) {
+      document.querySelectorAll('.pr-btn').forEach(b => {
+        const active = Number(b.dataset.r) === idx;
+        b.className = active
+          ? 'pr-btn p-3 rounded-2xl border-2 text-center font-extrabold text-xs sm:text-sm transition bg-emerald-900 text-amber-300 border-amber-500 shadow'
+          : 'pr-btn p-3 rounded-2xl border-2 text-center font-bold text-xs sm:text-sm transition bg-white text-emerald-950 border-stone-300 hover:bg-emerald-50';
+      });
+      const r = PARENT_ROLES[idx];
+      document.getElementById('role-detail-card').innerHTML = `
+        <div class="space-y-1.5">
+          <div class="text-xs font-extrabold uppercase text-emerald-800">${r.icon} ${isVn ? 'Nhiệm Vụ Của Con Trong Lớp' : 'What Your Child Did in Class'}</div>
+          <h4 class="font-extrabold text-lg text-emerald-950">${isVn ? r.vnTitle : r.enTitle}</h4>
+          <p class="text-sm text-slate-700 leading-relaxed">${isVn ? r.vnDid : r.enDid}</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 border-2 border-amber-300 flex flex-col justify-center">
+          <div class="text-xs font-extrabold uppercase text-amber-700 mb-1">💬 ${isVn ? 'Gợi Ý Câu Hỏi Cho Bố Mẹ' : 'Question to Ask Tonight'}</div>
+          <p class="text-sm font-bold text-emerald-950 italic">${isVn ? r.vnAsk : r.enAsk}</p>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // 8 VISUAL SVG BILINGUAL VOCAB CARDS + EN/VN AUDIO
+    // =========================================================================
+    const PORTAL_VOCAB = [
+      {
+        en: 'scale', vn: 'tỉ lệ bản vẽ',
+        defEn: 'Fixed ratio between drawing size and real size (1 square = 1 m²).',
+        defVn: 'Tỉ lệ giữa kích thước bản vẽ và thực tế (1 ô vuông = 1 m²).',
+        svg: `<svg viewBox="0 0 140 54" class="w-full h-12"><rect x="14" y="10" width="32" height="32" fill="#a7f3d0" stroke="#064e3b" stroke-width="2"/><text x="30" y="30" text-anchor="middle" font-size="10" font-weight="800">1m²</text><text x="64" y="31" font-size="15" font-weight="800" fill="#b45309">➔</text><rect x="86" y="6" width="42" height="40" fill="#fef3c7" stroke="#b45309" stroke-width="2" stroke-dasharray="3 2"/><text x="107" y="30" text-anchor="middle" font-size="10" font-weight="800">Park</text></svg>`
+      },
+      {
+        en: 'blueprint', vn: 'bản thiết kế kỹ thuật',
+        defEn: 'Labelled architectural plan drawn cleanly to scale.',
+        defVn: 'Bản vẽ kiến trúc theo tỉ lệ có ghi chú rõ kích thước.',
+        svg: `<svg viewBox="0 0 140 54" class="w-full h-12"><rect x="15" y="6" width="110" height="42" rx="4" fill="#064e3b" stroke="#fbbf24" stroke-width="2"/><line x1="70" y1="6" x2="70" y2="48" stroke="#fff" stroke-opacity="0.4"/><polygon points="70,6 125,6 125,48" fill="rgba(251,191,36,0.35)" stroke="#fbbf24" stroke-width="1.5"/></svg>`
+      },
+      {
+        en: 'zone', vn: 'khu vực chức năng',
+        defEn: 'One dedicated section of a park (e.g. pond or court).',
+        defVn: 'Một phần riêng của công viên (như hồ cá hay sân chơi).',
+        svg: `<svg viewBox="0 0 140 54" class="w-full h-12"><rect x="10" y="10" width="36" height="34" rx="4" fill="#fecdd3" stroke="#be123c" stroke-width="2"/><rect x="52" y="10" width="36" height="34" rx="4" fill="#cffafe" stroke="#0e7490" stroke-width="2"/><rect x="94" y="10" width="36" height="34" rx="4" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/></svg>`
+      },
+      {
+        en: 'budget', vn: 'ngân sách',
+        defEn: 'Maximum total credits allowed for the whole park.',
+        defVn: 'Tổng số tín chỉ tối đa được phép chi cho cả công viên.',
+        svg: `<svg viewBox="0 0 140 54" class="w-full h-12"><rect x="12" y="20" width="116" height="18" rx="9" fill="#e5e7eb" stroke="#064e3b" stroke-width="2"/><rect x="12" y="20" width="96" height="18" rx="9" fill="#10b981"/><text x="62" y="33" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">≤ 600 cr</text></svg>`
+      },
+      {
+        en: 'square metre (m²)', vn: 'mét vuông (m²)',
+        defEn: 'Area of a 1 m by 1 m square.',
+        defVn: 'Diện tích của một hình vuông cạnh 1 m × 1 m.',
+        svg: `<svg viewBox="0 0 140 54" class="w-full h-12"><rect x="52" y="10" width="36" height="36" fill="#d1fae5" stroke="#064e3b" stroke-width="2"/><text x="70" y="32" text-anchor="middle" font-size="11" font-weight="800" fill="#064e3b">1 m²</text><text x="98" y="31" font-size="10" font-weight="700" fill="#b45309">1m</text></svg>`
+      },
+      {
+        en: 'compound area', vn: 'diện tích hình ghép',
+        defEn: 'Total area found by adding a rectangle + right-angled triangle.',
+        defVn: 'Tổng diện tích bằng cách cộng hình chữ nhật và tam giác vuông.',
+        svg: `<svg viewBox="0 0 140 54" class="w-full h-12"><rect x="24" y="10" width="52" height="34" fill="#bbf7d0" stroke="#064e3b" stroke-width="2"/><polygon points="76,10 116,44 76,44" fill="#fde68a" stroke="#b45309" stroke-width="2"/></svg>`
+      },
+      {
+        en: 'justify', vn: 'giải thích chứng minh',
+        defEn: 'Prove why your choice is valid using exact maths.',
+        defVn: 'Chứng minh lựa chọn hợp lý bằng phép tính cụ thể.',
+        svg: `<svg viewBox="0 0 140 54" class="w-full h-12"><rect x="12" y="8" width="116" height="38" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="2"/><text x="70" y="31" text-anchor="middle" font-size="11" font-weight="800" fill="#92400e">(6×5)÷2 = 15 ✓</text></svg>`
+      },
+      {
+        en: 'optimise', vn: 'tối ưu hoá',
+        defEn: 'Balance space and cost to get the best design.',
+        defVn: 'Cân bằng diện tích và chi phí để đạt thiết kế tốt nhất.',
+        svg: `<svg viewBox="0 0 140 54" class="w-full h-12"><line x1="25" y1="36" x2="115" y2="20" stroke="#064e3b" stroke-width="3"/><polygon points="70,28 60,46 80,46" fill="#b45309"/><circle cx="34" cy="24" r="9" fill="#10b981"/><circle cx="106" cy="12" r="9" fill="#f59e0b"/></svg>`
+      }
+    ];
+
+    function buildPortalVocab() {
+      document.getElementById('portal-vocab-grid').innerHTML = PORTAL_VOCAB.map((v, i) => `
+        <div class="rounded-2xl bg-stone-50 border-2 border-stone-200 p-3.5 flex flex-col justify-between space-y-2.5">
+          <div>
+            <div class="bg-white rounded-xl p-2 border border-stone-200 mb-2">${v.svg}</div>
+            <div class="font-extrabold text-emerald-950 text-base capitalize">${v.en}</div>
+            <div class="font-bold text-emerald-700 text-xs">${v.vn}</div>
+            <p class="text-xs text-slate-600 mt-1.5">
+              <span class="lang-en">${v.defEn}</span>
+              <span class="lang-vn">${v.defVn}</span>
+            </p>
+          </div>
+          <div class="flex gap-1.5 pt-1">
+            <button onclick="speakPortal(${i}, 'en-GB')" class="flex-1 py-1.5 rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-extrabold transition">🔊 EN</button>
+            <button onclick="speakPortal(${i}, 'vi-VN')" class="flex-1 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-emerald-950 text-xs font-extrabold transition">🔊 VN</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function speakPortal(i, lang) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const v = PORTAL_VOCAB[i];
+      const u = new SpeechSynthesisUtterance(lang === 'en-GB' ? `${v.en}. ${v.defEn}` : `${v.vn}. ${v.defVn}`);
+      u.lang = lang;
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    // =========================================================================
+    // GAMIFIED 4-QUESTION INTERACTIVE QUIZ (100% FRESH NUMBERS)
+    // =========================================================================
+    const QUIZ_DATA = [
+      {
+        qEn: '1. A rectangular balcony measures 5 m × 3 m. At 4 credits/m², what are its area and total cost?',
+        qVn: '1. Một ban công hình chữ nhật kích thước 5 m × 3 m. Với giá 4 tín chỉ/m², diện tích và chi phí là bao nhiêu?',
+        optsEn: ['15 m² and 60 credits', '8 m² and 32 credits', '15 m² and 45 credits'],
+        optsVn: ['15 m² và 60 tín chỉ', '8 m² và 32 tín chỉ', '15 m² và 45 tín chỉ'],
+        ans: 0,
+        fbEn: 'Spot on! Area = 5 × 3 = 15 m², and Cost = 15 × 4 = 60 credits.',
+        fbVn: 'Chính xác! Diện tích = 5 × 3 = 15 m², Chi phí = 15 × 4 = 60 tín chỉ.'
+      },
+      {
+        qEn: '2. A right-angled triangular sandbox has base 6 m and perpendicular height 3 m. What is its area?',
+        qVn: '2. Một hố cát hình tam giác vuông có đáy 6 m và chiều cao vuông góc 3 m. Diện tích của hố cát là bao nhiêu?',
+        optsEn: ['18 m²', '9 m²', '12 m²'],
+        optsVn: ['18 m²', '9 m²', '12 m²'],
+        ans: 1,
+        fbEn: 'Brilliant! Always halve a right-angled triangle: (6 × 3) ÷ 2 = 18 ÷ 2 = 9 m².',
+        fbVn: 'Tuyệt vời! Luôn chia đôi tam giác vuông: (6 × 3) ÷ 2 = 18 ÷ 2 = 9 m².'
+      },
+      {
+        qEn: '3. Budget Swap: Replacing 10 m² of Sports Court (8 cr/m²) with Grass Lawn (3 cr/m²) saves how many credits?',
+        qVn: '3. Đổi Ngân Sách: Thay 10 m² Sân Thể Thao (8 tc/m²) bằng Thảm Cỏ (3 tc/m²) tiết kiệm được bao nhiêu tín chỉ?',
+        optsEn: ['30 credits', '80 credits', '50 credits'],
+        optsVn: ['30 tín chỉ', '80 tín chỉ', '50 tín chỉ'],
+        ans: 2,
+        fbEn: 'Super budget thinking! Each m² saves 8 − 3 = 5 credits, so 10 × 5 = 50 credits saved!',
+        fbVn: 'Tư duy ngân sách rất giỏi! Mỗi m² tiết kiệm 8 − 3 = 5 tín chỉ, vậy 10 × 5 = 50 tín chỉ!'
+      },
+      {
+        qEn: '4. Which Studio Role calculates (b × h) ÷ 2 for every triangle and proves the whole park equals 120 m²?',
+        qVn: '4. Vai trò nào tính (b × h) ÷ 2 cho mọi tam giác và chứng minh cả công viên đúng bằng 120 m²?',
+        optsEn: ['Area Accountant', 'Sports Referee', 'Park Gardener'],
+        optsVn: ['Kế Toán Diện Tích (Area Accountant)', 'Trọng Tài Thể Thao', 'Người Làm Vườn'],
+        ans: 0,
+        fbEn: 'Yes! The Area Accountant checks every area formula and verifies zero gaps!',
+        fbVn: 'Đúng rồi! Kế Toán Diện Tích kiểm tra mọi công thức diện tích và đảm bảo không để trống ô nào!'
+      }
+    ];
+
+    const quizState = [null, null, null, null];
+
+    function renderQuiz() {
+      const wrap = document.getElementById('quiz-container');
+      wrap.innerHTML = QUIZ_DATA.map((item, qi) => {
+        const picked = quizState[qi];
+        const opts = isVn ? item.optsVn : item.optsEn;
+        return `
+          <div class="bg-emerald-950/75 border-2 border-emerald-700 rounded-2xl p-4 space-y-3">
+            <div class="font-bold text-sm sm:text-base text-white">${isVn ? item.qVn : item.qEn}</div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              ${opts.map((opt, oi) => {
+                let cls = 'bg-emerald-900/90 hover:bg-emerald-800 border-emerald-600 text-emerald-50';
+                if (picked !== null) {
+                  if (oi === item.ans) cls = 'bg-emerald-600 border-amber-300 text-white font-extrabold';
+                  else if (oi === picked) cls = 'bg-rose-700 border-rose-400 text-white';
+                  else cls = 'bg-emerald-950/60 border-emerald-800 text-emerald-300/60';
+                }
+                return `<button onclick="answerQuiz(${qi}, ${oi})" class="p-2.5 rounded-xl border-2 text-xs sm:text-sm font-bold text-left transition ${cls}">${opt}</button>`;
+              }).join('')}
+            </div>
+            ${picked !== null ? `
+              <div class="text-xs sm:text-sm font-bold px-3 py-2 rounded-xl ${picked === item.ans ? 'bg-emerald-800/80 text-amber-200' : 'bg-rose-900/80 text-rose-100'}">
+                ${picked === item.ans ? '✓ ' : '✗ '} ${isVn ? item.fbVn : item.fbEn}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      const score = quizState.filter((p, i) => p === QUIZ_DATA[i].ans).length;
+      document.getElementById('quiz-score').textContent = score;
+      const allDone = quizState.every(p => p !== null);
+      const banner = document.getElementById('quiz-final-banner');
+      if (allDone) {
+        banner.classList.remove('hidden');
+        banner.textContent = isVn
+          ? `🎉 Chúc mừng gia đình đạt ${score} / 4 điểm! Con đã sẵn sàng làm Kiến Trúc Sư Công Viên!`
+          : `🎉 Well done! Your family scored ${score} / 4 — Certified Hanoi Eco-Park Architects!`;
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    function answerQuiz(qi, oi) {
+      if (quizState[qi] !== null) return;
+      quizState[qi] = oi;
+      renderQuiz();
+      if (oi === QUIZ_DATA[qi].ans) fireConfetti();
+    }
+
+    // =========================================================================
+    // CONFETTI ENGINE
+    // =========================================================================
+    const confCanvas = document.getElementById('confetti-canvas');
+    const confCtx = confCanvas.getContext('2d');
+    let pieces = [], anim = null;
+
+    function fireConfetti() {
+      confCanvas.width = window.innerWidth;
+      confCanvas.height = window.innerHeight;
+      const cols = ['#10b981', '#fbbf24', '#f59e0b', '#06b6d4', '#f43f5e', '#ffffff'];
+      for (let i = 0; i < 55; i++) {
+        pieces.push({
+          x: Math.random() * confCanvas.width, y: -15,
+          vx: (Math.random() - 0.5) * 5, vy: 2.5 + Math.random() * 4,
+          s: 6 + Math.random() * 5, r: Math.random() * 360, vr: (Math.random() - 0.5) * 9,
+          c: cols[Math.floor(Math.random() * cols.length)], life: 100
+        });
+      }
+      if (!anim) tickConfetti();
+    }
+
+    function tickConfetti() {
+      confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+      pieces.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life--;
+        confCtx.save(); confCtx.translate(p.x, p.y); confCtx.rotate(p.r * Math.PI / 180);
+        confCtx.fillStyle = p.c; confCtx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6);
+        confCtx.restore();
+      });
+      pieces = pieces.filter(p => p.life > 0 && p.y < confCanvas.height + 20);
+      if (pieces.length) anim = requestAnimationFrame(tickConfetti);
+      else { anim = null; confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height); }
+    }
+
+    // INIT
+    updateParkSim();
+    selectParentRole(0);
+    buildPortalVocab();
+    renderQuiz();
+  </script>
+</body>
+</html>

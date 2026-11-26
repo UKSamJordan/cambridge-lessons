@@ -1,0 +1,2003 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design Studio Challenge — Hanoi Eco-Park Blueprint (Stage 6 | 6Gg.03)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap');
+
+    :root {
+      --studio-emerald: #064e3b;
+      --studio-emerald-mid: #047857;
+      --studio-gold: #b45309;
+      --studio-gold-bright: #d97706;
+      --studio-cream: #faf7f0;
+      --studio-paper: #fffdf8;
+      --studio-ink: #1c2826;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: var(--studio-cream);
+      background-image:
+        linear-gradient(to right, rgba(6, 78, 59, 0.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(6, 78, 59, 0.045) 1px, transparent 1px);
+      background-size: 28px 28px;
+      color: var(--studio-ink);
+      overflow-x: hidden;
+    }
+
+    .font-studio-serif {
+      font-family: 'DM Serif Display', Georgia, serif;
+    }
+
+    .font-mono-tech {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    .studio-blueprint-banner {
+      background: linear-gradient(135deg, #052e2b 0%, #064e3b 55%, #0f5132 100%);
+      background-image:
+        radial-gradient(circle at 85% 20%, rgba(217, 119, 6, 0.25), transparent 45%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(135deg, #052e2b 0%, #064e3b 55%, #065f46 100%);
+      background-size: 100% 100%, 24px 24px, 24px 24px, 100% 100%;
+    }
+
+    #top-header {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+
+    .phase-section {
+      display: none;
+    }
+    .phase-section.active {
+      display: block;
+      animation: fadeSlideIn 0.28s ease-out;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 3D Flip Cards */
+    .flip-perspective { perspective: 1200px; }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .flip-back { transform: rotateY(180deg); }
+
+    /* Fullscreen Sandbox */
+    .sandbox-fullscreen {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 65 !important;
+      background: #faf7f0 !important;
+      padding: 16px 24px !important;
+      overflow-y: auto !important;
+      border-radius: 0 !important;
+    }
+
+    /* David's Board Squared Grid */
+    .davids-grid {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, #cbd5e1 1px, transparent 1px),
+        linear-gradient(to bottom, #cbd5e1 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* Studio Gold Double Frame */
+    .studio-card {
+      background: var(--studio-paper);
+      border: 2px solid #d6cbb5;
+      box-shadow: 0 6px 20px rgba(6, 78, 59, 0.06);
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 95;
+    }
+
+    @keyframes pulseRing {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.45); }
+      50% { box-shadow: 0 0 0 12px rgba(217, 119, 6, 0); }
+    }
+    .pulse-gold { animation: pulseRing 1.8s infinite; }
+  </style>
+</head>
+<body class="min-h-screen pb-16">
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- AUTO-HIDING STUDIO TOP HEADER -->
+  <header id="top-header" class="fixed top-0 left-0 right-0 bg-[#052e2b]/95 backdrop-blur-md text-amber-50 border-b-2 border-amber-500/70 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-emerald-950 font-extrabold flex items-center justify-center text-xl shadow-inner border border-amber-200">
+          🌿
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wider rounded bg-amber-400 text-emerald-950">Design Studio Project</span>
+            <span class="text-xs font-mono-tech text-emerald-200">Stage 6 • 6Gg.03 • Week 17 Lesson 3</span>
+          </div>
+          <h1 class="text-sm sm:text-base font-bold text-white leading-tight">Hanoi Eco-Park Blueprint — <span class="text-amber-300">Design a 120 m² Eco-Park on budget.</span></h1>
+        </div>
+      </div>
+
+      <!-- Studio Controls & Team Scoreboard -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <div class="flex items-center bg-emerald-950/90 border border-emerald-700 rounded-full px-2.5 py-1 gap-2 text-xs font-bold">
+          <button onclick="awardTeam('red', 1)" class="flex items-center gap-1 text-rose-300 hover:text-rose-200 transition" title="Add point to Team Red">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
+            Red: <span id="score-red" class="font-mono-tech text-white text-sm">0</span>
+          </button>
+          <span class="text-emerald-600">|</span>
+          <button onclick="awardTeam('blue', 1)" class="flex items-center gap-1 text-sky-300 hover:text-sky-200 transition" title="Add point to Team Blue">
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span>
+            Blue: <span id="score-blue" class="font-mono-tech text-white text-sm">0</span>
+          </button>
+        </div>
+
+        <button id="btn-mute" onclick="toggleMute()" class="px-2.5 py-1.5 rounded-lg bg-emerald-900 hover:bg-emerald-800 border border-emerald-700 text-xs font-bold text-emerald-100 transition" title="Mute / Unmute Audio (M)">
+          🔊 <span class="hidden sm:inline">Sound (M)</span>
+        </button>
+        <button onclick="toggleTeacherDrawer()" class="px-2.5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-xs font-bold text-white transition" title="Teacher Coaching Drawer (T)">
+          📋 <span class="hidden sm:inline">Teacher (T)</span>
+        </button>
+        <button onclick="openDavidsBoard()" class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-emerald-950 text-xs font-extrabold transition shadow" title="Open David's Board Whiteboard (W)">
+          ✏️ David's Board (W)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN STUDIO WORKSPACE -->
+  <main class="max-w-7xl mx-auto px-4 pt-24">
+
+    <!-- STUDIO PHASE NAVIGATION BAR (flex-wrap) -->
+    <nav aria-label="Design Studio Phases" class="mb-6 bg-[#fffdf8] border-2 border-emerald-900/20 rounded-2xl p-2 shadow-sm">
+      <div class="flex flex-wrap gap-1.5 justify-center">
+        <button onclick="goPhase(0)" data-phase="0" class="phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          📐 0. Brief &amp; 4 Roles
+        </button>
+        <button onclick="goPhase(1)" data-phase="1" class="phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          ⚡ 1. Flashback 3
+        </button>
+        <button onclick="goPhase(2)" data-phase="2" class="phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          📖 2. Studio Glossary
+        </button>
+        <button onclick="goPhase(3)" data-phase="3" class="phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          🗺️ 3. 120 m² Blueprint Sandbox
+        </button>
+        <button onclick="goPhase(4)" data-phase="4" class="phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          ⏱️ 4. 3-Sprint Studio Timer
+        </button>
+        <button onclick="goPhase(5)" data-phase="5" class="phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">
+          🏆 5. Peer Audit, Pitch &amp; Finale
+        </button>
+      </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- STUDIO PHASE 0: PROJECT BRIEF & 4-ROLE TEAM STUDIO BOARD     -->
+    <!-- ============================================================ -->
+    <section id="phase-0" class="phase-section active">
+      <div class="space-y-6">
+
+        <!-- Hero Architectural Blueprint Banner -->
+        <div class="studio-blueprint-banner rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-500/80 shadow-xl relative overflow-hidden">
+          <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            <div class="space-y-3 max-w-3xl">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-300/60 text-amber-200 text-xs font-extrabold uppercase tracking-widest">
+                <span>🌿 Special Lesson 3 • Collaborative Poster Studio</span>
+              </div>
+              <h2 class="font-studio-serif text-3xl sm:text-5xl tracking-tight text-white leading-tight">
+                HANOI ECO-PARK ARCHITECTURE CHALLENGE
+              </h2>
+              <p class="text-emerald-100 text-base sm:text-lg font-medium">
+                120 m² Team Poster Project • Design a zero-gap park using rectangles and right-angled triangles within a <span class="text-amber-300 font-extrabold">600 Eco-Credit</span> budget!
+              </p>
+            </div>
+            <div class="bg-emerald-950/80 border-2 border-amber-400/60 rounded-2xl p-4 min-w-[240px] shrink-0">
+              <div class="text-xs uppercase tracking-wider text-amber-300 font-extrabold mb-2">Studio Specifications</div>
+              <div class="grid grid-cols-2 gap-2 text-center">
+                <div class="bg-emerald-900/70 rounded-xl p-2">
+                  <div class="text-xl font-mono-tech font-bold text-white">12 × 10</div>
+                  <div class="text-[11px] text-emerald-200">120 m² Grid</div>
+                </div>
+                <div class="bg-emerald-900/70 rounded-xl p-2">
+                  <div class="text-xl font-mono-tech font-bold text-amber-300">≤ 600</div>
+                  <div class="text-[11px] text-emerald-200">Eco-Credits</div>
+                </div>
+              </div>
+              <div class="mt-2.5 text-[11px] text-emerald-200 text-center font-semibold">
+                Every team builds 1 A3 Poster + 60s Pitch!
+              </div>
+            </div>
+          </div>
+
+          <!-- Compact Must / Should / Could Success Criteria Strip -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-6 pt-5 border-t border-emerald-700/70">
+            <div class="bg-emerald-950/60 border border-emerald-500/60 rounded-xl p-3">
+              <div class="text-xs font-extrabold text-emerald-300 uppercase">🟢 Must</div>
+              <p class="text-sm font-semibold text-white mt-0.5">Calculate every rectangle and triangle area accurately.</p>
+            </div>
+            <div class="bg-amber-950/50 border border-amber-400/60 rounded-xl p-3">
+              <div class="text-xs font-extrabold text-amber-300 uppercase">🟠 Should</div>
+              <p class="text-sm font-semibold text-white mt-0.5">Cover 120 m² cleanly under 600 credits.</p>
+            </div>
+            <div class="bg-teal-950/60 border border-teal-400/60 rounded-xl p-3">
+              <div class="text-xs font-extrabold text-teal-200 uppercase">🟣 Could</div>
+              <p class="text-sm font-semibold text-white mt-0.5">Justify swaps and audit another team's poster.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Group Size Switcher -->
+        <div class="studio-card rounded-2xl p-5">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
+            <div>
+              <h3 class="text-xl font-extrabold text-emerald-950 flex items-center gap-2">
+                <span>👷‍♂️ Your Architecture Studio Team</span>
+              </h3>
+              <p class="text-sm text-slate-600 mt-0.5">Choose your table size — every pupil has an active role and personal checklist!</p>
+            </div>
+            <div class="flex flex-wrap gap-2" role="group" aria-label="Group Size Selector">
+              <button onclick="setGroupSize(4)" id="grp-btn-4" class="grp-btn px-4 py-2 rounded-xl text-sm font-extrabold border-2 transition">
+                👥 Group of 4 (Recommended)
+              </button>
+              <button onclick="setGroupSize(3)" id="grp-btn-3" class="grp-btn px-4 py-2 rounded-xl text-sm font-extrabold border-2 transition">
+                👥 Group of 3
+              </button>
+              <button onclick="setGroupSize(2)" id="grp-btn-2" class="grp-btn px-4 py-2 rounded-xl text-sm font-extrabold border-2 transition">
+                👥 Pair of 2
+              </button>
+            </div>
+          </div>
+
+          <div id="group-adaptation-banner" class="hidden mb-4 px-4 py-2.5 rounded-xl bg-amber-50 border-2 border-amber-400 text-amber-950 text-sm font-bold"></div>
+
+          <!-- 4 Role Cards Grid -->
+          <div id="roles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Dynamically rendered by setGroupSize() -->
+          </div>
+        </div>
+
+        <!-- Compact Park Price Menu & Mandatory Zones Overview -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div class="studio-card rounded-2xl p-5">
+            <h3 class="text-lg font-extrabold text-emerald-950 mb-3">💰 Eco-Park Surface Price Menu</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center">
+              <div class="rounded-xl p-2.5 bg-emerald-100 border-2 border-emerald-400">
+                <div class="text-lg">🌱</div>
+                <div class="text-xs font-extrabold text-emerald-950">Grass Lawn</div>
+                <div class="font-mono-tech text-sm font-bold text-emerald-800 mt-0.5">3 cr/m²</div>
+              </div>
+              <div class="rounded-xl p-2.5 bg-amber-100 border-2 border-amber-400">
+                <div class="text-lg">🌼</div>
+                <div class="text-xs font-extrabold text-amber-950">Flowerbed △</div>
+                <div class="font-mono-tech text-sm font-bold text-amber-800 mt-0.5">4 cr/m²</div>
+              </div>
+              <div class="rounded-xl p-2.5 bg-stone-200 border-2 border-stone-400">
+                <div class="text-lg">🪨</div>
+                <div class="text-xs font-extrabold text-stone-900">Stone Path</div>
+                <div class="font-mono-tech text-sm font-bold text-stone-800 mt-0.5">5 cr/m²</div>
+              </div>
+              <div class="rounded-xl p-2.5 bg-cyan-100 border-2 border-cyan-400">
+                <div class="text-lg">🐟</div>
+                <div class="text-xs font-extrabold text-cyan-950">Koi Pond △</div>
+                <div class="font-mono-tech text-sm font-bold text-cyan-800 mt-0.5">6 cr/m²</div>
+              </div>
+              <div class="rounded-xl p-2.5 bg-rose-100 border-2 border-rose-400 col-span-2 sm:col-span-1">
+                <div class="text-lg">🏀</div>
+                <div class="text-xs font-extrabold text-rose-950">Sports Court</div>
+                <div class="font-mono-tech text-sm font-bold text-rose-800 mt-0.5">8 cr/m²</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="studio-card rounded-2xl p-5">
+            <h3 class="text-lg font-extrabold text-emerald-950 mb-3">📋 4 Mandatory Client Rules</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm font-semibold">
+              <div class="flex items-center gap-2 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">
+                <span class="text-rose-600 font-extrabold">1.</span> Sports Court Rectangle <strong>≥ 24 m²</strong>
+              </div>
+              <div class="flex items-center gap-2 bg-cyan-50 border border-cyan-200 rounded-xl px-3 py-2">
+                <span class="text-cyan-700 font-extrabold">2.</span> Koi Pond Triangle (90°) <strong>≥ 15 m²</strong>
+              </div>
+              <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+                <span class="text-amber-700 font-extrabold">3.</span> Flowerbed Triangle (90°) <strong>≥ 12 m²</strong>
+              </div>
+              <div class="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">
+                <span class="text-emerald-700 font-extrabold">4.</span> Compound Zone (Rect + △) <strong>≥ 25 m²</strong> &amp; <strong>≤ 600 cr</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STUDIO PHASE 1: BRISK WARM-UP FLASHBACK 3                    -->
+    <!-- ============================================================ -->
+    <section id="phase-1" class="phase-section">
+      <div class="space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 studio-card rounded-2xl p-5">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Spaced Retrieval Warm-Up • 3 Earlier Units</span>
+            <h2 class="font-studio-serif text-3xl text-emerald-950">Flashback 3 — Architect's Brain Tune-Up</h2>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="flipAllFlashbacks(true)" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-sm font-bold transition">Reveal All 3</button>
+            <button onclick="flipAllFlashbacks(false)" class="px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-sm font-bold transition">Reset Cards</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 5 Quadrilaterals & Symmetry -->
+          <div class="flip-perspective h-[340px]">
+            <div onclick="toggleFlip(this)" class="flip-card w-full h-full cursor-pointer">
+              <div class="flip-inner">
+                <div class="flip-face rounded-3xl bg-gradient-to-br from-emerald-900 to-emerald-800 text-white p-6 border-4 border-amber-400/80 shadow-xl flex flex-col justify-between">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase">Unit 5 • Geometry</span>
+                    <span class="text-xs text-emerald-200 font-bold">Tap to Flip ↻</span>
+                  </div>
+                  <div class="text-center my-auto space-y-3">
+                    <svg viewBox="0 0 140 80" class="w-36 h-20 mx-auto">
+                      <polygon points="70,8 128,40 70,72 12,40" fill="rgba(251,191,36,0.22)" stroke="#fbbf24" stroke-width="3"/>
+                      <line x1="70" y1="8" x2="70" y2="72" stroke="#ffffff" stroke-width="2" stroke-dasharray="4 3"/>
+                      <line x1="12" y1="40" x2="128" y2="40" stroke="#ffffff" stroke-width="2" stroke-dasharray="4 3"/>
+                    </svg>
+                    <p class="text-xl font-extrabold leading-snug">Non-square Rhombus:</p>
+                    <p class="text-sm text-emerald-100 font-semibold">1. At what angle do its diagonals cross?<br/>2. What is its order of rotational symmetry?</p>
+                  </div>
+                  <div class="text-center text-xs text-amber-200 font-bold">Write both on your whiteboard!</div>
+                </div>
+                <div class="flip-face flip-back rounded-3xl bg-[#fffdf8] text-emerald-950 p-6 border-4 border-emerald-700 shadow-xl flex flex-col justify-between">
+                  <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold uppercase self-start">✓ Unit 5 Answer</span>
+                  <div class="text-center my-auto space-y-3">
+                    <div class="text-4xl font-mono-tech font-extrabold text-emerald-800">90° &amp; Order 2</div>
+                    <p class="text-sm font-semibold text-slate-700">Its diagonals meet at a <strong>right angle (90°)</strong>, and a non-square rhombus fits onto itself <strong>2 times</strong> in a full 360° turn.</p>
+                  </div>
+                  <div class="text-center text-xs text-slate-500 font-bold">Tap to flip back</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 8 Uneven Decimals -->
+          <div class="flip-perspective h-[340px]">
+            <div onclick="toggleFlip(this)" class="flip-card w-full h-full cursor-pointer">
+              <div class="flip-inner">
+                <div class="flip-face rounded-3xl bg-gradient-to-br from-amber-700 to-amber-600 text-white p-6 border-4 border-emerald-900/70 shadow-xl flex flex-col justify-between">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-emerald-950 text-amber-300 text-xs font-extrabold uppercase">Unit 8 • Decimals</span>
+                    <span class="text-xs text-amber-100 font-bold">Tap to Flip ↻</span>
+                  </div>
+                  <div class="text-center my-auto space-y-3">
+                    <div class="text-5xl font-mono-tech font-extrabold tracking-tight">15.2 − 7.65</div>
+                    <p class="text-sm text-amber-100 font-semibold">Subtract carefully using a trailing zero (15.20)!</p>
+                  </div>
+                  <div class="text-center text-xs text-amber-100 font-bold">Check by adding back!</div>
+                </div>
+                <div class="flip-face flip-back rounded-3xl bg-[#fffdf8] text-emerald-950 p-6 border-4 border-amber-600 shadow-xl flex flex-col justify-between">
+                  <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-950 text-xs font-extrabold uppercase self-start">✓ Unit 8 Answer</span>
+                  <div class="text-center my-auto space-y-3">
+                    <div class="text-6xl font-mono-tech font-extrabold text-amber-700">7.55</div>
+                    <p class="text-sm font-semibold text-slate-700">Write <strong>15.20 − 7.65 = 7.55</strong>.<br/>Inverse check: 7.55 + 7.65 = 15.20.</p>
+                  </div>
+                  <div class="text-center text-xs text-slate-500 font-bold">Tap to flip back</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 2 Sequences -->
+          <div class="flip-perspective h-[340px]">
+            <div onclick="toggleFlip(this)" class="flip-card w-full h-full cursor-pointer">
+              <div class="flip-inner">
+                <div class="flip-face rounded-3xl bg-gradient-to-br from-teal-900 to-emerald-900 text-white p-6 border-4 border-amber-400/80 shadow-xl flex flex-col justify-between">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase">Unit 2 • Sequences</span>
+                    <span class="text-xs text-teal-200 font-bold">Tap to Flip ↻</span>
+                  </div>
+                  <div class="text-center my-auto space-y-3">
+                    <div class="text-sm uppercase tracking-wider text-amber-300 font-extrabold">Position-to-Term Rule</div>
+                    <div class="text-6xl font-mono-tech font-extrabold">5n + 3</div>
+                    <p class="text-base font-bold text-teal-100">Find the <strong>15th term</strong>!</p>
+                  </div>
+                  <div class="text-center text-xs text-amber-200 font-bold">Substitute n = 15</div>
+                </div>
+                <div class="flip-face flip-back rounded-3xl bg-[#fffdf8] text-emerald-950 p-6 border-4 border-teal-700 shadow-xl flex flex-col justify-between">
+                  <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-950 text-xs font-extrabold uppercase self-start">✓ Unit 2 Answer</span>
+                  <div class="text-center my-auto space-y-3">
+                    <div class="text-6xl font-mono-tech font-extrabold text-teal-800">78</div>
+                    <p class="text-sm font-semibold text-slate-700"><strong>5 × 15 + 3</strong> = 75 + 3 = <strong>78</strong>.</p>
+                  </div>
+                  <div class="text-center text-xs text-slate-500 font-bold">Tap to flip back</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STUDIO PHASE 2: BILINGUAL GLOSSARY & HANOI PARK ARCHITECTS   -->
+    <!-- ============================================================ -->
+    <section id="phase-2" class="phase-section">
+      <div class="space-y-6">
+        <div class="studio-card rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Architecture &amp; Maths Language</span>
+            <h2 class="font-studio-serif text-3xl text-emerald-950">Architect's Studio Glossary</h2>
+            <p class="text-sm text-slate-600 mt-0.5">Tap any card to open the bilingual studio glossary, diagram, and voice pronunciation.</p>
+          </div>
+          <div class="px-4 py-2 rounded-xl bg-emerald-900 text-amber-300 text-xs font-extrabold">
+            🔊 Tap a word for EN &amp; VN audio
+          </div>
+        </div>
+
+        <!-- 8 Glossy Vocab Tiles (English ONLY on face; Bilingual inside Modal!) -->
+        <div id="vocab-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Real-World Park Architects in Hanoi Strip (100% English!) -->
+        <div class="studio-blueprint-banner rounded-3xl p-6 text-white border-2 border-amber-400/70 shadow-lg">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-2xl">🌍</span>
+            <h3 class="font-studio-serif text-2xl text-amber-300">Real-World Park Architects in Hanoi</h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-emerald-950/75 border border-emerald-600/60 rounded-2xl p-4">
+              <div class="text-2xl mb-1">🌳</div>
+              <h4 class="font-extrabold text-amber-200 text-base">Thong Nhat Park</h4>
+              <p class="text-xs sm:text-sm text-emerald-100 mt-1">Landscape architects measure walkways, lakes, and lawns in square metres so families have shaded paths and open sports zones.</p>
+            </div>
+            <div class="bg-emerald-950/75 border border-emerald-600/60 rounded-2xl p-4">
+              <div class="text-2xl mb-1">🏀</div>
+              <h4 class="font-extrabold text-amber-200 text-base">School Playgrounds</h4>
+              <p class="text-xs sm:text-sm text-emerald-100 mt-1">Sports courts use costly safety surfacing per m², so school planners balance rectangle courts with budget-friendly grass edges.</p>
+            </div>
+            <div class="bg-emerald-950/75 border border-emerald-600/60 rounded-2xl p-4">
+              <div class="text-2xl mb-1">💧</div>
+              <h4 class="font-extrabold text-amber-200 text-base">Eco-Drainage Ponds</h4>
+              <p class="text-xs sm:text-sm text-emerald-100 mt-1">Triangular koi ponds and rain gardens absorb Hanoi monsoon rainwater, fitting neatly into angled corners with zero wasted space.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STUDIO PHASE 3: INTERACTIVE 12 x 10 ECO-PARK SANDBOX         -->
+    <!-- ============================================================ -->
+    <section id="phase-3" class="phase-section">
+      <div id="sandbox-wrapper" class="studio-card rounded-3xl p-4 sm:p-6 space-y-4">
+
+        <!-- Sandbox Header & Fullscreen Toggle -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b-2 border-emerald-900/15">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Interactive Drafting Table • 1 Square = 1 m²</span>
+            <h2 class="font-studio-serif text-2xl sm:text-3xl text-emerald-950">12 m × 10 m (120 m²) Eco-Park Blueprint Sandbox</h2>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="loadSamplePark()" class="px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs sm:text-sm font-extrabold shadow transition">
+              ✨ Load Sample Valid 120 m² Park
+            </button>
+            <button onclick="clearSandbox()" class="px-3.5 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-900 border border-rose-300 text-xs sm:text-sm font-bold transition">
+              🗑️ Clear Blueprint
+            </button>
+            <button id="btn-fullscreen-sandbox" onclick="toggleSandboxFullscreen()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-emerald-950 text-xs sm:text-sm font-extrabold shadow transition">
+              ⛶ Full Screen Sandbox
+            </button>
+          </div>
+        </div>
+
+        <!-- LIVE TELEMETRY BAR -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 bg-emerald-950 text-white rounded-2xl p-3.5 border-2 border-amber-400/70">
+          <!-- Used Area & Budget Meters -->
+          <div class="lg:col-span-4 grid grid-cols-2 gap-2.5">
+            <div class="bg-emerald-900/90 rounded-xl p-2.5 border border-emerald-700">
+              <div class="text-[11px] uppercase tracking-wider text-emerald-200 font-bold">Used Area</div>
+              <div class="flex items-baseline gap-1 mt-0.5">
+                <span id="tele-area" class="font-mono-tech text-2xl font-extrabold text-white">0</span>
+                <span class="text-xs text-emerald-300 font-bold">/ 120 m²</span>
+              </div>
+              <div class="w-full h-2 bg-emerald-950 rounded-full mt-1.5 overflow-hidden">
+                <div id="tele-area-bar" class="h-full bg-emerald-400 transition-all duration-300" style="width: 0%;"></div>
+              </div>
+            </div>
+            <div class="bg-emerald-900/90 rounded-xl p-2.5 border border-emerald-700">
+              <div class="text-[11px] uppercase tracking-wider text-amber-200 font-bold">Total Budget</div>
+              <div class="flex items-baseline gap-1 mt-0.5">
+                <span id="tele-cost" class="font-mono-tech text-2xl font-extrabold text-amber-300">0</span>
+                <span class="text-xs text-amber-200 font-bold">/ 600 cr</span>
+              </div>
+              <div class="w-full h-2 bg-emerald-950 rounded-full mt-1.5 overflow-hidden">
+                <div id="tele-cost-bar" class="h-full bg-amber-400 transition-all duration-300" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Live Constraint Checklights -->
+          <div class="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div id="chk-sports" class="rounded-xl p-2 border bg-rose-950/70 border-rose-500/70 flex flex-col justify-between">
+              <div class="flex items-center justify-between text-[11px] font-extrabold">
+                <span>1. Sports Court</span>
+                <span class="chk-icon">🔴</span>
+              </div>
+              <div class="text-xs font-mono-tech text-rose-200 mt-1">Rect ≥ 24 m² (<span class="chk-val">0</span>)</div>
+            </div>
+            <div id="chk-pond" class="rounded-xl p-2 border bg-rose-950/70 border-rose-500/70 flex flex-col justify-between">
+              <div class="flex items-center justify-between text-[11px] font-extrabold">
+                <span>2. Koi Pond △</span>
+                <span class="chk-icon">🔴</span>
+              </div>
+              <div class="text-xs font-mono-tech text-rose-200 mt-1">△ ≥ 15 m² (<span class="chk-val">0</span>)</div>
+            </div>
+            <div id="chk-flower" class="rounded-xl p-2 border bg-rose-950/70 border-rose-500/70 flex flex-col justify-between">
+              <div class="flex items-center justify-between text-[11px] font-extrabold">
+                <span>3. Flowerbed △</span>
+                <span class="chk-icon">🔴</span>
+              </div>
+              <div class="text-xs font-mono-tech text-rose-200 mt-1">△ ≥ 12 m² (<span class="chk-val">0</span>)</div>
+            </div>
+            <div id="chk-compound" class="rounded-xl p-2 border bg-rose-950/70 border-rose-500/70 flex flex-col justify-between">
+              <div class="flex items-center justify-between text-[11px] font-extrabold">
+                <span>4. Compound &amp; ≤600</span>
+                <span class="chk-icon">🔴</span>
+              </div>
+              <div class="text-xs font-mono-tech text-rose-200 mt-1">≥25 m² (<span class="chk-val">0</span>)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN SANDBOX BODY: LEFT CONTROLS + RIGHT SVG BLUEPRINT -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+          <!-- Zone Builder Controls -->
+          <div class="lg:col-span-4 space-y-3 bg-[#f5efe2] border-2 border-amber-900/15 rounded-2xl p-4">
+            <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-950">1. Choose Zone Tool</h3>
+            <div class="grid grid-cols-1 gap-1.5" id="zone-tool-buttons">
+              <button onclick="selectTool('sports')" data-tool="sports" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
+                <span>🏀 Sports Court (Rectangle)</span>
+                <span class="font-mono-tech">8 cr/m²</span>
+              </button>
+              <button onclick="selectTool('pond')" data-tool="pond" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
+                <span>🐟 Koi Pond (Right-Angled △)</span>
+                <span class="font-mono-tech">6 cr/m²</span>
+              </button>
+              <button onclick="selectTool('flower')" data-tool="flower" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
+                <span>🌼 Flowerbed (Right-Angled △)</span>
+                <span class="font-mono-tech">4 cr/m²</span>
+              </button>
+              <button onclick="selectTool('path')" data-tool="path" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
+                <span>🪨 Stone Path (Rectangle)</span>
+                <span class="font-mono-tech">5 cr/m²</span>
+              </button>
+              <button onclick="selectTool('grass-rect')" data-tool="grass-rect" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
+                <span>🌱 Grass Lawn (Rectangle)</span>
+                <span class="font-mono-tech">3 cr/m²</span>
+              </button>
+              <button onclick="selectTool('grass-tri')" data-tool="grass-tri" class="tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition">
+                <span>🌿 Grass Lawn (Right-Angled △)</span>
+                <span class="font-mono-tech">3 cr/m²</span>
+              </button>
+            </div>
+
+            <div class="pt-2 border-t border-amber-900/15 space-y-2.5">
+              <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-950">2. Set Position &amp; Dimensions</h3>
+              <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+                <label class="bg-white rounded-xl p-2 border border-stone-300">
+                  Start X (0–11): <span id="lbl-x" class="font-mono-tech text-emerald-800">0</span> m
+                  <input id="inp-x" type="range" min="0" max="11" value="0" oninput="updatePreviewInputs()" class="w-full accent-emerald-700 mt-1" />
+                </label>
+                <label class="bg-white rounded-xl p-2 border border-stone-300">
+                  Start Y (0–9): <span id="lbl-y" class="font-mono-tech text-emerald-800">0</span> m
+                  <input id="inp-y" type="range" min="0" max="9" value="0" oninput="updatePreviewInputs()" class="w-full accent-emerald-700 mt-1" />
+                </label>
+                <label class="bg-white rounded-xl p-2 border border-stone-300">
+                  Base b (1–12): <span id="lbl-b" class="font-mono-tech text-emerald-800">6</span> m
+                  <input id="inp-b" type="range" min="1" max="12" value="6" oninput="updatePreviewInputs()" class="w-full accent-amber-600 mt-1" />
+                </label>
+                <label class="bg-white rounded-xl p-2 border border-stone-300">
+                  Height h (1–10): <span id="lbl-h" class="font-mono-tech text-emerald-800">4</span> m
+                  <input id="inp-h" type="range" min="1" max="10" value="4" oninput="updatePreviewInputs()" class="w-full accent-amber-600 mt-1" />
+                </label>
+              </div>
+
+              <!-- Triangle Corner Selector (shown when a triangle tool is active) -->
+              <div id="tri-corner-wrap" class="hidden bg-white rounded-xl p-2.5 border border-stone-300">
+                <div class="text-xs font-bold text-slate-700 mb-1.5">Right Angle (90°) Corner:</div>
+                <div class="grid grid-cols-4 gap-1.5">
+                  <button onclick="setTriCorner('TL')" data-corner="TL" class="corner-btn py-1 rounded-lg border text-xs font-extrabold">⌜ TL</button>
+                  <button onclick="setTriCorner('TR')" data-corner="TR" class="corner-btn py-1 rounded-lg border text-xs font-extrabold">⌝ TR</button>
+                  <button onclick="setTriCorner('BL')" data-corner="BL" class="corner-btn py-1 rounded-lg border text-xs font-extrabold">⌞ BL</button>
+                  <button onclick="setTriCorner('BR')" data-corner="BR" class="corner-btn py-1 rounded-lg border text-xs font-extrabold">⌟ BR</button>
+                </div>
+              </div>
+
+              <!-- Compound Zone Checkbox -->
+              <label class="flex items-center gap-2 bg-emerald-50 border border-emerald-300 rounded-xl px-3 py-2 text-xs font-bold text-emerald-950 cursor-pointer">
+                <input id="inp-compound" type="checkbox" class="w-4 h-4 accent-emerald-700" />
+                <span>Tag as part of Compound Picnic &amp; Play Zone</span>
+              </label>
+
+              <!-- Live Formula Preview -->
+              <div id="formula-preview" class="bg-emerald-950 text-amber-200 rounded-xl px-3 py-2 text-xs font-mono-tech font-bold text-center">
+                6 × 4 = 24 m² • 24 × 8 = 192 credits
+              </div>
+
+              <button onclick="addZoneToSandbox()" class="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-extrabold text-sm shadow transition">
+                ➕ Place Zone on Blueprint
+              </button>
+              <p class="text-[11px] text-slate-600 text-center">Tip: Click any grid square to set Start (X, Y), or click a placed zone in the list to remove it.</p>
+            </div>
+          </div>
+
+          <!-- Interactive 12 x 10 Blueprint SVG Canvas + Zone Ledger -->
+          <div class="lg:col-span-8 space-y-3">
+            <div class="bg-[#062e26] p-3 sm:p-4 rounded-2xl border-4 border-amber-500/70 shadow-inner">
+              <div class="flex items-center justify-between text-xs text-amber-200 font-mono-tech mb-2 px-1">
+                <span>BLUEPRINT GRID: 12 m × 10 m = 120 m²</span>
+                <span>SCALE: 1 SQUARE = 1 m² • N ↑</span>
+              </div>
+              <svg id="park-svg" viewBox="0 0 660 560" class="w-full h-auto bg-[#0b3d33] rounded-xl cursor-crosshair select-none" aria-label="12 by 10 Eco-Park Blueprint Grid"></svg>
+            </div>
+
+            <!-- Live Placed Zones Table -->
+            <div class="bg-white rounded-2xl border-2 border-stone-200 p-3">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-xs font-extrabold uppercase tracking-wider text-emerald-950">Placed Zones Calculation Ledger</h4>
+                <span id="zone-count-pill" class="text-xs font-mono-tech font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900">0 zones</span>
+              </div>
+              <div id="placed-zones-list" class="space-y-1.5 max-h-48 overflow-y-auto text-xs">
+                <p class="text-slate-500 italic py-2 text-center">No zones placed yet. Build your own or tap "Load Sample Valid 120 m² Park"!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STUDIO PHASE 4: LIVE 3-SPRINT TEAM CHALLENGE MISSION BOARD   -->
+    <!-- ============================================================ -->
+    <section id="phase-4" class="phase-section">
+      <div class="space-y-6">
+        <!-- Giant Built-In Sprint Countdown Timer -->
+        <div class="studio-blueprint-banner rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-400/80 shadow-xl">
+          <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="space-y-2 text-center lg:text-left">
+              <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase tracking-wider">Live Studio Sprint Timer</span>
+              <h2 id="sprint-title" class="font-studio-serif text-3xl sm:text-4xl text-white">Sprint 1: Blueprint &amp; Mandatory Zones</h2>
+              <p id="sprint-goal" class="text-emerald-100 text-sm sm:text-base font-medium">Draw all 4 mandatory zones cleanly with a ruler on Page 2 (12 × 10 grid) and mark every 90° right angle!</p>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+              <div id="sprint-clock" class="font-mono-tech text-6xl sm:text-7xl font-extrabold text-amber-300 bg-emerald-950/90 px-7 py-3 rounded-2xl border-2 border-amber-400/70 shadow-inner">
+                10:00
+              </div>
+              <div class="flex gap-2">
+                <button id="btn-sprint-start" onclick="toggleSprintTimer()" class="px-5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-sm shadow transition">▶ Start Sprint</button>
+                <button onclick="resetSprintTimer()" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-sm transition">↺ Reset</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 Sprint Selector Pills -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-6 pt-5 border-t border-emerald-700/80">
+            <button onclick="selectSprint(1)" id="sprint-btn-1" class="sprint-btn text-left p-3.5 rounded-2xl border-2 transition">
+              <div class="flex items-center justify-between text-xs font-extrabold uppercase">
+                <span>Sprint 1 • 10 mins</span>
+                <span>📐 Draft</span>
+              </div>
+              <div class="font-bold text-sm mt-1">Blueprint &amp; Mandatory Zones</div>
+            </button>
+            <button onclick="selectSprint(2)" id="sprint-btn-2" class="sprint-btn text-left p-3.5 rounded-2xl border-2 transition">
+              <div class="flex items-center justify-between text-xs font-extrabold uppercase">
+                <span>Sprint 2 • 8 mins</span>
+                <span>💰 Verify</span>
+              </div>
+              <div class="font-bold text-sm mt-1">Budget Optimisation &amp; Verification</div>
+            </button>
+            <button onclick="selectSprint(3)" id="sprint-btn-3" class="sprint-btn text-left p-3.5 rounded-2xl border-2 transition">
+              <div class="flex items-center justify-between text-xs font-extrabold uppercase">
+                <span>Sprint 3 • 8 mins</span>
+                <span>🎨 Poster</span>
+              </div>
+              <div class="font-bold text-sm mt-1">Team Poster Assembly &amp; Written Reasoning</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Clickable Role Accountability Checklists -->
+        <div class="studio-card rounded-3xl p-6">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <div>
+              <h3 class="text-xl font-extrabold text-emerald-950">✅ Live Role Accountability Checklists</h3>
+              <p class="text-sm text-slate-600">Tick off studio milestones together as teams complete each Sprint!</p>
+            </div>
+            <div class="px-3.5 py-1.5 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-950 font-mono-tech text-sm font-extrabold">
+              Studio Progress: <span id="studio-check-count">0 / 12</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="sprint-checklists">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STUDIO PHASE 5: PEER AUDIT, 60-SECOND PITCH & UNIT FINALE    -->
+    <!-- ============================================================ -->
+    <section id="phase-5" class="phase-section">
+      <div class="space-y-6">
+
+        <!-- Sub-view Switcher: Gallery Pitch & Awards vs Unit 7.1 Finale Quickfire -->
+        <div class="flex flex-wrap justify-center gap-3">
+          <button onclick="setPhase5Mode('pitch')" id="p5-tab-pitch" class="px-5 py-2.5 rounded-2xl font-extrabold text-sm border-2 transition shadow-sm">
+            🎤 Peer Audit, 60s Pitch &amp; Studio Awards
+          </button>
+          <button onclick="setPhase5Mode('quickfire')" id="p5-tab-qf" class="px-5 py-2.5 rounded-2xl font-extrabold text-sm border-2 transition shadow-sm">
+            ⚡ Unit 7.1 Finale 8-Question Quickfire
+          </button>
+        </div>
+
+        <!-- PANEL A: PEER AUDIT, PITCH TIMER & STUDIO AWARDS -->
+        <div id="p5-panel-pitch" class="space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Peer-Audit Inspector Checklist -->
+            <div class="studio-card rounded-3xl p-6 space-y-4">
+              <div>
+                <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Swap Posters With Another Team!</span>
+                <h3 class="font-studio-serif text-2xl text-emerald-950">🔍 Peer-Audit Inspector Checklist</h3>
+              </div>
+              <div class="space-y-2.5" id="peer-audit-list">
+                <label class="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
+                  <input type="checkbox" onchange="updateAuditCounter()" class="audit-chk mt-1 w-5 h-5 accent-emerald-700" />
+                  <span class="text-sm font-bold text-emerald-950">1. Right-Angle Check: Both triangles sit on two 90° grid lines and show (b × h) ÷ 2!</span>
+                </label>
+                <label class="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
+                  <input type="checkbox" onchange="updateAuditCounter()" class="audit-chk mt-1 w-5 h-5 accent-emerald-700" />
+                  <span class="text-sm font-bold text-emerald-950">2. Zero-Gap 120 m² Proof: All zone areas add up to exactly 120 m² with no overlaps.</span>
+                </label>
+                <label class="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
+                  <input type="checkbox" onchange="updateAuditCounter()" class="audit-chk mt-1 w-5 h-5 accent-emerald-700" />
+                  <span class="text-sm font-bold text-emerald-950">3. Budget Proof: Every multiplication is accurate and total cost is ≤ 600 Eco-Credits.</span>
+                </label>
+                <label class="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-200 cursor-pointer hover:bg-emerald-100 transition">
+                  <input type="checkbox" onchange="updateAuditCounter()" class="audit-chk mt-1 w-5 h-5 accent-emerald-700" />
+                  <span class="text-sm font-bold text-emerald-950">4. Poster Sign-Off: Written "One Star &amp; One Suggestion" completed on Page 4!</span>
+                </label>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-stone-200">
+                <span class="text-xs font-extrabold text-slate-600">Audit Status:</span>
+                <span id="audit-status-badge" class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold">0 / 4 Verified</span>
+              </div>
+            </div>
+
+            <!-- 60-Second Pitch Countdown -->
+            <div class="studio-blueprint-banner rounded-3xl p-6 text-white border-4 border-amber-400/80 flex flex-col justify-between">
+              <div>
+                <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase">Hanoi City Council Presentation</span>
+                <h3 class="font-studio-serif text-3xl text-white mt-2">🎤 60-Second Studio Pitch</h3>
+                <p class="text-sm text-emerald-100 mt-1">Lead Reasoning Writers present their poster! Include exact m² totals, one right-angled triangle calculation, and one clever budget trade-off.</p>
+              </div>
+              <div class="my-5 flex flex-col items-center">
+                <div id="pitch-clock" class="font-mono-tech text-7xl font-extrabold text-amber-300 bg-emerald-950/90 px-8 py-3 rounded-2xl border-2 border-amber-400/70">
+                  01:00
+                </div>
+                <div class="flex gap-2.5 mt-4">
+                  <button id="btn-pitch-start" onclick="togglePitchTimer()" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-sm transition shadow">▶ Start 60s Pitch</button>
+                  <button onclick="resetPitchTimer()" class="px-4 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-sm transition">↺ Reset</button>
+                </div>
+              </div>
+              <div class="bg-emerald-950/70 rounded-xl p-3 text-xs text-emerald-100 border border-emerald-700">
+                <strong>Pitch Stem:</strong> "Our Eco-Park covers 120 m² for ___ credits. Our Koi Pond triangle is (___ × ___) ÷ 2 = ___ m², and we saved ___ credits by..."
+              </div>
+            </div>
+          </div>
+
+          <!-- Clickable Studio Award Badges -->
+          <div class="studio-card rounded-3xl p-6">
+            <div class="text-center mb-5">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Tap Any Award to Celebrate a Winning Team!</span>
+              <h3 class="font-studio-serif text-3xl text-emerald-950">🏅 Hanoi Eco-Park Studio Awards</h3>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <button onclick="celebrateAward(this, 'Most Accurate Maths')" class="award-card p-5 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 border-2 border-emerald-400 hover:scale-[1.03] transition text-center shadow-sm">
+                <div class="text-4xl mb-2">📐</div>
+                <div class="font-extrabold text-emerald-950 text-base">Most Accurate Maths</div>
+                <div class="text-xs text-emerald-800 mt-1">Zero errors in (b × h) ÷ 2 and exact 120 m² proof!</div>
+                <div class="award-winner mt-3 text-xs font-extrabold text-amber-700 uppercase tracking-wider">Tap to Award!</div>
+              </button>
+              <button onclick="celebrateAward(this, 'Best Written Justification')" class="award-card p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-amber-400 hover:scale-[1.03] transition text-center shadow-sm">
+                <div class="text-4xl mb-2">✍️</div>
+                <div class="font-extrabold text-amber-950 text-base">Best Written Justification</div>
+                <div class="text-xs text-amber-900 mt-1">Clear mathematical sentences on the Poster Reasoning Panel!</div>
+                <div class="award-winner mt-3 text-xs font-extrabold text-emerald-800 uppercase tracking-wider">Tap to Award!</div>
+              </button>
+              <button onclick="celebrateAward(this, 'Smartest Budget')" class="award-card p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100 border-2 border-teal-400 hover:scale-[1.03] transition text-center shadow-sm">
+                <div class="text-4xl mb-2">💰</div>
+                <div class="font-extrabold text-teal-950 text-base">Smartest Budget</div>
+                <div class="text-xs text-teal-800 mt-1">Clever surface swaps keeping maximum fun under 600 credits!</div>
+                <div class="award-winner mt-3 text-xs font-extrabold text-amber-700 uppercase tracking-wider">Tap to Award!</div>
+              </button>
+              <button onclick="celebrateAward(this, 'Best 4-Role Teamwork')" class="award-card p-5 rounded-2xl bg-gradient-to-br from-yellow-50 to-amber-100 border-2 border-yellow-500 hover:scale-[1.03] transition text-center shadow-sm">
+                <div class="text-4xl mb-2">🤝</div>
+                <div class="font-extrabold text-amber-950 text-base">Best 4-Role Teamwork</div>
+                <div class="text-xs text-amber-900 mt-1">Every role contributed actively and respectfully!</div>
+                <div class="award-winner mt-3 text-xs font-extrabold text-emerald-800 uppercase tracking-wider">Tap to Award!</div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL B: UNIT 7.1 FINALE 8-QUESTION QUICKFIRE -->
+        <div id="p5-panel-qf" class="hidden">
+          <div class="studio-blueprint-banner rounded-3xl p-6 sm:p-8 text-white border-4 border-amber-400 shadow-xl space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <span class="px-3 py-1 rounded-full bg-amber-400 text-emerald-950 text-xs font-extrabold uppercase">Unit 7.1 Mastery Finale</span>
+                <h3 class="font-studio-serif text-3xl text-white mt-1">⚡ 8-Question Rapid Quickfire</h3>
+              </div>
+              <div class="flex items-center gap-3">
+                <span id="qf-progress" class="font-mono-tech text-sm font-bold bg-emerald-900 px-3.5 py-1.5 rounded-xl border border-emerald-600">Q 1 / 8</span>
+                <span id="qf-timer" class="font-mono-tech text-3xl font-extrabold text-amber-300 bg-emerald-950 px-4 py-1 rounded-xl border-2 border-amber-400">15s</span>
+              </div>
+            </div>
+
+            <!-- Question Stage -->
+            <div class="bg-[#fffdf8] text-emerald-950 rounded-3xl p-6 sm:p-10 text-center min-h-[250px] flex flex-col justify-center items-center shadow-inner border-4 border-emerald-800 relative">
+              <div id="qf-boards-up" class="hidden absolute top-3 right-3 px-4 py-1.5 rounded-full bg-rose-600 text-white font-extrabold text-sm animate-bounce shadow">
+                📣 BOARDS UP!
+              </div>
+              <div id="qf-question" class="text-2xl sm:text-4xl font-extrabold leading-snug max-w-3xl"></div>
+              <div id="qf-answer-box" class="hidden mt-6 px-6 py-4 rounded-2xl bg-emerald-100 border-2 border-emerald-600">
+                <div id="qf-answer" class="text-3xl sm:text-5xl font-mono-tech font-extrabold text-emerald-900"></div>
+                <div id="qf-method" class="text-sm font-bold text-emerald-800 mt-1"></div>
+              </div>
+            </div>
+
+            <!-- Quickfire Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div class="flex flex-wrap gap-2">
+                <button onclick="startQfTimer()" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-sm transition">⏱️ Start 15s</button>
+                <button onclick="revealQfAnswer()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm transition">👁️ Reveal Answer</button>
+                <button onclick="nextQf(-1)" class="px-4 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-white font-bold text-sm transition">← Prev</button>
+                <button onclick="nextQf(1)" class="px-4 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-white font-bold text-sm transition">Next →</button>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="awardTeam('red', 1)" class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-sm shadow transition">+1 Team Red 🔴</button>
+                <button onclick="awardTeam('blue', 1)" class="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-sm shadow transition">+1 Team Blue 🔵</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- VOCABULARY BILINGUAL MODAL (SOLE VIETNAMESE EXCEPTION) z-80  -->
+  <!-- ============================================================ -->
+  <div id="vocab-modal" class="hidden fixed inset-0 z-[80] bg-emerald-950/75 backdrop-blur-sm flex items-center justify-center p-4" onclick="if(event.target===this) closeVocabModal()">
+    <div class="bg-[#fffdf8] border-4 border-amber-500 rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-start justify-between gap-3 border-b-2 border-stone-200 pb-3">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">Bilingual Architect's Glossary</span>
+          <h3 id="vm-en" class="font-studio-serif text-3xl text-emerald-950"></h3>
+          <p id="vm-vn" class="text-lg font-extrabold text-emerald-700 mt-0.5"></p>
+        </div>
+        <button onclick="closeVocabModal()" class="w-9 h-9 rounded-full bg-stone-200 hover:bg-stone-300 font-extrabold text-slate-800">✕</button>
+      </div>
+
+      <div id="vm-svg" class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4 flex justify-center items-center"></div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <div class="bg-white border border-stone-200 rounded-xl p-3">
+          <div class="text-[11px] font-extrabold uppercase text-slate-500 mb-1">🇬🇧 English Meaning</div>
+          <p id="vm-def-en" class="font-semibold text-slate-800"></p>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
+          <div class="text-[11px] font-extrabold uppercase text-amber-800 mb-1">🇻🇳 Nghĩa Tiếng Việt</div>
+          <p id="vm-def-vn" class="font-semibold text-amber-950"></p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-2 justify-end pt-1">
+        <button onclick="speakVocab('en-GB')" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-sm font-extrabold transition">🔊 Listen EN (UK)</button>
+        <button onclick="speakVocab('vi-VN')" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-emerald-950 text-sm font-extrabold transition">🔊 Nghe Tiếng Việt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TEACHER PROMPT DRAWER (HIDDEN BY DEFAULT, T) z-75            -->
+  <!-- ============================================================ -->
+  <aside id="teacher-drawer" class="hidden fixed top-0 right-0 bottom-0 w-full max-w-md z-[75] bg-[#052e2b] text-emerald-50 border-l-4 border-amber-400 shadow-2xl p-6 overflow-y-auto">
+    <div class="flex items-center justify-between border-b border-emerald-700 pb-3 mb-4">
+      <h3 class="font-studio-serif text-2xl text-amber-300">📋 Teacher Studio Coaching</h3>
+      <button onclick="toggleTeacherDrawer()" class="px-3 py-1 rounded-lg bg-emerald-800 hover:bg-emerald-700 text-sm font-bold">✕ Close (T)</button>
+    </div>
+    <div class="space-y-4 text-sm">
+      <div class="bg-emerald-900/70 rounded-2xl p-4 border border-emerald-700">
+        <h4 class="font-extrabold text-amber-300 uppercase text-xs mb-1">70-Minute Studio Pacing</h4>
+        <ul class="space-y-1 text-emerald-100 list-disc pl-4">
+          <li><strong>0–8 min:</strong> Phase 0 Brief &amp; Assign 4 Roles + Phase 1 Flashback 3.</li>
+          <li><strong>8–16 min:</strong> Phase 2 Glossary + Phase 3 Live Sandbox Demo (load Sample Park, show why two triangles sharing a diagonal leave ZERO gaps!).</li>
+          <li><strong>16–44 min:</strong> Phase 4 Three Sprints (10m Draft ➔ 8m Budget ➔ 8m Poster &amp; Reasoning).</li>
+          <li><strong>44–58 min:</strong> Phase 5 Peer Audit Swap + 60-Second Pitches + Studio Awards.</li>
+          <li><strong>58–70 min:</strong> Unit 7.1 Finale 8-Question Quickfire!</li>
+        </ul>
+      </div>
+      <div class="bg-rose-950/70 rounded-2xl p-4 border border-rose-600/60">
+        <h4 class="font-extrabold text-rose-300 uppercase text-xs mb-1">Red-Flag Misconception Watch</h4>
+        <p class="text-rose-100"><strong>1. Forgetting ÷ 2:</strong> Area Accountants often multiply base × height for the Koi Pond or Flowerbed and forget to halve it, blowing the 600-credit budget.<br/><strong>2. Non-90° Slant Sides:</strong> Remind Chief Architects that BOTH straight sides of every triangle must lie along horizontal &amp; vertical grid lines!<br/><strong>3. Leftover Gaps:</strong> Show how pairing two right-angled triangles inside one bounding rectangle guarantees zero awkward gaps.</p>
+      </div>
+      <div class="bg-amber-950/60 rounded-2xl p-4 border border-amber-500/60">
+        <h4 class="font-extrabold text-amber-300 uppercase text-xs mb-1">EAL Speaking Stems for Pitch</h4>
+        <ul class="space-y-1 text-amber-100 list-disc pl-4">
+          <li>"Our right-angled triangle has a base of ___ m and a perpendicular height of ___ m."</li>
+          <li>"We halved the rectangle area so the triangle equals ___ m²."</li>
+          <li>"To stay under 600 credits, we swapped ___ m² of ___ for ___."</li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============================================================ -->
+  <!-- DAVID'S BOARD FULL-SCREEN WHITEBOARD (W) z-70                -->
+  <!-- ============================================================ -->
+  <div id="davids-board" class="hidden fixed inset-0 z-[70] bg-white flex flex-col">
+    <div class="bg-emerald-950 text-white px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 border-b-2 border-amber-400">
+      <div class="flex items-center gap-2 font-extrabold text-sm">
+        <span>✏️ David's Studio Sketch Board</span>
+        <span class="text-xs text-emerald-300 font-normal hidden sm:inline">(32px squared grid)</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="setInk('#064e3b')" class="w-7 h-7 rounded-full bg-emerald-900 border-2 border-white" title="Emerald Ink"></button>
+        <button onclick="setInk('#000000')" class="w-7 h-7 rounded-full bg-black border-2 border-white" title="Black Ink"></button>
+        <button onclick="setInk('#b45309')" class="w-7 h-7 rounded-full bg-amber-700 border-2 border-white" title="Gold Ink"></button>
+        <button onclick="setInk('#dc2626')" class="w-7 h-7 rounded-full bg-red-600 border-2 border-white" title="Red Ink"></button>
+        <button onclick="setInk('#0284c7')" class="w-7 h-7 rounded-full bg-sky-600 border-2 border-white" title="Blue Ink"></button>
+        <span class="text-emerald-600">|</span>
+        <button onclick="setPenWidth(3)" class="px-2 py-1 rounded bg-emerald-800 text-xs font-bold">Fine</button>
+        <button onclick="setPenWidth(6)" class="px-2 py-1 rounded bg-emerald-800 text-xs font-bold">Med</button>
+        <button onclick="setPenWidth(12)" class="px-2 py-1 rounded bg-emerald-800 text-xs font-bold">Bold</button>
+        <button onclick="setEraser()" class="px-2.5 py-1 rounded bg-amber-500 text-emerald-950 text-xs font-extrabold">Eraser</button>
+        <button onclick="clearBoard()" class="px-2.5 py-1 rounded bg-rose-600 text-white text-xs font-bold">Clear</button>
+        <button onclick="closeDavidsBoard()" class="px-3 py-1 rounded bg-white text-emerald-950 text-xs font-extrabold">✕ Close (W)</button>
+      </div>
+    </div>
+    <canvas id="board-canvas" class="flex-1 w-full davids-grid touch-none cursor-crosshair"></canvas>
+  </div>
+
+  <script>
+    // =========================================================================
+    // STATE & AUDIO ENGINE (OFFLINE WEB AUDIO API)
+    // =========================================================================
+    let currentPhase = 0;
+    let isMuted = false;
+    let audioCtx = null;
+    const scores = { red: 0, blue: 0 };
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playTone(freq, dur = 0.14, type = 'sine', vol = 0.12) {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(vol, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + dur);
+    }
+
+    function playChime() {
+      playTone(523.25, 0.14, 'triangle', 0.12);
+      setTimeout(() => playTone(659.25, 0.16, 'triangle', 0.12), 90);
+      setTimeout(() => playTone(783.99, 0.24, 'triangle', 0.13), 180);
+    }
+
+    function playBuzzer() {
+      playTone(220, 0.22, 'sawtooth', 0.1);
+      setTimeout(() => playTone(185, 0.3, 'sawtooth', 0.1), 180);
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('btn-mute').innerHTML = isMuted
+        ? '🔇 <span class="hidden sm:inline">Muted (M)</span>'
+        : '🔊 <span class="hidden sm:inline">Sound (M)</span>';
+    }
+
+    // =========================================================================
+    // AUTO-HIDING TOP HEADER
+    // =========================================================================
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const cur = window.scrollY;
+      const hdr = document.getElementById('top-header');
+      if (cur > lastScroll && cur > 60) {
+        hdr.style.transform = 'translateY(-100%)';
+      } else {
+        hdr.style.transform = 'translateY(0)';
+      }
+      lastScroll = cur;
+    });
+
+    // =========================================================================
+    // PHASE NAVIGATION
+    // =========================================================================
+    function goPhase(idx) {
+      if (idx < 0 || idx > 5) return;
+      currentPhase = idx;
+      document.querySelectorAll('.phase-section').forEach((sec, i) => {
+        sec.classList.toggle('active', i === idx);
+      });
+      document.querySelectorAll('.phase-tab').forEach((btn) => {
+        const p = Number(btn.dataset.phase);
+        if (p === idx) {
+          btn.className = 'phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition bg-emerald-900 text-amber-300 shadow border-2 border-amber-400';
+        } else {
+          btn.className = 'phase-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition bg-stone-100 text-emerald-950 hover:bg-emerald-50 border-2 border-transparent';
+        }
+      });
+      playTone(440 + idx * 40, 0.08, 'sine', 0.07);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =========================================================================
+    // PHASE 0: GROUP SIZE SWITCHER & 4 ROLE CARDS
+    // =========================================================================
+    const BASE_ROLES = [
+      {
+        id: 1,
+        icon: '📐',
+        title: 'Chief Architect',
+        colour: 'emerald',
+        badge: 'Role 1',
+        tasks: [
+          'Draw every rectangle & right-angled triangle cleanly with a ruler on the 12 × 10 grid.',
+          'Verify every triangle sits on two 90° perpendicular grid lines and draw the ∟ mark.',
+          'Label exact base (b) and height (h) measurements on the poster blueprint.'
+        ]
+      },
+      {
+        id: 2,
+        icon: '🧮',
+        title: 'Area Accountant',
+        colour: 'amber',
+        badge: 'Role 2',
+        tasks: [
+          'Calculate every zone area accurately: b × h for rectangles and (b × h) ÷ 2 for triangles.',
+          'Check for zero overlaps and zero empty squares anywhere on the blueprint.',
+          'Prove mathematically on Page 3 that all zones sum to exactly 120 m².'
+        ]
+      },
+      {
+        id: 3,
+        icon: '💰',
+        title: 'Budget Director',
+        colour: 'teal',
+        badge: 'Role 3',
+        tasks: [
+          'Multiply each zone area by its unit cost (3, 4, 5, 6, or 8 credits/m²).',
+          'Keep total park cost ≤ 600 Eco-Credits while meeting all 4 mandatory sizes.',
+          'Suggest clever surface swaps to save credits and boost park quality.'
+        ]
+      },
+      {
+        id: 4,
+        icon: '✍️',
+        title: 'Lead Reasoning Writer & Presenter',
+        colour: 'rose',
+        badge: 'Role 4',
+        tasks: [
+          'Write formal mathematical justifications on the Page 4 Poster Reasoning Panel.',
+          'Explain your halving checks and budget trade-off using exact m² numbers.',
+          'Lead your team\'s confident 60-second pitch to Hanoi City Council!'
+        ]
+      }
+    ];
+
+    function setGroupSize(size) {
+      [4, 3, 2].forEach(s => {
+        const b = document.getElementById('grp-btn-' + s);
+        if (s === size) {
+          b.className = 'grp-btn px-4 py-2 rounded-xl text-sm font-extrabold border-2 transition bg-emerald-900 text-amber-300 border-amber-500 shadow';
+        } else {
+          b.className = 'grp-btn px-4 py-2 rounded-xl text-sm font-bold border-2 transition bg-white text-emerald-950 border-stone-300 hover:bg-emerald-50';
+        }
+      });
+
+      const banner = document.getElementById('group-adaptation-banner');
+      const grid = document.getElementById('roles-grid');
+
+      if (size === 4) {
+        banner.classList.add('hidden');
+        grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4';
+        grid.innerHTML = BASE_ROLES.map(r => renderRoleCard(r.badge, r.icon, r.title, r.tasks, r.colour)).join('');
+      } else if (size === 3) {
+        banner.classList.remove('hidden');
+        banner.innerHTML = '👥 <strong>Group of 3 Adaptation:</strong> Pupil 1 leads Architecture, Pupil 2 combines Area &amp; Budget Verification, and Pupil 3 leads Writing, Poster Design &amp; Pitch (all 3 co-check the 120 m² sum!).';
+        grid.className = 'grid grid-cols-1 md:grid-cols-3 gap-4';
+        grid.innerHTML = [
+          renderRoleCard('Pupil 1', '📐', 'Chief Architect & Grid Checker', BASE_ROLES[0].tasks, 'emerald'),
+          renderRoleCard('Pupil 2', '🧮💰', 'Area & Budget Director', [
+            'Calculate every zone area using b × h and (b × h) ÷ 2 and prove Total = 120 m².',
+            'Multiply each zone by its unit cost and keep total cost ≤ 600 Eco-Credits.',
+            'Propose one smart surface swap to save credits.'
+          ], 'amber'),
+          renderRoleCard('Pupil 3', '✍️🎤', 'Lead Writer & Presenter', BASE_ROLES[3].tasks, 'rose')
+        ].join('');
+      } else {
+        banner.classList.remove('hidden');
+        banner.innerHTML = '👥 <strong>Pair of 2 Adaptation:</strong> Partner A leads Blueprint Drawing &amp; Area Proof (Roles 1 + 2); Partner B leads Budget Optimisation &amp; Written Pitch (Roles 3 + 4).';
+        grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
+        grid.innerHTML = [
+          renderRoleCard('Partner A (Roles 1 + 2)', '📐🧮', 'Chief Architect & Area Accountant', [
+            'Draw all rectangles and right-angled triangles cleanly on the 12 × 10 grid with 90° symbols.',
+            'Compute every zone area (b × h and (b × h) ÷ 2) and prove zero gaps = 120 m².',
+            'Co-present the blueprint geometry during the 60-second pitch.'
+          ], 'emerald'),
+          renderRoleCard('Partner B (Roles 3 + 4)', '💰✍️', 'Budget Director & Lead Writer', [
+            'Calculate every zone cost, keep total ≤ 600 credits, and find a clever budget swap.',
+            'Write the team\'s formal mathematical reasoning on the Page 4 Poster Panel.',
+            'Lead the 60-second pitch and check another team\'s poster in the Peer Audit.'
+          ], 'amber')
+        ].join('');
+      }
+    }
+
+    function renderRoleCard(badge, icon, title, tasks, colour) {
+      const palettes = {
+        emerald: 'bg-emerald-50 border-emerald-400 text-emerald-950 badge:bg-emerald-800 badge:text-amber-300',
+        amber: 'bg-amber-50 border-amber-400 text-amber-950',
+        teal: 'bg-teal-50 border-teal-400 text-teal-950',
+        rose: 'bg-rose-50 border-rose-300 text-rose-950'
+      };
+      const badgeColors = {
+        emerald: 'bg-emerald-800 text-amber-300',
+        amber: 'bg-amber-600 text-white',
+        teal: 'bg-teal-800 text-amber-200',
+        rose: 'bg-rose-700 text-white'
+      };
+      return `
+        <div class="rounded-2xl border-2 p-4 flex flex-col justify-between ${palettes[colour]}">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold uppercase ${badgeColors[colour]}">${badge}</span>
+              <span class="text-2xl">${icon}</span>
+            </div>
+            <h4 class="font-extrabold text-base leading-snug mb-2">${title}</h4>
+            <ul class="space-y-1.5 text-xs font-semibold opacity-90 list-disc pl-4">
+              ${tasks.map(t => `<li>${t}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // PHASE 1: FLASHBACK 3 FLIP CARDS
+    // =========================================================================
+    function toggleFlip(cardEl) {
+      cardEl.classList.toggle('flipped');
+      playTone(540, 0.08, 'triangle', 0.08);
+    }
+
+    function flipAllFlashbacks(show) {
+      document.querySelectorAll('#phase-1 .flip-card').forEach(c => {
+        c.classList.toggle('flipped', show);
+      });
+      playChime();
+    }
+
+    // =========================================================================
+    // PHASE 2: BILINGUAL GLOSSARY MODAL (SOLE VIETNAMESE ZONE)
+    // =========================================================================
+    const VOCAB_ITEMS = [
+      {
+        en: 'scale',
+        vn: 'tỉ lệ bản vẽ',
+        defEn: 'The fixed relationship between a size on a drawing and the real size (e.g. 1 grid square = 1 m²).',
+        defVn: 'Tỉ lệ cố định giữa kích thước trên bản vẽ và kích thước thật (ví dụ: 1 ô vuông = 1 m²).',
+        svg: `<svg viewBox="0 0 200 70" class="w-48 h-16"><rect x="15" y="14" width="40" height="40" fill="#a7f3d0" stroke="#064e3b" stroke-width="2.5"/><text x="35" y="39" text-anchor="middle" font-size="13" font-weight="800" fill="#064e3b">1 m²</text><text x="80" y="40" font-size="18" font-weight="800" fill="#b45309">➔</text><rect x="115" y="10" width="70" height="48" fill="#fef3c7" stroke="#b45309" stroke-width="2.5" stroke-dasharray="4 3"/><text x="150" y="39" text-anchor="middle" font-size="12" font-weight="800" fill="#92400e">Real Park</text></svg>`
+      },
+      {
+        en: 'blueprint',
+        vn: 'bản thiết kế kỹ thuật',
+        defEn: 'A precise, labelled architectural plan drawn to scale showing exact shapes and dimensions.',
+        defVn: 'Bản vẽ kiến trúc chính xác theo tỉ lệ, ghi rõ hình dạng và kích thước từng khu vực.',
+        svg: `<svg viewBox="0 0 200 70" class="w-48 h-16"><rect x="20" y="8" width="160" height="54" rx="4" fill="#064e3b" stroke="#fbbf24" stroke-width="2.5"/><line x1="20" y1="35" x2="180" y2="35" stroke="rgba(255,255,255,0.35)"/><line x1="100" y1="8" x2="100" y2="62" stroke="rgba(255,255,255,0.35)"/><polygon points="100,8 180,8 180,35" fill="rgba(251,191,36,0.35)" stroke="#fbbf24" stroke-width="2"/><text x="60" y="26" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Court</text></svg>`
+      },
+      {
+        en: 'zone',
+        vn: 'khu vực chức năng',
+        defEn: 'A dedicated section of a park or building designed for one clear purpose (e.g. pond or court).',
+        defVn: 'Một phần riêng biệt trong công viên được thiết kế cho một mục đích cụ thể (ví dụ: hồ cá, sân thể thao).',
+        svg: `<svg viewBox="0 0 200 70" class="w-48 h-16"><rect x="16" y="12" width="52" height="46" rx="4" fill="#fecdd3" stroke="#be123c" stroke-width="2"/><rect x="74" y="12" width="52" height="46" rx="4" fill="#cffafe" stroke="#0e7490" stroke-width="2"/><rect x="132" y="12" width="52" height="46" rx="4" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/><text x="42" y="39" text-anchor="middle" font-size="11" font-weight="800" fill="#881337">A</text><text x="100" y="39" text-anchor="middle" font-size="11" font-weight="800" fill="#164e63">B</text><text x="158" y="39" text-anchor="middle" font-size="11" font-weight="800" fill="#14532d">C</text></svg>`
+      },
+      {
+        en: 'budget',
+        vn: 'ngân sách',
+        defEn: 'The maximum total amount of money or credits a team is allowed to spend on a project.',
+        defVn: 'Tổng số tiền hoặc tín chỉ tối đa mà nhóm được phép chi tiêu cho dự án.',
+        svg: `<svg viewBox="0 0 200 70" class="w-48 h-16"><rect x="18" y="24" width="164" height="22" rx="11" fill="#e5e7eb" stroke="#064e3b" stroke-width="2"/><rect x="18" y="24" width="140" height="22" rx="11" fill="#10b981"/><text x="100" y="18" text-anchor="middle" font-size="11" font-weight="800" fill="#064e3b">≤ 600 Eco-Credits</text><text x="88" y="39" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff">582 / 600 ✓</text></svg>`
+      },
+      {
+        en: 'square metre (m²)',
+        vn: 'mét vuông (m²)',
+        defEn: 'A standard metric unit of area equal to a square measuring 1 metre by 1 metre.',
+        defVn: 'Đơn vị đo diện tích chuẩn bằng diện tích một hình vuông cạnh 1 mét × 1 mét.',
+        svg: `<svg viewBox="0 0 200 70" class="w-48 h-16"><rect x="74" y="14" width="46" height="46" fill="#d1fae5" stroke="#064e3b" stroke-width="2.5"/><text x="97" y="42" text-anchor="middle" font-size="14" font-weight="800" fill="#064e3b">1 m²</text><text x="97" y="10" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">1 m</text><text x="132" y="41" font-size="11" font-weight="700" fill="#b45309">1 m</text></svg>`
+      },
+      {
+        en: 'compound area',
+        vn: 'diện tích hình ghép',
+        defEn: 'The total area found by splitting a composite shape into simpler rectangles and right-angled triangles and adding them.',
+        defVn: 'Tổng diện tích tìm được bằng cách chia hình phức hợp thành các hình chữ nhật và tam giác vuông rồi cộng lại.',
+        svg: `<svg viewBox="0 0 200 70" class="w-48 h-16"><rect x="35" y="14" width="75" height="44" fill="#bbf7d0" stroke="#064e3b" stroke-width="2.5"/><polygon points="110,14 165,58 110,58" fill="#fde68a" stroke="#b45309" stroke-width="2.5"/><rect x="110" y="48" width="10" height="10" fill="none" stroke="#b45309" stroke-width="1.8"/><text x="72" y="41" text-anchor="middle" font-size="12" font-weight="800" fill="#064e3b">Rect</text><text x="130" y="50" text-anchor="middle" font-size="12" font-weight="800" fill="#92400e">△</text></svg>`
+      },
+      {
+        en: 'justify',
+        vn: 'giải thích và chứng minh',
+        defEn: 'To give clear mathematical reasons and exact calculations proving why your answer or choice is valid.',
+        defVn: 'Đưa ra lý do toán học rõ ràng và phép tính chính xác để chứng minh lựa chọn của em là hợp lý.',
+        svg: `<svg viewBox="0 0 200 70" class="w-48 h-16"><rect x="18" y="10" width="164" height="50" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2.2"/><text x="100" y="31" text-anchor="middle" font-size="12" font-weight="800" fill="#92400e">"Because (6 × 5) ÷ 2 = 15 m²,"</text><text x="100" y="49" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Proof + Exact Numbers ✓</text></svg>`
+      },
+      {
+        en: 'optimise',
+        vn: 'tối ưu hoá',
+        defEn: 'To improve a design by balancing space and cost to get the best possible result within the rules.',
+        defVn: 'Cải thiện bản thiết kế bằng cách cân bằng diện tích và chi phí để đạt hiệu quả tốt nhất trong quy định.',
+        svg: `<svg viewBox="0 0 200 70" class="w-48 h-16"><line x1="35" y1="48" x2="165" y2="28" stroke="#064e3b" stroke-width="3.5"/><polygon points="100,38 88,60 112,60" fill="#b45309"/><circle cx="48" cy="36" r="11" fill="#10b981"/><text x="48" y="40" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">m²</text><circle cx="152" cy="18" r="11" fill="#f59e0b"/><text x="152" y="22" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">cr</text></svg>`
+      }
+    ];
+
+    let activeVocabIdx = 0;
+
+    function buildVocabGrid() {
+      const grid = document.getElementById('vocab-grid');
+      grid.innerHTML = VOCAB_ITEMS.map((v, i) => `
+        <button onclick="openVocabModal(${i})" class="studio-card rounded-2xl p-4 text-left hover:border-amber-500 hover:-translate-y-0.5 transition group">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-mono-tech font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-900">0${i + 1}</span>
+            <span class="text-amber-600 group-hover:scale-110 transition">🔊</span>
+          </div>
+          <div class="font-extrabold text-lg text-emerald-950 capitalize">${v.en}</div>
+          <div class="text-xs text-slate-500 font-semibold mt-1">Tap for diagram &amp; audio</div>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(i) {
+      activeVocabIdx = i;
+      const v = VOCAB_ITEMS[i];
+      document.getElementById('vm-en').textContent = v.en;
+      document.getElementById('vm-vn').textContent = v.vn;
+      document.getElementById('vm-svg').innerHTML = v.svg;
+      document.getElementById('vm-def-en').textContent = v.defEn;
+      document.getElementById('vm-def-vn').textContent = v.defVn;
+      document.getElementById('vocab-modal').classList.remove('hidden');
+      playTone(600, 0.08, 'sine', 0.08);
+    }
+
+    function closeVocabModal() {
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      document.getElementById('vocab-modal').classList.add('hidden');
+    }
+
+    function speakVocab(lang) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const v = VOCAB_ITEMS[activeVocabIdx];
+      const text = lang === 'en-GB' ? `${v.en}. ${v.defEn}` : `${v.vn}. ${v.defVn}`;
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    // =========================================================================
+    // PHASE 3: INTERACTIVE 12 x 10 ECO-PARK BLUEPRINT SANDBOX
+    // =========================================================================
+    const TOOLS = {
+      'sports':     { name: 'Sports Court', shape: 'rect', rate: 8, fill: 'rgba(244, 63, 94, 0.72)', stroke: '#ffe4e6', tag: 'sports' },
+      'pond':       { name: 'Koi Pond',     shape: 'tri',  rate: 6, fill: 'rgba(6, 182, 212, 0.75)', stroke: '#cffafe', tag: 'pond' },
+      'flower':     { name: 'Flowerbed',    shape: 'tri',  rate: 4, fill: 'rgba(245, 158, 11, 0.78)', stroke: '#fef3c7', tag: 'flower' },
+      'path':       { name: 'Stone Path',   shape: 'rect', rate: 5, fill: 'rgba(168, 162, 158, 0.78)', stroke: '#f5f5f4', tag: 'path' },
+      'grass-rect': { name: 'Grass Lawn',   shape: 'rect', rate: 3, fill: 'rgba(16, 185, 129, 0.72)', stroke: '#d1fae5', tag: 'grass' },
+      'grass-tri':  { name: 'Grass Lawn',   shape: 'tri',  rate: 3, fill: 'rgba(52, 211, 153, 0.74)', stroke: '#d1fae5', tag: 'grass' }
+    };
+
+    let selectedToolKey = 'sports';
+    let triCorner = 'TL'; // Right-angle vertex corner of bounding box
+    let placedZones = [];
+    let nextZoneId = 1;
+
+    function selectTool(key) {
+      selectedToolKey = key;
+      document.querySelectorAll('.tool-btn').forEach(btn => {
+        const active = btn.dataset.tool === key;
+        btn.className = active
+          ? 'tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-extrabold transition bg-emerald-900 text-amber-300 border-amber-500 shadow'
+          : 'tool-btn flex items-center justify-between px-3 py-2 rounded-xl border-2 text-xs font-bold transition bg-white text-emerald-950 border-stone-300 hover:bg-emerald-50';
+      });
+      const isTri = TOOLS[key].shape === 'tri';
+      document.getElementById('tri-corner-wrap').classList.toggle('hidden', !isTri);
+      updatePreviewInputs();
+    }
+
+    function setTriCorner(c) {
+      triCorner = c;
+      document.querySelectorAll('.corner-btn').forEach(btn => {
+        const active = btn.dataset.corner === c;
+        btn.className = active
+          ? 'corner-btn py-1 rounded-lg border text-xs font-extrabold bg-emerald-800 text-amber-300 border-emerald-900'
+          : 'corner-btn py-1 rounded-lg border text-xs font-bold bg-stone-50 text-slate-700 border-stone-300';
+      });
+      renderBlueprint();
+    }
+
+    function updatePreviewInputs() {
+      let x = Number(document.getElementById('inp-x').value);
+      let y = Number(document.getElementById('inp-y').value);
+      let b = Number(document.getElementById('inp-b').value);
+      let h = Number(document.getElementById('inp-h').value);
+      if (x + b > 12) { b = 12 - x; document.getElementById('inp-b').value = b; }
+      if (y + h > 10) { h = 10 - y; document.getElementById('inp-h').value = h; }
+      document.getElementById('lbl-x').textContent = x;
+      document.getElementById('lbl-y').textContent = y;
+      document.getElementById('lbl-b').textContent = b;
+      document.getElementById('lbl-h').textContent = h;
+
+      const t = TOOLS[selectedToolKey];
+      const area = t.shape === 'rect' ? b * h : (b * h) / 2;
+      const cost = area * t.rate;
+      const formula = t.shape === 'rect'
+        ? `${b} × ${h} = ${area} m² • ${area} × ${t.rate} = ${cost} credits`
+        : `(${b} × ${h}) ÷ 2 = ${area} m² • ${area} × ${t.rate} = ${cost} credits`;
+      document.getElementById('formula-preview').textContent = formula;
+      renderBlueprint();
+    }
+
+    function addZoneToSandbox() {
+      const x = Number(document.getElementById('inp-x').value);
+      const y = Number(document.getElementById('inp-y').value);
+      const b = Number(document.getElementById('inp-b').value);
+      const h = Number(document.getElementById('inp-h').value);
+      const isCompound = document.getElementById('inp-compound').checked;
+      const t = TOOLS[selectedToolKey];
+      const area = t.shape === 'rect' ? b * h : (b * h) / 2;
+      const cost = area * t.rate;
+
+      placedZones.push({
+        id: nextZoneId++,
+        toolKey: selectedToolKey,
+        name: isCompound ? `${t.name} (Compound)` : t.name,
+        shape: t.shape,
+        corner: triCorner,
+        x, y, b, h,
+        area,
+        rate: t.rate,
+        cost,
+        fill: t.fill,
+        stroke: t.stroke,
+        tag: t.tag,
+        compound: isCompound
+      });
+      playTone(587, 0.1, 'triangle', 0.1);
+      renderBlueprint();
+    }
+
+    function removeZone(id) {
+      placedZones = placedZones.filter(z => z.id !== id);
+      playTone(320, 0.08, 'sine', 0.08);
+      renderBlueprint();
+    }
+
+    function clearSandbox() {
+      placedZones = [];
+      playTone(260, 0.1, 'sine', 0.08);
+      renderBlueprint();
+    }
+
+    // Verified 120 m² / 582 credits zero-gap Sample Park!
+    function loadSamplePark() {
+      placedZones = [
+        { id: nextZoneId++, toolKey: 'sports', name: 'Sports Court', shape: 'rect', corner: 'TL', x: 0, y: 0, b: 6, h: 4, area: 24, rate: 8, cost: 192, fill: TOOLS['sports'].fill, stroke: TOOLS['sports'].stroke, tag: 'sports', compound: false },
+        { id: nextZoneId++, toolKey: 'flower', name: 'Flowerbed', shape: 'tri', corner: 'TR', x: 6, y: 0, b: 6, h: 4, area: 12, rate: 4, cost: 48, fill: TOOLS['flower'].fill, stroke: TOOLS['flower'].stroke, tag: 'flower', compound: false },
+        { id: nextZoneId++, toolKey: 'grass-tri', name: 'Picnic Zone △ (Compound)', shape: 'tri', corner: 'BL', x: 6, y: 0, b: 6, h: 4, area: 12, rate: 3, cost: 36, fill: 'rgba(16, 185, 129, 0.78)', stroke: '#fef08a', tag: 'grass', compound: true },
+        { id: nextZoneId++, toolKey: 'grass-rect', name: 'Picnic Zone Rect (Compound)', shape: 'rect', corner: 'TL', x: 6, y: 4, b: 6, h: 3, area: 18, rate: 3, cost: 54, fill: 'rgba(16, 185, 129, 0.78)', stroke: '#fef08a', tag: 'grass', compound: true },
+        { id: nextZoneId++, toolKey: 'path', name: 'Stone Path Plaza', shape: 'rect', corner: 'TL', x: 6, y: 7, b: 6, h: 3, area: 18, rate: 5, cost: 90, fill: TOOLS['path'].fill, stroke: TOOLS['path'].stroke, tag: 'path', compound: false },
+        { id: nextZoneId++, toolKey: 'pond', name: 'Koi Pond', shape: 'tri', corner: 'TL', x: 0, y: 4, b: 6, h: 6, area: 18, rate: 6, cost: 108, fill: TOOLS['pond'].fill, stroke: TOOLS['pond'].stroke, tag: 'pond', compound: false },
+        { id: nextZoneId++, toolKey: 'grass-tri', name: 'South Grass Lawn', shape: 'tri', corner: 'BR', x: 0, y: 4, b: 6, h: 6, area: 18, rate: 3, cost: 54, fill: 'rgba(52, 211, 153, 0.68)', stroke: '#d1fae5', tag: 'grass', compound: false }
+      ];
+      playChime();
+      fireConfetti();
+      renderBlueprint();
+    }
+
+    function triPoints(z, ox, oy, cell) {
+      const x0 = ox + z.x * cell, y0 = oy + z.y * cell;
+      const x1 = x0 + z.b * cell, y1 = y0 + z.h * cell;
+      if (z.corner === 'TL') return { pts: `${x0},${y0} ${x1},${y0} ${x0},${y1}`, rx: x0, ry: y0, dx: 1, dy: 1, cx: x0 + z.b * cell * 0.32, cy: y0 + z.h * cell * 0.34 };
+      if (z.corner === 'TR') return { pts: `${x0},${y0} ${x1},${y0} ${x1},${y1}`, rx: x1, ry: y0, dx: -1, dy: 1, cx: x0 + z.b * cell * 0.68, cy: y0 + z.h * cell * 0.34 };
+      if (z.corner === 'BL') return { pts: `${x0},${y0} ${x0},${y1} ${x1},${y1}`, rx: x0, ry: y1, dx: 1, dy: -1, cx: x0 + z.b * cell * 0.32, cy: y0 + z.h * cell * 0.68 };
+      return { pts: `${x1},${y0} ${x1},${y1} ${x0},${y1}`, rx: x1, ry: y1, dx: -1, dy: -1, cx: x0 + z.b * cell * 0.68, cy: y0 + z.h * cell * 0.68 };
+    }
+
+    function renderBlueprint() {
+      const svg = document.getElementById('park-svg');
+      const ox = 42, oy = 32, cell = 48; // 12*48=576, 10*48=480
+      let html = '';
+
+      // Grid lines & numbered axes
+      for (let i = 0; i <= 12; i++) {
+        const gx = ox + i * cell;
+        html += `<line x1="${gx}" y1="${oy}" x2="${gx}" y2="${oy + 10 * cell}" stroke="rgba(255,255,255,0.22)" stroke-width="${i % 6 === 0 ? 1.8 : 1}"/>`;
+        html += `<text x="${gx}" y="${oy - 10}" text-anchor="middle" font-size="12" font-weight="700" fill="#fde68a">${i}</text>`;
+      }
+      for (let j = 0; j <= 10; j++) {
+        const gy = oy + j * cell;
+        html += `<line x1="${ox}" y1="${gy}" x2="${ox + 12 * cell}" y2="${gy}" stroke="rgba(255,255,255,0.22)" stroke-width="${j % 5 === 0 ? 1.8 : 1}"/>`;
+        html += `<text x="${ox - 12}" y="${gy + 4}" text-anchor="end" font-size="12" font-weight="700" fill="#fde68a">${j}</text>`;
+      }
+      html += `<rect x="${ox}" y="${oy}" width="${12 * cell}" height="${10 * cell}" fill="none" stroke="#fbbf24" stroke-width="2.5"/>`;
+
+      // Placed Zones
+      placedZones.forEach(z => {
+        if (z.shape === 'rect') {
+          const rx = ox + z.x * cell, ry = oy + z.y * cell, rw = z.b * cell, rh = z.h * cell;
+          html += `<rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" fill="${z.fill}" stroke="${z.stroke}" stroke-width="2.5"/>`;
+          html += `<text x="${rx + rw / 2}" y="${ry + rh / 2 - 5}" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">${z.name}</text>`;
+          html += `<text x="${rx + rw / 2}" y="${ry + rh / 2 + 12}" text-anchor="middle" font-size="12" font-weight="700" fill="#fef3c7">${z.b}×${z.h} = ${z.area} m² (${z.cost} cr)</text>`;
+        } else {
+          const tp = triPoints(z, ox, oy, cell);
+          const s = 12;
+          html += `<polygon points="${tp.pts}" fill="${z.fill}" stroke="${z.stroke}" stroke-width="2.5"/>`;
+          html += `<path d="M ${tp.rx + tp.dx * s} ${tp.ry} L ${tp.rx + tp.dx * s} ${tp.ry + tp.dy * s} L ${tp.rx} ${tp.ry + tp.dy * s}" fill="none" stroke="#ffffff" stroke-width="2"/>`;
+          html += `<text x="${tp.cx}" y="${tp.cy - 4}" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">${z.name}</text>`;
+          html += `<text x="${tp.cx}" y="${tp.cy + 12}" text-anchor="middle" font-size="11" font-weight="700" fill="#fef3c7">(${z.b}×${z.h})÷2 = ${z.area} m²</text>`;
+        }
+      });
+
+      // Live Dashed Ghost Preview of Current Tool Selection
+      const px = Number(document.getElementById('inp-x').value);
+      const py = Number(document.getElementById('inp-y').value);
+      const pb = Number(document.getElementById('inp-b').value);
+      const ph = Number(document.getElementById('inp-h').value);
+      const t = TOOLS[selectedToolKey];
+      if (t.shape === 'rect') {
+        html += `<rect x="${ox + px * cell}" y="${oy + py * cell}" width="${pb * cell}" height="${ph * cell}" fill="rgba(251,191,36,0.16)" stroke="#fbbf24" stroke-width="3" stroke-dasharray="7 5" pointer-events="none"/>`;
+      } else {
+        const gp = triPoints({ x: px, y: py, b: pb, h: ph, corner: triCorner }, ox, oy, cell);
+        html += `<polygon points="${gp.pts}" fill="rgba(251,191,36,0.18)" stroke="#fbbf24" stroke-width="3" stroke-dasharray="7 5" pointer-events="none"/>`;
+      }
+
+      svg.innerHTML = html;
+      updateTelemetryAndList();
+    }
+
+    function updateTelemetryAndList() {
+      const totalArea = placedZones.reduce((s, z) => s + z.area, 0);
+      const totalCost = placedZones.reduce((s, z) => s + z.cost, 0);
+      const sportsArea = placedZones.filter(z => z.tag === 'sports' && z.shape === 'rect').reduce((s, z) => s + z.area, 0);
+      const pondArea = placedZones.filter(z => z.tag === 'pond' && z.shape === 'tri').reduce((s, z) => s + z.area, 0);
+      const flowerArea = placedZones.filter(z => z.tag === 'flower' && z.shape === 'tri').reduce((s, z) => s + z.area, 0);
+      const compZones = placedZones.filter(z => z.compound);
+      const hasCompRect = compZones.some(z => z.shape === 'rect');
+      const hasCompTri = compZones.some(z => z.shape === 'tri');
+      const compArea = compZones.reduce((s, z) => s + z.area, 0);
+
+      document.getElementById('tele-area').textContent = totalArea;
+      document.getElementById('tele-cost').textContent = totalCost;
+
+      const areaBar = document.getElementById('tele-area-bar');
+      areaBar.style.width = Math.min(100, (totalArea / 120) * 100) + '%';
+      areaBar.className = totalArea === 120 ? 'h-full bg-emerald-400 transition-all duration-300' : (totalArea > 120 ? 'h-full bg-rose-500 transition-all duration-300' : 'h-full bg-amber-300 transition-all duration-300');
+
+      const costBar = document.getElementById('tele-cost-bar');
+      costBar.style.width = Math.min(100, (totalCost / 600) * 100) + '%';
+      costBar.className = totalCost <= 600 ? 'h-full bg-amber-400 transition-all duration-300' : 'h-full bg-rose-500 transition-all duration-300';
+
+      setChecklight('chk-sports', sportsArea >= 24, sportsArea + ' m²');
+      setChecklight('chk-pond', pondArea >= 15, pondArea + ' m²');
+      setChecklight('chk-flower', flowerArea >= 12, flowerArea + ' m²');
+      setChecklight('chk-compound', hasCompRect && hasCompTri && compArea >= 25 && totalCost <= 600 && totalArea === 120, compArea + ' m²');
+
+      document.getElementById('zone-count-pill').textContent = `${placedZones.length} zone${placedZones.length === 1 ? '' : 's'}`;
+      const list = document.getElementById('placed-zones-list');
+      if (placedZones.length === 0) {
+        list.innerHTML = '<p class="text-slate-500 italic py-2 text-center">No zones placed yet. Build your own or tap "Load Sample Valid 120 m² Park"!</p>';
+      } else {
+        list.innerHTML = placedZones.map(z => `
+          <div class="flex flex-wrap items-center justify-between gap-2 px-3 py-1.5 rounded-xl bg-stone-50 border border-stone-200">
+            <div class="font-bold text-emerald-950">${z.name} <span class="text-slate-500 font-normal">(${z.shape === 'rect' ? 'Rect' : '90° △'} ${z.b}m × ${z.h}m)</span></div>
+            <div class="flex items-center gap-3 font-mono-tech font-bold">
+              <span class="text-emerald-800">${z.area} m²</span>
+              <span class="text-amber-700">${z.cost} cr</span>
+              <button onclick="removeZone(${z.id})" class="text-rose-600 hover:text-rose-800 font-extrabold">✕</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function setChecklight(id, ok, valText) {
+      const el = document.getElementById(id);
+      el.className = ok
+        ? 'rounded-xl p-2 border bg-emerald-800/80 border-emerald-400 flex flex-col justify-between transition'
+        : 'rounded-xl p-2 border bg-rose-950/70 border-rose-500/70 flex flex-col justify-between transition';
+      el.querySelector('.chk-icon').textContent = ok ? '🟢' : '🔴';
+      el.querySelector('.chk-val').textContent = valText;
+    }
+
+    function toggleSandboxFullscreen() {
+      const wrap = document.getElementById('sandbox-wrapper');
+      const isFs = wrap.classList.toggle('sandbox-fullscreen');
+      document.getElementById('btn-fullscreen-sandbox').textContent = isFs ? '✕ Exit Full Screen (Esc)' : '⛶ Full Screen Sandbox';
+    }
+
+    // Allow clicking directly on SVG grid to set Start X, Y
+    document.getElementById('park-svg').addEventListener('click', (e) => {
+      const svg = e.currentTarget;
+      const rect = svg.getBoundingClientRect();
+      const svgX = ((e.clientX - rect.left) / rect.width) * 660;
+      const svgY = ((e.clientY - rect.top) / rect.height) * 560;
+      const gx = Math.floor((svgX - 42) / 48);
+      const gy = Math.floor((svgY - 32) / 48);
+      if (gx >= 0 && gx <= 11 && gy >= 0 && gy <= 9) {
+        document.getElementById('inp-x').value = gx;
+        document.getElementById('inp-y').value = gy;
+        updatePreviewInputs();
+      }
+    });
+
+    // =========================================================================
+    // PHASE 4: 3-SPRINT STUDIO TIMER & ROLE CHECKLISTS
+    // =========================================================================
+    const SPRINTS = {
+      1: { title: 'Sprint 1: Blueprint & Mandatory Zones', goal: 'Draw all 4 mandatory zones cleanly with a ruler on Page 2 (12 × 10 grid) and mark every 90° right angle!', secs: 600 },
+      2: { title: 'Sprint 2: Budget Optimisation & Verification', goal: 'Complete the Page 3 Area & Budget Ledger — verify every triangle uses (b × h) ÷ 2, Total = 120 m², and Cost ≤ 600 credits!', secs: 480 },
+      3: { title: 'Sprint 3: Team Poster Assembly & Written Reasoning', goal: 'Mount your Blueprint & Reasoning Panel onto A3 poster paper, finish all 3 justifications on Page 4, and rehearse your 60s pitch!', secs: 480 }
+    };
+
+    let activeSprint = 1;
+    let sprintSecsLeft = 600;
+    let sprintInterval = null;
+
+    function formatMMSS(s) {
+      const m = Math.floor(s / 60);
+      const r = s % 60;
+      return `${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}`;
+    }
+
+    function selectSprint(num) {
+      activeSprint = num;
+      stopSprintTimer();
+      sprintSecsLeft = SPRINTS[num].secs;
+      document.getElementById('sprint-title').textContent = SPRINTS[num].title;
+      document.getElementById('sprint-goal').textContent = SPRINTS[num].goal;
+      document.getElementById('sprint-clock').textContent = formatMMSS(sprintSecsLeft);
+      [1, 2, 3].forEach(i => {
+        const b = document.getElementById('sprint-btn-' + i);
+        b.className = i === num
+          ? 'sprint-btn text-left p-3.5 rounded-2xl border-2 transition bg-amber-400 text-emerald-950 border-white shadow'
+          : 'sprint-btn text-left p-3.5 rounded-2xl border-2 transition bg-emerald-950/60 text-emerald-100 border-emerald-700 hover:bg-emerald-900';
+      });
+    }
+
+    function stopSprintTimer() {
+      if (sprintInterval) { clearInterval(sprintInterval); sprintInterval = null; }
+      document.getElementById('btn-sprint-start').textContent = '▶ Start Sprint';
+    }
+
+    function toggleSprintTimer() {
+      if (sprintInterval) {
+        stopSprintTimer();
+      } else {
+        document.getElementById('btn-sprint-start').textContent = '⏸ Pause';
+        playTone(520, 0.1, 'sine', 0.1);
+        sprintInterval = setInterval(() => {
+          if (sprintSecsLeft > 0) {
+            sprintSecsLeft--;
+            document.getElementById('sprint-clock').textContent = formatMMSS(sprintSecsLeft);
+            if (sprintSecsLeft <= 5 && sprintSecsLeft > 0) playTone(660, 0.08, 'triangle', 0.08);
+            if (sprintSecsLeft === 0) {
+              stopSprintTimer();
+              playBuzzer();
+            }
+          }
+        }, 1000);
+      }
+    }
+
+    function resetSprintTimer() {
+      stopSprintTimer();
+      sprintSecsLeft = SPRINTS[activeSprint].secs;
+      document.getElementById('sprint-clock').textContent = formatMMSS(sprintSecsLeft);
+    }
+
+    function buildSprintChecklists() {
+      const container = document.getElementById('sprint-checklists');
+      const roleShort = [
+        { icon: '📐', name: 'Chief Architect', items: ['All zones drawn with ruler', 'Both △ sit on 90° lines', 'Park title & legend neat'] },
+        { icon: '🧮', name: 'Area Accountant', items: ['Every △ divided by 2', 'Compound zone ≥ 25 m²', 'Total proved = 120 m²'] },
+        { icon: '💰', name: 'Budget Director', items: ['Unit costs multiplied accurately', 'Total cost ≤ 600 credits', '1 smart swap recorded'] },
+        { icon: '✍️', name: 'Lead Writer', items: ['Accuracy proof written', 'Trade-off explained', '60-second pitch rehearsed'] }
+      ];
+      container.innerHTML = roleShort.map(r => `
+        <div class="rounded-2xl bg-stone-50 border-2 border-stone-200 p-4 space-y-2">
+          <div class="font-extrabold text-emerald-950 text-sm flex items-center gap-1.5"><span>${r.icon}</span> ${r.name}</div>
+          ${r.items.map(it => `
+            <label class="flex items-start gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+              <input type="checkbox" onchange="updateStudioCheckCount()" class="studio-chk mt-0.5 w-4 h-4 accent-emerald-700" />
+              <span>${it}</span>
+            </label>
+          `).join('')}
+        </div>
+      `).join('');
+    }
+
+    function updateStudioCheckCount() {
+      const all = document.querySelectorAll('.studio-chk');
+      const checked = Array.from(all).filter(c => c.checked).length;
+      document.getElementById('studio-check-count').textContent = `${checked} / ${all.length}`;
+      if (checked === all.length) { playChime(); fireConfetti(); }
+    }
+
+    // =========================================================================
+    // PHASE 5: PEER AUDIT, 60S PITCH TIMER, AWARDS & UNIT FINALE QUICKFIRE
+    // =========================================================================
+    function setPhase5Mode(mode) {
+      const isPitch = mode === 'pitch';
+      document.getElementById('p5-panel-pitch').classList.toggle('hidden', !isPitch);
+      document.getElementById('p5-panel-qf').classList.toggle('hidden', isPitch);
+      document.getElementById('p5-tab-pitch').className = isPitch
+        ? 'px-5 py-2.5 rounded-2xl font-extrabold text-sm border-2 transition shadow bg-emerald-900 text-amber-300 border-amber-500'
+        : 'px-5 py-2.5 rounded-2xl font-bold text-sm border-2 transition bg-white text-emerald-950 border-stone-300';
+      document.getElementById('p5-tab-qf').className = !isPitch
+        ? 'px-5 py-2.5 rounded-2xl font-extrabold text-sm border-2 transition shadow bg-emerald-900 text-amber-300 border-amber-500'
+        : 'px-5 py-2.5 rounded-2xl font-bold text-sm border-2 transition bg-white text-emerald-950 border-stone-300';
+    }
+
+    function updateAuditCounter() {
+      const all = document.querySelectorAll('.audit-chk');
+      const done = Array.from(all).filter(c => c.checked).length;
+      const badge = document.getElementById('audit-status-badge');
+      badge.textContent = `${done} / 4 Verified`;
+      if (done === 4) {
+        badge.className = 'px-3 py-1 rounded-full bg-emerald-700 text-white text-xs font-extrabold';
+        playChime();
+      } else {
+        badge.className = 'px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold';
+      }
+    }
+
+    let pitchSecs = 60;
+    let pitchInt = null;
+    function togglePitchTimer() {
+      if (pitchInt) {
+        clearInterval(pitchInt); pitchInt = null;
+        document.getElementById('btn-pitch-start').textContent = '▶ Resume Pitch';
+      } else {
+        document.getElementById('btn-pitch-start').textContent = '⏸ Pause';
+        pitchInt = setInterval(() => {
+          if (pitchSecs > 0) {
+            pitchSecs--;
+            document.getElementById('pitch-clock').textContent = formatMMSS(pitchSecs);
+            if (pitchSecs <= 5 && pitchSecs > 0) playTone(700, 0.08, 'triangle', 0.08);
+            if (pitchSecs === 0) {
+              clearInterval(pitchInt); pitchInt = null;
+              document.getElementById('btn-pitch-start').textContent = '▶ Start 60s Pitch';
+              playChime();
+              fireConfetti();
+            }
+          }
+        }, 1000);
+      }
+    }
+
+    function resetPitchTimer() {
+      if (pitchInt) { clearInterval(pitchInt); pitchInt = null; }
+      pitchSecs = 60;
+      document.getElementById('pitch-clock').textContent = '01:00';
+      document.getElementById('btn-pitch-start').textContent = '▶ Start 60s Pitch';
+    }
+
+    function celebrateAward(btn, title) {
+      btn.classList.add('pulse-gold', 'ring-4', 'ring-amber-400');
+      btn.querySelector('.award-winner').textContent = '🏆 AWARDED!';
+      playChime();
+      fireConfetti();
+    }
+
+    // Unit 7.1 Finale 8-Question Quickfire (100% Fresh Numbers)
+    const QF_QUESTIONS = [
+      { q: 'Find the area of a rectangular plaza measuring 9 m by 7 m.', a: '63 m²', m: '9 × 7 = 63 m²' },
+      { q: 'Find the area of a right-angled triangle with base 14 cm and perpendicular height 7 cm.', a: '49 cm²', m: '(14 × 7) ÷ 2 = 98 ÷ 2 = 49 cm²' },
+      { q: 'A rectangular grass lawn is 8 m × 5 m. At 3 credits/m², what is its total cost?', a: '120 credits', m: 'Area = 40 m²; Cost = 40 × 3 = 120 credits' },
+      { q: 'A right-angled triangle has base 12 m, perpendicular height 9 m, and slanted side 15 m. What is its area?', a: '54 m²', m: '(12 × 9) ÷ 2 = 54 m² (ignore the 15 m slanted side!)' },
+      { q: 'A right-angled triangle has area 28 cm² and base 8 cm. What is its perpendicular height?', a: '7 cm', m: 'Double area: 28 × 2 = 56; then 56 ÷ 8 = 7 cm' },
+      { q: 'A compound zone joins a 7 m × 4 m rectangle to a 4 m × 4 m right-angled triangle. Total area?', a: '36 m²', m: 'Rectangle = 28 m², Triangle = (4 × 4) ÷ 2 = 8 m²; 28 + 8 = 36 m²' },
+      { q: 'A koi pond costs 6 credits/m². If you shrink it from 15 m² to 11 m², how many credits do you save?', a: '24 credits', m: 'Area reduced by 4 m²; 4 × 6 = 24 credits saved' },
+      { q: 'A rectangular sports court has an area of 72 m² and a width of 6 m. What is its length?', a: '12 m', m: '72 ÷ 6 = 12 m' }
+    ];
+
+    let qfIdx = 0;
+    let qfSecs = 15;
+    let qfInt = null;
+
+    function renderQf() {
+      stopQfTimer();
+      qfSecs = 15;
+      document.getElementById('qf-timer').textContent = '15s';
+      document.getElementById('qf-progress').textContent = `Q ${qfIdx + 1} / ${QF_QUESTIONS.length}`;
+      document.getElementById('qf-question').textContent = QF_QUESTIONS[qfIdx].q;
+      document.getElementById('qf-answer').textContent = QF_QUESTIONS[qfIdx].a;
+      document.getElementById('qf-method').textContent = QF_QUESTIONS[qfIdx].m;
+      document.getElementById('qf-answer-box').classList.add('hidden');
+      document.getElementById('qf-boards-up').classList.add('hidden');
+    }
+
+    function stopQfTimer() {
+      if (qfInt) { clearInterval(qfInt); qfInt = null; }
+    }
+
+    function startQfTimer() {
+      stopQfTimer();
+      qfSecs = 15;
+      document.getElementById('qf-timer').textContent = '15s';
+      document.getElementById('qf-boards-up').classList.add('hidden');
+      qfInt = setInterval(() => {
+        qfSecs--;
+        document.getElementById('qf-timer').textContent = qfSecs + 's';
+        if (qfSecs <= 3 && qfSecs > 0) playTone(680, 0.08, 'triangle', 0.08);
+        if (qfSecs <= 0) {
+          stopQfTimer();
+          document.getElementById('qf-boards-up').classList.remove('hidden');
+          playBuzzer();
+        }
+      }, 1000);
+    }
+
+    function revealQfAnswer() {
+      stopQfTimer();
+      document.getElementById('qf-answer-box').classList.remove('hidden');
+      playChime();
+    }
+
+    function nextQf(delta) {
+      qfIdx = (qfIdx + delta + QF_QUESTIONS.length) % QF_QUESTIONS.length;
+      renderQf();
+    }
+
+    function awardTeam(team, pts) {
+      scores[team] += pts;
+      document.getElementById('score-' + team).textContent = scores[team];
+      playChime();
+      fireConfetti();
+    }
+
+    // =========================================================================
+    // TEACHER DRAWER & DAVID'S BOARD WHITEBOARD
+    // =========================================================================
+    function toggleTeacherDrawer() {
+      document.getElementById('teacher-drawer').classList.toggle('hidden');
+    }
+
+    let bCanvas, bCtx, isDrawing = false, inkColor = '#064e3b', penWidth = 4, isEraser = false;
+
+    function openDavidsBoard() {
+      document.getElementById('davids-board').classList.remove('hidden');
+      requestAnimationFrame(() => {
+        initBoardCanvas();
+        resizeBoardCanvas();
+      });
+    }
+
+    function closeDavidsBoard() {
+      document.getElementById('davids-board').classList.add('hidden');
+    }
+
+    function resizeBoardCanvas() {
+      bCanvas = document.getElementById('board-canvas');
+      if (!bCanvas) return;
+      const rect = bCanvas.getBoundingClientRect();
+      const targetW = Math.max(1, Math.round(rect.width));
+      const targetH = Math.max(1, Math.round(rect.height));
+      if (bCanvas.width === targetW && bCanvas.height === targetH) return;
+      const snapshot = (bCanvas.width > 0 && bCanvas.height > 0 && bCtx) ? bCanvas.toDataURL() : null;
+      bCanvas.width = targetW;
+      bCanvas.height = targetH;
+      bCtx = bCanvas.getContext('2d');
+      bCtx.lineCap = 'round';
+      bCtx.lineJoin = 'round';
+      if (snapshot) {
+        const img = new Image();
+        img.onload = () => bCtx.drawImage(img, 0, 0);
+        img.src = snapshot;
+      }
+    }
+
+    function initBoardCanvas() {
+      bCanvas = document.getElementById('board-canvas');
+      if (!bCanvas.dataset.ready) {
+        resizeBoardCanvas();
+        const getPos = (e) => {
+          const r = bCanvas.getBoundingClientRect();
+          return { x: (e.clientX - r.left) * (bCanvas.width / r.width), y: (e.clientY - r.top) * (bCanvas.height / r.height) };
+        };
+        bCanvas.addEventListener('pointerdown', (e) => {
+          isDrawing = true;
+          const p = getPos(e);
+          bCtx.beginPath();
+          bCtx.moveTo(p.x, p.y);
+        });
+        bCanvas.addEventListener('pointermove', (e) => {
+          if (!isDrawing) return;
+          const p = getPos(e);
+          bCtx.globalCompositeOperation = isEraser ? 'destination-out' : 'source-over';
+          bCtx.strokeStyle = inkColor;
+          bCtx.lineWidth = isEraser ? 26 : penWidth;
+          bCtx.lineTo(p.x, p.y);
+          bCtx.stroke();
+        });
+        window.addEventListener('pointerup', () => { isDrawing = false; });
+        window.addEventListener('resize', () => {
+          const board = document.getElementById('davids-board');
+          if (board && !board.classList.contains('hidden')) resizeBoardCanvas();
+        });
+        bCanvas.dataset.ready = '1';
+      }
+    }
+
+    function setInk(c) { isEraser = false; inkColor = c; }
+    function setPenWidth(w) { isEraser = false; penWidth = w; }
+    function setEraser() { isEraser = true; }
+    function clearBoard() { if (bCtx) bCtx.clearRect(0, 0, bCanvas.width, bCanvas.height); }
+
+    // =========================================================================
+    // CONFETTI CELEBRATION ENGINE
+    // =========================================================================
+    const confCanvas = document.getElementById('confetti-canvas');
+    const confCtx = confCanvas.getContext('2d');
+    let confettiPieces = [];
+    let confAnim = null;
+
+    function fireConfetti() {
+      confCanvas.width = window.innerWidth;
+      confCanvas.height = window.innerHeight;
+      const cols = ['#10b981', '#fbbf24', '#f59e0b', '#06b6d4', '#f43f5e', '#ffffff'];
+      for (let i = 0; i < 65; i++) {
+        confettiPieces.push({
+          x: Math.random() * confCanvas.width,
+          y: -15 - Math.random() * 60,
+          vx: (Math.random() - 0.5) * 6,
+          vy: 2.5 + Math.random() * 4.5,
+          size: 6 + Math.random() * 6,
+          rot: Math.random() * 360,
+          vrot: (Math.random() - 0.5) * 10,
+          col: cols[Math.floor(Math.random() * cols.length)],
+          life: 110
+        });
+      }
+      if (!confAnim) animateConfetti();
+    }
+
+    function animateConfetti() {
+      confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+      confettiPieces.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.rot += p.vrot; p.life--;
+        confCtx.save();
+        confCtx.translate(p.x, p.y);
+        confCtx.rotate(p.rot * Math.PI / 180);
+        confCtx.fillStyle = p.col;
+        confCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+        confCtx.restore();
+      });
+      confettiPieces = confettiPieces.filter(p => p.life > 0 && p.y < confCanvas.height + 20);
+      if (confettiPieces.length > 0) {
+        confAnim = requestAnimationFrame(animateConfetti);
+      } else {
+        confAnim = null;
+        confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+      }
+    }
+
+    // =========================================================================
+    // GUARDED KEYBOARD SHORTCUTS
+    // =========================================================================
+    document.addEventListener('keydown', (e) => {
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+      const vocabOpen = !document.getElementById('vocab-modal').classList.contains('hidden');
+      const boardOpen = !document.getElementById('davids-board').classList.contains('hidden');
+      const sandboxFs = document.getElementById('sandbox-wrapper').classList.contains('sandbox-fullscreen');
+
+      if (e.key === 'Escape') {
+        if (vocabOpen) closeVocabModal();
+        if (boardOpen) closeDavidsBoard();
+        if (sandboxFs) toggleSandboxFullscreen();
+        document.getElementById('teacher-drawer').classList.add('hidden');
+        return;
+      }
+
+      if (e.key === 'w' || e.key === 'W') {
+        boardOpen ? closeDavidsBoard() : openDavidsBoard();
+        return;
+      }
+      if (e.key === 't' || e.key === 'T') {
+        toggleTeacherDrawer();
+        return;
+      }
+      if (e.key === 'm' || e.key === 'M') {
+        toggleMute();
+        return;
+      }
+
+      if (vocabOpen || boardOpen) return;
+      if (e.key === 'ArrowRight') goPhase(Math.min(5, currentPhase + 1));
+      if (e.key === 'ArrowLeft') goPhase(Math.max(0, currentPhase - 1));
+    });
+
+    // =========================================================================
+    // INITIALISE STUDIO
+    // =========================================================================
+    goPhase(0);
+    setGroupSize(4);
+    buildVocabGrid();
+    selectTool('sports');
+    setTriCorner('TL');
+    selectSprint(1);
+    buildSprintChecklists();
+    setPhase5Mode('pitch');
+    renderQf();
+  </script>
+</body>
+</html>

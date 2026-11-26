@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grade 4 Science Parent Portal — Unit 2 Sound Review Part 1 (2.1–2.3)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(160deg, #f0f9ff 0%, #eef2ff 48%, #fffbeb 100%);
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+    body.mode-en .lang-vn { display: none !important; }
+    body.mode-vn .lang-en { display: none !important; }
+
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 120;
+    }
+    .sim-pill-active {
+      border-color: #4f46e5 !important;
+      background: #eef2ff !important;
+      color: #312e81 !important;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.22);
+    }
+  </style>
+</head>
+<body class="mode-en min-h-screen pb-16">
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- STICKY BILINGUAL TOP BAR -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-2 border-sky-200 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white flex items-center justify-center text-xl shadow">🔊</div>
+        <div class="leading-tight">
+          <div class="text-[11px] font-black uppercase tracking-wider text-sky-700">
+            <span class="lang-en">Grade 4 Science • Stage 5 • Week 17</span>
+            <span class="lang-vn">Khoa học Lớp 4 • Stage 5 • Tuần 17</span>
+          </div>
+          <h1 class="text-sm sm:text-base font-black text-slate-900">
+            <span class="lang-en">Parent Portal: Sound Travel &amp; Muffling</span>
+            <span class="lang-vn">Cổng Phụ Huynh: Truyền Âm &amp; Giảm Âm</span>
+          </h1>
+        </div>
+      </div>
+
+      <!-- Sticky EN / VN Toggle -->
+      <button id="langToggleBtn" onclick="toggleLanguage()" class="px-4 py-2 rounded-full bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-700 hover:to-sky-700 text-white font-black text-xs sm:text-sm shadow-md transition shrink-0">
+        <span class="lang-en">🇻🇳 Xem Tiếng Việt</span>
+        <span class="lang-vn">🇬🇧 Switch to English</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 pt-6 space-y-7">
+
+    <!-- HERO SUMMARY CARD -->
+    <section class="bg-gradient-to-br from-sky-600 via-indigo-600 to-violet-700 text-white rounded-3xl p-6 sm:p-8 shadow-xl space-y-3">
+      <div class="inline-flex items-center gap-2 bg-white/20 px-3 py-1 rounded-full text-xs font-extrabold">
+        <span class="lang-en">Unit 2 Sound Review (Topics 2.1–2.3) • 5Ps.01, 5Ps.02, 5Ps.03, 5TWSp.04</span>
+        <span class="lang-vn">Ôn tập Chủ đề 2: Âm thanh (Bài 2.1–2.3) • Chuẩn Cambridge Stage 5</span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-black leading-tight">
+        <span class="lang-en">Why does sound race through solid wood, and how do soft materials protect our ears?</span>
+        <span class="lang-vn">Tại sao âm thanh truyền nhanh nhất qua gỗ rắn, và vật liệu mềm bảo vệ tai như thế nào?</span>
+      </h2>
+      <p class="text-sm sm:text-base text-sky-100 font-semibold">
+        <span class="lang-en">Explore both interactive labs below with your child! Listen to real sound tones soften when muffled, practise 10 key Cambridge science words with British English &amp; Vietnamese audio, and try our 3-Minute Home Check quiz.</span>
+        <span class="lang-vn">Hãy cùng con trải nghiệm 2 phòng thí nghiệm tương tác bên dưới! Nghe âm thanh nhỏ dần khi được chắn âm, luyện 10 từ vựng khoa học Cambridge có phát âm Anh-Anh &amp; Tiếng Việt, và chinh phục trò chơi đố vui 3 phút.</span>
+      </p>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- INTERACTIVE MODEL A: SOLID / LIQUID / GAS SOUND TRAVEL SIMULATOR      -->
+    <!-- ===================================================================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-lg border-2 border-sky-200 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <span class="text-xs font-black uppercase text-sky-700">
+            <span class="lang-en">Interactive Lab 1 • Tap &amp; Race!</span>
+            <span class="lang-vn">Thí nghiệm tương tác 1 • Chạm &amp; Đua tốc độ!</span>
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black text-slate-900">
+            <span class="lang-en">🏁 Solid / Liquid / Gas Sound Travel Simulator</span>
+            <span class="lang-vn">🏁 Mô phỏng Truyền âm qua Rắn / Lỏng / Khí</span>
+          </h3>
+        </div>
+        <button onclick="launchPortalWave()" class="px-5 py-2.5 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-black text-sm shadow transition">
+          <span class="lang-en">🔔 Send Vibration!</span>
+          <span class="lang-vn">🔔 Gửi rung động!</span>
+        </button>
+      </div>
+
+      <!-- Medium Buttons -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <button onclick="selectPortalMedium('solid')" id="pMed-solid" class="sim-pill-active p-3 rounded-2xl border-2 border-slate-200 bg-white font-extrabold text-xs sm:text-sm text-center transition">
+          🪵 <span class="lang-en">Solid (Wood)</span><span class="lang-vn">Rắn (Gỗ)</span>
+        </button>
+        <button onclick="selectPortalMedium('liquid')" id="pMed-liquid" class="p-3 rounded-2xl border-2 border-slate-200 bg-white font-extrabold text-xs sm:text-sm text-center transition">
+          💧 <span class="lang-en">Liquid (Water)</span><span class="lang-vn">Lỏng (Nước)</span>
+        </button>
+        <button onclick="selectPortalMedium('gas')" id="pMed-gas" class="p-3 rounded-2xl border-2 border-slate-200 bg-white font-extrabold text-xs sm:text-sm text-center transition">
+          💨 <span class="lang-en">Gas (Air)</span><span class="lang-vn">Khí (Không khí)</span>
+        </button>
+        <button onclick="selectPortalMedium('vacuum')" id="pMed-vacuum" class="p-3 rounded-2xl border-2 border-slate-200 bg-white font-extrabold text-xs sm:text-sm text-center transition">
+          🌌 <span class="lang-en">Vacuum (Space)</span><span class="lang-vn">Chân không</span>
+        </button>
+      </div>
+
+      <!-- Visual SVG Stage -->
+      <div class="rounded-2xl bg-slate-900 p-3 border-2 border-slate-700">
+        <svg id="portalWaveSvg" viewBox="0 0 640 130" class="w-full h-32" role="img" aria-label="Sound wave particle simulator"></svg>
+      </div>
+
+      <!-- Dynamic Bilingual Readout Box (Always has dual .lang-en and .lang-vn!) -->
+      <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4 space-y-1">
+        <div class="text-sm sm:text-base font-black text-indigo-900">
+          <span class="lang-en" id="pWaveStatusEn">Solid (Wood) — FASTEST! Tightly packed particles bump into each other almost instantly (~3,500 m/s).</span>
+          <span class="lang-vn" id="pWaveStatusVn">Chất rắn (Gỗ) — NHANH NHẤT! Các hạt xếp sát chặt vào nhau nên truyền rung động gần như tức thì (~3.500 m/giây).</span>
+        </div>
+        <div class="text-xs font-bold text-slate-600">
+          <span class="lang-en" id="pWaveTipEn">Tap "Send Vibration!" to watch the golden vibration wave travel from the bell to the ear.</span>
+          <span class="lang-vn" id="pWaveTipVn">Nhấn "Gửi rung động!" để xem sóng rung động màu vàng truyền từ chuông tới tai.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- INTERACTIVE MODEL B: DECIBEL MUFFLE-O-METER WITH REAL WEB AUDIO       -->
+    <!-- ===================================================================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-lg border-2 border-indigo-200 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <span class="text-xs font-black uppercase text-indigo-700">
+            <span class="lang-en">Interactive Lab 2 • Listen &amp; Compare!</span>
+            <span class="lang-vn">Thí nghiệm tương tác 2 • Nghe &amp; So sánh!</span>
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black text-slate-900">
+            <span class="lang-en">🎛️ Interactive Decibel Muffle-O-Meter</span>
+            <span class="lang-vn">🎛️ Máy Đo Giảm Âm Đê-xi-ben (dB)</span>
+          </h3>
+        </div>
+        <button onclick="playPortalBuzzer()" class="px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm shadow transition">
+          <span class="lang-en">🔊 Test Tone</span>
+          <span class="lang-vn">🔊 Nghe âm thử</span>
+        </button>
+      </div>
+
+      <!-- Material Selector Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5" id="portalMuffleBtns"></div>
+
+      <!-- Digital dB Display & Safety Bar -->
+      <div class="bg-slate-900 text-white rounded-2xl p-5 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="text-xs font-black uppercase text-slate-300">
+            <span class="lang-en">90 dB Alarm Clock Wrapped In:</span>
+            <span class="lang-vn">Đồng hồ báo thức 90 dB được bọc bằng:</span>
+            <strong class="text-amber-300 ml-1">
+              <span class="lang-en" id="pMatNameEn">No Wrap (Bare)</span>
+              <span class="lang-vn" id="pMatNameVn">Không bọc</span>
+            </strong>
+          </span>
+          <span id="pSafetyBadge" class="px-3 py-1 rounded-full text-xs font-black bg-rose-600 text-white">
+            <span class="lang-en" id="pSafetyEn">DANGER &gt; 85 dB</span>
+            <span class="lang-vn" id="pSafetyVn">NGUY HIỂM &gt; 85 dB</span>
+          </span>
+        </div>
+
+        <div class="bg-lime-200 text-slate-900 rounded-xl p-4 text-center">
+          <div class="text-5xl font-black"><span id="pDbNum">90</span> <span class="text-2xl">dB</span></div>
+          <div class="w-full h-3.5 bg-slate-800 rounded-full overflow-hidden mt-3">
+            <div id="pDbBar" class="h-full bg-rose-500 transition-all duration-300" style="width: 75%;"></div>
+          </div>
+          <div class="flex justify-between text-[11px] font-black text-slate-700 mt-1">
+            <span>0 dB</span>
+            <span>70 dB</span>
+            <span>85 dB</span>
+            <span>120 dB</span>
+          </div>
+        </div>
+
+        <div class="text-sm font-bold text-sky-100">
+          <span class="lang-en" id="pMuffleDescEn">Reduction: 0 dB quieter. Bare sound waves reach your ears at full volume!</span>
+          <span class="lang-vn" id="pMuffleDescVn">Giảm được: 0 dB. Âm thanh truyền trực tiếp tới tai ở mức rất lớn!</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 10 VISUAL SVG BILINGUAL VOCAB CARDS WITH EN/VN WEB SPEECH AUDIO       -->
+    <!-- ===================================================================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-lg border-2 border-amber-200 space-y-4">
+      <div>
+        <span class="text-xs font-black uppercase text-amber-700">
+          <span class="lang-en">Bilingual Vocabulary Flashcards • Tap Audio to Practise</span>
+          <span class="lang-vn">Thẻ từ vựng song ngữ • Chạm loa để luyện phát âm</span>
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-slate-900">
+          <span class="lang-en">📖 10 Essential Unit 2 Sound Words</span>
+          <span class="lang-vn">📖 10 Từ vựng Trọng tâm Chủ đề Âm thanh</span>
+        </h3>
+      </div>
+
+      <div id="portalVocabGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 3-TIER DINNER TABLE TALKS (HOME ACTIVITIES)                           -->
+    <!-- ===================================================================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-lg border-2 border-emerald-200 space-y-4">
+      <div>
+        <span class="text-xs font-black uppercase text-emerald-700">
+          <span class="lang-en">Zero-Cost Home Science • 5 Minutes Together</span>
+          <span class="lang-vn">Khoa học tại nhà không cần dụng cụ • 5 phút bên nhau</span>
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-slate-900">
+          <span class="lang-en">🍽️ 3-Tier Dinner Table Talks</span>
+          <span class="lang-vn">🍽️ 3 Chủ đề Trò chuyện Bữa tối</span>
+        </h3>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="rounded-2xl p-4 bg-emerald-50 border-2 border-emerald-300 space-y-2">
+          <div class="text-xs font-black uppercase text-emerald-800">
+            <span class="lang-en">🌱 Tier 1 • Easy Demo</span>
+            <span class="lang-vn">🌱 Mức 1 • Thử nghiệm dễ</span>
+          </div>
+          <h4 class="font-black text-slate-900 text-base">
+            <span class="lang-en">Ear-on-Table Tap Test</span>
+            <span class="lang-vn">Thử áp tai lên mặt bàn gỗ</span>
+          </h4>
+          <p class="text-sm font-semibold text-slate-700">
+            <span class="lang-en">Gently tap the wooden dining table while listening through air, then press one ear flat on the wood and tap again. Ask your child why the wood sounds clearer! (Answer: tightly packed solid particles!)</span>
+            <span class="lang-vn">Gõ nhẹ lên mặt bàn ăn khi nghe qua không khí, sau đó áp một tai sát mặt bàn gỗ và gõ nhẹ như cũ. Hỏi con tại sao nghe qua gỗ lại to và rõ hơn? (Đáp án: các hạt chất rắn xếp sát nhau!)</span>
+          </p>
+        </div>
+
+        <div class="rounded-2xl p-4 bg-amber-50 border-2 border-amber-300 space-y-2">
+          <div class="text-xs font-black uppercase text-amber-800">
+            <span class="lang-en">⭐ Tier 2 • Real-Life Safety</span>
+            <span class="lang-vn">⭐ Mức 2 • An toàn thực tế</span>
+          </div>
+          <h4 class="font-black text-slate-900 text-base">
+            <span class="lang-en">Headphones &amp; Hanoi Horns</span>
+            <span class="lang-vn">Tai nghe &amp; Tiếng còi xe Hà Nội</span>
+          </h4>
+          <p class="text-sm font-semibold text-slate-700">
+            <span class="lang-en">Ask: "Why can listening to headphones at full volume or standing near loud Hanoi traffic horns (>85 dB) hurt our ears? What simple habits keep our hearing healthy?"</span>
+            <span class="lang-vn">Hỏi con: "Tại sao nghe tai nghe quá to hoặc đứng gần tiếng còi xe lớn (>85 dB) có thể làm hại tai? Những thói quen đơn giản nào giúp bảo vệ thính giác?"</span>
+          </p>
+        </div>
+
+        <div class="rounded-2xl p-4 bg-violet-50 border-2 border-violet-300 space-y-2">
+          <div class="text-xs font-black uppercase text-violet-800">
+            <span class="lang-en">🚀 Tier 3 • Fair Test Challenge</span>
+            <span class="lang-vn">🚀 Mức 3 • Thử thách Thí nghiệm công bằng</span>
+          </div>
+          <h4 class="font-black text-slate-900 text-base">
+            <span class="lang-en">Phone Alarm Under a Pillow</span>
+            <span class="lang-vn">Chắn tiếng chuông điện thoại dưới gối</span>
+          </h4>
+          <p class="text-sm font-semibold text-slate-700">
+            <span class="lang-en">Play a gentle phone timer uncovered, under a thin napkin, and under a thick pillow. Challenge your child: "What 2 things MUST we keep the same so this is a fair test?" (Same phone volume &amp; same distance!)</span>
+            <span class="lang-vn">Bật tiếng chuông nhẹ khi không che, che bằng khăn mỏng và che bằng gối dày. Thử thách con: "Cần giữ nguyên 2 yếu tố nào để thí nghiệm công bằng?" (Cùng âm lượng điện thoại &amp; cùng khoảng cách!)</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- GAMIFIED 4-QUESTION INTERACTIVE HOME CHECK QUIZ WITH CONFETTI         -->
+    <!-- ===================================================================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-lg border-2 border-sky-300 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <span class="text-xs font-black uppercase text-sky-700">
+            <span class="lang-en">3-Minute Home Check • Instant Feedback</span>
+            <span class="lang-vn">Kiểm tra nhanh 3 phút • Phản hồi tức thì</span>
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black text-slate-900">
+            <span class="lang-en">🏆 Sound Master Mini-Quiz</span>
+            <span class="lang-vn">🏆 Thử tài Bậc thầy Âm thanh</span>
+          </h3>
+        </div>
+        <div class="px-4 py-1.5 rounded-full bg-indigo-100 text-indigo-900 font-black text-sm">
+          <span class="lang-en">Score:</span><span class="lang-vn">Điểm:</span> <span id="quizScore">0</span> / 4
+        </div>
+      </div>
+
+      <div id="quizContainer" class="space-y-4"></div>
+
+      <div id="quizFinalBanner" class="hidden bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-2xl p-5 text-center space-y-2 shadow-lg">
+        <div class="text-2xl font-black">
+          <span class="lang-en">🎉 Fantastic Revision! Ready for Unit 2!</span>
+          <span class="lang-vn">🎉 Ôn tập xuất sắc! Sẵn sàng cho bài kiểm tra Chủ đề 2!</span>
+        </div>
+        <button onclick="resetQuiz()" class="px-4 py-2 rounded-xl bg-white text-emerald-800 font-black text-sm shadow">
+          <span class="lang-en">🔄 Play Again</span>
+          <span class="lang-vn">🔄 Chơi lại</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // =========================================================================
+    // LANGUAGE TOGGLE & AUDIO UTILITIES
+    // =========================================================================
+    let currentLang = 'en';
+    let audioCtx = null;
+
+    function ensureAudio() {
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) audioCtx = new Ctx();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function toggleLanguage() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      currentLang = currentLang === 'en' ? 'vn' : 'en';
+      document.body.classList.toggle('mode-en', currentLang === 'en');
+      document.body.classList.toggle('mode-vn', currentLang === 'vn');
+    }
+
+    function speakText(text, langCode) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utt = new SpeechSynthesisUtterance(text);
+      utt.lang = langCode;
+      utt.rate = 0.92;
+      window.speechSynthesis.speak(utt);
+    }
+
+    function playTone(freq, dur = 0.14, type = 'sine', gainVal = 0.14) {
+      ensureAudio();
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + dur);
+    }
+
+    // =========================================================================
+    // INTERACTIVE MODEL A: SOUND TRAVEL SIMULATOR
+    // =========================================================================
+    let pMedium = 'solid';
+    let pAnimId = null;
+
+    const pMedInfo = {
+      solid: {
+        en: 'Solid (Wood) — FASTEST! Tightly packed particles bump into each other almost instantly (~3,500 m/s).',
+        vn: 'Chất rắn (Gỗ) — NHANH NHẤT! Các hạt xếp sát chặt vào nhau nên truyền rung động gần như tức thì (~3.500 m/giây).',
+        cols: 14, rows: 3, dur: 700, color: '#818cf8', freq: 520
+      },
+      liquid: {
+        en: 'Liquid (Water) — MEDIUM speed (~1,500 m/s). Particles are close and slide smoothly past each other.',
+        vn: 'Chất lỏng (Nước) — Tốc độ TRUNG BÌNH (~1.500 m/giây). Các hạt ở gần nhau và trượt qua nhau.',
+        cols: 10, rows: 3, dur: 1550, color: '#38bdf8', freq: 410
+      },
+      gas: {
+        en: 'Gas (Air) — SLOWER (~340 m/s). Particles are far apart, so vibrations take longer to bump along.',
+        vn: 'Chất khí (Không khí) — CHẬM HƠN (~340 m/giây). Các hạt ở xa nhau nên cần nhiều thời gian va chạm hơn.',
+        cols: 6, rows: 2, dur: 2900, color: '#fbbf24', freq: 310
+      },
+      vacuum: {
+        en: 'Vacuum (Outer Space) — TOTAL SILENCE (0 m/s)! There are zero particles, so sound cannot travel at all.',
+        vn: 'Chân không (Vũ trụ) — HOÀN TOÀN IM LẶNG (0 m/giây)! Không có hạt vật chất nào để truyền âm thanh.',
+        cols: 0, rows: 0, dur: 0, color: '#94a3b8', freq: 0
+      }
+    };
+
+    function selectPortalMedium(med) {
+      pMedium = med;
+      if (pAnimId) cancelAnimationFrame(pAnimId);
+      ['solid', 'liquid', 'gas', 'vacuum'].forEach(k => {
+        document.getElementById('pMed-' + k).classList.toggle('sim-pill-active', k === med);
+      });
+      document.getElementById('pWaveStatusEn').textContent = pMedInfo[med].en;
+      document.getElementById('pWaveStatusVn').textContent = pMedInfo[med].vn;
+      drawPortalWave(-1);
+    }
+
+    function drawPortalWave(wx) {
+      const svg = document.getElementById('portalWaveSvg');
+      const cfg = pMedInfo[pMedium];
+      let html = `
+        <rect x="10" y="34" width="48" height="62" rx="12" fill="#f59e0b" />
+        <text x="34" y="74" text-anchor="middle" font-size="24">🔔</text>
+        <rect x="582" y="34" width="48" height="62" rx="12" fill="#10b981" />
+        <text x="606" y="74" text-anchor="middle" font-size="24">👂</text>
+      `;
+      if (cfg.cols === 0) {
+        html += `<circle cx="190" cy="40" r="2" fill="#64748b"/><circle cx="340" cy="95" r="2" fill="#64748b"/><circle cx="480" cy="48" r="2" fill="#64748b"/>`;
+      } else {
+        const x1 = 84, x2 = 556;
+        const step = (x2 - x1) / (cfg.cols - 1);
+        for (let c = 0; c < cfg.cols; c++) {
+          for (let r = 0; r < cfg.rows; r++) {
+            let cx = x1 + c * step;
+            let cy = cfg.rows === 3 ? (30 + r * 35) : (42 + r * 46);
+            if (pMedium === 'liquid') { cy += (c + r) % 2 === 0 ? -5 : 5; cx += r % 2 ? 7 : -4; }
+            if (pMedium === 'gas') { cy += ((c * 13 + r * 17) % 18) - 9; cx += ((c * 7 + r * 11) % 16) - 8; }
+            const hit = wx >= 0 && Math.abs(cx - wx) < 30;
+            const shift = hit ? 6 : 0;
+            html += `<circle cx="${(cx + shift).toFixed(1)}" cy="${cy.toFixed(1)}" r="${hit ? 9.5 : 7}" fill="${hit ? '#fbbf24' : cfg.color}" stroke="#ffffff" stroke-width="1.2" />`;
+          }
+        }
+      }
+      svg.innerHTML = html;
+    }
+
+    function launchPortalWave() {
+      if (pAnimId) cancelAnimationFrame(pAnimId);
+      const cfg = pMedInfo[pMedium];
+      if (pMedium === 'vacuum') {
+        document.getElementById('pWaveTipEn').textContent = 'No sound heard! Vibrations stop dead because there are no particles in space.';
+        document.getElementById('pWaveTipVn').textContent = 'Không nghe thấy tiếng gì! Rung động dừng hẳn vì trong chân không không có hạt vật chất.';
+        drawPortalWave(-1);
+        return;
+      }
+      playTone(cfg.freq, 0.14, 'triangle', 0.16);
+      document.getElementById('pWaveTipEn').textContent = 'Vibration wave racing through particles...';
+      document.getElementById('pWaveTipVn').textContent = 'Sóng rung động đang lan truyền qua các hạt vật chất...';
+      const t0 = performance.now();
+      function step(now) {
+        const prog = Math.min(1, (now - t0) / cfg.dur);
+        drawPortalWave(76 + prog * 490);
+        if (prog < 1) {
+          pAnimId = requestAnimationFrame(step);
+        } else {
+          playTone(cfg.freq * 1.4, 0.16, 'sine', 0.14);
+          document.getElementById('pWaveTipEn').textContent = `Reached the ear in ${(cfg.dur / 1000).toFixed(2)} seconds!`;
+          document.getElementById('pWaveTipVn').textContent = `Âm thanh đã tới tai sau ${(cfg.dur / 1000).toFixed(2)} giây!`;
+          setTimeout(() => drawPortalWave(-1), 450);
+        }
+      }
+      pAnimId = requestAnimationFrame(step);
+    }
+
+    // =========================================================================
+    // INTERACTIVE MODEL B: DECIBEL MUFFLE-O-METER
+    // =========================================================================
+    const pMaterials = [
+      {
+        id: 'none', emoji: '🔔', db: 90,
+        en: 'No Wrap', vn: 'Không bọc',
+        descEn: 'Reduction: 0 dB quieter. Bare 90 dB alarm clock reaches your ears at full loud volume!',
+        descVn: 'Giảm được: 0 dB. Tiếng chuông 90 dB truyền trực tiếp đến tai rất to và có thể gây hại!'
+      },
+      {
+        id: 'foil', emoji: '🪙', db: 84,
+        en: 'Thin Foil', vn: 'Giấy bạc mỏng',
+        descEn: 'Reduction: 6 dB quieter. Hard flat foil passes most vibrations straight through.',
+        descVn: 'Giảm được: 6 dB. Giấy bạc phẳng cứng để hầu hết rung động truyền thẳng qua.'
+      },
+      {
+        id: 'paper', emoji: '📰', db: 76,
+        en: 'Newspaper', vn: 'Giấy báo',
+        descEn: 'Reduction: 14 dB quieter. Paper absorbs a little sound, but stays in the Caution zone.',
+        descVn: 'Giảm được: 14 dB. Giấy báo hấp thụ một phần nhỏ âm thanh, vẫn ở mức Cần thận trọng.'
+      },
+      {
+        id: 'bubble', emoji: '🫧', db: 64,
+        en: 'Bubble Wrap', vn: 'Xốp nổ bọc hàng',
+        descEn: 'Reduction: 26 dB quieter! Tiny trapped air bubbles absorb vibrations — now SAFE!',
+        descVn: 'Giảm được: 26 dB! Các túi khí nhỏ hấp thụ rung động tốt — đã vào vùng AN TOÀN!'
+      },
+      {
+        id: 'foam', emoji: '🧽', db: 52,
+        en: 'Thick Foam', vn: 'Mút xốp dày',
+        descEn: 'Reduction: 38 dB quieter! Spongy foam traps sound waves inside tiny air pockets.',
+        descVn: 'Giảm được: 38 dB! Mút xốp dày giữ chặt sóng âm trong các khe khí siêu nhỏ.'
+      },
+      {
+        id: 'cotton', emoji: '☁️', db: 48,
+        en: 'Cotton Wool', vn: 'Bông gòn mềm',
+        descEn: 'Reduction: 42 dB quieter! Best muffler — fluffy fibres + trapped air soften noise to 48 dB!',
+        descVn: 'Giảm được: 42 dB! Giảm âm tốt nhất — sợi bông mềm và túi khí làm âm thanh êm xuống còn 48 dB!'
+      }
+    ];
+
+    let pMatId = 'none';
+
+    function renderPortalMuffleBtns() {
+      const box = document.getElementById('portalMuffleBtns');
+      box.innerHTML = pMaterials.map(m => `
+        <button onclick="selectPortalMat('${m.id}')" class="p-3 rounded-2xl border-2 text-center transition ${m.id === pMatId ? 'sim-pill-active' : 'border-slate-200 bg-white hover:bg-slate-50'}">
+          <div class="text-2xl">${m.emoji}</div>
+          <div class="text-xs font-black text-slate-900 mt-1">
+            <span class="lang-en">${m.en}</span>
+            <span class="lang-vn">${m.vn}</span>
+          </div>
+          <div class="text-xs font-extrabold text-indigo-700">${m.db} dB</div>
+        </button>
+      `).join('');
+    }
+
+    function selectPortalMat(id) {
+      pMatId = id;
+      renderPortalMuffleBtns();
+      const m = pMaterials.find(x => x.id === id);
+      document.getElementById('pMatNameEn').textContent = m.en;
+      document.getElementById('pMatNameVn').textContent = m.vn;
+      document.getElementById('pDbNum').textContent = m.db;
+      document.getElementById('pMuffleDescEn').textContent = m.descEn;
+      document.getElementById('pMuffleDescVn').textContent = m.descVn;
+
+      const bar = document.getElementById('pDbBar');
+      const badge = document.getElementById('pSafetyBadge');
+      bar.style.width = `${Math.min(100, (m.db / 120) * 100)}%`;
+
+      if (m.db > 85) {
+        badge.className = 'px-3 py-1 rounded-full text-xs font-black bg-rose-600 text-white';
+        bar.className = 'h-full bg-rose-500 transition-all duration-300';
+        document.getElementById('pSafetyEn').textContent = 'DANGER > 85 dB';
+        document.getElementById('pSafetyVn').textContent = 'NGUY HIỂM > 85 dB';
+      } else if (m.db >= 70) {
+        badge.className = 'px-3 py-1 rounded-full text-xs font-black bg-amber-400 text-slate-900';
+        bar.className = 'h-full bg-amber-400 transition-all duration-300';
+        document.getElementById('pSafetyEn').textContent = 'CAUTION (70–85 dB)';
+        document.getElementById('pSafetyVn').textContent = 'CẨN THẬN (70–85 dB)';
+      } else {
+        badge.className = 'px-3 py-1 rounded-full text-xs font-black bg-emerald-500 text-white';
+        bar.className = 'h-full bg-emerald-500 transition-all duration-300';
+        document.getElementById('pSafetyEn').textContent = 'SAFE < 70 dB';
+        document.getElementById('pSafetyVn').textContent = 'AN TOÀN < 70 dB';
+      }
+      playPortalBuzzer();
+    }
+
+    function playPortalBuzzer() {
+      ensureAudio();
+      if (!audioCtx) return;
+      const m = pMaterials.find(x => x.id === pMatId);
+      const norm = Math.max(0.05, (m.db - 38) / 52);
+      const gainLevel = 0.015 + Math.pow(norm, 2.2) * 0.24;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(560, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(700, audioCtx.currentTime + 0.14);
+      gain.gain.setValueAtTime(gainLevel, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.38);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.38);
+    }
+
+    // =========================================================================
+    // 10 VISUAL SVG BILINGUAL VOCAB CARDS
+    // =========================================================================
+    const pVocab = [
+      {
+        en: 'vibrate', vn: 'rung động',
+        defEn: 'Shake very quickly backwards and forwards to make sound.',
+        defVn: 'Lắc qua lắc lại rất nhanh để tạo ra âm thanh.',
+        svg: `<svg viewBox="0 0 100 68" class="w-20 h-14 shrink-0"><rect x="8" y="28" width="32" height="12" fill="#94a3b8" stroke="#0f172a" stroke-width="1.8"/><line x1="40" y1="34" x2="90" y2="18" stroke="#4f46e5" stroke-width="3" stroke-dasharray="3 2"/><line x1="40" y1="34" x2="92" y2="34" stroke="#0f172a" stroke-width="3.5"/><line x1="40" y1="34" x2="90" y2="50" stroke="#4f46e5" stroke-width="3" stroke-dasharray="3 2"/></svg>`
+      },
+      {
+        en: 'vibration', vn: 'sự rung động',
+        defEn: 'Rapid back-and-forth movement passing sound through particles.',
+        defVn: 'Chuyển động qua lại nhanh truyền âm thanh qua các hạt.',
+        svg: `<svg viewBox="0 0 100 68" class="w-20 h-14 shrink-0"><circle cx="50" cy="34" r="14" fill="#fde047" stroke="#b45309" stroke-width="2"/><path d="M28 20 Q20 34 28 48 M72 20 Q80 34 72 48" fill="none" stroke="#0284c7" stroke-width="2.5"/></svg>`
+      },
+      {
+        en: 'particle', vn: 'hạt vật chất',
+        defEn: 'Tiny piece of matter making up solids, liquids and gases.',
+        defVn: 'Hạt siêu nhỏ cấu tạo nên mọi chất rắn, lỏng, khí.',
+        svg: `<svg viewBox="0 0 100 68" class="w-20 h-14 shrink-0"><circle cx="24" cy="24" r="9" fill="#4f46e5"/><circle cx="44" cy="24" r="9" fill="#4f46e5"/><circle cx="64" cy="24" r="9" fill="#f59e0b"/><circle cx="24" cy="44" r="9" fill="#4f46e5"/><circle cx="44" cy="44" r="9" fill="#4f46e5"/><circle cx="64" cy="44" r="9" fill="#f59e0b"/></svg>`
+      },
+      {
+        en: 'volume', vn: 'âm lượng',
+        defEn: 'How loud or quiet a sound is.',
+        defVn: 'Độ to hay nhỏ của âm thanh.',
+        svg: `<svg viewBox="0 0 100 68" class="w-20 h-14 shrink-0"><polygon points="16,26 32,26 48,14 48,54 32,42 16,42" fill="#0284c7"/><path d="M58 24 Q66 34 58 44 M70 14 Q84 34 70 54" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/></svg>`
+      },
+      {
+        en: 'decibel (dB)', vn: 'đê-xi-ben (dB)',
+        defEn: 'The scientific unit used to measure sound volume.',
+        defVn: 'Đơn vị khoa học dùng để đo độ lớn của âm thanh.',
+        svg: `<svg viewBox="0 0 100 68" class="w-20 h-14 shrink-0"><rect x="8" y="16" width="84" height="36" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.5"/><text x="50" y="40" text-anchor="middle" font-size="16" font-weight="900" fill="#0369a1">85 dB</text></svg>`
+      },
+      {
+        en: 'sound level meter', vn: 'máy đo cường độ âm thanh',
+        defEn: 'An instrument that measures loudness in decibels (dB).',
+        defVn: 'Dụng cụ đo độ lớn âm thanh theo đơn vị đê-xi-ben (dB).',
+        svg: `<svg viewBox="0 0 100 68" class="w-20 h-14 shrink-0"><rect x="28" y="14" width="44" height="48" rx="7" fill="#1e293b"/><circle cx="50" cy="9" r="6" fill="#64748b"/><rect x="35" y="22" width="30" height="18" rx="3" fill="#bef264"/><text x="50" y="35" text-anchor="middle" font-size="10" font-weight="900" fill="#1a2e05">62 dB</text></svg>`
+      },
+      {
+        en: 'muffle', vn: 'làm giảm âm',
+        defEn: 'To make a sound quieter using soft material that absorbs vibrations.',
+        defVn: 'Làm âm thanh nhỏ lại bằng vật liệu mềm hấp thụ rung động.',
+        svg: `<svg viewBox="0 0 100 68" class="w-20 h-14 shrink-0"><rect x="20" y="12" width="60" height="44" rx="12" fill="#d1fae5" stroke="#059669" stroke-width="2.5" stroke-dasharray="4 2"/><circle cx="50" cy="34" r="12" fill="#ffffff" stroke="#0f172a" stroke-width="2"/></svg>`
+      },
+      {
+        en: 'ear defenders', vn: 'chụp tai chống ồn',
+        defEn: 'Padded headphones worn over ears to block dangerous noise.',
+        defVn: 'Chụp tai có đệm mút dày giúp bảo vệ tai khỏi tiếng ồn lớn.',
+        svg: `<svg viewBox="0 0 100 68" class="w-20 h-14 shrink-0"><path d="M24 40 C24 10 76 10 76 40" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round"/><rect x="14" y="30" width="16" height="28" rx="6" fill="#f59e0b" stroke="#0f172a" stroke-width="2"/><rect x="70" y="30" width="16" height="28" rx="6" fill="#f59e0b" stroke="#0f172a" stroke-width="2"/></svg>`
+      },
+      {
+        en: 'silencer', vn: 'ống giảm thanh',
+        defEn: 'Part on a car or motorbike exhaust that muffles engine noise.',
+        defVn: 'Bộ phận trên ống xả xe giúp làm giảm tiếng ồn động cơ.',
+        svg: `<svg viewBox="0 0 100 68" class="w-20 h-14 shrink-0"><rect x="8" y="28" width="20" height="12" fill="#64748b"/><rect x="28" y="20" width="44" height="28" rx="6" fill="#cbd5e1" stroke="#0f172a" stroke-width="2"/><rect x="72" y="28" width="20" height="12" fill="#64748b"/></svg>`
+      },
+      {
+        en: 'amplifier', vn: 'bộ khuếch đại âm thanh',
+        defEn: 'A device such as a megaphone that makes a sound louder.',
+        defVn: 'Thiết bị như loa phóng thanh làm cho âm thanh to hơn.',
+        svg: `<svg viewBox="0 0 100 68" class="w-20 h-14 shrink-0"><polygon points="16,28 36,24 76,10 76,54 36,40 16,36" fill="#4f46e5" stroke="#0f172a" stroke-width="2"/><path d="M84 20 Q94 32 84 44" fill="none" stroke="#f59e0b" stroke-width="3.5"/></svg>`
+      }
+    ];
+
+    function renderPortalVocab() {
+      const grid = document.getElementById('portalVocabGrid');
+      grid.innerHTML = pVocab.map((v, i) => `
+        <div class="rounded-2xl border-2 border-slate-200 bg-slate-50/70 p-4 flex items-center gap-3.5">
+          ${v.svg}
+          <div class="flex-1 min-w-0">
+            <div class="font-black text-slate-900 text-base leading-tight">${v.en}</div>
+            <div class="font-extrabold text-indigo-700 text-sm">${v.vn}</div>
+            <p class="text-xs font-semibold text-slate-700 mt-1">
+              <span class="lang-en">${v.defEn}</span>
+              <span class="lang-vn">${v.defVn}</span>
+            </p>
+            <div class="flex gap-2 mt-2">
+              <button onclick="speakText('${v.en.replace(/'/g, "\\'")}', 'en-GB')" class="px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-[11px] font-black">🔊 EN</button>
+              <button onclick="speakText('${v.vn.replace(/'/g, "\\'")}', 'vi-VN')" class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-black">🔊 VN</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // =========================================================================
+    // GAMIFIED 4-QUESTION INTERACTIVE HOME CHECK QUIZ (100% FRESH SCENARIOS)
+    // =========================================================================
+    const quizData = [
+      {
+        qEn: '1. Mai taps a long metal park fence while her friend listens from 10 metres away. Through which medium does the tap reach her friend FIRST?',
+        qVn: '1. Mai gõ vào hàng rào kim loại dài trong công viên, bạn cô ấy nghe cách đó 10 mét. Tiếng gõ truyền tới tai bạn NHANH NHẤT qua môi trường nào?',
+        opts: [
+          { en: 'Solid metal fence (particles packed tightly)', vn: 'Hàng rào kim loại rắn (các hạt xếp sát chặt)', ok: true },
+          { en: 'Gas air (nothing blocks the sound)', vn: 'Không khí (không có gì cản trở âm thanh)', ok: false },
+          { en: 'Both arrive at the exact same time', vn: 'Cả hai truyền đến cùng một lúc', ok: false }
+        ],
+        fbEn: 'Spot on! Tightly packed solid metal particles pass vibrations much faster than far-apart air particles.',
+        fbVn: 'Chính xác! Các hạt kim loại rắn xếp sát chặt nên truyền rung động nhanh hơn nhiều so với không khí.'
+      },
+      {
+        qEn: '2. A noisy motorbike horn measures 98 dB. If a helmet with padded lining reduces the noise by 30 dB, what sound level reaches the rider\'s ears?',
+        qVn: '2. Tiếng còi xe máy đo được 98 dB. Nếu mũ bảo hiểm có lớp đệm mút giúp giảm 30 dB, mức âm thanh tới tai người lái còn bao nhiêu?',
+        opts: [
+          { en: '68 dB (now in the SAFE zone!)', vn: '68 dB (đã vào vùng AN TOÀN!)', ok: true },
+          { en: '128 dB (even louder!)', vn: '128 dB (to hơn nữa!)', ok: false },
+          { en: '78 dB', vn: '78 dB', ok: false }
+        ],
+        fbEn: 'Brilliant maths! 98 − 30 = 68 dB, which is safely below the 85 dB ear-damage limit.',
+        fbVn: 'Tính rất giỏi! 98 − 30 = 68 dB, thấp hơn ngưỡng gây hại cho tai là 85 dB.'
+      },
+      {
+        qEn: '3. Why can astronauts floating in outer space NOT hear a rocket engine firing outside their spacecraft?',
+        qVn: '3. Tại sao các phi hành gia ngoài vũ trụ KHÔNG THỂ nghe thấy tiếng động cơ tên lửa bên ngoài tàu?',
+        opts: [
+          { en: 'Outer space is a vacuum with NO particles to carry vibrations.', vn: 'Vũ trụ là môi trường chân không, KHÔNG có hạt vật chất để truyền rung động.', ok: true },
+          { en: 'Outer space is too cold for sound to move.', vn: 'Ngoài vũ trụ quá lạnh nên âm thanh không đi được.', ok: false },
+          { en: 'Rocket engines do not vibrate.', vn: 'Động cơ tên lửa không rung động.', ok: false }
+        ],
+        fbEn: 'Correct! Sound always needs particles (solid, liquid or gas) to travel. No particles = total silence!',
+        fbVn: 'Đúng rồi! Âm thanh luôn cần các hạt vật chất (rắn, lỏng hoặc khí) để truyền đi. Không có hạt = im lặng hoàn toàn!'
+      },
+      {
+        qEn: '4. Khoa tests whether a wool jumper or a plastic bag muffles a speaker better. He puts the plastic bag 1 m from the meter, then moves the wool jumper 2 m away. Why is this UNFAIR?',
+        qVn: '4. Khoa thử xem áo len hay túi nilon giảm âm loa tốt hơn. Cậu đặt túi nilon cách máy đo 1 m, rồi dời áo len ra xa 2 m. Tại sao thí nghiệm này KHÔNG công bằng?',
+        opts: [
+          { en: 'He changed TWO variables (both material and distance).', vn: 'Cậu ấy đã thay đổi CÙNG LÚC 2 yếu tố (cả vật liệu và khoảng cách).', ok: true },
+          { en: 'Plastic bags cannot be tested in science.', vn: 'Không được dùng túi nilon trong thí nghiệm khoa học.', ok: false },
+          { en: 'He should have shouted louder.', vn: 'Cậu ấy lẽ ra nên hét to hơn.', ok: false }
+        ],
+        fbEn: 'Super scientist! In a fair test, only change ONE variable (material) and keep distance, speaker and thickness the same!',
+        fbVn: 'Nhà khoa học nhí tuyệt vời! Trong thí nghiệm công bằng chỉ được thay đổi DUY NHẤT 1 yếu tố (vật liệu) và giữ nguyên khoảng cách, loa và độ dày!'
+      }
+    ];
+
+    let quizAnswered = [false, false, false, false];
+    let quizScoreVal = 0;
+
+    function renderQuiz() {
+      const wrap = document.getElementById('quizContainer');
+      wrap.innerHTML = quizData.map((item, qi) => `
+        <div class="rounded-2xl border-2 border-slate-200 p-4 space-y-3 bg-slate-50/50" id="qCard-${qi}">
+          <p class="font-black text-slate-900 text-sm sm:text-base">
+            <span class="lang-en">${item.qEn}</span>
+            <span class="lang-vn">${item.qVn}</span>
+          </p>
+          <div class="grid grid-cols-1 gap-2">
+            ${item.opts.map((o, oi) => `
+              <button onclick="answerQuiz(${qi}, ${oi})" id="qBtn-${qi}-${oi}" class="text-left px-4 py-2.5 rounded-xl border-2 border-slate-200 bg-white hover:bg-sky-50 font-bold text-xs sm:text-sm transition">
+                <span class="lang-en">${o.en}</span>
+                <span class="lang-vn">${o.vn}</span>
+              </button>
+            `).join('')}
+          </div>
+          <div id="qFb-${qi}" class="hidden rounded-xl p-3 text-xs sm:text-sm font-extrabold"></div>
+        </div>
+      `).join('');
+    }
+
+    function answerQuiz(qi, oi) {
+      if (quizAnswered[qi]) return;
+      const item = quizData[qi];
+      const chosen = item.opts[oi];
+      const fb = document.getElementById(`qFb-${qi}`);
+      const btn = document.getElementById(`qBtn-${qi}-${oi}`);
+
+      if (chosen.ok) {
+        quizAnswered[qi] = true;
+        quizScoreVal++;
+        document.getElementById('quizScore').textContent = quizScoreVal;
+        btn.className = 'text-left px-4 py-2.5 rounded-xl border-2 border-emerald-500 bg-emerald-100 text-emerald-950 font-black text-xs sm:text-sm';
+        fb.className = 'rounded-xl p-3 text-xs sm:text-sm font-extrabold bg-emerald-50 border border-emerald-300 text-emerald-900';
+        fb.innerHTML = `<span class="lang-en">✅ ${item.fbEn}</span><span class="lang-vn">✅ ${item.fbVn}</span>`;
+        playTone(660, 0.12, 'triangle', 0.15);
+        setTimeout(() => playTone(880, 0.18, 'triangle', 0.15), 100);
+        if (quizScoreVal === quizData.length) {
+          document.getElementById('quizFinalBanner').classList.remove('hidden');
+          launchPortalConfetti();
+        }
+      } else {
+        btn.className = 'text-left px-4 py-2.5 rounded-xl border-2 border-rose-400 bg-rose-50 text-rose-900 font-bold text-xs sm:text-sm';
+        fb.className = 'rounded-xl p-3 text-xs sm:text-sm font-extrabold bg-rose-50 border border-rose-300 text-rose-900';
+        fb.innerHTML = `<span class="lang-en">💡 Not quite — try another choice!</span><span class="lang-vn">💡 Chưa chính xác — hãy thử chọn đáp án khác nhé!</span>`;
+        playTone(240, 0.14, 'sawtooth', 0.08);
+      }
+    }
+
+    function resetQuiz() {
+      quizAnswered = [false, false, false, false];
+      quizScoreVal = 0;
+      document.getElementById('quizScore').textContent = '0';
+      document.getElementById('quizFinalBanner').classList.add('hidden');
+      renderQuiz();
+    }
+
+    function launchPortalConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const palette = ['#0ea5e9', '#4f46e5', '#f59e0b', '#10b981', '#ef4444'];
+      const parts = Array.from({ length: 80 }, () => ({
+        x: Math.random() * canvas.width, y: -20 - Math.random() * 120,
+        vx: (Math.random() - 0.5) * 4, vy: 3 + Math.random() * 4,
+        s: 8 + Math.random() * 6, c: palette[Math.floor(Math.random() * palette.length)]
+      }));
+      let f = 0;
+      function loop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        parts.forEach(p => {
+          p.x += p.vx; p.y += p.vy;
+          ctx.fillStyle = p.c;
+          ctx.fillRect(p.x, p.y, p.s, p.s);
+        });
+        f++;
+        if (f < 90) requestAnimationFrame(loop);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      loop();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      selectPortalMedium('solid');
+      renderPortalMuffleBtns();
+      renderPortalVocab();
+      renderQuiz();
+    });
+  </script>
+</body>
+</html>

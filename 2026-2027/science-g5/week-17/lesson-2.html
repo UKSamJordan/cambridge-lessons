@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grade 5 Science — Unit 5.4 Lesson 2: Series vs Parallel Circuits &amp; Lamp Brightness</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 45%, #0f172a 100%);
+      color: #f8fafc;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    /* Auto-hiding fixed top bar */
+    #top-header {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    #top-header.header-hidden {
+      transform: translateY(-100%);
+    }
+
+    /* Station visibility — NEVER apply flex/grid directly on toggleable <section> */
+    .station-section {
+      display: none;
+    }
+    .station-section.active {
+      display: block;
+      animation: fadeInStation 0.25s ease-out;
+    }
+    @keyframes fadeInStation {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 3D Flip Cards for Station 1 Flashback 3 */
+    .flip-card {
+      perspective: 1200px;
+      cursor: pointer;
+    }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Animated electric current dashes */
+    @keyframes flowDash {
+      to { stroke-dashoffset: -28; }
+    }
+    .current-flow {
+      stroke-dasharray: 8 6;
+      animation: flowDash 0.85s linear infinite;
+    }
+    .current-flow-slow {
+      stroke-dasharray: 8 8;
+      animation: flowDash 1.6s linear infinite;
+    }
+    .current-flow-fast {
+      stroke-dasharray: 9 5;
+      animation: flowDash 0.45s linear infinite;
+    }
+
+    /* Full Screen I Do mode */
+    .fullscreen-ido {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 60 !important;
+      background: #0f172a !important;
+      overflow-y: auto !important;
+      padding: 1.25rem 2rem !important;
+    }
+
+    /* Confetti particles */
+    .confetti-piece {
+      position: fixed;
+      width: 10px;
+      height: 14px;
+      z-index: 95;
+      pointer-events: none;
+      animation: confettiFall 2.1s cubic-bezier(0.2, 0.7, 0.4, 1) forwards;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Interactive graph bars */
+    .graph-bar {
+      transition: opacity 0.2s ease, filter 0.2s ease;
+      cursor: pointer;
+    }
+    .graph-bar:hover {
+      filter: brightness(1.18);
+    }
+  </style>
+</head>
+<body class="selection:bg-amber-400 selection:text-slate-900">
+
+  <!-- [SoL: Cognitive Load Management] Auto-Hiding Fixed Top Header -->
+  <header id="top-header" class="fixed top-0 left-0 right-0 bg-slate-950/95 backdrop-blur-md border-b border-amber-400/30 shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-black text-xs tracking-wider uppercase shrink-0">G5 Science · 5.4 L2</span>
+        <div class="min-w-0">
+          <div class="text-xs font-bold text-amber-300 truncate">Enquiry Question: Why do classroom lights stay bright and stay ON even when one bulb breaks?</div>
+          <div class="text-sm font-extrabold text-white truncate">LO: Compare brightness in series and parallel circuits.</div>
+        </div>
+      </div>
+
+      <div class="flex items-center flex-wrap gap-2">
+        <!-- Team Red vs Blue Scoreboard -->
+        <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1">
+          <button onclick="addTeamScore('red', 1)" class="px-2 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-black text-xs transition" title="Add 1 point to Team Red">RED <span id="hdr-score-red">0</span></button>
+          <span class="text-slate-500 font-bold text-xs">vs</span>
+          <button onclick="addTeamScore('blue', 1)" class="px-2 py-0.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-black text-xs transition" title="Add 1 point to Team Blue">BLUE <span id="hdr-score-blue">0</span></button>
+          <button onclick="resetTeamScores()" class="ml-1 text-slate-400 hover:text-white text-xs px-1" title="Reset Team Scores">↺</button>
+        </div>
+
+        <button onclick="openWhiteboard()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs shadow transition" title="David's Board (Shortcut: W)">✏️ David's Board (W)</button>
+        <button onclick="toggleTeacherDrawer()" class="px-3 py-1.5 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs shadow transition" title="Teacher Prompts (Shortcut: T)">🎓 Prompts (T)</button>
+        <button id="mute-btn" onclick="toggleMute()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-amber-300 font-bold text-xs transition" title="Toggle Sound (Shortcut: M)">🔊</button>
+      </div>
+    </div>
+
+    <!-- Station Navigation Bar (flex-wrap so tabs never squash) -->
+    <nav class="max-w-7xl mx-auto px-4 pb-2 flex flex-wrap items-center gap-1.5" aria-label="Lesson Stations">
+      <button data-station="0" onclick="goStation(0)" class="station-tab px-3 py-1.5 rounded-lg text-xs font-extrabold transition">0 · LO &amp; Kit Brief</button>
+      <button data-station="1" onclick="goStation(1)" class="station-tab px-3 py-1.5 rounded-lg text-xs font-extrabold transition">1 · Flashback 3</button>
+      <button data-station="2" onclick="goStation(2)" class="station-tab px-3 py-1.5 rounded-lg text-xs font-extrabold transition">2 · Vocabulary</button>
+      <button data-station="3" onclick="goStation(3)" class="station-tab px-3 py-1.5 rounded-lg text-xs font-extrabold transition">3 · Visual I Do</button>
+      <button data-station="4" onclick="goStation(4)" class="station-tab px-3 py-1.5 rounded-lg text-xs font-extrabold transition">4 · Virtual Lab</button>
+      <button data-station="5" onclick="goStation(5)" class="station-tab px-3 py-1.5 rounded-lg text-xs font-extrabold transition">5 · SC Check</button>
+      <button data-station="6" onclick="goStation(6)" class="station-tab px-3 py-1.5 rounded-lg text-xs font-extrabold transition">6 · Quickfire</button>
+    </nav>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-7xl mx-auto px-4 pt-32 pb-16">
+
+    <!-- ==================== STATION 0: LO, SUCCESS CRITERIA & HANDS-ON KIT BRIEF ==================== -->
+    <!-- [SoL: Cognitive Load Management] [SoL: Schema Building] -->
+    <section id="station-0" class="station-section active">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border-2 border-amber-400/40 rounded-3xl p-8 shadow-2xl">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <span class="px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400/40 text-amber-300 font-bold text-xs uppercase tracking-widest">Unit 5.4 · Lesson 2 · Stage 6 (6Pe.02 · 6TWSp.03 · 6TWSc.08 · 6TWSa.03)</span>
+            <span class="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-bold text-xs">⚡ Classroom Kits Ready!</span>
+          </div>
+
+          <h1 class="text-4xl md:text-5xl font-black text-white leading-tight mb-3">
+            Compare brightness in series and parallel circuits.
+          </h1>
+          <p class="text-xl text-amber-300 font-bold mb-6">
+            Enquiry Question: "Why do classroom lights stay bright and stay ON even when one bulb breaks?"
+          </p>
+
+          <!-- Must / Should / Could Criteria -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-emerald-950/70 border-2 border-emerald-400/60 rounded-2xl p-5">
+              <div class="text-xs font-black uppercase tracking-widest text-emerald-300 mb-1">🟢 MUST</div>
+              <p class="text-xl font-extrabold text-white">Identify series and parallel circuits from Cambridge diagrams.</p>
+            </div>
+            <div class="bg-sky-950/70 border-2 border-sky-400/60 rounded-2xl p-5">
+              <div class="text-xs font-black uppercase tracking-widest text-sky-300 mb-1">🔵 SHOULD</div>
+              <p class="text-xl font-extrabold text-white">Compare lamp brightness when adding lamps or cells.</p>
+            </div>
+            <div class="bg-amber-950/70 border-2 border-amber-400/60 rounded-2xl p-5">
+              <div class="text-xs font-black uppercase tracking-widest text-amber-300 mb-1">🟡 COULD</div>
+              <p class="text-xl font-extrabold text-white">Explain why parallel circuits keep working if one lamp breaks.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SoL: CPA Progression] Hands-On Classroom Kit Investigation Brief -->
+        <div class="bg-slate-900/90 border-2 border-sky-400/40 rounded-3xl p-6 shadow-xl">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <h2 class="text-2xl font-black text-sky-300">🧰 Hands-On Classroom Kit Investigation Brief</h2>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-sky-500/20 text-sky-200 border border-sky-400/30">Concrete ➔ Pictorial ➔ Abstract</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700">
+              <div class="text-2xl mb-1">🔋</div>
+              <div class="font-extrabold text-amber-300 text-sm uppercase">1. Fair Test Power</div>
+              <p class="text-slate-200 text-sm mt-1">Keep the <strong>same 3.0 V battery</strong> (2 × 1.5 V cells) and <strong>identical bulbs</strong> for every test.</p>
+            </div>
+            <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700">
+              <div class="text-2xl mb-1">🔗</div>
+              <div class="font-extrabold text-sky-300 text-sm uppercase">2. Series Loop Test</div>
+              <p class="text-slate-200 text-sm mt-1">Build <strong>1 lamp</strong>, then <strong>2 lamps</strong>, then <strong>3 lamps</strong> in a single loop. Observe brightness carefully!</p>
+            </div>
+            <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700">
+              <div class="text-2xl mb-1">🪜</div>
+              <div class="font-extrabold text-emerald-300 text-sm uppercase">3. Parallel Branch Test</div>
+              <p class="text-slate-200 text-sm mt-1">Wire <strong>2 lamps</strong>, then <strong>3 lamps</strong> on separate branches like ladder rungs. Compare brightness!</p>
+            </div>
+            <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700">
+              <div class="text-2xl mb-1">💡</div>
+              <div class="font-extrabold text-rose-300 text-sm uppercase">4. Unscrew-1-Bulb Test</div>
+              <p class="text-slate-200 text-sm mt-1">Gently unscrew <strong>Lamp 1</strong> in Series and in Parallel. Watch which lamps stay ON!</p>
+            </div>
+          </div>
+          <div class="mt-4 px-4 py-2.5 rounded-xl bg-amber-500/15 border border-amber-400/40 text-amber-200 text-sm font-bold flex items-center gap-2">
+            <span>⚠️</span>
+            <span>Safety Rule: Never connect a wire straight from + to − without a lamp (short circuit heats wires fast). Always open your switch when changing wires!</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATION 1: SPACED FLASHBACK 3 ==================== -->
+    <!-- [SoL: Retrieval Practice] [SoL: Spaced Practice] [SoL: Interleaving] -->
+    <section id="station-1" class="station-section">
+      <div class="space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-3xl font-black text-white">🔄 Spaced Flashback 3 — Retrieval Warm-Up</h2>
+            <p class="text-slate-300 font-semibold">Write your answers on mini-whiteboards first, then click each card to flip and check!</p>
+          </div>
+          <button onclick="resetFlashbacks()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-sm font-bold text-amber-300 transition">↺ Flip All Back</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 5.1 Mass & Weight (6Pf.01) -->
+          <div class="flip-card h-[360px]" onclick="flipCard(this)">
+            <div class="flip-inner">
+              <div class="flip-face bg-gradient-to-br from-sky-600 to-blue-900 border-2 border-sky-300 shadow-2xl">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-white text-xs font-black uppercase">Unit 5.1 · 6Pf.01</span>
+                  <span class="text-3xl">⚖️</span>
+                </div>
+                <div class="my-auto text-center space-y-3">
+                  <div class="text-sm font-bold uppercase tracking-widest text-sky-200">Mass vs Weight</div>
+                  <p class="text-2xl font-black text-white leading-snug">What unit measures <span class="text-amber-300">mass</span>, what unit measures <span class="text-amber-300">weight</span>, and which instrument measures weight?</p>
+                </div>
+                <div class="text-center text-xs font-extrabold uppercase tracking-widest text-sky-200">👆 Click to Reveal Answer</div>
+              </div>
+              <div class="flip-face flip-back bg-slate-900 border-2 border-emerald-400 shadow-2xl">
+                <div class="text-xs font-black uppercase tracking-widest text-emerald-400">✅ Answer · Unit 5.1</div>
+                <div class="my-auto text-center space-y-3">
+                  <div class="text-5xl font-black text-amber-300">g / kg · N</div>
+                  <p class="text-lg font-bold text-white leading-snug"><strong>Mass</strong> is measured in <strong>grams (g)</strong> or <strong>kilograms (kg)</strong>.<br><strong>Weight</strong> is a force measured in <strong>newtons (N)</strong> using a <strong>forcemeter</strong> (newton meter).</p>
+                </div>
+                <div class="text-center text-xs text-slate-400 font-bold">Mass stays the same everywhere; weight depends on gravity!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 2.3 Reversible Changes (6Cc.01) -->
+          <div class="flip-card h-[360px]" onclick="flipCard(this)">
+            <div class="flip-inner">
+              <div class="flip-face bg-gradient-to-br from-emerald-600 to-teal-900 border-2 border-emerald-300 shadow-2xl">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-white text-xs font-black uppercase">Unit 2.3 · 6Cc.01</span>
+                  <span class="text-3xl">🧊</span>
+                </div>
+                <div class="my-auto text-center space-y-3">
+                  <div class="text-sm font-bold uppercase tracking-widest text-emerald-200">Changes of State &amp; Dissolving</div>
+                  <p class="text-2xl font-black text-white leading-snug">Are <span class="text-amber-300">melting ice</span> and <span class="text-amber-300">dissolving salt</span> reversible or irreversible? How can you get the solid salt back?</p>
+                </div>
+                <div class="text-center text-xs font-extrabold uppercase tracking-widest text-emerald-200">👆 Click to Reveal Answer</div>
+              </div>
+              <div class="flip-face flip-back bg-slate-900 border-2 border-emerald-400 shadow-2xl">
+                <div class="text-xs font-black uppercase tracking-widest text-emerald-400">✅ Answer · Unit 2.3</div>
+                <div class="my-auto text-center space-y-3">
+                  <div class="text-5xl font-black text-emerald-300">Reversible!</div>
+                  <p class="text-lg font-bold text-white leading-snug">Both are <strong>reversible physical changes</strong> (no new substance is made).<br><strong>Evaporate the water</strong> to leave solid salt crystals behind.</p>
+                </div>
+                <div class="text-center text-xs text-slate-400 font-bold">Freezing reverses melting; evaporation reverses dissolving!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 1.3 Reproduction (6Bp.03) -->
+          <div class="flip-card h-[360px]" onclick="flipCard(this)">
+            <div class="flip-inner">
+              <div class="flip-face bg-gradient-to-br from-purple-600 to-indigo-950 border-2 border-purple-300 shadow-2xl">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full bg-white/20 text-white text-xs font-black uppercase">Unit 1.3 · 6Bp.03</span>
+                  <span class="text-3xl">🐾</span>
+                </div>
+                <div class="my-auto text-center space-y-3">
+                  <div class="text-sm font-bold uppercase tracking-widest text-purple-200">Animal Reproduction</div>
+                  <p class="text-2xl font-black text-white leading-snug">Do <span class="text-amber-300">mammals</span> use internal or external fertilisation? Give one way this protects the young.</p>
+                </div>
+                <div class="text-center text-xs font-extrabold uppercase tracking-widest text-purple-200">👆 Click to Reveal Answer</div>
+              </div>
+              <div class="flip-face flip-back bg-slate-900 border-2 border-emerald-400 shadow-2xl">
+                <div class="text-xs font-black uppercase tracking-widest text-emerald-400">✅ Answer · Unit 1.3</div>
+                <div class="my-auto text-center space-y-3">
+                  <div class="text-5xl font-black text-purple-300">Internal</div>
+                  <p class="text-lg font-bold text-white leading-snug">Mammals use <strong>internal fertilisation</strong>.<br>The young develop safely <strong>inside the mother's body</strong>, protected from predators and harsh weather.</p>
+                </div>
+                <div class="text-center text-xs text-slate-400 font-bold">Primary descriptive phrasing accepted!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATION 2: VOCABULARY + REAL-LIFE RELEVANCE STRIP ==================== -->
+    <!-- [SoL: Dual Coding] [SoL: Cognitive Load Management] -->
+    <section id="station-2" class="station-section">
+      <div class="space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-3xl font-black text-white">🗣️ Scientific Vocabulary — Click Any Tile</h2>
+            <p class="text-slate-300 font-semibold">Click a word to open its official Cambridge diagram, clear definition, and EN / VN pronunciation.</p>
+          </div>
+          <span class="px-3 py-1.5 rounded-xl bg-amber-400/15 border border-amber-400/40 text-amber-300 text-xs font-extrabold">9 Key Terms · Official Cambridge Symbols</span>
+        </div>
+
+        <div id="vocab-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+        <!-- Real-World Science Relevance Strip -->
+        <div class="bg-gradient-to-r from-emerald-950/90 via-slate-900 to-sky-950/90 border-2 border-emerald-400/40 rounded-3xl p-6 shadow-xl">
+          <h3 class="text-xl font-black text-emerald-300 mb-3">🌍 Real-World Science: Why Homes Use Parallel Circuits</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-slate-900/80 border border-slate-700 rounded-2xl p-4">
+              <div class="text-2xl mb-1">🏫</div>
+              <div class="font-extrabold text-white text-base">Classroom Ceiling Lights</div>
+              <p class="text-slate-300 text-sm mt-1">Wired in <strong>parallel</strong>! Every light tube gets full voltage, stays equally bright, and if one tube blows, the rest stay ON.</p>
+            </div>
+            <div class="bg-slate-900/80 border border-slate-700 rounded-2xl p-4">
+              <div class="text-2xl mb-1">🚗</div>
+              <div class="font-extrabold text-white text-base">Car Headlights Safety</div>
+              <p class="text-slate-300 text-sm mt-1">Wired in <strong>parallel</strong> so if the left headlight breaks at night, the right headlight stays brightly lit and keeps the driver safe!</p>
+            </div>
+            <div class="bg-slate-900/80 border border-slate-700 rounded-2xl p-4">
+              <div class="text-2xl mb-1">🎄</div>
+              <div class="font-extrabold text-white text-base">Old Series Fairy Lights</div>
+              <p class="text-slate-300 text-sm mt-1">Cheap old fairy lights were wired in <strong>series</strong>. When just ONE tiny bulb broke, the single loop opened and the ENTIRE string went dark!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATION 3: FULL-SCREEN VISUAL I DO ==================== -->
+    <!-- [SoL: Worked Examples] [SoL: Dual Coding] [SoL: Misconceptions] [SoL: Elaborative Interrogation] -->
+    <section id="station-3" class="station-section">
+      <div id="ido-wrapper" class="space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-3xl font-black text-white">🎬 Visual I Do — Series vs Parallel Side-by-Side</h2>
+            <p class="text-slate-300 font-semibold">Watch how voltage and circuit pathways behave in official Cambridge diagrams.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="ido-m1-btn" onclick="selectIdoMission(1)" class="px-4 py-2 rounded-xl font-extrabold text-sm bg-amber-400 text-slate-950 shadow">Mission 1: Voltage Sharing vs Full Voltage</button>
+            <button id="ido-m2-btn" onclick="selectIdoMission(2)" class="px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-800 text-slate-200 border border-slate-600">Mission 2: Unscrew-1-Bulb Break Test</button>
+            <button id="ido-fs-btn" onclick="toggleFullscreenIdo()" class="px-4 py-2 rounded-xl font-extrabold text-sm bg-sky-500 hover:bg-sky-400 text-slate-950 shadow">⛶ Full Screen I Do</button>
+            <button onclick="openGiantProjection()" class="px-4 py-2 rounded-xl font-extrabold text-sm bg-purple-500 hover:bg-purple-400 text-white shadow">🔎 Giant Takeaway</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <!-- Left / Main Visual Comparison Stage -->
+          <div class="lg:col-span-9 bg-slate-900 border-2 border-slate-700 rounded-3xl p-5 shadow-2xl space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div id="ido-mission-title" class="text-xl font-black text-amber-300">Mission 1: Voltage Sharing vs Full Voltage (Both powered by 3.0 V)</div>
+              <button id="ido-action-btn" onclick="runIdoAnimation()" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm shadow-lg transition">⚡ Switch ON &amp; Compare Brightness</button>
+            </div>
+
+            <!-- Side-by-Side Official Cambridge Diagrams -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Series Panel -->
+              <div class="bg-slate-950 border-2 border-rose-400/50 rounded-2xl p-4 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-black text-rose-300 text-base">SERIES CIRCUIT (1 Single Loop)</span>
+                  <span id="ido-series-badge" class="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 text-xs font-extrabold">Ready</span>
+                </div>
+                <div id="ido-series-svg" class="w-full flex items-center justify-center py-2"></div>
+                <div id="ido-series-readout" class="mt-2 p-3 rounded-xl bg-slate-900 border border-slate-700 text-sm text-slate-200 font-semibold">
+                  Click the green action button above to power up both circuits and watch carefully!
+                </div>
+              </div>
+
+              <!-- Parallel Panel -->
+              <div class="bg-slate-950 border-2 border-emerald-400/50 rounded-2xl p-4 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-black text-emerald-300 text-base">PARALLEL CIRCUIT (2 Branches)</span>
+                  <span id="ido-parallel-badge" class="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 text-xs font-extrabold">Ready</span>
+                </div>
+                <div id="ido-parallel-svg" class="w-full flex items-center justify-center py-2"></div>
+                <div id="ido-parallel-readout" class="mt-2 p-3 rounded-xl bg-slate-900 border border-slate-700 text-sm text-slate-200 font-semibold">
+                  Watch the brightness of Lamp 1 and Lamp 2 on each separate branch!
+                </div>
+              </div>
+            </div>
+
+            <!-- Myth-Buster Callout Box (Anchored outside SVG) -->
+            <div id="ido-myth-box" class="p-4 rounded-2xl bg-amber-400/15 border-2 border-amber-400/50 text-amber-100">
+              <div class="font-black text-amber-300 text-sm uppercase tracking-wider mb-1">🚨 Misconception Buster!</div>
+              <p id="ido-myth-text" class="text-base font-bold">
+                Myth: "Lamp 1 in a series circuit is brighter because it gets the electricity first!" — FALSE! In a series circuit, BOTH identical lamps share the 3.0 V equally (1.5 V each) and have the EXACT SAME dimmer brightness!
+              </p>
+            </div>
+          </div>
+
+          <!-- Permanent Steps to Success & Safety Sidebar -->
+          <aside class="lg:col-span-3 bg-slate-900 border-2 border-indigo-400/40 rounded-3xl p-5 flex flex-col justify-between space-y-4">
+            <div>
+              <h3 class="text-lg font-black text-indigo-300 mb-3">📋 Steps to Success</h3>
+              <ol class="space-y-2.5 text-sm font-semibold text-slate-200">
+                <li class="flex gap-2"><span class="w-6 h-6 rounded-full bg-indigo-500 text-white font-black flex items-center justify-center shrink-0 text-xs">1</span><span>Trace from <strong>+</strong> to <strong>−</strong> with your finger. Count the loops!</span></li>
+                <li class="flex gap-2"><span class="w-6 h-6 rounded-full bg-indigo-500 text-white font-black flex items-center justify-center shrink-0 text-xs">2</span><span><strong>1 loop = Series</strong> (voltage is shared ➔ lamps dimmer, equal).</span></li>
+                <li class="flex gap-2"><span class="w-6 h-6 rounded-full bg-indigo-500 text-white font-black flex items-center justify-center shrink-0 text-xs">3</span><span><strong>2+ branches = Parallel</strong> (each branch gets full voltage ➔ bright!).</span></li>
+                <li class="flex gap-2"><span class="w-6 h-6 rounded-full bg-indigo-500 text-white font-black flex items-center justify-center shrink-0 text-xs">4</span><span><strong>Break test:</strong> If 1 loop breaks, Series stops; Parallel branches keep flowing!</span></li>
+              </ol>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-rose-950/60 border border-rose-400/40 text-xs font-bold text-rose-200 space-y-1">
+              <div class="text-rose-300 font-black uppercase">⚡ Kit Safety Check</div>
+              <p>• Use 1.5 V cells ONLY (never mains sockets).</p>
+              <p>• Open switch before moving crocodile clips.</p>
+              <p>• Check cell direction: + to − in batteries.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATION 4: VIRTUAL BRIGHTNESS & FAULT LAB ==================== -->
+    <!-- [SoL: CPA Progression] [SoL: Immediate Feedback] [SoL: Elaborative Interrogation] -->
+    <section id="station-4" class="station-section">
+      <div class="space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-3xl font-black text-white">🔬 Series vs Parallel Virtual Brightness &amp; Fault Lab</h2>
+            <p class="text-slate-300 font-semibold">Change circuit type, cells, lamps, view mode, or unscrew Lamp 1 to test your predictions!</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="sim-view-btn" onclick="toggleSimView()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-sm shadow transition">📐 View: Official Cambridge Symbols</button>
+          </div>
+        </div>
+
+        <!-- Controls Bar -->
+        <div class="bg-slate-900 border-2 border-slate-700 rounded-3xl p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Circuit Type -->
+          <div class="bg-slate-950 rounded-2xl p-3 border border-slate-800">
+            <div class="text-xs font-black uppercase text-slate-400 mb-2">1. Circuit Type</div>
+            <div class="grid grid-cols-2 gap-2">
+              <button id="ctrl-type-series" onclick="setSimType('series')" class="py-2 rounded-xl font-extrabold text-xs transition">Series (1 Loop)</button>
+              <button id="ctrl-type-parallel" onclick="setSimType('parallel')" class="py-2 rounded-xl font-extrabold text-xs transition">Parallel (Branches)</button>
+            </div>
+          </div>
+
+          <!-- Number of Cells -->
+          <div class="bg-slate-950 rounded-2xl p-3 border border-slate-800">
+            <div class="text-xs font-black uppercase text-slate-400 mb-2">2. Battery Cells (1.5 V each)</div>
+            <div class="grid grid-cols-3 gap-1.5">
+              <button id="ctrl-cells-1" onclick="setSimCells(1)" class="py-2 rounded-xl font-extrabold text-xs transition">1 (1.5 V)</button>
+              <button id="ctrl-cells-2" onclick="setSimCells(2)" class="py-2 rounded-xl font-extrabold text-xs transition">2 (3.0 V)</button>
+              <button id="ctrl-cells-3" onclick="setSimCells(3)" class="py-2 rounded-xl font-extrabold text-xs transition">3 (4.5 V)</button>
+            </div>
+          </div>
+
+          <!-- Number of Lamps -->
+          <div class="bg-slate-950 rounded-2xl p-3 border border-slate-800">
+            <div class="text-xs font-black uppercase text-slate-400 mb-2">3. Identical Lamps</div>
+            <div class="grid grid-cols-3 gap-1.5">
+              <button id="ctrl-lamps-1" onclick="setSimLamps(1)" class="py-2 rounded-xl font-extrabold text-xs transition">1 Lamp</button>
+              <button id="ctrl-lamps-2" onclick="setSimLamps(2)" class="py-2 rounded-xl font-extrabold text-xs transition">2 Lamps</button>
+              <button id="ctrl-lamps-3" onclick="setSimLamps(3)" class="py-2 rounded-xl font-extrabold text-xs transition">3 Lamps</button>
+            </div>
+          </div>
+
+          <!-- Fault Test -->
+          <div class="bg-slate-950 rounded-2xl p-3 border border-slate-800">
+            <div class="text-xs font-black uppercase text-slate-400 mb-2">4. Live Fault Test</div>
+            <button id="ctrl-unscrew-btn" onclick="toggleUnscrewLamp1()" class="w-full py-2 rounded-xl font-black text-xs transition">💡 Unscrew Lamp 1!</button>
+          </div>
+        </div>
+
+        <!-- Dedicated Interactive SVG Canvas (Clean — NO overlapping text panels!) -->
+        <div class="bg-slate-950 border-2 border-sky-400/40 rounded-3xl p-4 shadow-2xl">
+          <div id="sim-svg-container" class="w-full flex items-center justify-center min-h-[310px]"></div>
+        </div>
+
+        <!-- Anchored Telemetry & Live Brightness Dashboard (Below Canvas) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <div class="lg:col-span-7 bg-slate-900 border-2 border-slate-700 rounded-3xl p-5 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-black text-amber-300">📊 Live Telemetry &amp; Brightness Readout</h3>
+              <span id="sim-status-pill" class="px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">CLOSED CIRCUIT</span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="bg-slate-950 rounded-2xl p-3 border border-slate-800 text-center">
+                <div class="text-[11px] font-bold uppercase text-slate-400">Battery Voltage</div>
+                <div id="tele-total-v" class="text-2xl font-black text-sky-300 mt-0.5">3.0 V</div>
+              </div>
+              <div class="bg-slate-950 rounded-2xl p-3 border border-slate-800 text-center">
+                <div class="text-[11px] font-bold uppercase text-slate-400">Voltage per Lit Lamp</div>
+                <div id="tele-lamp-v" class="text-2xl font-black text-amber-300 mt-0.5">1.5 V</div>
+              </div>
+              <div class="bg-slate-950 rounded-2xl p-3 border border-slate-800 text-center">
+                <div class="text-[11px] font-bold uppercase text-slate-400">Brightness Rating</div>
+                <div id="tele-bright" class="text-xl font-black text-emerald-300 mt-1">Normal</div>
+              </div>
+              <div class="bg-slate-950 rounded-2xl p-3 border border-slate-800 text-center">
+                <div class="text-[11px] font-bold uppercase text-slate-400">Lamps Lit</div>
+                <div id="tele-lit" class="text-2xl font-black text-white mt-0.5">2 / 2</div>
+              </div>
+            </div>
+
+            <!-- Live Lamp-by-Lamp Table -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr class="border-b border-slate-700 text-slate-400 text-xs uppercase">
+                    <th class="py-2 px-3">Lamp</th>
+                    <th class="py-2 px-3">Pathway State</th>
+                    <th class="py-2 px-3">Voltage Received</th>
+                    <th class="py-2 px-3">Brightness</th>
+                  </tr>
+                </thead>
+                <tbody id="sim-lamp-table" class="divide-y divide-slate-800 font-bold text-slate-100"></tbody>
+              </table>
+            </div>
+
+            <!-- Click-to-Reveal Voltage & Pathway Explainer -->
+            <div class="pt-1">
+              <button onclick="toggleMechanismExplainer()" class="w-full py-2.5 px-4 rounded-2xl bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/40 text-amber-300 font-black text-sm flex items-center justify-between transition">
+                <span>🔍 Click to Reveal: Why Does Voltage &amp; Brightness Behave Like This?</span>
+                <span id="mech-chevron">▼</span>
+              </button>
+              <div id="mech-panel" class="hidden mt-3 p-4 rounded-2xl bg-slate-950 border border-amber-400/30 text-sm text-slate-200 space-y-2">
+                <p id="mech-explain-1" class="font-semibold"></p>
+                <p id="mech-explain-2" class="text-amber-200 font-semibold"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Labelled Interactive Brightness Bar Chart (NO NAKED GRAPHS!) -->
+          <div class="lg:col-span-5 bg-slate-900 border-2 border-slate-700 rounded-3xl p-5 flex flex-col justify-between space-y-3">
+            <div>
+              <h3 class="text-base font-black text-sky-300">📈 Brightness Comparison Graph (3.0 V Battery)</h3>
+              <p class="text-xs text-slate-300 font-semibold mt-1"><strong>How to Read:</strong> Find the circuit setup on the X-axis, then read its brightness in lux on the Y-axis. Click any bar for its exact reading!</p>
+            </div>
+            <div id="sim-graph-container" class="bg-slate-950 rounded-2xl p-3 border border-slate-800"></div>
+            <div id="graph-readout" class="px-3 py-2 rounded-xl bg-sky-500/15 border border-sky-400/40 text-sky-200 text-xs font-extrabold">
+              👆 Hover or click a bar above to inspect its exact coordinates (Setup, Brightness in lux).
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATION 5: SUCCESS CRITERIA WHITEBOARD CHECK ==================== -->
+    <!-- [SoL: Metacognition] [SoL: Immediate Feedback] -->
+    <section id="station-5" class="station-section">
+      <div class="space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-3xl font-black text-white">✅ Success Criteria Whiteboard Check</h2>
+            <p class="text-slate-300 font-semibold">Show your mini-whiteboard for all 3 checks, then tick off each criterion you have mastered!</p>
+          </div>
+          <div class="px-5 py-2.5 rounded-2xl bg-emerald-500/20 border-2 border-emerald-400 text-emerald-300 font-black text-lg">
+            Progress: <span id="sc-met-count">0</span> / 3 Met
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <!-- Check 1: MUST -->
+          <div class="bg-slate-900 border-2 border-emerald-400/50 rounded-3xl p-5 flex flex-col justify-between space-y-4">
+            <div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-black uppercase">Check 1 · MUST</span>
+              <h3 class="text-lg font-black text-white mt-2">Identify the Circuit Type</h3>
+              <p class="text-sm text-slate-300 font-semibold mt-1">Look at this official Cambridge diagram. Is it <strong>Series</strong> or <strong>Parallel</strong>? How many complete loops can electricity travel around?</p>
+              <div class="my-3 bg-slate-950 rounded-2xl p-2 border border-slate-800 flex justify-center">
+                <svg viewBox="0 0 260 140" class="w-full max-w-[240px] h-auto" aria-label="Parallel circuit with 2 lamps on separate branches">
+                  <!-- Top main wire + 2 cells -->
+                  <line x1="30" y1="22" x2="105" y2="22" stroke="#f8fafc" stroke-width="2.5"/>
+                  <!-- Cell 1 -->
+                  <line x1="105" y1="8" x2="105" y2="36" stroke="#f8fafc" stroke-width="2"/>
+                  <line x1="115" y1="14" x2="115" y2="30" stroke="#f8fafc" stroke-width="5"/>
+                  <line x1="115" y1="22" x2="132" y2="22" stroke="#f8fafc" stroke-width="2.5"/>
+                  <!-- Cell 2 -->
+                  <line x1="132" y1="8" x2="132" y2="36" stroke="#f8fafc" stroke-width="2"/>
+                  <line x1="142" y1="14" x2="142" y2="30" stroke="#f8fafc" stroke-width="5"/>
+                  <line x1="142" y1="22" x2="230" y2="22" stroke="#f8fafc" stroke-width="2.5"/>
+                  <!-- Side rails -->
+                  <line x1="30" y1="22" x2="30" y2="118" stroke="#f8fafc" stroke-width="2.5"/>
+                  <line x1="230" y1="22" x2="230" y2="118" stroke="#f8fafc" stroke-width="2.5"/>
+                  <!-- Junction dots -->
+                  <circle cx="30" cy="72" r="4" fill="#38bdf8"/>
+                  <circle cx="230" cy="72" r="4" fill="#38bdf8"/>
+                  <!-- Branch 1 -->
+                  <line x1="30" y1="72" x2="116" y2="72" stroke="#f8fafc" stroke-width="2.5"/>
+                  <circle cx="130" cy="72" r="14" fill="#0f172a" stroke="#fbbf24" stroke-width="2.5"/>
+                  <line x1="120" y1="62" x2="140" y2="82" stroke="#fbbf24" stroke-width="2.2"/>
+                  <line x1="140" y1="62" x2="120" y2="82" stroke="#fbbf24" stroke-width="2.2"/>
+                  <line x1="144" y1="72" x2="230" y2="72" stroke="#f8fafc" stroke-width="2.5"/>
+                  <!-- Branch 2 -->
+                  <line x1="30" y1="118" x2="116" y2="118" stroke="#f8fafc" stroke-width="2.5"/>
+                  <circle cx="130" cy="118" r="14" fill="#0f172a" stroke="#fbbf24" stroke-width="2.5"/>
+                  <line x1="120" y1="108" x2="140" y2="128" stroke="#fbbf24" stroke-width="2.2"/>
+                  <line x1="140" y1="108" x2="120" y2="128" stroke="#fbbf24" stroke-width="2.2"/>
+                  <line x1="144" y1="118" x2="230" y2="118" stroke="#f8fafc" stroke-width="2.5"/>
+                </svg>
+              </div>
+              <div id="sc-ans-1" class="hidden p-3 rounded-xl bg-emerald-950 border border-emerald-400/50 text-emerald-200 text-sm font-bold">
+                ✅ Parallel circuit! There are 2 separate branches (2 complete loops).
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="revealScAns(1)" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs">👁️ Reveal</button>
+              <button id="sc-btn-1" onclick="toggleScMet(1)" class="flex-1 py-2 rounded-xl bg-emerald-600/20 border border-emerald-400 text-emerald-300 font-black text-xs">⬜ Mark Met</button>
+            </div>
+          </div>
+
+          <!-- Check 2: SHOULD -->
+          <div class="bg-slate-900 border-2 border-sky-400/50 rounded-3xl p-5 flex flex-col justify-between space-y-4">
+            <div>
+              <span class="px-2.5 py-1 rounded-full bg-sky-500/20 text-sky-300 text-xs font-black uppercase">Check 2 · SHOULD</span>
+              <h3 class="text-lg font-black text-white mt-2">Compare Lamp Brightness</h3>
+              <p class="text-sm text-slate-300 font-semibold mt-1">Circuit P has <strong>1 lamp</strong> on a 3.0 V battery. Circuit Q has <strong>2 lamps in series</strong> on an identical 3.0 V battery.</p>
+              <div class="my-3 p-3.5 rounded-2xl bg-slate-950 border border-slate-800 text-sm font-bold text-sky-200">
+                Question: Which circuit has brighter lamps, and why? Are the two lamps in Circuit Q equally bright?
+              </div>
+              <div id="sc-ans-2" class="hidden p-3 rounded-xl bg-sky-950 border border-sky-400/50 text-sky-200 text-sm font-bold">
+                ✅ Circuit P is brighter (gets all 3.0 V). In Circuit Q, both lamps are dimmer and EQUALLY bright (sharing 3.0 V ➔ 1.5 V each).
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="revealScAns(2)" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs">👁️ Reveal</button>
+              <button id="sc-btn-2" onclick="toggleScMet(2)" class="flex-1 py-2 rounded-xl bg-sky-600/20 border border-sky-400 text-sky-300 font-black text-xs">⬜ Mark Met</button>
+            </div>
+          </div>
+
+          <!-- Check 3: COULD -->
+          <div class="bg-slate-900 border-2 border-amber-400/50 rounded-3xl p-5 flex flex-col justify-between space-y-4">
+            <div>
+              <span class="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-black uppercase">Check 3 · COULD</span>
+              <h3 class="text-lg font-black text-white mt-2">Predict the Corridor Fault</h3>
+              <p class="text-sm text-slate-300 font-semibold mt-1">Three school corridor lights (Lamp A, Lamp B, Lamp C) are wired on <strong>3 parallel branches</strong>. Lamp A breaks!</p>
+              <div class="my-3 p-3.5 rounded-2xl bg-slate-950 border border-slate-800 text-sm font-bold text-amber-200">
+                Question: What happens to Lamp B and Lamp C? Explain using the word "branch" or "loop".
+              </div>
+              <div id="sc-ans-3" class="hidden p-3 rounded-xl bg-amber-950 border border-amber-400/50 text-amber-200 text-sm font-bold">
+                ✅ Lamp B and Lamp C stay ON at the same brightness, because each has its own complete branch (closed loop) connected to the power supply!
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="revealScAns(3)" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs">👁️ Reveal</button>
+              <button id="sc-btn-3" onclick="toggleScMet(3)" class="flex-1 py-2 rounded-xl bg-amber-600/20 border border-amber-400 text-amber-300 font-black text-xs">⬜ Mark Met</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATION 6: QUICKFIRE CHECKPOINT CHALLENGE ==================== -->
+    <!-- [SoL: Retrieval Practice] [SoL: Automaticity] [SoL: Immediate Feedback] [SoL: Interleaving] -->
+    <section id="station-6" class="station-section">
+      <div class="space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-3xl font-black text-white">🏆 Quickfire Checkpoint Challenge (8 Questions)</h2>
+            <p class="text-slate-300 font-semibold">Start the timer ➔ Write on boards ➔ BOARDS UP! ➔ Reveal &amp; Award Team Points!</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="qf-counter" class="px-4 py-2 rounded-xl bg-slate-800 border border-slate-600 font-black text-amber-300 text-sm">Question 1 / 8</span>
+            <button onclick="prevQf()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 font-extrabold text-sm">◀ Prev</button>
+            <button onclick="nextQf()" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-sm">Next ▶</button>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 border-2 border-amber-400/40 rounded-3xl p-7 shadow-2xl space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <span id="qf-tag" class="px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/40 text-sky-300 font-black text-xs uppercase">6Pe.02 · Series Circuits</span>
+            <div class="flex items-center gap-3">
+              <div id="qf-timer-display" class="text-4xl font-black text-amber-300 tabular-nums">15s</div>
+              <button onclick="startQfTimer(15)" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm shadow">⏱️ Start 15s</button>
+              <button onclick="stopQfTimer()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs">Stop</button>
+            </div>
+          </div>
+
+          <div id="qf-boards-up" class="hidden py-3 px-6 rounded-2xl bg-rose-600 text-white text-center text-3xl font-black tracking-widest animate-bounce">
+            🙌 BOARDS UP! SHOW YOUR ANSWERS! 🙌
+          </div>
+
+          <div class="min-h-[150px] flex flex-col justify-center">
+            <p id="qf-question" class="text-3xl md:text-4xl font-black text-white leading-snug"></p>
+            <div id="qf-visual" class="mt-4 flex justify-center"></div>
+          </div>
+
+          <div id="qf-answer-box" class="hidden p-5 rounded-2xl bg-emerald-950/90 border-2 border-emerald-400 text-emerald-100">
+            <div class="text-xs font-black uppercase tracking-widest text-emerald-300 mb-1">✅ Cambridge Checkpoint Answer</div>
+            <p id="qf-answer-text" class="text-2xl font-extrabold text-white"></p>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-700/70">
+            <button onclick="revealQfAnswer()" class="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-base shadow-lg">👁️ Reveal Answer</button>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <button onclick="addTeamScore('red', 1, true)" class="px-5 py-3 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-black text-sm shadow-lg">🔴 +1 Team Red (<span id="qf-score-red">0</span>)</button>
+              <button onclick="addTeamScore('blue', 1, true)" class="px-5 py-3 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-black text-sm shadow-lg">🔵 +1 Team Blue (<span id="qf-score-blue">0</span>)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION — z-[80]) ==================== -->
+  <div id="vocab-modal" class="hidden fixed inset-0 z-[80] bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4" onclick="if(event.target===this) closeVocabModal()">
+    <div class="bg-slate-900 border-2 border-amber-400 rounded-3xl max-w-2xl w-full p-7 shadow-2xl space-y-5 relative">
+      <button onclick="closeVocabModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-800 hover:bg-rose-600 text-white font-black text-lg transition">✕</button>
+      <div>
+        <span class="px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-black uppercase">Unit 5.4 Bilingual Scientific Term</span>
+        <h3 id="vm-en" class="text-4xl font-black text-white mt-2"></h3>
+        <div id="vm-vn" class="text-2xl font-extrabold text-emerald-300 mt-1"></div>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <button onclick="speakVocab('en')" class="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-sm shadow">🔊 Listen English (en-GB)</button>
+        <button onclick="speakVocab('vn')" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm shadow">🔊 Nghe Tiếng Việt (vi-VN)</button>
+      </div>
+      <div id="vm-svg" class="bg-slate-950 rounded-2xl p-4 border border-slate-700 flex items-center justify-center min-h-[150px]"></div>
+      <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700 space-y-1.5">
+        <div class="text-xs font-black uppercase text-amber-300">Primary Science Definition</div>
+        <p id="vm-def" class="text-lg font-bold text-white"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== GIANT PROJECTION MODAL (z-[80]) ==================== -->
+  <div id="giant-modal" class="hidden fixed inset-0 z-[80] bg-slate-950/95 flex items-center justify-center p-6" onclick="if(event.target===this) closeGiantProjection()">
+    <div class="max-w-5xl w-full bg-slate-900 border-4 border-amber-400 rounded-3xl p-10 text-center space-y-6 relative shadow-2xl">
+      <button onclick="closeGiantProjection()" class="absolute top-5 right-5 w-12 h-12 rounded-full bg-slate-800 hover:bg-rose-600 text-white font-black text-2xl">✕</button>
+      <div class="text-sm font-black uppercase tracking-widest text-amber-300">🔑 Key Rule to Remember</div>
+      <div id="giant-text" class="text-5xl md:text-6xl font-black text-white leading-tight"></div>
+      <p id="giant-sub" class="text-2xl font-bold text-sky-300"></p>
+    </div>
+  </div>
+
+  <!-- ==================== TEACHER PROMPT DRAWER (z-[70]) ==================== -->
+  <aside id="teacher-drawer" class="hidden fixed top-0 right-0 bottom-0 w-full max-w-md z-[70] bg-slate-900 border-l-2 border-indigo-400 shadow-2xl p-6 overflow-y-auto space-y-5">
+    <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+      <h3 class="text-xl font-black text-indigo-300">🎓 Teacher Prompt &amp; Intervention Drawer</h3>
+      <button onclick="toggleTeacherDrawer()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-rose-600 text-white font-black">✕</button>
+    </div>
+    <div class="space-y-4 text-sm text-slate-200">
+      <div class="p-4 rounded-2xl bg-slate-950 border border-slate-700">
+        <div class="font-black text-amber-300 uppercase text-xs mb-1">Red-Flag Hinge Check (Minute 35)</div>
+        <p>Ask: <em>"In a 2-lamp series circuit, is Lamp 1 brighter than Lamp 2?"</em> If &gt;20% say YES, pause immediately and demonstrate physically with 2 identical bulbs on 3.0 V — swap the bulbs' positions to prove both glow equally dimly!</p>
+      </div>
+      <div class="p-4 rounded-2xl bg-slate-950 border border-slate-700">
+        <div class="font-black text-emerald-300 uppercase text-xs mb-1">Hands-On Kit Pacing Tip</div>
+        <p>Have groups build <strong>Series 1 ➔ 2 ➔ 3</strong> first (takes 8 mins), record observations, then convert to <strong>Parallel 2 ➔ 3</strong> by clipping the 2nd lamp's leads directly across Lamp 1's terminals (ladder shape). Then unscrew Lamp 1!</p>
+      </div>
+      <div class="p-4 rounded-2xl bg-slate-950 border border-slate-700">
+        <div class="font-black text-sky-300 uppercase text-xs mb-1">EAL Sentence Stems</div>
+        <ul class="list-disc pl-4 space-y-1">
+          <li>"In a <strong>series</strong> circuit, lamps are dimmer because they <strong>share the voltage</strong>."</li>
+          <li>"In a <strong>parallel</strong> circuit, each <strong>branch</strong> receives the <strong>full voltage</strong>."</li>
+          <li>"When one lamp breaks in parallel, the other lamps stay ON because their <strong>loops are still complete</strong>."</li>
+        </ul>
+      </div>
+      <div class="p-4 rounded-2xl bg-slate-950 border border-slate-700">
+        <div class="font-black text-purple-300 uppercase text-xs mb-1">Keyboard Shortcuts</div>
+        <p><strong>← / →</strong> Switch Stations · <strong>W</strong> David's Board · <strong>T</strong> Teacher Drawer · <strong>M</strong> Mute Audio · <strong>Esc</strong> Close Modals / Exit Fullscreen</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==================== DAVID'S BOARD WHITEBOARD OVERLAY (z-[70]) ==================== -->
+  <div id="whiteboard-overlay" class="hidden fixed inset-0 z-[70] bg-slate-950/95 flex flex-col p-4">
+    <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-700">
+      <div class="flex items-center gap-3">
+        <span class="text-lg font-black text-emerald-400">✏️ David's Board — Circuit Sketchpad</span>
+        <div class="flex items-center gap-1.5">
+          <button onclick="setWbColor('#ffffff')" class="w-7 h-7 rounded-full bg-white border-2 border-slate-500" title="White"></button>
+          <button onclick="setWbColor('#fbbf24')" class="w-7 h-7 rounded-full bg-amber-400 border-2 border-slate-500" title="Amber"></button>
+          <button onclick="setWbColor('#38bdf8')" class="w-7 h-7 rounded-full bg-sky-400 border-2 border-slate-500" title="Sky"></button>
+          <button onclick="setWbColor('#fb7185')" class="w-7 h-7 rounded-full bg-rose-400 border-2 border-slate-500" title="Rose"></button>
+          <button onclick="setWbColor('#34d399')" class="w-7 h-7 rounded-full bg-emerald-400 border-2 border-slate-500" title="Emerald"></button>
+        </div>
+        <button onclick="setWbSize(3)" class="px-2.5 py-1 rounded-lg bg-slate-800 text-xs font-bold">Thin</button>
+        <button onclick="setWbSize(6)" class="px-2.5 py-1 rounded-lg bg-slate-800 text-xs font-bold">Medium</button>
+        <button onclick="setWbSize(12)" class="px-2.5 py-1 rounded-lg bg-slate-800 text-xs font-bold">Thick</button>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="clearWhiteboard()" class="px-4 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs">🗑️ Clear Board</button>
+        <button onclick="closeWhiteboard()" class="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs">✕ Close (Esc)</button>
+      </div>
+    </div>
+    <div id="wb-canvas-wrap" class="flex-1 mt-3 bg-slate-900 border-2 border-slate-700 rounded-2xl overflow-hidden relative">
+      <canvas id="wb-canvas" class="w-full h-full touch-none cursor-crosshair block"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // ==================== AUDIO & CONFETTI ENGINE (OFFLINE WEB AUDIO API) ====================
+    let isMuted = false;
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playChime(type = 'click') {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === 'success') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.09);
+        osc.frequency.setValueAtTime(783.99, now + 0.18);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.42);
+        osc.start(now);
+        osc.stop(now + 0.44);
+      } else if (type === 'alert') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(880, now);
+        osc.frequency.setValueAtTime(660, now + 0.12);
+        osc.frequency.setValueAtTime(880, now + 0.24);
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+        osc.start(now);
+        osc.stop(now + 0.48);
+      } else {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(480, now);
+        gain.gain.setValueAtTime(0.09, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.start(now);
+        osc.stop(now + 0.13);
+      }
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('mute-btn').textContent = isMuted ? '🔇' : '🔊';
+    }
+
+    function fireConfetti() {
+      const palette = ['#fbbf24', '#38bdf8', '#34d399', '#fb7185', '#a78bfa'];
+      for (let i = 0; i < 42; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = (Math.random() * 98) + 'vw';
+        el.style.top = (-10 - Math.random() * 30) + 'px';
+        el.style.backgroundColor = palette[i % palette.length];
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.animationDelay = (Math.random() * 0.35) + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2500);
+      }
+    }
+
+    // ==================== AUTO-HIDING HEADER & STATION NAVIGATION ====================
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const current = window.scrollY;
+      const hdr = document.getElementById('top-header');
+      if (current > lastScroll && current > 60) {
+        hdr.classList.add('header-hidden');
+      } else {
+        hdr.classList.remove('header-hidden');
+      }
+      lastScroll = Math.max(0, current);
+    }, { passive: true });
+
+    let currentStation = 0;
+    const totalStations = 7;
+
+    function goStation(idx) {
+      if (idx < 0 || idx >= totalStations) return;
+      currentStation = idx;
+      document.querySelectorAll('.station-section').forEach((sec, i) => {
+        sec.classList.toggle('active', i === idx);
+      });
+      document.querySelectorAll('.station-tab').forEach((btn, i) => {
+        if (i === idx) {
+          btn.className = 'station-tab px-3 py-1.5 rounded-lg text-xs font-black bg-amber-400 text-slate-950 shadow transition';
+        } else {
+          btn.className = 'station-tab px-3 py-1.5 rounded-lg text-xs font-extrabold bg-slate-800/80 hover:bg-slate-700 text-slate-200 transition';
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      playChime('click');
+    }
+
+    // ==================== TEAM SCOREBOARD ====================
+    const teamScores = { red: 0, blue: 0 };
+    function addTeamScore(team, delta, celebrate = false) {
+      teamScores[team] = Math.max(0, teamScores[team] + delta);
+      document.getElementById('hdr-score-red').textContent = teamScores.red;
+      document.getElementById('hdr-score-blue').textContent = teamScores.blue;
+      document.getElementById('qf-score-red').textContent = teamScores.red;
+      document.getElementById('qf-score-blue').textContent = teamScores.blue;
+      playChime('success');
+      if (celebrate) fireConfetti();
+    }
+    function resetTeamScores() {
+      teamScores.red = 0;
+      teamScores.blue = 0;
+      document.getElementById('hdr-score-red').textContent = 0;
+      document.getElementById('hdr-score-blue').textContent = 0;
+      document.getElementById('qf-score-red').textContent = 0;
+      document.getElementById('qf-score-blue').textContent = 0;
+    }
+
+    // ==================== STATION 1: FLASHBACK 3 ====================
+    function flipCard(card) {
+      card.classList.toggle('flipped');
+      playChime('click');
+    }
+    function resetFlashbacks() {
+      document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
+      playChime('click');
+    }
+
+    // ==================== STATION 2: BILINGUAL VOCABULARY (SOLE VN EXCEPTION) ====================
+    const vocabData = [
+      {
+        en: 'series circuit',
+        vn: 'mạch điện nối tiếp',
+        def: 'A circuit with only ONE single loop, so electricity flows through every component one after another.',
+        svg: `<svg viewBox="0 0 260 120" class="w-60 h-28">
+          <line x1="30" y1="22" x2="112" y2="22" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="112" y1="8" x2="112" y2="36" stroke="#f8fafc" stroke-width="2"/>
+          <line x1="124" y1="14" x2="124" y2="30" stroke="#f8fafc" stroke-width="5"/>
+          <line x1="124" y1="22" x2="230" y2="22" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="30" y1="22" x2="30" y2="96" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="230" y1="22" x2="230" y2="96" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="30" y1="96" x2="76" y2="96" stroke="#f8fafc" stroke-width="2.5"/>
+          <circle cx="90" cy="96" r="14" fill="#0f172a" stroke="#fbbf24" stroke-width="2.5"/>
+          <line x1="80" y1="86" x2="100" y2="106" stroke="#fbbf24" stroke-width="2"/>
+          <line x1="100" y1="86" x2="80" y2="106" stroke="#fbbf24" stroke-width="2"/>
+          <line x1="104" y1="96" x2="156" y2="96" stroke="#f8fafc" stroke-width="2.5"/>
+          <circle cx="170" cy="96" r="14" fill="#0f172a" stroke="#fbbf24" stroke-width="2.5"/>
+          <line x1="160" y1="86" x2="180" y2="106" stroke="#fbbf24" stroke-width="2"/>
+          <line x1="180" y1="86" x2="160" y2="106" stroke="#fbbf24" stroke-width="2"/>
+          <line x1="184" y1="96" x2="230" y2="96" stroke="#f8fafc" stroke-width="2.5"/>
+          <text x="130" y="64" text-anchor="middle" fill="#fb7185" font-size="12" font-weight="bold">1 SINGLE LOOP</text>
+        </svg>`
+      },
+      {
+        en: 'parallel circuit',
+        vn: 'mạch điện song song',
+        def: 'A circuit with TWO OR MORE separate branches, so electricity splits and each branch gets the full battery voltage.',
+        svg: `<svg viewBox="0 0 260 130" class="w-60 h-28">
+          <line x1="30" y1="20" x2="112" y2="20" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="112" y1="6" x2="112" y2="34" stroke="#f8fafc" stroke-width="2"/>
+          <line x1="124" y1="12" x2="124" y2="28" stroke="#f8fafc" stroke-width="5"/>
+          <line x1="124" y1="20" x2="230" y2="20" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="30" y1="20" x2="30" y2="110" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="230" y1="20" x2="230" y2="110" stroke="#f8fafc" stroke-width="2.5"/>
+          <circle cx="30" cy="65" r="4" fill="#34d399"/><circle cx="230" cy="65" r="4" fill="#34d399"/>
+          <line x1="30" y1="65" x2="116" y2="65" stroke="#f8fafc" stroke-width="2.5"/>
+          <circle cx="130" cy="65" r="14" fill="#0f172a" stroke="#34d399" stroke-width="2.5"/>
+          <line x1="120" y1="55" x2="140" y2="75" stroke="#34d399" stroke-width="2"/>
+          <line x1="140" y1="55" x2="120" y2="75" stroke="#34d399" stroke-width="2"/>
+          <line x1="144" y1="65" x2="230" y2="65" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="30" y1="110" x2="116" y2="110" stroke="#f8fafc" stroke-width="2.5"/>
+          <circle cx="130" cy="110" r="14" fill="#0f172a" stroke="#34d399" stroke-width="2.5"/>
+          <line x1="120" y1="100" x2="140" y2="120" stroke="#34d399" stroke-width="2"/>
+          <line x1="140" y1="100" x2="120" y2="120" stroke="#34d399" stroke-width="2"/>
+          <line x1="144" y1="110" x2="230" y2="110" stroke="#f8fafc" stroke-width="2.5"/>
+        </svg>`
+      },
+      {
+        en: 'branch',
+        vn: 'nhánh mạch',
+        def: 'One separate pathway in a parallel circuit that connects its own component across the battery.',
+        svg: `<svg viewBox="0 0 260 120" class="w-60 h-28">
+          <line x1="35" y1="18" x2="35" y2="105" stroke="#94a3b8" stroke-width="2.5"/>
+          <line x1="225" y1="18" x2="225" y2="105" stroke="#94a3b8" stroke-width="2.5"/>
+          <line x1="35" y1="45" x2="116" y2="45" stroke="#38bdf8" stroke-width="3.5"/>
+          <circle cx="130" cy="45" r="13" fill="#0f172a" stroke="#38bdf8" stroke-width="2.5"/>
+          <line x1="121" y1="36" x2="139" y2="54" stroke="#38bdf8" stroke-width="2"/>
+          <line x1="139" y1="36" x2="121" y2="54" stroke="#38bdf8" stroke-width="2"/>
+          <line x1="143" y1="45" x2="225" y2="45" stroke="#38bdf8" stroke-width="3.5"/>
+          <text x="130" y="24" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">Branch 1</text>
+          <line x1="35" y1="92" x2="116" y2="92" stroke="#fbbf24" stroke-width="3.5"/>
+          <circle cx="130" cy="92" r="13" fill="#0f172a" stroke="#fbbf24" stroke-width="2.5"/>
+          <line x1="121" y1="83" x2="139" y2="101" stroke="#fbbf24" stroke-width="2"/>
+          <line x1="139" y1="83" x2="121" y2="101" stroke="#fbbf24" stroke-width="2"/>
+          <line x1="143" y1="92" x2="225" y2="92" stroke="#fbbf24" stroke-width="3.5"/>
+          <text x="130" y="116" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="bold">Branch 2</text>
+        </svg>`
+      },
+      {
+        en: 'loop',
+        vn: 'vòng mạch kín',
+        def: 'A complete, unbroken circular pathway from the positive (+) side of a cell back to the negative (−) side.',
+        svg: `<svg viewBox="0 0 260 120" class="w-60 h-28">
+          <rect x="40" y="22" width="180" height="76" fill="none" stroke="#34d399" stroke-width="3" class="current-flow"/>
+          <text x="130" y="64" text-anchor="middle" fill="#34d399" font-size="14" font-weight="bold">COMPLETE LOOP ➔</text>
+        </svg>`
+      },
+      {
+        en: 'brightness',
+        vn: 'độ sáng',
+        def: 'How strongly a lamp shines. More voltage across a lamp makes it glow brighter.',
+        svg: `<svg viewBox="0 0 260 120" class="w-60 h-28">
+          <circle cx="70" cy="60" r="18" fill="#78350f" stroke="#f59e0b" stroke-width="2.5"/>
+          <line x1="58" y1="48" x2="82" y2="72" stroke="#fbbf24" stroke-width="2"/>
+          <line x1="82" y1="48" x2="58" y2="72" stroke="#fbbf24" stroke-width="2"/>
+          <text x="70" y="102" text-anchor="middle" fill="#cbd5e1" font-size="12" font-weight="bold">Dim (1.5 V)</text>
+          <circle cx="190" cy="60" r="34" fill="#fbbf24" opacity="0.28"/>
+          <circle cx="190" cy="60" r="24" fill="#fde047" opacity="0.45"/>
+          <circle cx="190" cy="60" r="18" fill="#fef08a" stroke="#facc15" stroke-width="3"/>
+          <line x1="178" y1="48" x2="202" y2="72" stroke="#0f172a" stroke-width="2.5"/>
+          <line x1="202" y1="48" x2="178" y2="72" stroke="#0f172a" stroke-width="2.5"/>
+          <text x="190" y="106" text-anchor="middle" fill="#fde047" font-size="12" font-weight="bold">Bright (3.0 V)</text>
+        </svg>`
+      },
+      {
+        en: 'voltage',
+        vn: 'hiệu điện thế',
+        def: 'The electrical push provided by a cell or battery that drives electricity around a circuit.',
+        svg: `<svg viewBox="0 0 260 120" class="w-60 h-28">
+          <line x1="20" y1="55" x2="78" y2="55" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="78" y1="30" x2="78" y2="80" stroke="#38bdf8" stroke-width="2.5"/>
+          <line x1="92" y1="40" x2="92" y2="70" stroke="#38bdf8" stroke-width="6"/>
+          <line x1="92" y1="55" x2="132" y2="55" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="132" y1="30" x2="132" y2="80" stroke="#38bdf8" stroke-width="2.5"/>
+          <line x1="146" y1="40" x2="146" y2="70" stroke="#38bdf8" stroke-width="6"/>
+          <line x1="146" y1="55" x2="240" y2="55" stroke="#f8fafc" stroke-width="2.5"/>
+          <text x="85" y="22" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">1.5 V</text>
+          <text x="139" y="22" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">1.5 V</text>
+          <text x="130" y="102" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="bold">Total Push = 3.0 V</text>
+        </svg>`
+      },
+      {
+        en: 'volt',
+        vn: 'vôn (V)',
+        def: 'The standard scientific unit used to measure voltage (symbol: V). A standard AA cell is 1.5 V.',
+        svg: `<svg viewBox="0 0 260 120" class="w-60 h-28">
+          <rect x="65" y="34" width="120" height="52" rx="8" fill="#1e293b" stroke="#fbbf24" stroke-width="3"/>
+          <rect x="185" y="48" width="12" height="24" rx="2" fill="#fbbf24"/>
+          <text x="125" y="67" text-anchor="middle" fill="#fde047" font-size="24" font-weight="bold">1.5 V</text>
+          <text x="130" y="108" text-anchor="middle" fill="#cbd5e1" font-size="12" font-weight="bold">Symbol: V (Volts)</text>
+        </svg>`
+      },
+      {
+        en: 'prediction',
+        vn: 'dự đoán',
+        def: 'A scientific guess about what will happen in an investigation, backed by a scientific reason BEFORE testing.',
+        svg: `<svg viewBox="0 0 260 120" class="w-60 h-28">
+          <rect x="20" y="24" width="220" height="72" rx="14" fill="#1e293b" stroke="#a78bfa" stroke-width="2.5"/>
+          <text x="130" y="54" text-anchor="middle" fill="#e9d5ff" font-size="14" font-weight="bold">"I predict the lamps will</text>
+          <text x="130" y="76" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="bold">get dimmer because..."</text>
+        </svg>`
+      },
+      {
+        en: 'conclusion',
+        vn: 'kết luận',
+        def: 'A clear summary of what your results proved at the end of an investigation, linked back to scientific ideas.',
+        svg: `<svg viewBox="0 0 260 120" class="w-60 h-28">
+          <rect x="20" y="24" width="220" height="72" rx="14" fill="#064e3b" stroke="#34d399" stroke-width="2.5"/>
+          <text x="130" y="54" text-anchor="middle" fill="#a7f3d0" font-size="14" font-weight="bold">"Our results show that</text>
+          <text x="130" y="76" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold">parallel lamps stay bright!"</text>
+        </svg>`
+      }
+    ];
+
+    let activeVocabIndex = 0;
+
+    function buildVocabGrid() {
+      const grid = document.getElementById('vocab-grid');
+      grid.innerHTML = vocabData.map((v, idx) => `
+        <button onclick="openVocabModal(${idx})" class="text-left bg-slate-900 hover:bg-slate-800 border-2 border-slate-700 hover:border-amber-400 rounded-2xl p-5 shadow-lg transition group flex items-center justify-between gap-3">
+          <div>
+            <div class="text-xs font-black uppercase text-amber-400">Term ${idx + 1}</div>
+            <div class="text-2xl font-black text-white group-hover:text-amber-300 transition mt-0.5">${v.en}</div>
+          </div>
+          <span class="w-10 h-10 rounded-xl bg-amber-400/15 text-amber-300 font-black flex items-center justify-center shrink-0">🔊</span>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(idx) {
+      activeVocabIndex = idx;
+      const v = vocabData[idx];
+      document.getElementById('vm-en').textContent = v.en;
+      document.getElementById('vm-vn').textContent = v.vn;
+      document.getElementById('vm-def').textContent = v.def;
+      document.getElementById('vm-svg').innerHTML = v.svg;
+      document.getElementById('vocab-modal').classList.remove('hidden');
+      playChime('click');
+    }
+
+    function closeVocabModal() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('vocab-modal').classList.add('hidden');
+    }
+
+    function speakVocab(lang) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const v = vocabData[activeVocabIndex];
+      const u = new SpeechSynthesisUtterance(lang === 'vn' ? v.vn : v.en);
+      u.lang = lang === 'vn' ? 'vi-VN' : 'en-GB';
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    // ==================== OFFICIAL CAMBRIDGE SVG BUILDER HELPERS ====================
+    function lampGlowColor(voltage) {
+      if (voltage <= 0) return { glow: 0, fill: '#0f172a', stroke: '#94a3b8', xCol: '#94a3b8', label: 'OFF' };
+      if (voltage <= 1.0) return { glow: 0.22, fill: '#451a03', stroke: '#d97706', xCol: '#fbbf24', label: 'Very Dim' };
+      if (voltage <= 1.55) return { glow: 0.42, fill: '#78350f', stroke: '#f59e0b', xCol: '#fde047', label: 'Dim' };
+      if (voltage <= 2.3) return { glow: 0.65, fill: '#ca8a04', stroke: '#facc15', xCol: '#0f172a', label: 'Normal' };
+      if (voltage <= 3.1) return { glow: 0.88, fill: '#fef08a', stroke: '#fde047', xCol: '#0f172a', label: 'Bright' };
+      return { glow: 1.0, fill: '#ffffff', stroke: '#fef08a', xCol: '#0f172a', label: 'Very Bright' };
+    }
+
+    function drawCambridgeBattery(cx, y, cells, isKit = false) {
+      let out = '';
+      if (isKit) {
+        const w = 52;
+        const totalW = cells * w + (cells - 1) * 6;
+        const startX = cx - totalW / 2;
+        for (let i = 0; i < cells; i++) {
+          const x = startX + i * (w + 6);
+          out += `<rect x="${x}" y="${y - 16}" width="${w - 6}" height="32" rx="4" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>`;
+          out += `<rect x="${x + w - 6}" y="${y - 7}" width="6" height="14" rx="1" fill="#fbbf24"/>`;
+          out += `<text x="${x + 12}" y="${y + 4}" fill="#94a3b8" font-size="11" font-weight="bold">−</text>`;
+          out += `<text x="${x + w - 16}" y="${y + 4}" fill="#fbbf24" font-size="11" font-weight="bold">+</text>`;
+          if (i < cells - 1) out += `<line x1="${x + w}" y1="${y}" x2="${x + w + 6}" y2="${y}" stroke="#f8fafc" stroke-width="3"/>`;
+        }
+        return { svg: out, leftX: startX, rightX: startX + totalW };
+      }
+      // Official Cambridge cell symbols: tall thin (+), gap, short thick (-)
+      const unitW = 24;
+      const totalW = cells * unitW - 12;
+      const startX = cx - totalW / 2;
+      for (let i = 0; i < cells; i++) {
+        const x = startX + i * unitW;
+        // Tall thin (+)
+        out += `<line x1="${x}" y1="${y - 18}" x2="${x}" y2="${y + 18}" stroke="#f8fafc" stroke-width="2.2"/>`;
+        // Clean gap, then short thick (-)
+        out += `<line x1="${x + 11}" y1="${y - 9}" x2="${x + 11}" y2="${y + 9}" stroke="#f8fafc" stroke-width="5.5"/>`;
+        if (i < cells - 1) {
+          out += `<line x1="${x + 11}" y1="${y}" x2="${x + unitW}" y2="${y}" stroke="#f8fafc" stroke-width="2.5"/>`;
+        }
+      }
+      out += `<text x="${startX - 10}" y="${y - 12}" fill="#fbbf24" font-size="12" font-weight="bold">+</text>`;
+      out += `<text x="${startX + totalW + 5}" y="${y - 12}" fill="#38bdf8" font-size="13" font-weight="bold">−</text>`;
+      return { svg: out, leftX: startX, rightX: startX + totalW };
+    }
+
+    function drawLampNode(cx, cy, voltage, broken = false, isKit = false, label = '') {
+      const st = lampGlowColor(broken ? 0 : voltage);
+      let out = '';
+      if (!broken && st.glow > 0) {
+        const rOuter = 20 + st.glow * 22;
+        out += `<circle cx="${cx}" cy="${cy}" r="${rOuter}" fill="#fde047" opacity="${(st.glow * 0.35).toFixed(2)}"/>`;
+        out += `<circle cx="${cx}" cy="${cy}" r="${18 + st.glow * 10}" fill="#fef08a" opacity="${(st.glow * 0.45).toFixed(2)}"/>`;
+      }
+      if (isKit) {
+        // Bulb holder & glass dome
+        out += `<rect x="${cx - 16}" y="${cy - 8}" width="32" height="16" rx="4" fill="#334155" stroke="#94a3b8" stroke-width="2"/>`;
+        if (broken) {
+          out += `<circle cx="${cx}" cy="${cy - 18}" r="14" fill="#1e293b" stroke="#fb7185" stroke-width="2" stroke-dasharray="4 3"/>`;
+          out += `<text x="${cx}" y="${cy - 13}" text-anchor="middle" fill="#fb7185" font-size="14" font-weight="bold">✕</text>`;
+        } else {
+          out += `<circle cx="${cx}" cy="${cy - 14}" r="15" fill="${st.fill}" stroke="${st.stroke}" stroke-width="2.5"/>`;
+          out += `<path d="M${cx - 5} ${cy - 8} Q${cx} ${cy - 22} ${cx + 5} ${cy - 8}" fill="none" stroke="${st.xCol}" stroke-width="2"/>`;
+        }
+      } else {
+        // Official Cambridge Lamp Symbol: circle with clean X edge-to-edge
+        out += `<circle cx="${cx}" cy="${cy}" r="16" fill="${broken ? '#1e293b' : st.fill}" stroke="${broken ? '#fb7185' : st.stroke}" stroke-width="2.8" ${broken ? 'stroke-dasharray="4 3"' : ''}/>`;
+        out += `<line x1="${cx - 11.3}" y1="${cy - 11.3}" x2="${cx + 11.3}" y2="${cy + 11.3}" stroke="${broken ? '#fb7185' : st.xCol}" stroke-width="2.4"/>`;
+        out += `<line x1="${cx + 11.3}" y1="${cy - 11.3}" x2="${cx - 11.3}" y2="${cy + 11.3}" stroke="${broken ? '#fb7185' : st.xCol}" stroke-width="2.4"/>`;
+      }
+      if (broken) {
+        out += `<text x="${cx}" y="${cy + 30}" text-anchor="middle" fill="#fb7185" font-size="11" font-weight="bold">UNSCREWED (GAP)</text>`;
+      } else if (label) {
+        out += `<text x="${cx}" y="${cy + 30}" text-anchor="middle" fill="#cbd5e1" font-size="11" font-weight="bold">${label}</text>`;
+      }
+      return out;
+    }
+
+    // ==================== STATION 3: VISUAL I DO ====================
+    let idoMission = 1;
+    let idoActive = false;
+
+    function selectIdoMission(m) {
+      idoMission = m;
+      idoActive = false;
+      document.getElementById('ido-m1-btn').className = m === 1
+        ? 'px-4 py-2 rounded-xl font-extrabold text-sm bg-amber-400 text-slate-950 shadow'
+        : 'px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-800 text-slate-200 border border-slate-600';
+      document.getElementById('ido-m2-btn').className = m === 2
+        ? 'px-4 py-2 rounded-xl font-extrabold text-sm bg-amber-400 text-slate-950 shadow'
+        : 'px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-800 text-slate-200 border border-slate-600';
+
+      if (m === 1) {
+        document.getElementById('ido-mission-title').textContent = 'Mission 1: Voltage Sharing vs Full Voltage (Both powered by 3.0 V)';
+        document.getElementById('ido-action-btn').textContent = '⚡ Switch ON & Compare Brightness';
+        document.getElementById('ido-myth-text').textContent = 'Myth: "Lamp 1 in a series circuit is brighter because it gets the electricity first!" — FALSE! In a series circuit, BOTH identical lamps share the 3.0 V equally (1.5 V each) and have the EXACT SAME dimmer brightness!';
+      } else {
+        document.getElementById('ido-mission-title').textContent = 'Mission 2: The Unscrew-1-Bulb Break Test (What stays ON?)';
+        document.getElementById('ido-action-btn').textContent = '💡 Unscrew Lamp 1 in BOTH Circuits!';
+        document.getElementById('ido-myth-text').textContent = 'Why Homes Use Parallel: In a series circuit, removing 1 bulb opens the ONLY loop so EVERY bulb goes dark. In a parallel circuit, Branch 2 stays a complete closed loop so Lamp 2 stays BRIGHT!';
+      }
+      renderIdoCircuits();
+      playChime('click');
+    }
+
+    function runIdoAnimation() {
+      idoActive = !idoActive;
+      renderIdoCircuits();
+      playChime(idoActive ? 'success' : 'click');
+    }
+
+    function renderIdoCircuits() {
+      const m1On = (idoMission === 1 && idoActive);
+      const m2Broken = (idoMission === 2 && idoActive);
+      const m2Before = (idoMission === 2 && !idoActive);
+
+      const sVoltage = m1On || m2Before ? 1.5 : 0;
+      const pLamp1V = m1On || m2Before ? 3.0 : 0;
+      const pLamp2V = (m1On || m2Before || m2Broken) ? 3.0 : 0;
+
+      // Series SVG (3.0 V Battery, 2 lamps)
+      const batS = drawCambridgeBattery(160, 28, 2, false);
+      const flowS = sVoltage > 0 ? `<path d="M${batS.leftX} 28 L30 28 L30 150 L290 150 L290 28 L${batS.rightX} 28" fill="none" stroke="#fbbf24" stroke-width="2.5" opacity="0.6" class="current-flow-slow"/>` : '';
+      const seriesSvg = `
+        <svg viewBox="0 0 320 190" class="w-full max-w-[330px] h-auto">
+          <line x1="30" y1="28" x2="${batS.leftX}" y2="28" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="${batS.rightX}" y1="28" x2="290" y2="28" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="30" y1="28" x2="30" y2="150" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="290" y1="28" x2="290" y2="150" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="30" y1="150" x2="94" y2="150" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="126" y1="150" x2="194" y2="150" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="226" y1="150" x2="290" y2="150" stroke="#f8fafc" stroke-width="2.5"/>
+          ${flowS}
+          ${batS.svg}
+          <text x="160" y="60" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">3.0 V Battery (2 Cells)</text>
+          ${drawLampNode(110, 150, sVoltage, m2Broken, false, m2Broken ? '' : `Lamp 1 (${sVoltage.toFixed(1)} V)`)}
+          ${drawLampNode(210, 150, sVoltage, false, false, `Lamp 2 (${sVoltage.toFixed(1)} V)`)}
+        </svg>`;
+
+      // Parallel SVG (3.0 V Battery, 2 lamps on 2 branches)
+      const batP = drawCambridgeBattery(160, 28, 2, false);
+      const flowP1 = pLamp1V > 0 ? `<path d="M30 28 L30 98 L290 98 L290 28" fill="none" stroke="#fde047" stroke-width="2.5" opacity="0.65" class="current-flow-fast"/>` : '';
+      const flowP2 = pLamp2V > 0 ? `<path d="M30 28 L30 156 L290 156 L290 28" fill="none" stroke="#34d399" stroke-width="2.5" opacity="0.7" class="current-flow-fast"/>` : '';
+      const parallelSvg = `
+        <svg viewBox="0 0 320 190" class="w-full max-w-[330px] h-auto">
+          <line x1="30" y1="28" x2="${batP.leftX}" y2="28" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="${batP.rightX}" y1="28" x2="290" y2="28" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="30" y1="28" x2="30" y2="156" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="290" y1="28" x2="290" y2="156" stroke="#f8fafc" stroke-width="2.5"/>
+          <circle cx="30" cy="98" r="4.5" fill="#34d399"/><circle cx="290" cy="98" r="4.5" fill="#34d399"/>
+          <!-- Branch 1 -->
+          <line x1="30" y1="98" x2="144" y2="98" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="176" y1="98" x2="290" y2="98" stroke="#f8fafc" stroke-width="2.5"/>
+          <!-- Branch 2 -->
+          <line x1="30" y1="156" x2="144" y2="156" stroke="#f8fafc" stroke-width="2.5"/>
+          <line x1="176" y1="156" x2="290" y2="156" stroke="#f8fafc" stroke-width="2.5"/>
+          ${flowP1}
+          ${flowP2}
+          ${batP.svg}
+          <text x="160" y="60" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">3.0 V Battery (2 Cells)</text>
+          ${drawLampNode(160, 98, pLamp1V, m2Broken, false, m2Broken ? '' : `Lamp 1 (${pLamp1V.toFixed(1)} V)`)}
+          ${drawLampNode(160, 156, pLamp2V, false, false, `Lamp 2 (${pLamp2V.toFixed(1)} V)`)}
+        </svg>`;
+
+      document.getElementById('ido-series-svg').innerHTML = seriesSvg;
+      document.getElementById('ido-parallel-svg').innerHTML = parallelSvg;
+
+      if (idoMission === 1) {
+        document.getElementById('ido-series-badge').textContent = idoActive ? '1.5 V Each · Dimmer' : 'Switched Off';
+        document.getElementById('ido-parallel-badge').textContent = idoActive ? '3.0 V Each · BRIGHT!' : 'Switched Off';
+        document.getElementById('ido-series-readout').innerHTML = idoActive
+          ? 'Both lamps share the 3.0 V equally (<strong>1.5 V each</strong>). Both are <strong>dimmer</strong>, and BOTH have the <strong>exact same brightness</strong>!'
+          : 'Press the action button above to compare brightness on the same 3.0 V battery.';
+        document.getElementById('ido-parallel-readout').innerHTML = idoActive
+          ? 'Each separate branch connects directly to the 3.0 V battery (<strong>3.0 V each</strong>). Both lamps shine <strong>BRIGHTLY</strong>!'
+          : 'Press the action button above to compare brightness on the same 3.0 V battery.';
+      } else {
+        document.getElementById('ido-series-badge').textContent = idoActive ? 'BOTH LAMPS OFF!' : 'Both Dimly Lit';
+        document.getElementById('ido-parallel-badge').textContent = idoActive ? 'LAMP 2 STAYS BRIGHT!' : 'Both Brightly Lit';
+        document.getElementById('ido-series-readout').innerHTML = idoActive
+          ? '❌ Unscrewing Lamp 1 breaks the <strong>ONLY loop</strong>. Electricity stops everywhere — <strong>Lamp 2 goes OFF too!</strong>'
+          : 'Both lamps are lit dimly in 1 loop. Now press the button to unscrew Lamp 1!';
+        document.getElementById('ido-parallel-readout').innerHTML = idoActive
+          ? '✅ Branch 1 has a gap, so Lamp 1 goes OFF. Branch 2 is STILL a complete closed loop — <strong>Lamp 2 stays BRIGHT at 3.0 V!</strong>'
+          : 'Both lamps shine brightly on 2 separate branches. Press the button to unscrew Lamp 1!';
+      }
+    }
+
+    let isFullscreenIdo = false;
+    function toggleFullscreenIdo() {
+      isFullscreenIdo = !isFullscreenIdo;
+      const wrap = document.getElementById('ido-wrapper');
+      const btn = document.getElementById('ido-fs-btn');
+      if (isFullscreenIdo) {
+        wrap.classList.add('fullscreen-ido');
+        btn.textContent = '✕ Exit Full Screen (Esc)';
+      } else {
+        wrap.classList.remove('fullscreen-ido');
+        btn.textContent = '⛶ Full Screen I Do';
+      }
+    }
+
+    function openGiantProjection() {
+      if (idoMission === 1) {
+        document.getElementById('giant-text').textContent = 'Series = Voltage SHARED (Dimmer, Equal). Parallel = FULL Voltage (Bright!).';
+        document.getElementById('giant-sub').textContent = 'In a 3.0 V circuit with 2 identical lamps: Series gives 1.5 V each; Parallel gives 3.0 V to every branch.';
+      } else {
+        document.getElementById('giant-text').textContent = '1 Broken Bulb: Series = ALL OFF! Parallel = Other Branches STAY ON!';
+        document.getElementById('giant-sub').textContent = 'Each parallel branch has its own complete closed loop back to the battery.';
+      }
+      document.getElementById('giant-modal').classList.remove('hidden');
+      playChime('click');
+    }
+    function closeGiantProjection() {
+      document.getElementById('giant-modal').classList.add('hidden');
+    }
+
+    // ==================== STATION 4: VIRTUAL BRIGHTNESS & FAULT LAB ====================
+    const simState = {
+      type: 'series',
+      cells: 2,
+      lamps: 2,
+      view: 'symbols', // 'symbols' or 'kit'
+      unscrewed: false
+    };
+
+    function setSimType(t) { simState.type = t; updateSim(); playChime('click'); }
+    function setSimCells(c) { simState.cells = c; updateSim(); playChime('click'); }
+    function setSimLamps(l) { simState.lamps = l; updateSim(); playChime('click'); }
+    function toggleSimView() {
+      simState.view = simState.view === 'symbols' ? 'kit' : 'symbols';
+      updateSim();
+      playChime('click');
+    }
+    function toggleUnscrewLamp1() {
+      simState.unscrewed = !simState.unscrewed;
+      updateSim();
+      playChime(simState.unscrewed ? 'alert' : 'success');
+    }
+
+    function toggleMechanismExplainer() {
+      const p = document.getElementById('mech-panel');
+      const ch = document.getElementById('mech-chevron');
+      p.classList.toggle('hidden');
+      ch.textContent = p.classList.contains('hidden') ? '▼' : '▲';
+    }
+
+    function updateSim() {
+      // Button states
+      const activeBtn = 'py-2 rounded-xl font-black text-xs bg-amber-400 text-slate-950 shadow transition';
+      const idleBtn = 'py-2 rounded-xl font-extrabold text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 transition';
+      document.getElementById('ctrl-type-series').className = simState.type === 'series' ? activeBtn : idleBtn;
+      document.getElementById('ctrl-type-parallel').className = simState.type === 'parallel' ? activeBtn : idleBtn;
+      [1, 2, 3].forEach(n => {
+        document.getElementById('ctrl-cells-' + n).className = simState.cells === n ? activeBtn : idleBtn;
+        document.getElementById('ctrl-lamps-' + n).className = simState.lamps === n ? activeBtn : idleBtn;
+      });
+      document.getElementById('sim-view-btn').textContent = simState.view === 'symbols'
+        ? '📐 View: Official Cambridge Symbols'
+        : '🧰 View: Classroom Electricity Kit';
+      const unBtn = document.getElementById('ctrl-unscrew-btn');
+      if (simState.unscrewed) {
+        unBtn.className = 'w-full py-2 rounded-xl font-black text-xs bg-rose-600 hover:bg-rose-500 text-white shadow transition';
+        unBtn.textContent = '🔧 Screw Lamp 1 Back In';
+      } else {
+        unBtn.className = 'w-full py-2 rounded-xl font-black text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow transition';
+        unBtn.textContent = '💡 Unscrew Lamp 1!';
+      }
+
+      const totalV = simState.cells * 1.5;
+      const isKit = simState.view === 'kit';
+      const lampVoltages = [];
+      let litCount = 0;
+
+      for (let i = 1; i <= simState.lamps; i++) {
+        if (simState.type === 'series') {
+          const v = simState.unscrewed ? 0 : totalV / simState.lamps;
+          lampVoltages.push(v);
+          if (v > 0) litCount++;
+        } else {
+          const v = (i === 1 && simState.unscrewed) ? 0 : totalV;
+          lampVoltages.push(v);
+          if (v > 0) litCount++;
+        }
+      }
+
+      // Render SVG cleanly
+      const bat = drawCambridgeBattery(310, 42, simState.cells, isKit);
+      let svgBody = '';
+
+      if (simState.type === 'series') {
+        const yBot = 225;
+        const leftX = 70;
+        const rightX = 550;
+        const positions = simState.lamps === 1 ? [310] : simState.lamps === 2 ? [210, 410] : [170, 310, 450];
+        const loopFlow = !simState.unscrewed
+          ? `<path d="M${bat.leftX} 42 L${leftX} 42 L${leftX} ${yBot} L${rightX} ${yBot} L${rightX} 42 L${bat.rightX} 42" fill="none" stroke="#fbbf24" stroke-width="3" opacity="0.6" class="${lampVoltages[0] >= 2.5 ? 'current-flow-fast' : 'current-flow-slow'}"/>`
+          : '';
+        // Bottom wire segments with clean breaks at lamps
+        let botWire = `<line x1="${leftX}" y1="${yBot}" x2="${positions[0] - 16}" y2="${yBot}" stroke="#f8fafc" stroke-width="3"/>`;
+        for (let i = 0; i < positions.length - 1; i++) {
+          botWire += `<line x1="${positions[i] + 16}" y1="${yBot}" x2="${positions[i + 1] - 16}" y2="${yBot}" stroke="#f8fafc" stroke-width="3"/>`;
+        }
+        botWire += `<line x1="${positions[positions.length - 1] + 16}" y1="${yBot}" x2="${rightX}" y2="${yBot}" stroke="#f8fafc" stroke-width="3"/>`;
+
+        let lampsHtml = positions.map((px, idx) =>
+          drawLampNode(px, yBot, lampVoltages[idx], idx === 0 && simState.unscrewed, isKit, `Lamp ${idx + 1} (${lampVoltages[idx].toFixed(2)} V)`)
+        ).join('');
+
+        // Closed switch on left vertical wire
+        svgBody = `
+          <svg viewBox="0 0 620 295" class="w-full max-w-[660px] h-auto">
+            <line x1="${leftX}" y1="42" x2="${bat.leftX}" y2="42" stroke="#f8fafc" stroke-width="3"/>
+            <line x1="${bat.rightX}" y1="42" x2="${rightX}" y2="42" stroke="#f8fafc" stroke-width="3"/>
+            <line x1="${leftX}" y1="42" x2="${leftX}" y2="112" stroke="#f8fafc" stroke-width="3"/>
+            <line x1="${leftX}" y1="152" x2="${leftX}" y2="${yBot}" stroke="#f8fafc" stroke-width="3"/>
+            <line x1="${rightX}" y1="42" x2="${rightX}" y2="${yBot}" stroke="#f8fafc" stroke-width="3"/>
+            ${botWire}
+            ${loopFlow}
+            <!-- Official Closed Switch -->
+            <circle cx="${leftX}" cy="112" r="4.5" fill="#0f172a" stroke="#34d399" stroke-width="2.5"/>
+            <circle cx="${leftX}" cy="152" r="4.5" fill="#0f172a" stroke="#34d399" stroke-width="2.5"/>
+            <line x1="${leftX}" y1="116" x2="${leftX}" y2="148" stroke="#34d399" stroke-width="3"/>
+            <text x="${leftX + 12}" y="136" fill="#34d399" font-size="11" font-weight="bold">Switch (Closed)</text>
+            ${bat.svg}
+            <text x="310" y="84" text-anchor="middle" fill="#38bdf8" font-size="13" font-weight="bold">Battery: ${simState.cells} Cell${simState.cells > 1 ? 's' : ''} = ${totalV.toFixed(1)} V</text>
+            ${lampsHtml}
+          </svg>`;
+      } else {
+        const leftX = 75;
+        const rightX = 545;
+        const branchYs = simState.lamps === 1 ? [160] : simState.lamps === 2 ? [135, 225] : [115, 185, 255];
+        const maxY = branchYs[branchYs.length - 1];
+        let branchesHtml = '';
+        let flowsHtml = '';
+
+        branchYs.forEach((by, idx) => {
+          const isBroken = idx === 0 && simState.unscrewed;
+          if (idx < branchYs.length - 1) {
+            branchesHtml += `<circle cx="${leftX}" cy="${by}" r="5" fill="#34d399"/><circle cx="${rightX}" cy="${by}" r="5" fill="#34d399"/>`;
+          }
+          branchesHtml += `<line x1="${leftX}" y1="${by}" x2="294" y2="${by}" stroke="#f8fafc" stroke-width="3"/>`;
+          branchesHtml += `<line x1="326" y1="${by}" x2="${rightX}" y2="${by}" stroke="#f8fafc" stroke-width="3"/>`;
+          branchesHtml += `<text x="${leftX + 18}" y="${by - 8}" fill="#94a3b8" font-size="11" font-weight="bold">Branch ${idx + 1}</text>`;
+          if (!isBroken) {
+            flowsHtml += `<path d="M${leftX} 42 L${leftX} ${by} L${rightX} ${by} L${rightX} 42" fill="none" stroke="#34d399" stroke-width="2.5" opacity="0.6" class="current-flow-fast"/>`;
+          }
+          branchesHtml += drawLampNode(310, by, lampVoltages[idx], isBroken, isKit, `Lamp ${idx + 1} (${lampVoltages[idx].toFixed(1)} V)`);
+        });
+
+        svgBody = `
+          <svg viewBox="0 0 620 305" class="w-full max-w-[660px] h-auto">
+            <line x1="${leftX}" y1="42" x2="${bat.leftX}" y2="42" stroke="#f8fafc" stroke-width="3"/>
+            <line x1="${bat.rightX}" y1="42" x2="${rightX}" y2="42" stroke="#f8fafc" stroke-width="3"/>
+            <line x1="${leftX}" y1="42" x2="${leftX}" y2="${maxY}" stroke="#f8fafc" stroke-width="3"/>
+            <line x1="${rightX}" y1="42" x2="${rightX}" y2="${maxY}" stroke="#f8fafc" stroke-width="3"/>
+            ${flowsHtml}
+            ${bat.svg}
+            <text x="310" y="82" text-anchor="middle" fill="#38bdf8" font-size="13" font-weight="bold">Battery: ${simState.cells} Cell${simState.cells > 1 ? 's' : ''} = ${totalV.toFixed(1)} V (Full Voltage on Every Branch)</text>
+            ${branchesHtml}
+          </svg>`;
+      }
+
+      document.getElementById('sim-svg-container').innerHTML = svgBody;
+
+      // Update Anchored Telemetry
+      const activeV = lampVoltages.find(v => v > 0) || 0;
+      const rating = lampGlowColor(activeV).label;
+      document.getElementById('tele-total-v').textContent = totalV.toFixed(1) + ' V';
+      document.getElementById('tele-lamp-v').textContent = activeV.toFixed(2).replace(/\.00$/, '.0') + ' V';
+      document.getElementById('tele-bright').textContent = rating;
+      document.getElementById('tele-lit').textContent = `${litCount} / ${simState.lamps}`;
+
+      const pill = document.getElementById('sim-status-pill');
+      if (simState.unscrewed && simState.type === 'series') {
+        pill.className = 'px-3 py-1 rounded-full text-xs font-black bg-rose-500/20 text-rose-300 border border-rose-400/50';
+        pill.textContent = 'BROKEN LOOP — ALL OFF';
+      } else if (simState.unscrewed && simState.type === 'parallel') {
+        if (litCount > 0) {
+          pill.className = 'px-3 py-1 rounded-full text-xs font-black bg-amber-500/20 text-amber-300 border border-amber-400/50';
+          pill.textContent = 'BRANCH 1 BROKEN — OTHERS ON';
+        } else {
+          pill.className = 'px-3 py-1 rounded-full text-xs font-black bg-rose-500/20 text-rose-300 border border-rose-400/50';
+          pill.textContent = 'ONLY BRANCH BROKEN — ADD 2+ LAMPS';
+        }
+      } else {
+        pill.className = 'px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-400/40';
+        pill.textContent = 'CLOSED CIRCUIT';
+      }
+
+      // Live Lamp-by-Lamp Table
+      document.getElementById('sim-lamp-table').innerHTML = lampVoltages.map((v, idx) => {
+        const isUn = idx === 0 && simState.unscrewed;
+        const info = lampGlowColor(v);
+        const pathState = isUn ? '❌ Unscrewed (Gap)' : (v > 0 ? '✅ Complete Loop' : '⛔ Loop Broken Upstream');
+        return `
+          <tr>
+            <td class="py-2 px-3">Lamp ${idx + 1}</td>
+            <td class="py-2 px-3">${pathState}</td>
+            <td class="py-2 px-3 text-amber-300">${v.toFixed(2).replace(/\.00$/, '.0')} V</td>
+            <td class="py-2 px-3">${info.label}</td>
+          </tr>`;
+      }).join('');
+
+      // Explainer Text
+      if (simState.type === 'series') {
+        document.getElementById('mech-explain-1').textContent = `Series Pathway: All ${simState.lamps} lamp(s) sit on ONE single loop, so they share the ${totalV.toFixed(1)} V battery push equally (${(totalV / simState.lamps).toFixed(2)} V each). Adding more lamps makes every lamp equally dimmer.`;
+        document.getElementById('mech-explain-2').textContent = simState.unscrewed
+          ? 'Fault Result: Unscrewing Lamp 1 created an air gap in the ONLY loop, stopping electricity everywhere!'
+          : 'Try clicking "Unscrew Lamp 1!" above to see why old series fairy lights all go out at once.';
+      } else {
+        document.getElementById('mech-explain-1').textContent = `Parallel Pathways: Each lamp sits on its own separate branch directly across the ${totalV.toFixed(1)} V battery, so every lit lamp receives the FULL ${totalV.toFixed(1)} V and stays equally bright!`;
+        document.getElementById('mech-explain-2').textContent = simState.unscrewed
+          ? (litCount > 0
+            ? `Fault Result: Branch 1 is open, so Lamp 1 is OFF — but the remaining ${litCount} branch(es) still form complete loops and stay bright!`
+            : 'Only 1 parallel branch exists right now — add 2 or 3 lamps above to see the remaining parallel branches stay bright when Lamp 1 is unscrewed!')
+          : 'Notice that adding a 2nd or 3rd parallel branch does NOT dim the other bulbs (though the battery will run flat faster).';
+      }
+    }
+
+    function renderSimGraph() {
+      // Strictly labelled SVG Bar Chart (Title, X/Y axes with units, interactive coordinate readouts)
+      const bars = [
+        { label: '1 Lamp', lux: 90, col: '#38bdf8', desc: '1 Lamp (Control, 3.0 V): 90 lux — Full 3.0 V on 1 lamp.' },
+        { label: '2 Series', lux: 45, col: '#fb7185', desc: '2 Lamps in Series (3.0 V): 45 lux — Voltage shared (1.5 V each).' },
+        { label: '3 Series', lux: 30, col: '#f43f5e', desc: '3 Lamps in Series (3.0 V): 30 lux — Voltage shared 3 ways (1.0 V each).' },
+        { label: '2 Parallel', lux: 90, col: '#34d399', desc: '2 Lamps in Parallel (3.0 V): 90 lux — Each branch gets full 3.0 V!' },
+        { label: '3 Parallel', lux: 90, col: '#10b981', desc: '3 Lamps in Parallel (3.0 V): 90 lux — Every branch still gets full 3.0 V!' }
+      ];
+      let barsSvg = '';
+      bars.forEach((b, i) => {
+        const x = 62 + i * 68;
+        const h = (b.lux / 100) * 140;
+        const y = 175 - h;
+        barsSvg += `
+          <g class="graph-bar" onclick="showGraphTip('${b.desc.replace(/'/g, "\\'")}')" onmouseenter="showGraphTip('${b.desc.replace(/'/g, "\\'")}')">
+            <rect x="${x}" y="${y}" width="44" height="${h}" rx="5" fill="${b.col}"/>
+            <text x="${x + 22}" y="${y - 6}" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="bold">${b.lux}</text>
+            <text x="${x + 22}" y="192" text-anchor="middle" fill="#cbd5e1" font-size="10" font-weight="bold">${b.label}</text>
+          </g>`;
+      });
+
+      document.getElementById('sim-graph-container').innerHTML = `
+        <svg viewBox="0 0 420 220" class="w-full h-auto" role="img" aria-label="Lamp brightness bar chart in lux">
+          <text x="220" y="16" text-anchor="middle" fill="#fde047" font-size="12" font-weight="bold">Lamp Brightness vs Circuit Setup (3.0 V Battery)</text>
+          <!-- Grid & Y-axis ticks -->
+          ${[0, 20, 40, 60, 80, 100].map(val => {
+            const yy = 175 - (val / 100) * 140;
+            return `<line x1="48" y1="${yy}" x2="405" y2="${yy}" stroke="#334155" stroke-width="1" stroke-dasharray="3 3"/>
+                    <text x="42" y="${yy + 4}" text-anchor="end" fill="#94a3b8" font-size="10">${val}</text>`;
+          }).join('')}
+          <!-- Axes -->
+          <line x1="48" y1="30" x2="48" y2="175" stroke="#f8fafc" stroke-width="2"/>
+          <line x1="48" y1="175" x2="405" y2="175" stroke="#f8fafc" stroke-width="2"/>
+          <!-- Y-axis label -->
+          <text x="14" y="105" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="bold" transform="rotate(-90 14 105)">Brightness (lux)</text>
+          <!-- X-axis label -->
+          <text x="226" y="212" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="bold">Circuit Arrangement (Identical Bulbs)</text>
+          ${barsSvg}
+        </svg>`;
+    }
+
+    function showGraphTip(txt) {
+      document.getElementById('graph-readout').textContent = '📍 Coordinate Reading: ' + txt;
+    }
+
+    // ==================== STATION 5: SUCCESS CRITERIA CHECKLIST ====================
+    const scMet = { 1: false, 2: false, 3: false };
+    function revealScAns(n) {
+      document.getElementById('sc-ans-' + n).classList.remove('hidden');
+      playChime('click');
+    }
+    function toggleScMet(n) {
+      scMet[n] = !scMet[n];
+      const btn = document.getElementById('sc-btn-' + n);
+      btn.textContent = scMet[n] ? '✅ Met!' : '⬜ Mark Met';
+      const count = Object.values(scMet).filter(Boolean).length;
+      document.getElementById('sc-met-count').textContent = count;
+      playChime(scMet[n] ? 'success' : 'click');
+      if (count === 3) fireConfetti();
+    }
+
+    // ==================== STATION 6: QUICKFIRE CHECKPOINT CHALLENGE ====================
+    const qfQuestions = [
+      {
+        tag: '6Pe.02 · Series Brightness',
+        q: 'A pupil adds a 3rd identical lamp into a 2-lamp SERIES circuit using the same 3.0 V battery. What happens to the brightness of all three lamps?',
+        a: 'All three lamps become DIMMER (and all three glow equally dimly because they now share the 3.0 V three ways — 1.0 V each).'
+      },
+      {
+        tag: '6Pe.02 · Adding Cells',
+        q: 'A 2-lamp series circuit is powered by one 1.5 V cell. The pupil adds a SECOND 1.5 V cell facing the same direction. What happens to the lamps?',
+        a: 'Both lamps become BRIGHTER because the battery voltage doubled from 1.5 V to 3.0 V!'
+      },
+      {
+        tag: '6Pe.02 · Parallel Fault Test',
+        q: 'Two identical bulbs are wired in PARALLEL on a classroom bench. Bulb 1 breaks and goes out. What happens to Bulb 2?',
+        a: 'Bulb 2 stays ON with the EXACT SAME brightness, because its branch still forms a complete closed loop with the battery.'
+      },
+      {
+        tag: '6Pe.02 · Official Symbols',
+        q: 'In an official Cambridge circuit diagram, what does a circle with an × inside represent, and what does a semicircle with 2 legs represent?',
+        a: 'Circle with × = Lamp (bulb). Semicircle with 2 legs = Buzzer.'
+      },
+      {
+        tag: '6Pe.02 · Voltage in Parallel',
+        q: 'A 4.5 V battery (3 cells) powers 3 identical lamps wired in PARALLEL. What voltage does EACH branch receive?',
+        a: 'Each branch receives the FULL 4.5 V!'
+      },
+      {
+        tag: '6Pe.02 · Misconception Check',
+        q: 'TRUE or FALSE: "In a series circuit, the bulb closest to the positive (+) end of the battery is brighter than the second bulb." Explain!',
+        a: 'FALSE! Both identical bulbs receive the exact same current and share the voltage equally, so they have the SAME brightness.'
+      },
+      {
+        tag: '6TWSp.03 · Fair Testing',
+        q: 'When comparing lamp brightness in series vs parallel circuits, name TWO control variables you must keep the SAME.',
+        a: 'Keep the same battery voltage (same number of identical cells) AND use identical lamps (same voltage/power rating)!'
+      },
+      {
+        tag: '6Pe.02 · Parallel Buzzer & Lamp',
+        q: 'A lamp is on Branch 1 and a buzzer is on Branch 2 of a parallel circuit. The lamp is unscrewed. Will the buzzer still sound? Why?',
+        a: 'YES! The buzzer stays ON because Branch 2 is still a complete, unbroken closed loop connected to the battery.'
+      }
+    ];
+
+    let qfIdx = 0;
+    let qfInterval = null;
+
+    function renderQf() {
+      stopQfTimer();
+      const item = qfQuestions[qfIdx];
+      document.getElementById('qf-counter').textContent = `Question ${qfIdx + 1} / ${qfQuestions.length}`;
+      document.getElementById('qf-tag').textContent = item.tag;
+      document.getElementById('qf-question').textContent = item.q;
+      document.getElementById('qf-answer-text').textContent = item.a;
+      document.getElementById('qf-answer-box').classList.add('hidden');
+      document.getElementById('qf-boards-up').classList.add('hidden');
+      document.getElementById('qf-timer-display').textContent = '15s';
+    }
+
+    function nextQf() { qfIdx = (qfIdx + 1) % qfQuestions.length; renderQf(); playChime('click'); }
+    function prevQf() { qfIdx = (qfIdx - 1 + qfQuestions.length) % qfQuestions.length; renderQf(); playChime('click'); }
+
+    function startQfTimer(sec) {
+      stopQfTimer();
+      let left = sec;
+      document.getElementById('qf-boards-up').classList.add('hidden');
+      document.getElementById('qf-timer-display').textContent = left + 's';
+      qfInterval = setInterval(() => {
+        left--;
+        document.getElementById('qf-timer-display').textContent = left + 's';
+        if (left <= 0) {
+          stopQfTimer();
+          document.getElementById('qf-boards-up').classList.remove('hidden');
+          playChime('alert');
+        }
+      }, 1000);
+    }
+
+    function stopQfTimer() {
+      if (qfInterval) { clearInterval(qfInterval); qfInterval = null; }
+    }
+
+    function revealQfAnswer() {
+      stopQfTimer();
+      document.getElementById('qf-answer-box').classList.remove('hidden');
+      playChime('success');
+    }
+
+    // ==================== TEACHER DRAWER & DAVID'S BOARD ====================
+    function toggleTeacherDrawer() {
+      document.getElementById('teacher-drawer').classList.toggle('hidden');
+      playChime('click');
+    }
+
+    let wbDrawing = false;
+    let wbColor = '#fbbf24';
+    let wbSize = 4;
+    const wbCanvas = document.getElementById('wb-canvas');
+    const wbCtx = wbCanvas.getContext('2d');
+
+    function resizeWhiteboard() {
+      const rect = document.getElementById('wb-canvas-wrap').getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      const dpr = window.devicePixelRatio || 1;
+      wbCanvas.width = Math.floor(rect.width * dpr);
+      wbCanvas.height = Math.floor(rect.height * dpr);
+      wbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      wbCtx.lineCap = 'round';
+      wbCtx.lineJoin = 'round';
+    }
+
+    function openWhiteboard() {
+      document.getElementById('whiteboard-overlay').classList.remove('hidden');
+      requestAnimationFrame(resizeWhiteboard);
+      playChime('click');
+    }
+    function closeWhiteboard() {
+      document.getElementById('whiteboard-overlay').classList.add('hidden');
+    }
+    function setWbColor(c) { wbColor = c; }
+    function setWbSize(s) { wbSize = s; }
+    function clearWhiteboard() {
+      wbCtx.clearRect(0, 0, wbCanvas.width, wbCanvas.height);
+    }
+
+    function getWbPos(e) {
+      const rect = wbCanvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+
+    wbCanvas.addEventListener('pointerdown', e => {
+      wbDrawing = true;
+      const p = getWbPos(e);
+      wbCtx.beginPath();
+      wbCtx.moveTo(p.x, p.y);
+      wbCtx.strokeStyle = wbColor;
+      wbCtx.lineWidth = wbSize;
+    });
+    wbCanvas.addEventListener('pointermove', e => {
+      if (!wbDrawing) return;
+      const p = getWbPos(e);
+      wbCtx.lineTo(p.x, p.y);
+      wbCtx.stroke();
+    });
+    window.addEventListener('pointerup', () => { wbDrawing = false; });
+    window.addEventListener('resize', () => {
+      if (!document.getElementById('whiteboard-overlay').classList.contains('hidden')) resizeWhiteboard();
+    });
+
+    // ==================== GUARDED KEYBOARD SHORTCUTS ====================
+    function anyModalOpen() {
+      return !document.getElementById('vocab-modal').classList.contains('hidden') ||
+             !document.getElementById('giant-modal').classList.contains('hidden') ||
+             !document.getElementById('whiteboard-overlay').classList.contains('hidden') ||
+             !document.getElementById('teacher-drawer').classList.contains('hidden');
+    }
+
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeVocabModal();
+        closeGiantProjection();
+        closeWhiteboard();
+        document.getElementById('teacher-drawer').classList.add('hidden');
+        if (isFullscreenIdo) toggleFullscreenIdo();
+        return;
+      }
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.key === 'w' || e.key === 'W') {
+        if (document.getElementById('whiteboard-overlay').classList.contains('hidden')) openWhiteboard();
+        else closeWhiteboard();
+        return;
+      }
+      if (e.key === 't' || e.key === 'T') { toggleTeacherDrawer(); return; }
+      if (e.key === 'm' || e.key === 'M') { toggleMute(); return; }
+
+      if (!anyModalOpen()) {
+        if (e.key === 'ArrowRight') goStation(currentStation + 1);
+        if (e.key === 'ArrowLeft') goStation(currentStation - 1);
+      }
+    });
+
+    // ==================== INIT ====================
+    buildVocabGrid();
+    renderIdoCircuits();
+    updateSim();
+    renderSimGraph();
+    renderQf();
+    goStation(0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circuit Sandbox Lab — Stage 6 Electricity (Unit 5.4)</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0f172a;
+      --indigo: #1e3a8a;
+      --blue: #2563eb;
+      --sky: #0284c7;
+      --amber: #f59e0b;
+      --gold: #facc15;
+      --emerald: #059669;
+      --rose: #e11d48;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-900: #0f172a;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
+      background: linear-gradient(160deg, #eff6ff 0%, #f8fafc 45%, #fefce8 100%);
+      color: var(--slate-900);
+      min-height: 100vh;
+      line-height: 1.4;
+      overflow-x: hidden;
+    }
+
+    /* Top Navigation Bar */
+    .topbar {
+      background: linear-gradient(95deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
+      color: #ffffff;
+      padding: 12px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.25);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #facc15, #f59e0b);
+      color: #0f172a;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      font-weight: 900;
+      box-shadow: 0 0 18px rgba(250, 204, 21, 0.45);
+      flex-shrink: 0;
+    }
+    .brand h1 {
+      font-size: 1.28rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    .brand p {
+      font-size: 0.82rem;
+      color: #bfdbfe;
+      font-weight: 500;
+    }
+    .topbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+    .top-btn {
+      border: 1.5px solid rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      padding: 8px 13px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .top-btn:hover { background: rgba(255, 255, 255, 0.24); transform: translateY(-1px); }
+    .top-btn.active { background: #facc15; color: #0f172a; border-color: #fde047; }
+    .top-btn.muted { background: #475569; border-color: #94a3b8; color: #e2e8f0; }
+
+    /* Main Container */
+    .container {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 16px 18px 34px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Mode Switcher Bar */
+    .mode-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #ffffff;
+      border: 2px solid var(--slate-200);
+      border-radius: 16px;
+      padding: 10px 14px;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
+    }
+    .mode-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .mode-btn {
+      border: 2px solid var(--slate-200);
+      background: var(--slate-50);
+      color: var(--slate-700);
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 0.94rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .mode-btn:hover { border-color: var(--blue); color: var(--blue); background: #eff6ff; }
+    .mode-btn.active {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      border-color: #1d4ed8;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.32);
+    }
+
+    .view-switcher {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+    .view-pill {
+      display: inline-flex;
+      background: var(--slate-100);
+      border: 2px solid var(--slate-200);
+      border-radius: 12px;
+      padding: 3px;
+      gap: 4px;
+    }
+    .view-opt {
+      border: none;
+      background: transparent;
+      color: var(--slate-700);
+      padding: 7px 12px;
+      border-radius: 9px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .view-opt.active {
+      background: #0f172a;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
+    }
+    .flow-btn {
+      border: 2px solid #0284c7;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 8px 13px;
+      border-radius: 11px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .flow-btn.off {
+      border-color: var(--slate-300);
+      background: var(--slate-100);
+      color: var(--slate-600);
+    }
+
+    /* Quick Challenge Missions Bar */
+    .missions-card {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border: 2px solid #fbbf24;
+      border-radius: 16px;
+      padding: 12px 16px;
+      box-shadow: 0 3px 10px rgba(245, 158, 11, 0.12);
+    }
+    .missions-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .missions-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .mission-score {
+      background: #92400e;
+      color: #fef3c7;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .mission-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+    .mission-pill {
+      border: 2px solid #f59e0b;
+      background: #ffffff;
+      color: #78350f;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.83rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .mission-pill:hover { background: #fef9c3; transform: translateY(-1px); }
+    .mission-pill.active {
+      background: #d97706;
+      color: #ffffff;
+      border-color: #b45309;
+      box-shadow: 0 3px 8px rgba(217, 119, 6, 0.3);
+    }
+    .mission-pill.solved {
+      background: #ecfdf5;
+      border-color: #10b981;
+      color: #065f46;
+    }
+    .mission-pill.solved.active {
+      background: #059669;
+      color: #ffffff;
+      border-color: #047857;
+    }
+    .mission-prompt-bar {
+      margin-top: 9px;
+      padding: 9px 13px;
+      background: #ffffff;
+      border: 1.5px solid #fcd34d;
+      border-radius: 11px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .solved-badge {
+      display: none;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      padding: 5px 13px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 900;
+      animation: popIn 0.35s ease;
+    }
+    .solved-badge.show { display: inline-flex; align-items: center; gap: 5px; }
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      70% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    /* Main Lab Grid */
+    .lab-grid {
+      display: grid;
+      grid-template-columns: 330px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 1020px) {
+      .lab-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Control Deck */
+    .control-deck {
+      background: #ffffff;
+      border: 2px solid var(--slate-200);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .ctrl-section {
+      border-bottom: 1.5px solid var(--slate-100);
+      padding-bottom: 13px;
+    }
+    .ctrl-section:last-child { border-bottom: none; padding-bottom: 0; }
+    .ctrl-label {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--slate-600);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .seg-grid {
+      display: grid;
+      gap: 6px;
+    }
+    .seg-3 { grid-template-columns: repeat(3, 1fr); }
+    .seg-4 { grid-template-columns: repeat(4, 1fr); }
+    .seg-btn {
+      border: 2px solid var(--slate-200);
+      background: var(--slate-50);
+      color: var(--slate-900);
+      padding: 9px 6px;
+      border-radius: 11px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .seg-btn small {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--slate-600);
+      margin-top: 2px;
+    }
+    .seg-btn:hover { border-color: var(--blue); background: #eff6ff; }
+    .seg-btn.active {
+      background: #1e3a8a;
+      color: #ffffff;
+      border-color: #1e3a8a;
+      box-shadow: 0 3px 10px rgba(30, 58, 138, 0.28);
+    }
+    .seg-btn.active small { color: #bfdbfe; }
+
+    .toggle-btn {
+      width: 100%;
+      border: 2px solid var(--slate-200);
+      background: var(--slate-50);
+      color: var(--slate-900);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.16s ease;
+      margin-top: 7px;
+    }
+    .toggle-btn:hover { border-color: var(--blue); }
+    .toggle-btn.on-emerald { background: #ecfdf5; border-color: #10b981; color: #065f46; }
+    .toggle-btn.on-amber { background: #fffbeb; border-color: #f59e0b; color: #92400e; }
+    .toggle-btn.on-rose { background: #fff1f2; border-color: #f43f5e; color: #9f1239; }
+    .toggle-btn.on-blue { background: #eff6ff; border-color: #3b82f6; color: #1e40af; }
+
+    .pill-state {
+      font-size: 0.74rem;
+      font-weight: 900;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--slate-200);
+      color: var(--slate-700);
+    }
+    .on-emerald .pill-state { background: #10b981; color: #ffffff; }
+    .on-amber .pill-state { background: #f59e0b; color: #ffffff; }
+    .on-rose .pill-state { background: #e11d48; color: #ffffff; }
+    .on-blue .pill-state { background: #2563eb; color: #ffffff; }
+
+    .branch-switches-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .branch-sw-btn {
+      border: 2px solid #10b981;
+      background: #ecfdf5;
+      color: #065f46;
+      padding: 7px 8px;
+      border-radius: 10px;
+      font-size: 0.79rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .branch-sw-btn.open {
+      border-color: var(--slate-300);
+      background: var(--slate-100);
+      color: var(--slate-600);
+    }
+
+    .fault-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .repair-btn {
+      border: 2px solid #059669;
+      background: #ecfdf5;
+      color: #065f46;
+      padding: 9px 11px;
+      border-radius: 11px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .repair-btn:hover { background: #d1fae5; }
+
+    /* Stage Wrapper (Canvas + Telemetry cleanly separated) */
+    .stage-col {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .canvas-card {
+      background: #ffffff;
+      border: 2px solid var(--slate-200);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+    .canvas-header {
+      background: var(--slate-900);
+      color: #ffffff;
+      padding: 10px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .canvas-title {
+      font-size: 0.96rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .canvas-hint {
+      font-size: 0.8rem;
+      color: #93c5fd;
+      font-weight: 600;
+    }
+
+    .svg-stage {
+      width: 100%;
+      min-height: 410px;
+      background: radial-gradient(circle at 50% 45%, #ffffff 0%, #f8fafc 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      position: relative;
+    }
+    .svg-stage.symbol-mode {
+      background-color: #ffffff;
+      background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    .svg-stage.compare-mode {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+    @media (max-width: 780px) {
+      .svg-stage.compare-mode { grid-template-columns: 1fr; }
+    }
+    .compare-pane {
+      border: 2px solid var(--slate-200);
+      border-radius: 14px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .compare-pane-head {
+      padding: 7px 12px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .compare-pane-head.series-h { background: #eff6ff; color: #1e40af; border-bottom: 1.5px solid #bfdbfe; }
+    .compare-pane-head.parallel-h { background: #ecfdf5; color: #065f46; border-bottom: 1.5px solid #a7f3d0; }
+
+    svg.circuit-svg {
+      width: 100%;
+      height: auto;
+      max-height: 430px;
+      display: block;
+      user-select: none;
+    }
+    .clickable-comp { cursor: pointer; transition: filter 0.15s ease; }
+    .clickable-comp:hover { filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.55)); }
+
+    @keyframes overloadPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
+    }
+    .overload-ring { animation: overloadPulse 0.45s infinite ease-in-out; }
+
+    @keyframes soundWave {
+      0% { opacity: 0.95; transform: scale(0.92); }
+      100% { opacity: 0.15; transform: scale(1.18); }
+    }
+    .buzzer-wave { transform-box: fill-box; transform-origin: center; animation: soundWave 0.65s infinite ease-out; }
+
+    /* Telemetry Strip (Cleanly Outside SVG Canvas) */
+    .telemetry-card {
+      background: #ffffff;
+      border: 2px solid var(--slate-200);
+      border-radius: 18px;
+      padding: 15px 16px;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 820px) {
+      .telemetry-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .metric-box {
+      background: var(--slate-50);
+      border: 1.5px solid var(--slate-200);
+      border-radius: 13px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .metric-label {
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--slate-600);
+    }
+    .metric-val {
+      font-size: 1.32rem;
+      font-weight: 900;
+      color: var(--slate-900);
+    }
+    .metric-sub {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--slate-600);
+    }
+
+    .meter-track {
+      width: 100%;
+      height: 11px;
+      background: var(--slate-200);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 3px;
+    }
+    .meter-fill {
+      height: 100%;
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.25s ease, background 0.25s ease;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      width: fit-content;
+    }
+    .st-closed { background: #d1fae5; color: #065f46; }
+    .st-open { background: #fef3c7; color: #92400e; }
+    .st-broken { background: #ffe4e6; color: #9f1239; }
+
+    .scientist-box {
+      background: linear-gradient(95deg, #eff6ff 0%, #f0fdf4 100%);
+      border: 2px solid #93c5fd;
+      border-radius: 13px;
+      padding: 11px 14px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .sci-icon {
+      font-size: 1.55rem;
+      flex-shrink: 0;
+    }
+
+    /* Official Cambridge Symbol Reference Legend */
+    .legend-card {
+      background: #ffffff;
+      border: 2px solid var(--slate-200);
+      border-radius: 16px;
+      padding: 13px 16px;
+    }
+    .legend-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--slate-600);
+      margin-bottom: 9px;
+    }
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 900px) {
+      .legend-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .legend-item {
+      border: 1.5px solid var(--slate-200);
+      border-radius: 11px;
+      padding: 7px 6px;
+      text-align: center;
+      background: var(--slate-50);
+    }
+    .legend-item svg { width: 76px; height: 42px; display: block; margin: 0 auto 3px; }
+    .legend-item span { font-size: 0.76rem; font-weight: 800; color: var(--slate-900); }
+
+    /* Confetti Layer */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <h1>Circuit Sandbox Lab</h1>
+        <p>Cambridge Primary Science Stage 6 • Unit 5.4 Circuits &amp; Conventional Diagrams</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button id="btn-mute" class="top-btn" type="button" title="Mute or unmute sound effects and buzzer (M)">🔊 Sound: ON</button>
+      <button id="btn-reset" class="top-btn" type="button" title="Reset circuit to default (R)">🔄 Reset Lab</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Mode & View Bar -->
+    <section class="mode-bar" aria-label="Circuit Mode and View Switcher">
+      <div class="mode-group">
+        <button class="mode-btn active" id="mode-series" type="button">⚡ Series Circuit (Single Loop)</button>
+        <button class="mode-btn" id="mode-parallel" type="button">🔀 Parallel Circuit (Separate Branches)</button>
+        <button class="mode-btn" id="mode-compare" type="button">🧪 Compare Side-by-Side (Series vs Parallel)</button>
+      </div>
+      <div class="view-switcher">
+        <div class="view-pill" role="group" aria-label="Visual representation">
+          <button class="view-opt active" id="view-kit" type="button">🔌 Real Classroom Kit View</button>
+          <button class="view-opt" id="view-symbol" type="button">📐 Official Cambridge Symbol View</button>
+        </div>
+        <button class="flow-btn" id="btn-flow" type="button">✨ Electricity Flow Dots: ON</button>
+      </div>
+    </section>
+
+    <!-- Quick Challenge Missions Bar -->
+    <section class="missions-card" aria-label="Quick Challenge Missions">
+      <div class="missions-head">
+        <div class="missions-title">
+          <span>🏆 Quick Challenge Missions</span>
+          <span class="mission-score" id="mission-score">0 / 5 Solved</span>
+        </div>
+        <span style="font-size: 0.78rem; font-weight: 700; color: #92400e;">Pick a challenge and build the circuit to auto-solve it!</span>
+      </div>
+      <div class="mission-pills" id="mission-pills">
+        <button class="mission-pill active" data-mission="0" type="button">1. Bright Trio</button>
+        <button class="mission-pill" data-mission="1" type="button">2. Unbreakable Lights</button>
+        <button class="mission-pill" data-mission="2" type="button">3. Dim Duo</button>
+        <button class="mission-pill" data-mission="3" type="button">4. Independent Switch</button>
+        <button class="mission-pill" data-mission="4" type="button">5. Backwards Battery</button>
+      </div>
+      <div class="mission-prompt-bar">
+        <span id="mission-text">Mission 1: Make 3 lamps shine just as brightly as 1 lamp (100% Normal) using ONLY 1 cell (1.5 V)!</span>
+        <span class="solved-badge" id="mission-solved-badge">🎉 Challenge Solved!</span>
+      </div>
+    </section>
+
+    <!-- Main Lab Workspace -->
+    <div class="lab-grid">
+      <!-- Left Control Deck (Fixed DOM, never destroyed on update) -->
+      <aside class="control-deck" aria-label="Circuit Component Controls">
+        <!-- Cells / Battery -->
+        <div class="ctrl-section">
+          <div class="ctrl-label">
+            <span>🔋 Cells / Battery Power</span>
+            <span id="lbl-batt-v" style="color: #1e3a8a;">3.0 V</span>
+          </div>
+          <div class="seg-grid seg-3">
+            <button class="seg-btn" data-cells="1" type="button">1 Cell<small>1.5 V</small></button>
+            <button class="seg-btn active" data-cells="2" type="button">2 Cells<small>3.0 V</small></button>
+            <button class="seg-btn" data-cells="3" type="button">3 Cells<small>4.5 V</small></button>
+          </div>
+          <button class="toggle-btn" id="btn-reverse" type="button">
+            <span>🔁 Reverse 1 Cell</span>
+            <span class="pill-state" id="pill-reverse">NORMAL</span>
+          </button>
+        </div>
+
+        <!-- Lamps -->
+        <div class="ctrl-section">
+          <div class="ctrl-label">
+            <span>💡 Number of Lamps (Bulbs)</span>
+            <span id="lbl-lamp-count" style="color: #b45309;">2 Lamps</span>
+          </div>
+          <div class="seg-grid seg-4">
+            <button class="seg-btn" data-lamps="1" type="button">1</button>
+            <button class="seg-btn active" data-lamps="2" type="button">2</button>
+            <button class="seg-btn" data-lamps="3" type="button">3</button>
+            <button class="seg-btn" data-lamps="4" type="button">4</button>
+          </div>
+        </div>
+
+        <!-- Switches & Extras -->
+        <div class="ctrl-section">
+          <div class="ctrl-label"><span>🎛️ Switches &amp; Extras</span></div>
+          <button class="toggle-btn on-emerald" id="btn-master-sw" type="button">
+            <span>🔘 Master Switch</span>
+            <span class="pill-state" id="pill-master-sw">CLOSED (ON)</span>
+          </button>
+          <button class="toggle-btn" id="btn-buzzer" type="button">
+            <span>🔊 Add Buzzer</span>
+            <span class="pill-state" id="pill-buzzer">OFF</span>
+          </button>
+
+          <!-- Parallel Individual Branch Switches -->
+          <div id="branch-sw-panel" style="display: none; margin-top: 10px;">
+            <div class="ctrl-label" style="margin-bottom: 4px;"><span>🔀 Individual Branch Switches</span></div>
+            <div class="branch-switches-grid" id="branch-switches-grid">
+              <button class="branch-sw-btn" data-branch="0" type="button">Lamp 1: CLOSED</button>
+              <button class="branch-sw-btn" data-branch="1" type="button">Lamp 2: CLOSED</button>
+              <button class="branch-sw-btn" data-branch="2" type="button" style="display: none;">Lamp 3: CLOSED</button>
+              <button class="branch-sw-btn" data-branch="3" type="button" style="display: none;">Lamp 4: CLOSED</button>
+              <button class="branch-sw-btn" data-branch="4" type="button" style="display: none; grid-column: span 2;">Buzzer Branch: CLOSED</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Fault Tester -->
+        <div class="ctrl-section">
+          <div class="ctrl-label"><span>🔧 Live Fault Tester</span></div>
+          <p style="font-size: 0.78rem; color: #475569; margin-bottom: 6px; font-weight: 600;">
+            Click any bulb directly on the circuit diagram, or use the quick fault tester below:
+          </p>
+          <div class="fault-row">
+            <button class="toggle-btn" id="btn-break-1" type="button" style="margin-top: 0;">
+              <span>💥 Unscrew Lamp 1</span>
+              <span class="pill-state" id="pill-break-1">INTACT</span>
+            </button>
+            <button class="repair-btn" id="btn-repair-all" type="button">🔧 Repair All</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Stage & Telemetry Column -->
+      <div class="stage-col">
+        <!-- Circuit Canvas Card -->
+        <section class="canvas-card" aria-label="Interactive Circuit Workbench">
+          <div class="canvas-header">
+            <div class="canvas-title">
+              <span id="stage-badge">⚡ Series Circuit — Single Continuous Loop</span>
+            </div>
+            <span class="canvas-hint">Tip: Click any lamp to unscrew/break it, or click a switch to open/close it!</span>
+          </div>
+          <div class="svg-stage" id="svg-stage">
+            <!-- Dynamically updated SVG circuit(s) -->
+          </div>
+        </section>
+
+        <!-- Live Physics Telemetry Strip (Anchored outside SVG canvas) -->
+        <section class="telemetry-card" aria-label="Live Physics Telemetry">
+          <div class="telemetry-grid">
+            <div class="metric-box">
+              <span class="metric-label">Total Battery Voltage</span>
+              <span class="metric-val" id="tel-batt-v">3.0 V</span>
+              <span class="metric-sub" id="tel-batt-sub">2 cells × 1.5 V</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Voltage per Lamp</span>
+              <span class="metric-val" id="tel-lamp-v">1.50 V</span>
+              <span class="metric-sub" id="tel-lamp-sub">Shared across 2 lamps</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Relative Brightness</span>
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 6px;">
+                <span class="metric-val" id="tel-bright-pct">100%</span>
+                <span class="metric-sub" id="tel-bright-word" style="font-weight: 900; color: #059669;">Normal</span>
+              </div>
+              <div class="meter-track">
+                <div class="meter-fill" id="tel-meter-fill"></div>
+              </div>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Circuit Status</span>
+              <span class="status-badge st-closed" id="tel-status">Closed Complete Loop</span>
+              <span class="metric-sub" id="tel-status-sub">Electricity is flowing</span>
+            </div>
+          </div>
+
+          <div class="scientist-box">
+            <span class="sci-icon">👩‍🔬</span>
+            <p id="scientist-explanation">
+              In a series circuit, the 3.0 V battery voltage is shared equally between the 2 lamps (1.50 V each), so both shine at normal brightness.
+            </p>
+          </div>
+        </section>
+
+        <!-- Official Cambridge Conventional Symbols Legend -->
+        <section class="legend-card" aria-label="Official Cambridge Circuit Symbols">
+          <div class="legend-title">📐 Official Cambridge Primary Stage 6 Circuit Symbols</div>
+          <div class="legend-grid">
+            <!-- Cell -->
+            <div class="legend-item">
+              <svg viewBox="0 0 80 44" aria-hidden="true">
+                <line x1="6" y1="22" x2="34" y2="22" stroke="#0f172a" stroke-width="2.5"/>
+                <line x1="34" y1="8" x2="34" y2="36" stroke="#0f172a" stroke-width="2"/>
+                <line x1="44" y1="14" x2="44" y2="30" stroke="#0f172a" stroke-width="4.5"/>
+                <line x1="44" y1="22" x2="74" y2="22" stroke="#0f172a" stroke-width="2.5"/>
+                <text x="24" y="13" font-size="11" font-weight="800" fill="#0f172a">+</text>
+                <text x="48" y="13" font-size="12" font-weight="800" fill="#0f172a">−</text>
+              </svg>
+              <span>Cell (1.5 V)</span>
+            </div>
+            <!-- Battery -->
+            <div class="legend-item">
+              <svg viewBox="0 0 80 44" aria-hidden="true">
+                <line x1="4" y1="22" x2="18" y2="22" stroke="#0f172a" stroke-width="2.5"/>
+                <line x1="18" y1="8" x2="18" y2="36" stroke="#0f172a" stroke-width="2"/>
+                <line x1="26" y1="14" x2="26" y2="30" stroke="#0f172a" stroke-width="4.5"/>
+                <line x1="28" y1="22" x2="50" y2="22" stroke="#0f172a" stroke-width="2" stroke-dasharray="4 3"/>
+                <line x1="52" y1="8" x2="52" y2="36" stroke="#0f172a" stroke-width="2"/>
+                <line x1="60" y1="14" x2="60" y2="30" stroke="#0f172a" stroke-width="4.5"/>
+                <line x1="60" y1="22" x2="76" y2="22" stroke="#0f172a" stroke-width="2.5"/>
+              </svg>
+              <span>Battery (2+ cells)</span>
+            </div>
+            <!-- Lamp -->
+            <div class="legend-item">
+              <svg viewBox="0 0 80 44" aria-hidden="true">
+                <line x1="6" y1="22" x2="26" y2="22" stroke="#0f172a" stroke-width="2.5"/>
+                <circle cx="40" cy="22" r="14" fill="#ffffff" stroke="#0f172a" stroke-width="2.5"/>
+                <line x1="30" y1="12" x2="50" y2="32" stroke="#0f172a" stroke-width="2.3"/>
+                <line x1="50" y1="12" x2="30" y2="32" stroke="#0f172a" stroke-width="2.3"/>
+                <line x1="54" y1="22" x2="74" y2="22" stroke="#0f172a" stroke-width="2.5"/>
+              </svg>
+              <span>Lamp (Bulb)</span>
+            </div>
+            <!-- Open Switch -->
+            <div class="legend-item">
+              <svg viewBox="0 0 80 44" aria-hidden="true">
+                <line x1="6" y1="26" x2="26" y2="26" stroke="#0f172a" stroke-width="2.5"/>
+                <line x1="54" y1="26" x2="74" y2="26" stroke="#0f172a" stroke-width="2.5"/>
+                <line x1="26" y1="26" x2="51" y2="12" stroke="#0f172a" stroke-width="2.5"/>
+                <circle cx="26" cy="26" r="3.5" fill="#ffffff" stroke="#0f172a" stroke-width="2.2"/>
+                <circle cx="54" cy="26" r="3.5" fill="#ffffff" stroke="#0f172a" stroke-width="2.2"/>
+              </svg>
+              <span>Open Switch</span>
+            </div>
+            <!-- Closed Switch -->
+            <div class="legend-item">
+              <svg viewBox="0 0 80 44" aria-hidden="true">
+                <line x1="6" y1="26" x2="26" y2="26" stroke="#0f172a" stroke-width="2.5"/>
+                <line x1="54" y1="26" x2="74" y2="26" stroke="#0f172a" stroke-width="2.5"/>
+                <line x1="26" y1="26" x2="54" y2="26" stroke="#0f172a" stroke-width="2.5"/>
+                <circle cx="26" cy="26" r="3.5" fill="#ffffff" stroke="#0f172a" stroke-width="2.2"/>
+                <circle cx="54" cy="26" r="3.5" fill="#ffffff" stroke="#0f172a" stroke-width="2.2"/>
+              </svg>
+              <span>Closed Switch</span>
+            </div>
+            <!-- Buzzer -->
+            <div class="legend-item">
+              <svg viewBox="0 0 80 44" aria-hidden="true">
+                <line x1="6" y1="34" x2="32" y2="34" stroke="#0f172a" stroke-width="2.5"/>
+                <line x1="48" y1="34" x2="74" y2="34" stroke="#0f172a" stroke-width="2.5"/>
+                <line x1="32" y1="34" x2="32" y2="24" stroke="#0f172a" stroke-width="2.5"/>
+                <line x1="48" y1="34" x2="48" y2="24" stroke="#0f172a" stroke-width="2.5"/>
+                <path d="M 24 24 L 56 24 A 16 16 0 0 0 24 24 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2.5"/>
+              </svg>
+              <span>Buzzer</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      // ==========================================
+      // 1. LAB STATE & MISSIONS
+      // ==========================================
+      const state = {
+        mode: 'series',        // 'series' | 'parallel' | 'compare'
+        view: 'kit',           // 'kit' | 'symbol'
+        cells: 2,              // 1 | 2 | 3
+        reverseLastCell: false,
+        lamps: 2,              // 1 | 2 | 3 | 4
+        masterClosed: true,
+        hasBuzzer: false,
+        showFlow: true,
+        muted: false,
+        brokenLamps: [false, false, false, false],
+        branchSwitches: [true, true, true, true, true], // 0-3 lamps, 4 buzzer
+        activeMission: 0,
+        solvedMissions: [false, false, false, false, false]
+      };
+
+      const MISSIONS = [
+        {
+          title: 'Mission 1 — Bright Trio',
+          prompt: 'Make 3 lamps shine just as brightly as 1 lamp (100% Normal) using ONLY 1 cell (1.5 V)!',
+          check: (s, phys) => {
+            const p = s.mode === 'compare' ? phys.parallel : phys.primary;
+            return (s.mode === 'parallel' || s.mode === 'compare') &&
+              s.cells === 1 && !s.reverseLastCell && s.lamps === 3 &&
+              p.litLampCount === 3 && p.lampVoltages[0] >= 1.49;
+          }
+        },
+        {
+          title: 'Mission 2 — Unbreakable Lights',
+          prompt: 'Unscrew / break Lamp 1 while keeping Lamp 2 glowing brightly!',
+          check: (s, phys) => {
+            const p = s.mode === 'compare' ? phys.parallel : phys.primary;
+            return (s.mode === 'parallel' || s.mode === 'compare') &&
+              s.lamps >= 2 && s.brokenLamps[0] && !s.brokenLamps[1] && p.lampVoltages[1] > 0.1;
+          }
+        },
+        {
+          title: 'Mission 3 — Dim Duo',
+          prompt: 'Make 2 lamps glow dimly (50% brightness) using only 1 cell (1.5 V)!',
+          check: (s, phys) => {
+            const p = s.mode === 'compare' ? phys.series : phys.primary;
+            return (s.mode === 'series' || s.mode === 'compare') &&
+              s.cells === 1 && s.lamps === 2 && !s.hasBuzzer &&
+              p.litLampCount === 2 && p.brightnessPct === 50;
+          }
+        },
+        {
+          title: 'Mission 4 — Independent Switch',
+          prompt: 'Turn Lamp 1 OFF using its own branch switch while Lamp 2 stays ON!',
+          check: (s, phys) => {
+            const p = s.mode === 'compare' ? phys.parallel : phys.primary;
+            return (s.mode === 'parallel' || s.mode === 'compare') &&
+              s.lamps >= 2 && s.masterClosed &&
+              !s.branchSwitches[0] && s.branchSwitches[1] &&
+              !s.brokenLamps[0] && !s.brokenLamps[1] && p.lampVoltages[1] > 0.1;
+          }
+        },
+        {
+          title: 'Mission 5 — Backwards Battery Mystery',
+          prompt: 'Use 2 cells in a closed circuit with intact lamps, yet make the voltage cancel to 0.0 V so the lamps stay OFF!',
+          check: (s, phys) => {
+            const anyBroken = s.brokenLamps.slice(0, s.lamps).some(Boolean);
+            return s.cells === 2 && s.reverseLastCell && s.masterClosed && !anyBroken && phys.effectiveVoltage === 0;
+          }
+        }
+      ];
+
+      // ==========================================
+      // 2. WEB AUDIO ENGINE (CHIMES + LIVE BUZZER)
+      // ==========================================
+      let audioCtx = null;
+      let buzzerOsc = null;
+      let buzzerGain = null;
+
+      function ensureAudio() {
+        if (!audioCtx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) audioCtx = new AC();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
+        }
+      }
+
+      function playClick(freq = 540) {
+        if (state.muted) return;
+        try {
+          ensureAudio();
+          if (!audioCtx) return;
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type = 'sine';
+          o.frequency.setValueAtTime(freq, audioCtx.currentTime);
+          g.gain.setValueAtTime(0.08, audioCtx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.09);
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.start();
+          o.stop(audioCtx.currentTime + 0.09);
+        } catch (e) {}
+      }
+
+      function playFanfare() {
+        if (state.muted) return;
+        try {
+          ensureAudio();
+          if (!audioCtx) return;
+          const notes = [523.25, 659.25, 783.99, 1046.5];
+          notes.forEach((f, idx) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            const t = audioCtx.currentTime + idx * 0.1;
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(f, t);
+            g.gain.setValueAtTime(0.12, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            o.start(t);
+            o.stop(t + 0.26);
+          });
+        } catch (e) {}
+      }
+
+      function updateBuzzerAudio(buzzerVoltage) {
+        const shouldBuzz = !state.muted && state.hasBuzzer && buzzerVoltage > 0.05;
+        if (!shouldBuzz) {
+          if (buzzerGain && audioCtx) {
+            buzzerGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.04);
+          }
+          return;
+        }
+        try {
+          ensureAudio();
+          if (!audioCtx) return;
+          if (!buzzerOsc) {
+            buzzerOsc = audioCtx.createOscillator();
+            buzzerGain = audioCtx.createGain();
+            buzzerOsc.type = 'sawtooth';
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 620;
+            buzzerOsc.connect(filter);
+            filter.connect(buzzerGain);
+            buzzerGain.connect(audioCtx.destination);
+            buzzerGain.gain.value = 0.0001;
+            buzzerOsc.start();
+          }
+          const pitch = 190 + Math.min(buzzerVoltage, 4.5) * 58;
+          const vol = Math.min(0.065, 0.015 + buzzerVoltage * 0.012);
+          buzzerOsc.frequency.setTargetAtTime(pitch, audioCtx.currentTime, 0.05);
+          buzzerGain.gain.setTargetAtTime(vol, audioCtx.currentTime, 0.05);
+        } catch (e) {}
+      }
+
+      // ==========================================
+      // 3. PHYSICS MODEL
+      // ==========================================
+      function voltageToBrightness(v) {
+        if (v <= 0.01) return { pct: 0, label: 'Off', tone: '#64748b' };
+        if (v < 1.15) {
+          const pct = Math.max(18, Math.round((v / 1.5) * 100));
+          return { pct, label: 'Dim', tone: '#d97706' };
+        }
+        if (v <= 1.75) {
+          const pct = Math.round((v / 1.5) * 100);
+          return { pct, label: 'Normal', tone: '#059669' };
+        }
+        if (v <= 3.4) {
+          const pct = v < 2.5 ? 120 : 132;
+          return { pct, label: 'Bright', tone: '#2563eb' };
+        }
+        return { pct: 150, label: 'Overloaded!', tone: '#e11d48' };
+      }
+
+      function computeBattery() {
+        let signed = 0;
+        for (let i = 0; i < state.cells; i++) {
+          const isRev = state.reverseLastCell && i === state.cells - 1;
+          signed += isRev ? -1.5 : 1.5;
+        }
+        const effV = Math.abs(signed);
+        const flowDir = signed < 0 ? -1 : 1;
+        return { signed, effV, flowDir };
+      }
+
+      function solveCircuit(type) {
+        const batt = computeBattery();
+        const lampVoltages = [];
+        let buzzerVoltage = 0;
+        let statusText = 'Closed Complete Loop';
+        let statusClass = 'st-closed';
+        let statusSub = 'Electricity flows around the circuit';
+        let mainFlowActive = false;
+
+        if (type === 'series') {
+          const anyBroken = state.brokenLamps.slice(0, state.lamps).some(Boolean);
+          const loadCount = state.lamps + (state.hasBuzzer ? 1 : 0);
+          if (!state.masterClosed) {
+            for (let i = 0; i < state.lamps; i++) lampVoltages.push(0);
+            statusText = 'Open Switch';
+            statusClass = 'st-open';
+            statusSub = 'Gap in switch stops electricity';
+          } else if (anyBroken) {
+            for (let i = 0; i < state.lamps; i++) lampVoltages.push(0);
+            statusText = 'Broken Loop';
+            statusClass = 'st-broken';
+            statusSub = 'An unscrewed lamp breaks the single loop';
+          } else if (batt.effV === 0) {
+            for (let i = 0; i < state.lamps; i++) lampVoltages.push(0);
+            statusText = 'Cells Cancel (0.0 V)';
+            statusClass = 'st-open';
+            statusSub = 'Reversed cell pushes the opposite way';
+          } else {
+            const perLoad = batt.effV / loadCount;
+            for (let i = 0; i < state.lamps; i++) lampVoltages.push(perLoad);
+            buzzerVoltage = state.hasBuzzer ? perLoad : 0;
+            mainFlowActive = true;
+            statusSub = batt.flowDir < 0 ? 'Flowing in reverse direction' : 'Electricity flows through every component';
+          }
+        } else {
+          // Parallel
+          let activeBranches = 0;
+          if (!state.masterClosed) {
+            for (let i = 0; i < state.lamps; i++) lampVoltages.push(0);
+            statusText = 'Master Switch Open';
+            statusClass = 'st-open';
+            statusSub = 'Main wire is open — all branches off';
+          } else if (batt.effV === 0) {
+            for (let i = 0; i < state.lamps; i++) lampVoltages.push(0);
+            statusText = 'Cells Cancel (0.0 V)';
+            statusClass = 'st-open';
+            statusSub = 'Reversed cell cancels battery voltage';
+          } else {
+            for (let i = 0; i < state.lamps; i++) {
+              const branchLive = state.branchSwitches[i] && !state.brokenLamps[i];
+              lampVoltages.push(branchLive ? batt.effV : 0);
+              if (branchLive) activeBranches++;
+            }
+            if (state.hasBuzzer && state.branchSwitches[4]) {
+              buzzerVoltage = batt.effV;
+              activeBranches++;
+            }
+            mainFlowActive = activeBranches > 0;
+            const totalBranches = state.lamps + (state.hasBuzzer ? 1 : 0);
+            if (activeBranches === 0) {
+              statusText = 'No Complete Branches';
+              statusClass = 'st-broken';
+              statusSub = 'Every branch is either open or broken';
+            } else if (activeBranches < totalBranches) {
+              statusText = 'Partial Parallel Flow';
+              statusClass = 'st-closed';
+              statusSub = `${activeBranches} of ${totalBranches} branches closed & working`;
+            } else {
+              statusText = 'Closed Parallel Loops';
+              statusClass = 'st-closed';
+              statusSub = 'Every branch receives full battery voltage';
+            }
+          }
+        }
+
+        const litLampCount = lampVoltages.filter(v => v > 0.05).length;
+        const repV = litLampCount > 0 ? Math.max(...lampVoltages) : 0;
+        const bright = voltageToBrightness(repV);
+
+        return {
+          type,
+          effV: batt.effV,
+          flowDir: batt.flowDir,
+          lampVoltages,
+          buzzerVoltage,
+          litLampCount,
+          repV,
+          brightnessPct: bright.pct,
+          brightnessWord: bright.label,
+          brightnessTone: bright.tone,
+          statusText,
+          statusClass,
+          statusSub,
+          mainFlowActive
+        };
+      }
+
+      // ==========================================
+      // 4. SVG DRAWING HELPERS (KIT + CAMBRIDGE SYMBOLS)
+      // ==========================================
+      function glowVisuals(v) {
+        if (v <= 0.05) return { fill: '#f1f5f9', glowOpacity: 0, glowR: 0, rays: 0, overload: false, label: 'OFF' };
+        if (v < 1.15) return { fill: '#fcd34d', glowOpacity: 0.32, glowR: 28, rays: 0.35, overload: false, label: 'DIM' };
+        if (v <= 1.75) return { fill: '#fef08a', glowOpacity: 0.62, glowR: 38, rays: 0.72, overload: false, label: 'NORMAL' };
+        if (v <= 3.4) return { fill: '#fef9c3', glowOpacity: 0.88, glowR: 48, rays: 1, overload: false, label: 'BRIGHT' };
+        return { fill: '#ffffff', glowOpacity: 1, glowR: 56, rays: 1, overload: true, label: 'OVERLOAD!' };
+      }
+
+      function drawBatteryGroup(cx, cy, isSymbol) {
+        const n = state.cells;
+        let out = '';
+        if (isSymbol) {
+          // Official Cambridge Battery / Cell symbol along horizontal top wire
+          const cellSpacing = 44;
+          const totalW = (n - 1) * cellSpacing + 16;
+          const startX = cx - totalW / 2;
+          // White mask over wire behind plates
+          out += `<rect x="${startX - 4}" y="${cy - 24}" width="${totalW + 8}" height="48" fill="#ffffff"/>`;
+          for (let i = 0; i < n; i++) {
+            const x = startX + i * cellSpacing;
+            const rev = state.reverseLastCell && i === n - 1;
+            if (!rev) {
+              // Normal: tall thin (+) on left, short thick (−) on right
+              out += `<line x1="${x}" y1="${cy - 20}" x2="${x}" y2="${cy + 20}" stroke="#0f172a" stroke-width="2.4"/>`;
+              out += `<line x1="${x + 12}" y1="${cy - 10}" x2="${x + 12}" y2="${cy + 10}" stroke="#0f172a" stroke-width="5.5"/>`;
+              out += `<text x="${x - 10}" y="${cy - 14}" font-size="12" font-weight="800" fill="#0f172a">+</text>`;
+              out += `<text x="${x + 17}" y="${cy - 14}" font-size="13" font-weight="800" fill="#0f172a">−</text>`;
+            } else {
+              // Reversed: short thick (−) on left, tall thin (+) on right
+              out += `<line x1="${x}" y1="${cy - 10}" x2="${x}" y2="${cy + 10}" stroke="#e11d48" stroke-width="5.5"/>`;
+              out += `<line x1="${x + 12}" y1="${cy - 20}" x2="${x + 12}" y2="${cy + 20}" stroke="#e11d48" stroke-width="2.4"/>`;
+              out += `<text x="${x - 10}" y="${cy - 14}" font-size="13" font-weight="800" fill="#e11d48">−</text>`;
+              out += `<text x="${x + 16}" y="${cy - 14}" font-size="12" font-weight="800" fill="#e11d48">+</text>`;
+              out += `<text x="${x + 6}" y="${cy + 34}" text-anchor="middle" font-size="10" font-weight="800" fill="#e11d48">REVERSED!</text>`;
+            }
+            if (i < n - 1) {
+              // Dashed battery connector line between cells
+              out += `<line x1="${x + 15}" y1="${cy}" x2="${x + cellSpacing - 3}" y2="${cy}" stroke="#0f172a" stroke-width="2.2" stroke-dasharray="5 3"/>`;
+            }
+          }
+          // Wire connections into outermost plates
+          out += `<line x1="${startX - 8}" y1="${cy}" x2="${startX}" y2="${cy}" stroke="#0f172a" stroke-width="3"/>`;
+          out += `<line x1="${startX + totalW - 4}" y1="${cy}" x2="${startX + totalW + 8}" y2="${cy}" stroke="#0f172a" stroke-width="3"/>`;
+          const batt = computeBattery();
+          out += `<text x="${cx}" y="${cy - 28}" text-anchor="middle" font-size="12" font-weight="800" fill="#1e3a8a">${n === 1 ? '1 Cell' : n + ' Cells (Battery)'} • ${batt.effV.toFixed(1)} V</text>`;
+        } else {
+          // Real Classroom Kit View — AA Cells in holder
+          const cellW = 58;
+          const gap = 8;
+          const totalW = n * cellW + (n - 1) * gap;
+          const startX = cx - totalW / 2;
+          // Holder tray
+          out += `<rect x="${startX - 10}" y="${cy - 23}" width="${totalW + 20}" height="46" rx="9" fill="#334155" stroke="#0f172a" stroke-width="2.5"/>`;
+          for (let i = 0; i < n; i++) {
+            const x = startX + i * (cellW + gap);
+            const rev = state.reverseLastCell && i === n - 1;
+            const bodyStroke = rev ? '#f43f5e' : '#0f172a';
+            // Battery cylinder
+            out += `<rect x="${x}" y="${cy - 15}" width="${cellW}" height="30" rx="5" fill="#1e293b" stroke="${bodyStroke}" stroke-width="2"/>`;
+            if (!rev) {
+              // Positive copper cap on LEFT
+              out += `<rect x="${x}" y="${cy - 15}" width="18" height="30" rx="4" fill="#d97706"/>`;
+              out += `<rect x="${x - 5}" y="${cy - 6}" width="5" height="12" rx="2" fill="#f59e0b"/>`;
+              out += `<text x="${x + 9}" y="${cy + 5}" text-anchor="middle" font-size="13" font-weight="900" fill="#ffffff">+</text>`;
+              out += `<text x="${x + 44}" y="${cy + 5}" text-anchor="middle" font-size="14" font-weight="900" fill="#cbd5e1">−</text>`;
+            } else {
+              // Reversed: Positive copper cap on RIGHT
+              out += `<rect x="${x + cellW - 18}" y="${cy - 15}" width="18" height="30" rx="4" fill="#e11d48"/>`;
+              out += `<rect x="${x + cellW}" y="${cy - 6}" width="5" height="12" rx="2" fill="#fb7185"/>`;
+              out += `<text x="${x + 13}" y="${cy + 5}" text-anchor="middle" font-size="14" font-weight="900" fill="#cbd5e1">−</text>`;
+              out += `<text x="${x + cellW - 9}" y="${cy + 5}" text-anchor="middle" font-size="13" font-weight="900" fill="#ffffff">+</text>`;
+              out += `<text x="${x + cellW / 2}" y="${cy + 36}" text-anchor="middle" font-size="10" font-weight="900" fill="#e11d48">REVERSED!</text>`;
+            }
+            out += `<text x="${x + cellW / 2}" y="${cy + 3}" text-anchor="middle" font-size="9" font-weight="800" fill="#f8fafc">1.5V</text>`;
+          }
+          // Crocodile clip terminals
+          out += `<circle cx="${startX - 10}" cy="${cy}" r="5" fill="#ef4444" stroke="#0f172a" stroke-width="1.5"/>`;
+          out += `<circle cx="${startX + totalW + 10}" cy="${cy}" r="5" fill="#0f172a" stroke="#475569" stroke-width="1.5"/>`;
+          const batt = computeBattery();
+          out += `<text x="${cx}" y="${cy - 30}" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">Battery Pack (${batt.effV.toFixed(1)} V)</text>`;
+        }
+        return out;
+      }
+
+      function drawSwitch(cx, cy, isClosed, isSymbol, actionAttr, labelText) {
+        let out = `<g class="clickable-comp" data-action="${actionAttr}">`;
+        out += `<rect x="${cx - 32}" y="${cy - 26}" width="64" height="50" fill="transparent"/>`;
+        if (isSymbol) {
+          // Clear gap in wire
+          out += `<rect x="${cx - 20}" y="${cy - 22}" width="40" height="32" fill="#ffffff"/>`;
+          if (isClosed) {
+            out += `<line x1="${cx - 18}" y1="${cy}" x2="${cx + 18}" y2="${cy}" stroke="#0f172a" stroke-width="3"/>`;
+          } else {
+            out += `<line x1="${cx - 18}" y1="${cy}" x2="${cx + 15}" y2="${cy - 18}" stroke="#e11d48" stroke-width="3"/>`;
+          }
+          out += `<circle cx="${cx - 18}" cy="${cy}" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="2.5"/>`;
+          out += `<circle cx="${cx + 18}" cy="${cy}" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="2.5"/>`;
+        } else {
+          // Real classroom knife switch
+          out += `<rect x="${cx - 26}" y="${cy - 9}" width="52" height="22" rx="5" fill="#d6d3d1" stroke="#57534e" stroke-width="2"/>`;
+          out += `<circle cx="${cx - 17}" cy="${cy}" r="5" fill="#b45309" stroke="#0f172a" stroke-width="1.5"/>`;
+          out += `<circle cx="${cx + 17}" cy="${cy}" r="5" fill="#b45309" stroke="#0f172a" stroke-width="1.5"/>`;
+          if (isClosed) {
+            out += `<line x1="${cx - 17}" y1="${cy}" x2="${cx + 17}" y2="${cy}" stroke="#d97706" stroke-width="5" stroke-linecap="round"/>`;
+            out += `<circle cx="${cx + 8}" cy="${cy}" r="4.5" fill="#059669" stroke="#0f172a" stroke-width="1.5"/>`;
+          } else {
+            out += `<line x1="${cx - 17}" y1="${cy}" x2="${cx + 12}" y2="${cy - 21}" stroke="#d97706" stroke-width="5" stroke-linecap="round"/>`;
+            out += `<circle cx="${cx + 12}" cy="${cy - 21}" r="5" fill="#e11d48" stroke="#0f172a" stroke-width="1.5"/>`;
+          }
+        }
+        if (labelText) {
+          out += `<text x="${cx}" y="${cy + 26}" text-anchor="middle" font-size="11" font-weight="800" fill="${isClosed ? '#065f46' : '#be123c'}">${labelText}</text>`;
+        }
+        out += `</g>`;
+        return out;
+      }
+
+      function drawLamp(cx, cy, idx, voltage, isBroken, isSymbol, compact = false) {
+        const g = glowVisuals(isBroken ? 0 : voltage);
+        const r = compact ? 17 : 21;
+        let out = `<g class="clickable-comp" data-action="toggle-lamp" data-idx="${idx}">`;
+
+        // Soft brightness halo (shown in BOTH Kit and Symbol views!)
+        if (!isBroken && voltage > 0.05) {
+          const haloR = compact ? g.glowR * 0.78 : g.glowR;
+          out += `<circle cx="${cx}" cy="${cy}" r="${haloR}" fill="url(#lampGlow)" opacity="${g.glowOpacity}"/>`;
+          if (g.rays > 0) {
+            for (let a = 0; a < 8; a++) {
+              const ang = (a * Math.PI) / 4;
+              const x1 = cx + Math.cos(ang) * (r + 5);
+              const y1 = cy + Math.sin(ang) * (r + 5);
+              const x2 = cx + Math.cos(ang) * (r + 12 + g.rays * 8);
+              const y2 = cy + Math.sin(ang) * (r + 12 + g.rays * 8);
+              out += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${g.overload ? '#f97316' : '#f59e0b'}" stroke-width="2.5" stroke-linecap="round" opacity="${g.rays}"/>`;
+            }
+          }
+          if (g.overload) {
+            out += `<circle class="overload-ring" cx="${cx}" cy="${cy}" r="${r + 9}" fill="none" stroke="#e11d48" stroke-width="3" stroke-dasharray="6 4"/>`;
+          }
+        }
+
+        if (isSymbol) {
+          // Official Cambridge Lamp Symbol: Circle with X
+          out += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${isBroken ? '#ffe4e6' : g.fill}" stroke="${isBroken ? '#e11d48' : '#0f172a'}" stroke-width="2.8"/>`;
+          const d = r * 0.707;
+          out += `<line x1="${(cx - d).toFixed(1)}" y1="${(cy - d).toFixed(1)}" x2="${(cx + d).toFixed(1)}" y2="${(cy + d).toFixed(1)}" stroke="${isBroken ? '#e11d48' : '#0f172a'}" stroke-width="2.5"/>`;
+          out += `<line x1="${(cx + d).toFixed(1)}" y1="${(cy - d).toFixed(1)}" x2="${(cx - d).toFixed(1)}" y2="${(cy + d).toFixed(1)}" stroke="${isBroken ? '#e11d48' : '#0f172a'}" stroke-width="2.5"/>`;
+        } else {
+          // Real Classroom Kit Lamp in brass screw-base holder
+          // Brass holder base below glass
+          out += `<rect x="${cx - 18}" y="${cy + 4}" width="36" height="14" rx="4" fill="#475569" stroke="#0f172a" stroke-width="2"/>`;
+          out += `<circle cx="${cx - 18}" cy="${cy + 11}" r="3.5" fill="#eab308" stroke="#0f172a" stroke-width="1.2"/>`;
+          out += `<circle cx="${cx + 18}" cy="${cy + 11}" r="3.5" fill="#eab308" stroke="#0f172a" stroke-width="1.2"/>`;
+          // Screw metal collar
+          out += `<rect x="${cx - 8}" y="${cy + 1}" width="16" height="9" rx="2" fill="#94a3b8" stroke="#0f172a" stroke-width="1.5"/>`;
+          // Glass bulb dome
+          out += `<circle cx="${cx}" cy="${cy - 8}" r="${r - 2}" fill="${isBroken ? '#ffe4e6' : g.fill}" stroke="${isBroken ? '#e11d48' : '#334155'}" stroke-width="2.2"/>`;
+          // Filament
+          if (!isBroken) {
+            out += `<path d="M ${cx - 5} ${cy + 2} L ${cx - 5} ${cy - 9} Q ${cx} ${cy - 16} ${cx + 5} ${cy - 9} L ${cx + 5} ${cy + 2}" fill="none" stroke="${voltage > 0.05 ? '#ea580c' : '#64748b'}" stroke-width="2.2"/>`;
+          } else {
+            // Snapped filament + crack lines
+            out += `<path d="M ${cx - 6} ${cy + 1} L ${cx - 4} ${cy - 7} M ${cx + 6} ${cy + 1} L ${cx + 4} ${cy - 6}" stroke="#be123c" stroke-width="2.2"/>`;
+            out += `<path d="M ${cx - 10} ${cy - 17} L ${cx - 2} ${cy - 9} L ${cx + 8} ${cy - 15}" fill="none" stroke="#e11d48" stroke-width="2"/>`;
+          }
+        }
+
+        // Broken badge overlay
+        if (isBroken) {
+          out += `<rect x="${cx - 28}" y="${cy - 34}" width="56" height="16" rx="8" fill="#e11d48"/>`;
+          out += `<text x="${cx}" y="${cy - 23}" text-anchor="middle" font-size="9.5" font-weight="900" fill="#ffffff">BROKEN</text>`;
+        }
+
+        // Caption underneath
+        const vLabel = isBroken ? 'Unscrewed' : (voltage > 0.05 ? `${voltage.toFixed(2)} V` : '0.00 V');
+        out += `<text x="${cx}" y="${cy + r + 16}" text-anchor="middle" font-size="11" font-weight="800" fill="#0f172a">Lamp ${idx + 1}</text>`;
+        out += `<text x="${cx}" y="${cy + r + 29}" text-anchor="middle" font-size="10" font-weight="700" fill="${isBroken ? '#e11d48' : '#475569'}">${vLabel}</text>`;
+        out += `</g>`;
+        return out;
+      }
+
+      function drawBuzzer(cx, cy, voltage, isSymbol) {
+        const active = voltage > 0.05;
+        let out = '<g>';
+        if (active) {
+          out += `<path class="buzzer-wave" d="M ${cx - 26} ${cy - 16} Q ${cx - 34} ${cy - 8} ${cx - 26} ${cy}" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>`;
+          out += `<path class="buzzer-wave" d="M ${cx + 26} ${cy - 16} Q ${cx + 34} ${cy - 8} ${cx + 26} ${cy}" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>`;
+        }
+        if (isSymbol) {
+          // Clear wire gap between the 2 vertical legs
+          out += `<rect x="${cx - 10}" y="${cy - 4}" width="20" height="8" fill="#ffffff"/>`;
+          out += `<line x1="${cx - 10}" y1="${cy}" x2="${cx - 10}" y2="${cy - 10}" stroke="#0f172a" stroke-width="2.8"/>`;
+          out += `<line x1="${cx + 10}" y1="${cy}" x2="${cx + 10}" y2="${cy - 10}" stroke="#0f172a" stroke-width="2.8"/>`;
+          out += `<path d="M ${cx - 19} ${cy - 10} L ${cx + 19} ${cy - 10} A 19 19 0 0 0 ${cx - 19} ${cy - 10} Z" fill="${active ? '#dbeafe' : '#ffffff'}" stroke="#0f172a" stroke-width="2.8"/>`;
+        } else {
+          // Real classroom black piezo buzzer
+          out += `<rect x="${cx - 18}" y="${cy - 22}" width="36" height="24" rx="8" fill="#1e293b" stroke="${active ? '#2563eb' : '#0f172a'}" stroke-width="2.4"/>`;
+          out += `<circle cx="${cx}" cy="${cy - 10}" r="6" fill="#0f172a" stroke="#94a3b8" stroke-width="1.5"/>`;
+          out += `<line x1="${cx - 10}" y1="${cy + 2}" x2="${cx - 10}" y2="${cy + 7}" stroke="#ef4444" stroke-width="3"/>`;
+          out += `<line x1="${cx + 10}" y1="${cy + 2}" x2="${cx + 10}" y2="${cy + 7}" stroke="#0f172a" stroke-width="3"/>`;
+        }
+        out += `<text x="${cx}" y="${cy + 20}" text-anchor="middle" font-size="11" font-weight="800" fill="${active ? '#1d4ed8' : '#334155'}">Buzzer ${active ? '(ON)' : '(OFF)'}</text>`;
+        out += '</g>';
+        return out;
+      }
+
+      // ==========================================
+      // 5. FULL CIRCUIT SVG BUILDERS
+      // ==========================================
+      function buildSeriesSVG(phys, isSymbol, compact = false) {
+        const W = 740, H = 370;
+        const left = 78, right = 662, top = 74, bottom = 290;
+        const wireStroke = isSymbol ? '#0f172a' : '#2563eb';
+        const wireW = isSymbol ? 3.2 : 4.5;
+
+        let svg = `<svg class="circuit-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Series circuit diagram">`;
+        svg += `<defs>
+          <radialGradient id="lampGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fef08a" stop-opacity="1"/>
+            <stop offset="55%" stop-color="#facc15" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+          </radialGradient>
+        </defs>`;
+
+        // Main crisp 90-degree rectangular loop wire
+        svg += `<rect x="${left}" y="${top}" width="${right - left}" height="${bottom - top}" rx="${isSymbol ? 0 : 10}" fill="none" stroke="${wireStroke}" stroke-width="${wireW}"/>`;
+
+        // Electricity flow dots (animated path along loop)
+        if (state.showFlow && phys.mainFlowActive) {
+          const speed = Math.max(2.2, 8.5 - phys.repV * 1.4);
+          const loopPath = phys.flowDir >= 0
+            ? `M ${left} ${top} L ${right} ${top} L ${right} ${bottom} L ${left} ${bottom} Z`
+            : `M ${left} ${top} L ${left} ${bottom} L ${right} ${bottom} L ${right} ${top} Z`;
+          const dotCount = 14;
+          for (let d = 0; d < dotCount; d++) {
+            const begin = (-d * (speed / dotCount)).toFixed(2);
+            svg += `<circle r="4.5" fill="#06b6d4" stroke="#ffffff" stroke-width="1.3">
+              <animateMotion dur="${speed.toFixed(2)}s" repeatCount="indefinite" begin="${begin}s" path="${loopPath}"/>
+            </circle>`;
+          }
+        }
+
+        // Top wire: Battery centred slightly left + Master Switch on top right
+        svg += drawBatteryGroup(285, top, isSymbol);
+        svg += drawSwitch(545, top, state.masterClosed, isSymbol, 'toggle-master', state.masterClosed ? 'Switch (Closed)' : 'Switch (Open)');
+
+        // Bottom wire: Lamps + optional Buzzer evenly spaced
+        const totalLoads = state.lamps + (state.hasBuzzer ? 1 : 0);
+        const span = right - left - 60;
+        const startX = left + 30;
+        for (let i = 0; i < state.lamps; i++) {
+          const cx = startX + ((i + 0.5) * span) / totalLoads;
+          svg += drawLamp(cx, bottom, i, phys.lampVoltages[i], state.brokenLamps[i], isSymbol, compact);
+        }
+        if (state.hasBuzzer) {
+          const bx = startX + ((state.lamps + 0.5) * span) / totalLoads;
+          svg += drawBuzzer(bx, bottom, phys.buzzerVoltage, isSymbol);
+        }
+
+        svg += `</svg>`;
+        return svg;
+      }
+
+      function buildParallelSVG(phys, isSymbol, compact = false) {
+        const branches = state.lamps + (state.hasBuzzer ? 1 : 0);
+        const W = 760;
+        const top = 66;
+        const rowGap = branches >= 4 ? 82 : 86;
+        const firstBranchY = 148;
+        const bottom = firstBranchY + (branches - 1) * rowGap;
+        const H = Math.max(365, bottom + 68);
+
+        const left = 84, right = 676;
+        const wireStroke = isSymbol ? '#0f172a' : '#2563eb';
+        const wireW = isSymbol ? 3.2 : 4.5;
+
+        let svg = `<svg class="circuit-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Parallel circuit diagram">`;
+        svg += `<defs>
+          <radialGradient id="lampGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fef08a" stop-opacity="1"/>
+            <stop offset="55%" stop-color="#facc15" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+          </radialGradient>
+        </defs>`;
+
+        // Top main rail + left/right vertical rails down to lowest branch
+        svg += `<path d="M ${left} ${bottom} L ${left} ${top} L ${right} ${top} L ${right} ${bottom}" fill="none" stroke="${wireStroke}" stroke-width="${wireW}" stroke-linejoin="miter"/>`;
+
+        // Draw horizontal parallel branches + junction dots
+        for (let b = 0; b < branches; b++) {
+          const by = firstBranchY + b * rowGap;
+          svg += `<line x1="${left}" y1="${by}" x2="${right}" y2="${by}" stroke="${wireStroke}" stroke-width="${wireW}"/>`;
+          // Clean junction dots on rails
+          if (b < branches - 1) {
+            svg += `<circle cx="${left}" cy="${by}" r="4.5" fill="${wireStroke}"/>`;
+            svg += `<circle cx="${right}" cy="${by}" r="4.5" fill="${wireStroke}"/>`;
+          }
+
+          // Animated flow dots per live branch!
+          const isBuzzerBranch = state.hasBuzzer && b === state.lamps;
+          const branchV = isBuzzerBranch ? phys.buzzerVoltage : phys.lampVoltages[b];
+          if (state.showFlow && branchV > 0.05) {
+            const speed = Math.max(2.0, 7.6 - branchV * 1.25);
+            const loopPath = phys.flowDir >= 0
+              ? `M ${left} ${top} L ${right} ${top} L ${right} ${by} L ${left} ${by} Z`
+              : `M ${left} ${top} L ${left} ${by} L ${right} ${by} L ${right} ${top} Z`;
+            const dots = 8;
+            for (let d = 0; d < dots; d++) {
+              const begin = (-d * (speed / dots)).toFixed(2);
+              svg += `<circle r="4.2" fill="#06b6d4" stroke="#ffffff" stroke-width="1.2">
+                <animateMotion dur="${speed.toFixed(2)}s" repeatCount="indefinite" begin="${begin}s" path="${loopPath}"/>
+              </circle>`;
+            }
+          }
+        }
+
+        // Top main rail components: Battery + Master Switch
+        svg += drawBatteryGroup(290, top, isSymbol);
+        svg += drawSwitch(560, top, state.masterClosed, isSymbol, 'toggle-master', state.masterClosed ? 'Master (Closed)' : 'Master (Open)');
+
+        // Branch components (Branch switch + Lamp or Buzzer)
+        for (let i = 0; i < state.lamps; i++) {
+          const by = firstBranchY + i * rowGap;
+          svg += `<text x="${left - 12}" y="${by + 4}" text-anchor="end" font-size="11" font-weight="800" fill="#64748b">B${i + 1}</text>`;
+          svg += drawSwitch(215, by, state.branchSwitches[i], isSymbol, `toggle-branch-${i}`, '');
+          svg += drawLamp(445, by, i, phys.lampVoltages[i], state.brokenLamps[i], isSymbol, true);
+        }
+        if (state.hasBuzzer) {
+          const by = firstBranchY + state.lamps * rowGap;
+          svg += `<text x="${left - 12}" y="${by + 4}" text-anchor="end" font-size="11" font-weight="800" fill="#64748b">B${state.lamps + 1}</text>`;
+          svg += drawSwitch(215, by, state.branchSwitches[4], isSymbol, 'toggle-branch-4', '');
+          svg += drawBuzzer(445, by, phys.buzzerVoltage, isSymbol);
+        }
+
+        svg += `</svg>`;
+        return svg;
+      }
+
+      // ==========================================
+      // 6. SCIENTIST EXPLANATION & TELEMETRY UPDATE
+      // ==========================================
+      function buildExplanation(seriesPhys, parallelPhys) {
+        const batt = computeBattery();
+        if (batt.effV === 0) {
+          return 'You have 2 cells facing opposite ways! One cell pushes electricity one way (+1.5 V) and the reversed cell pushes equally hard the opposite way (−1.5 V), so they cancel to 0.0 V and the lamps stay off.';
+        }
+        if (!state.masterClosed) {
+          return 'The master switch is OPEN, creating an air gap in the main wire. Electricity cannot flow around an incomplete circuit, so all lamps stay off.';
+        }
+        if (state.mode === 'compare') {
+          if (seriesPhys.litLampCount === 0 && parallelPhys.litLampCount > 0) {
+            return `Look at the difference! Breaking a lamp broke the entire Series loop (all Series lamps went out), while the unbroken Parallel branches stayed glowing at ${parallelPhys.repV.toFixed(2)} V!`;
+          }
+          if (state.lamps === 1 && !state.hasBuzzer) {
+            return `With just 1 lamp, Series and Parallel behave identically — both give the single lamp the full ${batt.effV.toFixed(1)} V. Now add a 2nd or 3rd lamp to watch them diverge!`;
+          }
+          return `In Series, the ${batt.effV.toFixed(1)} V battery is shared (${seriesPhys.repV.toFixed(2)} V per lamp ➔ ${seriesPhys.brightnessWord}). In Parallel, EVERY branch gets the full ${batt.effV.toFixed(1)} V (${parallelPhys.brightnessWord})!`;
+        }
+        if (state.mode === 'series') {
+          if (seriesPhys.litLampCount === 0 && state.brokenLamps.slice(0, state.lamps).some(Boolean)) {
+            return 'In a series circuit, there is only ONE pathway. Unscrewing or breaking a single lamp breaks the entire loop, so ALL lamps go out immediately.';
+          }
+          if (seriesPhys.brightnessPct >= 150) {
+            return `Warning — ${seriesPhys.repV.toFixed(2)} V across 1 lamp is too high! Adding more cells makes the lamp shine intensely, and in real life could blow the bulb filament.`;
+          }
+          const totalLoads = state.lamps + (state.hasBuzzer ? 1 : 0);
+          return `In this series loop, the ${batt.effV.toFixed(1)} V power supply is shared equally across ${totalLoads} component${totalLoads > 1 ? 's' : ''} (${seriesPhys.repV.toFixed(2)} V each), making the lamps glow ${seriesPhys.brightnessWord.toLowerCase()}.`;
+        }
+        // Parallel
+        if (parallelPhys.litLampCount === 0 && parallelPhys.buzzerVoltage <= 0.05) {
+          return 'Every parallel branch is currently open or broken, so no complete pathway exists for electricity to flow.';
+        }
+        if (parallelPhys.litLampCount === 0) {
+          return `All lamp branches are open or broken, so the lamps stay off — but the buzzer branch still forms a complete parallel loop at the full ${batt.effV.toFixed(1)} V!`;
+        }
+        if (state.brokenLamps.slice(0, state.lamps).some(Boolean)) {
+          return `Because parallel circuits give each lamp its own separate loop, breaking one lamp does NOT stop the other branches — they keep glowing at the full ${batt.effV.toFixed(1)} V!`;
+        }
+        return `In this parallel circuit, every closed branch connects straight across the ${batt.effV.toFixed(1)} V battery, so adding extra lamps does NOT reduce brightness (${parallelPhys.repV.toFixed(2)} V per lamp).`;
+      }
+
+      // ==========================================
+      // 7. CONFETTI ENGINE
+      // ==========================================
+      function launchConfetti() {
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const pieces = Array.from({ length: 75 }, () => ({
+          x: Math.random() * canvas.width,
+          y: -15 - Math.random() * 80,
+          vx: (Math.random() - 0.5) * 6,
+          vy: 2.5 + Math.random() * 4.5,
+          size: 6 + Math.random() * 6,
+          rot: Math.random() * 360,
+          vr: (Math.random() - 0.5) * 12,
+          tone: ['#facc15', '#2563eb', '#10b981', '#f43f5e', '#a855f7'][Math.floor(Math.random() * 5)]
+        }));
+        let frames = 0;
+        function tick() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          pieces.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.rot += p.vr;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rot * Math.PI) / 180);
+            ctx.fillStyle = p.tone;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+            ctx.restore();
+          });
+          frames++;
+          if (frames < 95) requestAnimationFrame(tick);
+          else ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      // ==========================================
+      // 8. MASTER RENDER FUNCTION
+      // ==========================================
+      function render() {
+        const isSymbol = state.view === 'symbol';
+        const seriesPhys = solveCircuit('series');
+        const parallelPhys = solveCircuit('parallel');
+        const primary = state.mode === 'parallel' ? parallelPhys : seriesPhys;
+        const batt = computeBattery();
+
+        // Update top/mode/view button states (controls never destroyed!)
+        document.getElementById('mode-series').classList.toggle('active', state.mode === 'series');
+        document.getElementById('mode-parallel').classList.toggle('active', state.mode === 'parallel');
+        document.getElementById('mode-compare').classList.toggle('active', state.mode === 'compare');
+        document.getElementById('view-kit').classList.toggle('active', !isSymbol);
+        document.getElementById('view-symbol').classList.toggle('active', isSymbol);
+
+        const flowBtn = document.getElementById('btn-flow');
+        flowBtn.textContent = state.showFlow ? '✨ Electricity Flow Dots: ON' : '✨ Electricity Flow Dots: OFF';
+        flowBtn.classList.toggle('off', !state.showFlow);
+
+        const muteBtn = document.getElementById('btn-mute');
+        muteBtn.textContent = state.muted ? '🔇 Sound: MUTED' : '🔊 Sound: ON';
+        muteBtn.classList.toggle('muted', state.muted);
+
+        // Update cell & lamp segmented buttons
+        document.querySelectorAll('[data-cells]').forEach(btn => {
+          btn.classList.toggle('active', Number(btn.dataset.cells) === state.cells);
+        });
+        document.querySelectorAll('[data-lamps]').forEach(btn => {
+          btn.classList.toggle('active', Number(btn.dataset.lamps) === state.lamps);
+        });
+        document.getElementById('lbl-batt-v').textContent = `${batt.effV.toFixed(1)} V`;
+        document.getElementById('lbl-lamp-count').textContent = `${state.lamps} Lamp${state.lamps > 1 ? 's' : ''}`;
+
+        // Reverse cell button
+        const revBtn = document.getElementById('btn-reverse');
+        revBtn.className = 'toggle-btn' + (state.reverseLastCell ? ' on-rose' : '');
+        document.getElementById('pill-reverse').textContent = state.reverseLastCell ? 'REVERSED' : 'NORMAL';
+
+        // Master switch button
+        const swBtn = document.getElementById('btn-master-sw');
+        swBtn.className = 'toggle-btn' + (state.masterClosed ? ' on-emerald' : ' on-amber');
+        document.getElementById('pill-master-sw').textContent = state.masterClosed ? 'CLOSED (ON)' : 'OPEN (OFF)';
+
+        // Buzzer button
+        const buzBtn = document.getElementById('btn-buzzer');
+        buzBtn.className = 'toggle-btn' + (state.hasBuzzer ? ' on-blue' : '');
+        document.getElementById('pill-buzzer').textContent = state.hasBuzzer ? 'ADDED' : 'OFF';
+
+        // Break Lamp 1 button
+        const brkBtn = document.getElementById('btn-break-1');
+        brkBtn.className = 'toggle-btn' + (state.brokenLamps[0] ? ' on-rose' : '');
+        document.getElementById('pill-break-1').textContent = state.brokenLamps[0] ? 'BROKEN' : 'INTACT';
+
+        // Parallel branch switches panel
+        const branchPanel = document.getElementById('branch-sw-panel');
+        branchPanel.style.display = (state.mode === 'parallel' || state.mode === 'compare') ? 'block' : 'none';
+        for (let i = 0; i < 4; i++) {
+          const bBtn = document.querySelector(`[data-branch="${i}"]`);
+          bBtn.style.display = i < state.lamps ? 'block' : 'none';
+          const closed = state.branchSwitches[i];
+          bBtn.textContent = `Lamp ${i + 1}: ${closed ? 'CLOSED' : 'OPEN'}`;
+          bBtn.classList.toggle('open', !closed);
+        }
+        const buzBranchBtn = document.querySelector('[data-branch="4"]');
+        buzBranchBtn.style.display = state.hasBuzzer ? 'block' : 'none';
+        buzBranchBtn.textContent = `Buzzer Branch: ${state.branchSwitches[4] ? 'CLOSED' : 'OPEN'}`;
+        buzBranchBtn.classList.toggle('open', !state.branchSwitches[4]);
+
+        // Stage header & SVG render
+        const stage = document.getElementById('svg-stage');
+        stage.classList.toggle('symbol-mode', isSymbol);
+        stage.classList.toggle('compare-mode', state.mode === 'compare');
+
+        if (state.mode === 'series') {
+          document.getElementById('stage-badge').textContent = '⚡ Series Circuit — Single Continuous Loop';
+          stage.innerHTML = buildSeriesSVG(seriesPhys, isSymbol, false);
+        } else if (state.mode === 'parallel') {
+          document.getElementById('stage-badge').textContent = '🔀 Parallel Circuit — Separate Independent Branches';
+          stage.innerHTML = buildParallelSVG(parallelPhys, isSymbol, false);
+        } else {
+          document.getElementById('stage-badge').textContent = '🧪 Side-by-Side Comparison — Series vs Parallel';
+          stage.innerHTML = `
+            <div class="compare-pane">
+              <div class="compare-pane-head series-h">
+                <span>⚡ Series (${seriesPhys.repV.toFixed(2)} V / lamp)</span>
+                <span>${seriesPhys.brightnessPct}% • ${seriesPhys.brightnessWord}</span>
+              </div>
+              ${buildSeriesSVG(seriesPhys, isSymbol, true)}
+            </div>
+            <div class="compare-pane">
+              <div class="compare-pane-head parallel-h">
+                <span>🔀 Parallel (${parallelPhys.repV.toFixed(2)} V / lamp)</span>
+                <span>${parallelPhys.brightnessPct}% • ${parallelPhys.brightnessWord}</span>
+              </div>
+              ${buildParallelSVG(parallelPhys, isSymbol, true)}
+            </div>
+          `;
+        }
+
+        // Live Telemetry Strip
+        document.getElementById('tel-batt-v').textContent = `${batt.effV.toFixed(1)} V`;
+        document.getElementById('tel-batt-sub').textContent = state.reverseLastCell
+          ? `${state.cells} cell${state.cells > 1 ? 's' : ''} (1 reversed!)`
+          : `${state.cells} cell${state.cells > 1 ? 's' : ''} × 1.5 V`;
+
+        if (state.mode === 'compare') {
+          document.getElementById('tel-lamp-v').textContent = `${seriesPhys.repV.toFixed(2)} V vs ${parallelPhys.repV.toFixed(2)} V`;
+          document.getElementById('tel-lamp-sub').textContent = 'Series vs Parallel lamp voltage';
+          document.getElementById('tel-bright-pct').textContent = `${seriesPhys.brightnessPct}% vs ${parallelPhys.brightnessPct}%`;
+          const wordEl = document.getElementById('tel-bright-word');
+          wordEl.textContent = `${seriesPhys.brightnessWord} / ${parallelPhys.brightnessWord}`;
+          wordEl.style.color = '#1e3a8a';
+          const fill = document.getElementById('tel-meter-fill');
+          fill.style.width = `${Math.min(100, (parallelPhys.brightnessPct / 150) * 100)}%`;
+          fill.style.background = parallelPhys.brightnessTone;
+          const stEl = document.getElementById('tel-status');
+          stEl.textContent = parallelPhys.statusText;
+          stEl.className = `status-badge ${parallelPhys.statusClass}`;
+          document.getElementById('tel-status-sub').textContent = `Series: ${seriesPhys.statusText}`;
+        } else {
+          document.getElementById('tel-lamp-v').textContent = `${primary.repV.toFixed(2)} V`;
+          document.getElementById('tel-lamp-sub').textContent = state.mode === 'series'
+            ? `Shared across ${state.lamps + (state.hasBuzzer ? 1 : 0)} load${state.lamps + (state.hasBuzzer ? 1 : 0) > 1 ? 's' : ''}`
+            : 'Full battery voltage per closed branch';
+          document.getElementById('tel-bright-pct').textContent = `${primary.brightnessPct}%`;
+          const wordEl = document.getElementById('tel-bright-word');
+          wordEl.textContent = primary.brightnessWord;
+          wordEl.style.color = primary.brightnessTone;
+          const fill = document.getElementById('tel-meter-fill');
+          fill.style.width = `${Math.min(100, (primary.brightnessPct / 150) * 100)}%`;
+          fill.style.background = primary.brightnessTone;
+          const stEl = document.getElementById('tel-status');
+          stEl.textContent = primary.statusText;
+          stEl.className = `status-badge ${primary.statusClass}`;
+          document.getElementById('tel-status-sub').textContent = primary.statusSub;
+        }
+
+        document.getElementById('scientist-explanation').textContent = buildExplanation(seriesPhys, parallelPhys);
+
+        // Live Web Audio Buzzer
+        const buzzV = state.mode === 'compare'
+          ? Math.max(seriesPhys.buzzerVoltage, parallelPhys.buzzerVoltage)
+          : primary.buzzerVoltage;
+        updateBuzzerAudio(buzzV);
+
+        // Evaluate Active & All Challenges
+        const physBundle = { primary, series: seriesPhys, parallel: parallelPhys, effectiveVoltage: batt.effV };
+        const m = MISSIONS[state.activeMission];
+        document.getElementById('mission-text').textContent = `${m.title}: ${m.prompt}`;
+        const solvedNow = m.check(state, physBundle);
+        if (solvedNow && !state.solvedMissions[state.activeMission]) {
+          state.solvedMissions[state.activeMission] = true;
+          playFanfare();
+          launchConfetti();
+        }
+        document.getElementById('mission-solved-badge').classList.toggle('show', state.solvedMissions[state.activeMission]);
+        const solvedTotal = state.solvedMissions.filter(Boolean).length;
+        document.getElementById('mission-score').textContent = `${solvedTotal} / 5 Solved`;
+
+        document.querySelectorAll('.mission-pill').forEach(pill => {
+          const idx = Number(pill.dataset.mission);
+          pill.classList.toggle('active', idx === state.activeMission);
+          pill.classList.toggle('solved', state.solvedMissions[idx]);
+          const base = ['1. Bright Trio', '2. Unbreakable Lights', '3. Dim Duo', '4. Independent Switch', '5. Backwards Battery'][idx];
+          pill.textContent = state.solvedMissions[idx] ? `✓ ${base}` : base;
+        });
+      }
+
+      // ==========================================
+      // 9. EVENT LISTENERS (STATIC CONTROLS + DELEGATED SVG CLICKS)
+      // ==========================================
+      document.getElementById('mode-series').addEventListener('click', () => { state.mode = 'series'; playClick(520); render(); });
+      document.getElementById('mode-parallel').addEventListener('click', () => { state.mode = 'parallel'; playClick(620); render(); });
+      document.getElementById('mode-compare').addEventListener('click', () => { state.mode = 'compare'; playClick(720); render(); });
+
+      document.getElementById('view-kit').addEventListener('click', () => { state.view = 'kit'; playClick(480); render(); });
+      document.getElementById('view-symbol').addEventListener('click', () => { state.view = 'symbol'; playClick(580); render(); });
+
+      document.getElementById('btn-flow').addEventListener('click', () => { state.showFlow = !state.showFlow; playClick(500); render(); });
+      document.getElementById('btn-mute').addEventListener('click', () => { state.muted = !state.muted; render(); });
+
+      document.getElementById('btn-reset').addEventListener('click', () => {
+        state.mode = 'series';
+        state.cells = 2;
+        state.reverseLastCell = false;
+        state.lamps = 2;
+        state.masterClosed = true;
+        state.hasBuzzer = false;
+        state.brokenLamps = [false, false, false, false];
+        state.branchSwitches = [true, true, true, true, true];
+        playClick(440);
+        render();
+      });
+
+      document.querySelectorAll('[data-cells]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.cells = Number(btn.dataset.cells);
+          playClick(460 + state.cells * 70);
+          render();
+        });
+      });
+
+      document.querySelectorAll('[data-lamps]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.lamps = Number(btn.dataset.lamps);
+          playClick(420 + state.lamps * 60);
+          render();
+        });
+      });
+
+      document.getElementById('btn-reverse').addEventListener('click', () => {
+        state.reverseLastCell = !state.reverseLastCell;
+        playClick(state.reverseLastCell ? 320 : 540);
+        render();
+      });
+
+      document.getElementById('btn-master-sw').addEventListener('click', () => {
+        state.masterClosed = !state.masterClosed;
+        playClick(state.masterClosed ? 660 : 360);
+        render();
+      });
+
+      document.getElementById('btn-buzzer').addEventListener('click', () => {
+        state.hasBuzzer = !state.hasBuzzer;
+        playClick(state.hasBuzzer ? 700 : 380);
+        render();
+      });
+
+      document.querySelectorAll('[data-branch]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.dataset.branch);
+          state.branchSwitches[idx] = !state.branchSwitches[idx];
+          playClick(state.branchSwitches[idx] ? 640 : 350);
+          render();
+        });
+      });
+
+      document.getElementById('btn-break-1').addEventListener('click', () => {
+        state.brokenLamps[0] = !state.brokenLamps[0];
+        playClick(state.brokenLamps[0] ? 240 : 600);
+        render();
+      });
+
+      document.getElementById('btn-repair-all').addEventListener('click', () => {
+        state.brokenLamps = [false, false, false, false];
+        playClick(680);
+        render();
+      });
+
+      document.querySelectorAll('.mission-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          state.activeMission = Number(pill.dataset.mission);
+          playClick(580);
+          render();
+        });
+      });
+
+      // Delegated clicks directly on SVG components (lamps & switches!)
+      document.getElementById('svg-stage').addEventListener('click', (e) => {
+        const target = e.target.closest('[data-action]');
+        if (!target) return;
+        const action = target.dataset.action;
+        if (action === 'toggle-master') {
+          state.masterClosed = !state.masterClosed;
+          playClick(state.masterClosed ? 660 : 360);
+          render();
+        } else if (action === 'toggle-lamp') {
+          const idx = Number(target.dataset.idx);
+          state.brokenLamps[idx] = !state.brokenLamps[idx];
+          playClick(state.brokenLamps[idx] ? 240 : 600);
+          render();
+        } else if (action.startsWith('toggle-branch-')) {
+          const idx = Number(action.replace('toggle-branch-', ''));
+          state.branchSwitches[idx] = !state.branchSwitches[idx];
+          playClick(state.branchSwitches[idx] ? 640 : 350);
+          render();
+        }
+      });
+
+      // Keyboard shortcuts
+      window.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key.toLowerCase() === 'm') { state.muted = !state.muted; render(); }
+        if (e.key.toLowerCase() === 'v') { state.view = state.view === 'kit' ? 'symbol' : 'kit'; playClick(550); render(); }
+        if (e.key.toLowerCase() === 'r') { document.getElementById('btn-reset').click(); }
+      });
+
+      // Initial render
+      render();
+    })();
+  </script>
+</body>
+</html>

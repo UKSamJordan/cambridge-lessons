@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parent Portal — Grade 5 Science · Unit 5.4 Lesson 2: Series vs Parallel Circuits</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(160deg, #fffbeb 0%, #f0f9ff 48%, #ecfdf5 100%);
+      color: #0f172a;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    /* Bilingual visibility engine */
+    body.mode-en .lang-vn { display: none !important; }
+    body.mode-vn .lang-en { display: none !important; }
+
+    /* Animated electric current dashes */
+    @keyframes flowDash {
+      to { stroke-dashoffset: -28; }
+    }
+    .flow-active {
+      stroke-dasharray: 8 6;
+      animation: flowDash 0.8s linear infinite;
+    }
+    .flow-slow {
+      stroke-dasharray: 8 8;
+      animation: flowDash 1.5s linear infinite;
+    }
+
+    /* Loop trace highlight animation in Model B */
+    @keyframes tracePulse {
+      0%, 100% { stroke-opacity: 1; stroke-width: 4; }
+      50% { stroke-opacity: 0.45; stroke-width: 6; }
+    }
+    .loop-highlight {
+      animation: tracePulse 1.2s ease-in-out infinite;
+    }
+
+    /* Confetti */
+    .confetti-piece {
+      position: fixed;
+      width: 10px;
+      height: 14px;
+      z-index: 95;
+      pointer-events: none;
+      animation: confettiFall 2.2s cubic-bezier(0.2, 0.7, 0.4, 1) forwards;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="mode-en pb-16">
+
+  <!-- Sticky Bilingual Header -->
+  <header class="sticky top-0 z-50 bg-slate-950/95 backdrop-blur-md text-white border-b-2 border-amber-400 shadow-lg">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="min-w-0">
+        <div class="text-[11px] font-black uppercase tracking-wider text-amber-300">
+          <span class="lang-en">Cambridge Stage 6 · Grade 5 Science · Parent Portal</span>
+          <span class="lang-vn">Cambridge Bậc 6 · Khoa Học Lớp 5 · Cổng Phụ Huynh</span>
+        </div>
+        <h1 class="text-base sm:text-lg font-black truncate">
+          <span class="lang-en">Unit 5.4 L2: Series vs Parallel Circuits</span>
+          <span class="lang-vn">Bài 5.4 Tiết 2: Mạch Điện Nối Tiếp &amp; Song Song</span>
+        </h1>
+      </div>
+
+      <button id="lang-toggle-btn" onclick="toggleLanguage()" class="shrink-0 px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow transition">
+        <span class="lang-en">🇻🇳 Tiếng Việt</span>
+        <span class="lang-vn">🇬🇧 English</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 pt-6 space-y-8">
+
+    <!-- Hero Summary Card -->
+    <section class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-7 shadow-xl border-2 border-amber-400/50">
+      <div class="inline-block px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-black uppercase mb-3">
+        <span class="lang-en">⚡ What Your Child Explored in Class Today</span>
+        <span class="lang-vn">⚡ Hôm Nay Con Đã Khám Phá Gì Trên Lớp?</span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-black leading-snug mb-3">
+        <span class="lang-en">Why do home &amp; classroom lights stay bright and stay ON when one bulb breaks?</span>
+        <span class="lang-vn">Vì sao đèn lớp học và đèn nhà vẫn sáng rõ và không tắt khi một bóng bị hỏng?</span>
+      </h2>
+      <p class="text-slate-200 text-sm sm:text-base leading-relaxed">
+        <span class="lang-en">Using real classroom electricity kits and official Cambridge circuit diagrams, pupils built <strong>series circuits</strong> (1 single loop where bulbs share voltage and grow dimmer) and <strong>parallel circuits</strong> (separate branches where every bulb gets the full battery voltage and stays ON even if another bulb breaks!).</span>
+        <span class="lang-vn">Bằng bộ dụng cụ thực hành điện thật trên lớp và sơ đồ ký hiệu chuẩn Cambridge, các con đã tự lắp <strong>mạch điện nối tiếp</strong> (1 vòng duy nhất khiến các bóng chia nhau hiệu điện thế và tối dần) và <strong>mạch điện song song</strong> (các nhánh riêng biệt giúp mỗi bóng nhận đủ hiệu điện thế, sáng đều và vẫn sáng khi một bóng khác bị hỏng!).</span>
+      </p>
+    </section>
+
+    <!-- ==================== INTERACTIVE MODEL A: SERIES VS PARALLEL TOY ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 shadow-xl border-2 border-sky-200 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs font-black uppercase">
+            <span class="lang-en">Interactive Lab A · Explore Together</span>
+            <span class="lang-vn">Mô Hình Tương Tác A · Cùng Con Khám Phá</span>
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1">
+            <span class="lang-en">💡 Series vs Parallel Brightness &amp; Break-Test Toy</span>
+            <span class="lang-vn">💡 Mô Phỏng Độ Sáng &amp; Thử Thách Tháo 1 Bóng Đèn</span>
+          </h3>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+        <div>
+          <div class="text-[11px] font-black uppercase text-slate-500 mb-1.5">
+            <span class="lang-en">Circuit Type</span>
+            <span class="lang-vn">Loại Mạch Điện</span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button id="ma-series" onclick="setModelA('type','series')" class="py-2 rounded-xl font-extrabold text-xs transition">
+              <span class="lang-en">Series</span><span class="lang-vn">Nối Tiếp</span>
+            </button>
+            <button id="ma-parallel" onclick="setModelA('type','parallel')" class="py-2 rounded-xl font-extrabold text-xs transition">
+              <span class="lang-en">Parallel</span><span class="lang-vn">Song Song</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-[11px] font-black uppercase text-slate-500 mb-1.5">
+            <span class="lang-en">Battery Cells</span>
+            <span class="lang-vn">Số Pin (1.5 V/pin)</span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button id="ma-c1" onclick="setModelA('cells',1)" class="py-2 rounded-xl font-extrabold text-xs transition">1 (1.5 V)</button>
+            <button id="ma-c2" onclick="setModelA('cells',2)" class="py-2 rounded-xl font-extrabold text-xs transition">2 (3.0 V)</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-[11px] font-black uppercase text-slate-500 mb-1.5">
+            <span class="lang-en">Number of Bulbs</span>
+            <span class="lang-vn">Số Bóng Đèn</span>
+          </div>
+          <div class="grid grid-cols-3 gap-1">
+            <button id="ma-b1" onclick="setModelA('bulbs',1)" class="py-2 rounded-xl font-extrabold text-xs transition">1</button>
+            <button id="ma-b2" onclick="setModelA('bulbs',2)" class="py-2 rounded-xl font-extrabold text-xs transition">2</button>
+            <button id="ma-b3" onclick="setModelA('bulbs',3)" class="py-2 rounded-xl font-extrabold text-xs transition">3</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-[11px] font-black uppercase text-slate-500 mb-1.5">
+            <span class="lang-en">Fault Test</span>
+            <span class="lang-vn">Thử Hỏng Bóng</span>
+          </div>
+          <button id="ma-break" onclick="toggleModelABreak()" class="w-full py-2 rounded-xl font-black text-xs transition"></button>
+        </div>
+      </div>
+
+      <!-- Dark Circuit Stage -->
+      <div id="ma-svg-stage" class="bg-slate-950 rounded-2xl p-4 flex items-center justify-center min-h-[250px] border-2 border-slate-800"></div>
+
+      <!-- Bilingual Live Readout Panel (Anchored cleanly below SVG) -->
+      <div id="ma-readout" class="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 text-sm font-bold text-slate-800"></div>
+    </section>
+
+    <!-- ==================== INTERACTIVE MODEL B: CIRCUIT CLASSIFIER QUIZ-CARD ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 shadow-xl border-2 border-emerald-200 space-y-4">
+      <div>
+        <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black uppercase">
+          <span class="lang-en">Interactive Lab B · Official Cambridge Symbols</span>
+          <span class="lang-vn">Mô Hình Tương Tác B · Ký Hiệu Chuẩn Cambridge</span>
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1">
+          <span class="lang-en">🔍 Circuit Classifier — Tap Series or Parallel!</span>
+          <span class="lang-vn">🔍 Phân Loại Mạch Điện — Chọn Nối Tiếp hay Song Song!</span>
+        </h3>
+        <p class="text-sm text-slate-600 font-semibold mt-1">
+          <span class="lang-en">Tap your answer on each official Cambridge diagram to watch the glowing loop-tracer highlight the exact pathways!</span>
+          <span class="lang-vn">Chạm vào đáp án ở mỗi sơ đồ chuẩn Cambridge để xem đường phát sáng vạch rõ các vòng mạch điện!</span>
+        </p>
+      </div>
+
+      <div id="mb-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- ==================== 9 VISUAL BILINGUAL VOCABULARY CARDS ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 shadow-xl border-2 border-indigo-200 space-y-4">
+      <div>
+        <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-black uppercase">
+          <span class="lang-en">Bilingual Audio Dictionary · 9 Key Terms</span>
+          <span class="lang-vn">Từ Điển Âm Thanh Song Ngữ · 9 Thuật Ngữ Chính</span>
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1">
+          <span class="lang-en">🗣️ Tap to Practise Scientific Vocabulary</span>
+          <span class="lang-vn">🗣️ Chạm Để Luyện Phát Âm Từ Vựng Khoa Học</span>
+        </h3>
+      </div>
+
+      <div id="portal-vocab-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- ==================== 3-TIER DINNER TABLE TALKS ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 shadow-xl border-2 border-amber-200 space-y-4">
+      <div>
+        <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-black uppercase">
+          <span class="lang-en">Family Science Chat · 3 Difficulty Tiers</span>
+          <span class="lang-vn">Trò Chuyện Khoa Học Bữa Tối · 3 Cấp Độ</span>
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-1">
+          <span class="lang-en">🍽️ Dinner Table Talks (Ask Your Child!)</span>
+          <span class="lang-vn">🍽️ Câu Hỏi Gợi Mở Cho Cả Nhà</span>
+        </h3>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4 space-y-2">
+          <div class="text-xs font-black uppercase text-emerald-700">
+            <span class="lang-en">🟢 Tier 1 · Everyday Home</span>
+            <span class="lang-vn">🟢 Cấp 1 · Trong Nhà Mình</span>
+          </div>
+          <p class="font-extrabold text-slate-900 text-sm">
+            <span class="lang-en">"When we switch OFF the bedroom light tonight, why does the living room TV stay ON?"</span>
+            <span class="lang-vn">"Tối nay khi mình tắt đèn phòng ngủ, vì sao tivi ở phòng khách vẫn bật bình thường?"</span>
+          </p>
+          <p class="text-xs text-slate-700 font-semibold">
+            <span class="lang-en"><strong>Hint:</strong> Home rooms are wired on separate <em>parallel branches</em>!</span>
+            <span class="lang-vn"><strong>Gợi ý:</strong> Các thiết bị điện trong nhà được mắc trên các <em>nhánh song song</em> riêng biệt!</span>
+          </p>
+        </div>
+
+        <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4 space-y-2">
+          <div class="text-xs font-black uppercase text-sky-700">
+            <span class="lang-en">🔵 Tier 2 · Road Safety</span>
+            <span class="lang-vn">🔵 Cấp 2 · An Toàn Giao Thông</span>
+          </div>
+          <p class="font-extrabold text-slate-900 text-sm">
+            <span class="lang-en">"Why would wiring a car's two front headlights in SERIES be dangerous at night in Hanoi?"</span>
+            <span class="lang-vn">"Vì sao việc mắc hai đèn pha ô tô theo kiểu NỐI TIẾP lại rất nguy hiểm khi lái xe ban đêm ở Hà Nội?"</span>
+          </p>
+          <p class="text-xs text-slate-700 font-semibold">
+            <span class="lang-en"><strong>Hint:</strong> In series, if 1 headlight breaks, BOTH go dark at once — and both would be dimmer!</span>
+            <span class="lang-vn"><strong>Gợi ý:</strong> Nếu mắc nối tiếp, chỉ cần 1 đèn hỏng thì CẢ HAI đèn tắt cùng lúc, hơn nữa đèn còn bị tối hơn!</span>
+          </p>
+        </div>
+
+        <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 space-y-2">
+          <div class="text-xs font-black uppercase text-amber-800">
+            <span class="lang-en">🟡 Tier 3 · Battery Detective</span>
+            <span class="lang-vn">🟡 Cấp 3 · Thám Tử Pin AA</span>
+          </div>
+          <p class="font-extrabold text-slate-900 text-sm">
+            <span class="lang-en">"Open the TV remote! Look for '1.5 V' printed on each AA cell. If there are 2 cells in series, what is the total voltage?"</span>
+            <span class="lang-vn">"Hãy mở nắp điều khiển tivi! Tìm chữ '1.5 V' in trên mỗi viên pin AA. Nếu lắp 2 viên nối tiếp thì tổng hiệu điện thế là bao nhiêu?"</span>
+          </p>
+          <p class="text-xs text-slate-700 font-semibold">
+            <span class="lang-en"><strong>Answer:</strong> 1.5 V + 1.5 V = <strong>3.0 V</strong>! Check which way the + and − ends point!</span>
+            <span class="lang-vn"><strong>Đáp án:</strong> 1.5 V + 1.5 V = <strong>3.0 V</strong>! Hãy kiểm tra xem cực + và cực − đang quay hướng nào nhé!</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== GAMIFIED 4-QUESTION HOME CHECK QUIZ ==================== -->
+    <section class="bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 text-white rounded-3xl p-5 sm:p-7 shadow-2xl border-2 border-amber-400/50 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-xs font-black uppercase">
+            <span class="lang-en">3-Minute Home Check · Instant Feedback</span>
+            <span class="lang-vn">Kiểm Tra Nhanh 3 Phút Tại Nhà · Phản Hồi Tức Thì</span>
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black mt-1">
+            <span class="lang-en">🏆 Family Circuit Challenge (4 Questions)</span>
+            <span class="lang-vn">🏆 Thử Thách Mạch Điện Gia Đình (4 Câu Hỏi)</span>
+          </h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="px-4 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-black text-sm">
+            <span class="lang-en">Score: </span><span class="lang-vn">Điểm: </span><span id="quiz-score">0</span> / 4
+          </span>
+          <button onclick="resetQuiz()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200">↺</button>
+        </div>
+      </div>
+
+      <div id="quiz-container" class="space-y-4"></div>
+    </section>
+
+  </main>
+
+  <script>
+    // ==================== LANGUAGE TOGGLE & SPEECH ENGINE ====================
+    let currentLang = 'en';
+
+    function toggleLanguage() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      currentLang = currentLang === 'en' ? 'vn' : 'en';
+      document.body.classList.toggle('mode-en', currentLang === 'en');
+      document.body.classList.toggle('mode-vn', currentLang === 'vn');
+    }
+
+    function speakText(text, langCode) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = langCode;
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    function fireConfetti() {
+      const cols = ['#fbbf24', '#38bdf8', '#34d399', '#fb7185', '#a78bfa'];
+      for (let i = 0; i < 45; i++) {
+        const d = document.createElement('div');
+        d.className = 'confetti-piece';
+        d.style.left = (Math.random() * 98) + 'vw';
+        d.style.top = (-10 - Math.random() * 30) + 'px';
+        d.style.backgroundColor = cols[i % cols.length];
+        d.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        d.style.animationDelay = (Math.random() * 0.35) + 's';
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), 2500);
+      }
+    }
+
+    // ==================== INTERACTIVE MODEL A: BRIGHTNESS & BREAK-TEST TOY ====================
+    const modelA = { type: 'series', cells: 2, bulbs: 2, broken: false };
+
+    function setModelA(key, val) {
+      modelA[key] = val;
+      renderModelA();
+    }
+    function toggleModelABreak() {
+      modelA.broken = !modelA.broken;
+      renderModelA();
+    }
+
+    function glowProps(v) {
+      if (v <= 0) return { glow: 0, fill: '#1e293b', stroke: '#94a3b8', x: '#94a3b8', en: 'OFF', vn: 'TẮT' };
+      if (v <= 1.05) return { glow: 0.25, fill: '#78350f', stroke: '#f59e0b', x: '#fde047', en: 'Very Dim', vn: 'Rất Mờ' };
+      if (v <= 1.55) return { glow: 0.48, fill: '#b45309', stroke: '#fbbf24', x: '#fef08a', en: 'Dim / Medium', vn: 'Mờ / Trung Bình' };
+      return { glow: 0.92, fill: '#fef08a', stroke: '#fde047', x: '#0f172a', en: 'Bright!', vn: 'Sáng Rõ!' };
+    }
+
+    function drawBatterySvg(cx, y, cells) {
+      const unitW = 24;
+      const totalW = cells * unitW - 12;
+      const startX = cx - totalW / 2;
+      let s = '';
+      for (let i = 0; i < cells; i++) {
+        const x = startX + i * unitW;
+        s += `<line x1="${x}" y1="${y - 16}" x2="${x}" y2="${y + 16}" stroke="#f8fafc" stroke-width="2.2"/>`;
+        s += `<line x1="${x + 11}" y1="${y - 8}" x2="${x + 11}" y2="${y + 8}" stroke="#f8fafc" stroke-width="5"/>`;
+        if (i < cells - 1) s += `<line x1="${x + 11}" y1="${y}" x2="${x + unitW}" y2="${y}" stroke="#f8fafc" stroke-width="2.4"/>`;
+      }
+      return { svg: s, leftX: startX, rightX: startX + totalW };
+    }
+
+    function drawBulbSvg(cx, cy, v, broken, idx) {
+      const g = glowProps(broken ? 0 : v);
+      let s = '';
+      if (!broken && g.glow > 0) {
+        s += `<circle cx="${cx}" cy="${cy}" r="${18 + g.glow * 20}" fill="#fde047" opacity="${(g.glow * 0.36).toFixed(2)}"/>`;
+      }
+      s += `<circle cx="${cx}" cy="${cy}" r="14" fill="${broken ? '#1e293b' : g.fill}" stroke="${broken ? '#fb7185' : g.stroke}" stroke-width="2.5" ${broken ? 'stroke-dasharray="4 3"' : ''}/>`;
+      s += `<line x1="${cx - 10}" y1="${cy - 10}" x2="${cx + 10}" y2="${cy + 10}" stroke="${broken ? '#fb7185' : g.x}" stroke-width="2.2"/>`;
+      s += `<line x1="${cx + 10}" y1="${cy - 10}" x2="${cx - 10}" y2="${cy + 10}" stroke="${broken ? '#fb7185' : g.x}" stroke-width="2.2"/>`;
+      s += `<text x="${cx}" y="${cy + 27}" text-anchor="middle" fill="${broken ? '#fb7185' : '#cbd5e1'}" font-size="11" font-weight="bold">${broken ? '✕' : v.toFixed(1) + ' V'}</text>`;
+      return s;
+    }
+
+    function renderModelA() {
+      const onCls = 'py-2 rounded-xl font-black text-xs bg-sky-600 text-white shadow transition';
+      const offCls = 'py-2 rounded-xl font-extrabold text-xs bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition';
+      document.getElementById('ma-series').className = modelA.type === 'series' ? onCls : offCls;
+      document.getElementById('ma-parallel').className = modelA.type === 'parallel' ? onCls : offCls;
+      document.getElementById('ma-c1').className = modelA.cells === 1 ? onCls : offCls;
+      document.getElementById('ma-c2').className = modelA.cells === 2 ? onCls : offCls;
+      [1, 2, 3].forEach(n => {
+        document.getElementById('ma-b' + n).className = modelA.bulbs === n ? onCls : offCls;
+      });
+      const brkBtn = document.getElementById('ma-break');
+      if (modelA.broken) {
+        brkBtn.className = 'w-full py-2 rounded-xl font-black text-xs bg-rose-600 text-white shadow transition';
+        brkBtn.innerHTML = '<span class="lang-en">🔧 Fix Bulb 1</span><span class="lang-vn">🔧 Lắp Lại Bóng 1</span>';
+      } else {
+        brkBtn.className = 'w-full py-2 rounded-xl font-black text-xs bg-amber-400 hover:bg-amber-300 text-slate-950 shadow transition';
+        brkBtn.innerHTML = '<span class="lang-en">💥 Break Bulb 1!</span><span class="lang-vn">💥 Làm Hỏng Bóng 1!</span>';
+      }
+
+      const totalV = modelA.cells * 1.5;
+      const bat = drawBatterySvg(220, 32, modelA.cells);
+      let svg = '';
+      let litV = 0;
+      let litCount = 0;
+
+      if (modelA.type === 'series') {
+        litV = modelA.broken ? 0 : totalV / modelA.bulbs;
+        litCount = modelA.broken ? 0 : modelA.bulbs;
+        const xs = modelA.bulbs === 1 ? [220] : modelA.bulbs === 2 ? [145, 295] : [115, 220, 325];
+        let bot = `<line x1="45" y1="168" x2="${xs[0] - 14}" y2="168" stroke="#f8fafc" stroke-width="2.6"/>`;
+        for (let i = 0; i < xs.length - 1; i++) {
+          bot += `<line x1="${xs[i] + 14}" y1="168" x2="${xs[i + 1] - 14}" y2="168" stroke="#f8fafc" stroke-width="2.6"/>`;
+        }
+        bot += `<line x1="${xs[xs.length - 1] + 14}" y1="168" x2="395" y2="168" stroke="#f8fafc" stroke-width="2.6"/>`;
+        const flow = !modelA.broken ? `<path d="M${bat.leftX} 32 L45 32 L45 168 L395 168 L395 32 L${bat.rightX} 32" fill="none" stroke="#fbbf24" stroke-width="2.5" opacity="0.6" class="flow-slow"/>` : '';
+        const bulbsSvg = xs.map((x, idx) => drawBulbSvg(x, 168, litV, idx === 0 && modelA.broken, idx + 1)).join('');
+        svg = `<svg viewBox="0 0 440 218" class="w-full max-w-[440px] h-auto">
+          <line x1="45" y1="32" x2="${bat.leftX}" y2="32" stroke="#f8fafc" stroke-width="2.6"/>
+          <line x1="${bat.rightX}" y1="32" x2="395" y2="32" stroke="#f8fafc" stroke-width="2.6"/>
+          <line x1="45" y1="32" x2="45" y2="168" stroke="#f8fafc" stroke-width="2.6"/>
+          <line x1="395" y1="32" x2="395" y2="168" stroke="#f8fafc" stroke-width="2.6"/>
+          ${bot}${flow}${bat.svg}
+          <text x="220" y="68" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold"><tspan class="lang-en">${totalV.toFixed(1)} V · 1 Loop</tspan><tspan class="lang-vn">${totalV.toFixed(1)} V · 1 Vòng Mạch</tspan></text>
+          ${bulbsSvg}
+        </svg>`;
+      } else {
+        litV = totalV;
+        litCount = modelA.broken ? Math.max(0, modelA.bulbs - 1) : modelA.bulbs;
+        const ys = modelA.bulbs === 1 ? [125] : modelA.bulbs === 2 ? [102, 172] : [90, 146, 202];
+        const maxY = ys[ys.length - 1];
+        let br = '';
+        let fl = '';
+        ys.forEach((by, idx) => {
+          const isBrk = idx === 0 && modelA.broken;
+          if (idx < ys.length - 1) br += `<circle cx="55" cy="${by}" r="4.5" fill="#34d399"/><circle cx="385" cy="${by}" r="4.5" fill="#34d399"/>`;
+          br += `<line x1="55" y1="${by}" x2="206" y2="${by}" stroke="#f8fafc" stroke-width="2.6"/>`;
+          br += `<line x1="234" y1="${by}" x2="385" y2="${by}" stroke="#f8fafc" stroke-width="2.6"/>`;
+          if (!isBrk) fl += `<path d="M55 32 L55 ${by} L385 ${by} L385 32" fill="none" stroke="#34d399" stroke-width="2.5" opacity="0.65" class="flow-active"/>`;
+          br += drawBulbSvg(220, by, isBrk ? 0 : totalV, isBrk, idx + 1);
+        });
+        svg = `<svg viewBox="0 0 440 245" class="w-full max-w-[440px] h-auto">
+          <line x1="55" y1="32" x2="${bat.leftX}" y2="32" stroke="#f8fafc" stroke-width="2.6"/>
+          <line x1="${bat.rightX}" y1="32" x2="385" y2="32" stroke="#f8fafc" stroke-width="2.6"/>
+          <line x1="55" y1="32" x2="55" y2="${maxY}" stroke="#f8fafc" stroke-width="2.6"/>
+          <line x1="385" y1="32" x2="385" y2="${maxY}" stroke="#f8fafc" stroke-width="2.6"/>
+          ${fl}${bat.svg}
+          <text x="220" y="64" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold"><tspan class="lang-en">${totalV.toFixed(1)} V · ${modelA.bulbs} Branch${modelA.bulbs > 1 ? 'es' : ''}</tspan><tspan class="lang-vn">${totalV.toFixed(1)} V · ${modelA.bulbs} Nhánh</tspan></text>
+          ${br}
+        </svg>`;
+      }
+
+      document.getElementById('ma-svg-stage').innerHTML = svg;
+
+      const gp = glowProps(litCount > 0 ? litV : 0);
+      const readoutEl = document.getElementById('ma-readout');
+      if (modelA.type === 'series' && modelA.broken) {
+        readoutEl.innerHTML = `
+          <span class="lang-en">❌ <strong>Series Break Test:</strong> Breaking Bulb 1 opens the ONLY loop — ALL ${modelA.bulbs} bulb(s) go <strong>OFF</strong>!</span>
+          <span class="lang-vn">❌ <strong>Thử Hỏng Bóng Mạch Nối Tiếp:</strong> Bóng 1 hỏng làm hở vòng mạch duy nhất — TẤT CẢ ${modelA.bulbs} bóng đều <strong>TẮT</strong>!</span>`;
+      } else if (modelA.type === 'parallel' && modelA.broken && litCount === 0) {
+        readoutEl.innerHTML = `
+          <span class="lang-en">⚠️ <strong>Only 1 Branch Active:</strong> Bulb 1 is OFF. Select <strong>2 or 3 bulbs</strong> above to see the other parallel branches stay bright when Bulb 1 breaks!</span>
+          <span class="lang-vn">⚠️ <strong>Chỉ Có 1 Nhánh:</strong> Bóng 1 đã tắt. Hãy chọn <strong>2 hoặc 3 bóng</strong> ở trên để xem các nhánh song song còn lại vẫn sáng khi Bóng 1 hỏng!</span>`;
+      } else if (modelA.type === 'parallel' && modelA.broken) {
+        readoutEl.innerHTML = `
+          <span class="lang-en">✅ <strong>Parallel Break Test:</strong> Bulb 1 is OFF, but the other <strong>${litCount} bulb(s) stay ${gp.en} (${totalV.toFixed(1)} V)</strong> because their separate loops are still complete!</span>
+          <span class="lang-vn">✅ <strong>Thử Hỏng Bóng Mạch Song Song:</strong> Bóng 1 tắt, nhưng <strong>${litCount} bóng còn lại vẫn ${gp.vn} (${totalV.toFixed(1)} V)</strong> vì các nhánh riêng của chúng vẫn kín!</span>`;
+      } else if (modelA.type === 'series') {
+        readoutEl.innerHTML = `
+          <span class="lang-en">🔗 <strong>Series (${modelA.bulbs} bulb(s), ${totalV.toFixed(1)} V):</strong> Every bulb shares the voltage equally (<strong>${litV.toFixed(2)} V each</strong> ➔ <strong>${gp.en}</strong>). Notice all bulbs have the exact same brightness!</span>
+          <span class="lang-vn">🔗 <strong>Mạch Nối Tiếp (${modelA.bulbs} bóng, ${totalV.toFixed(1)} V):</strong> Các bóng chia đều hiệu điện thế (<strong>${litV.toFixed(2)} V mỗi bóng</strong> ➔ <strong>${gp.vn}</strong>). Tất cả các bóng đều có độ sáng bằng nhau!</span>`;
+      } else {
+        readoutEl.innerHTML = `
+          <span class="lang-en">🪜 <strong>Parallel (${modelA.bulbs} branch(es), ${totalV.toFixed(1)} V):</strong> Every branch gets the FULL <strong>${totalV.toFixed(1)} V</strong> ➔ <strong>${gp.en}</strong>. Adding more branches keeps every bulb equally bright!</span>
+          <span class="lang-vn">🪜 <strong>Mạch Song Song (${modelA.bulbs} nhánh, ${totalV.toFixed(1)} V):</strong> Mỗi nhánh đều nhận đủ <strong>${totalV.toFixed(1)} V</strong> ➔ <strong>${gp.vn}</strong>. Thêm nhánh mới không làm các bóng cũ bị mờ đi!</span>`;
+      }
+    }
+
+    // ==================== INTERACTIVE MODEL B: CIRCUIT CLASSIFIER ====================
+    const classifierCards = [
+      {
+        id: 0,
+        ans: 'series',
+        titleEn: 'Diagram 1 (Switch + 2 Lamps)',
+        titleVn: 'Sơ Đồ 1 (Công tắc + 2 Bóng đèn)',
+        expEn: 'Correct! Series — there is only 1 single loop from + to −.',
+        expVn: 'Chính xác! Mạch nối tiếp — chỉ có 1 vòng mạch duy nhất từ + sang −.',
+        svg: (hl) => `<svg viewBox="0 0 240 110" class="w-56 h-24">
+          ${hl ? '<path d="M108 18 L24 18 L24 90 L216 90 L216 18 L118 18" fill="none" stroke="#10b981" class="loop-highlight"/>' : ''}
+          <line x1="24" y1="18" x2="108" y2="18" stroke="#0f172a" stroke-width="2"/>
+          <line x1="108" y1="6" x2="108" y2="30" stroke="#0f172a" stroke-width="2"/>
+          <line x1="118" y1="11" x2="118" y2="25" stroke="#0f172a" stroke-width="4.5"/>
+          <line x1="118" y1="18" x2="162" y2="18" stroke="#0f172a" stroke-width="2"/>
+          <circle cx="162" cy="18" r="3" fill="#ffffff" stroke="#0f172a" stroke-width="1.8"/>
+          <circle cx="186" cy="18" r="3" fill="#ffffff" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="165" y1="18" x2="183" y2="18" stroke="#0f172a" stroke-width="2.2"/>
+          <line x1="189" y1="18" x2="216" y2="18" stroke="#0f172a" stroke-width="2"/>
+          <line x1="24" y1="18" x2="24" y2="90" stroke="#0f172a" stroke-width="2"/>
+          <line x1="216" y1="18" x2="216" y2="90" stroke="#0f172a" stroke-width="2"/>
+          <line x1="24" y1="90" x2="66" y2="90" stroke="#0f172a" stroke-width="2"/>
+          <circle cx="80" cy="90" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+          <line x1="71" y1="81" x2="89" y2="99" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="89" y1="81" x2="71" y2="99" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="93" y1="90" x2="147" y2="90" stroke="#0f172a" stroke-width="2"/>
+          <circle cx="160" cy="90" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+          <line x1="151" y1="81" x2="169" y2="99" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="169" y1="81" x2="151" y2="99" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="173" y1="90" x2="216" y2="90" stroke="#0f172a" stroke-width="2"/>
+        </svg>`
+      },
+      {
+        id: 1,
+        ans: 'parallel',
+        titleEn: 'Diagram 2 (2 Lamps on Ladder Branches)',
+        titleVn: 'Sơ Đồ 2 (2 Bóng trên 2 Nhánh)',
+        expEn: 'Correct! Parallel — electricity splits into 2 separate branches.',
+        expVn: 'Chính xác! Mạch song song — dòng điện chia thành 2 nhánh riêng biệt.',
+        svg: (hl) => `<svg viewBox="0 0 240 112" class="w-56 h-24">
+          ${hl ? '<path d="M26 16 L26 56 L214 56 L214 16" fill="none" stroke="#0284c7" class="loop-highlight"/><path d="M26 16 L26 94 L214 94 L214 16" fill="none" stroke="#10b981" class="loop-highlight"/>' : ''}
+          <line x1="26" y1="16" x2="108" y2="16" stroke="#0f172a" stroke-width="2"/>
+          <line x1="108" y1="5" x2="108" y2="27" stroke="#0f172a" stroke-width="2"/>
+          <line x1="118" y1="10" x2="118" y2="22" stroke="#0f172a" stroke-width="4.5"/>
+          <line x1="118" y1="16" x2="214" y2="16" stroke="#0f172a" stroke-width="2"/>
+          <line x1="26" y1="16" x2="26" y2="94" stroke="#0f172a" stroke-width="2"/>
+          <line x1="214" y1="16" x2="214" y2="94" stroke="#0f172a" stroke-width="2"/>
+          <circle cx="26" cy="56" r="3.5" fill="#0f172a"/><circle cx="214" cy="56" r="3.5" fill="#0f172a"/>
+          <line x1="26" y1="56" x2="107" y2="56" stroke="#0f172a" stroke-width="2"/>
+          <circle cx="120" cy="56" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+          <line x1="111" y1="47" x2="129" y2="65" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="129" y1="47" x2="111" y2="65" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="133" y1="56" x2="214" y2="56" stroke="#0f172a" stroke-width="2"/>
+          <line x1="26" y1="94" x2="107" y2="94" stroke="#0f172a" stroke-width="2"/>
+          <circle cx="120" cy="94" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+          <line x1="111" y1="85" x2="129" y2="103" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="129" y1="85" x2="111" y2="103" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="133" y1="94" x2="214" y2="94" stroke="#0f172a" stroke-width="2"/>
+        </svg>`
+      },
+      {
+        id: 2,
+        ans: 'series',
+        titleEn: 'Diagram 3 (Lamp + Buzzer)',
+        titleVn: 'Sơ Đồ 3 (Bóng đèn + Còi điện)',
+        expEn: 'Correct! Series — the lamp and buzzer sit one after another on 1 loop.',
+        expVn: 'Chính xác! Mạch nối tiếp — bóng đèn và còi nằm nối tiếp trên cùng 1 vòng mạch.',
+        svg: (hl) => `<svg viewBox="0 0 240 110" class="w-56 h-24">
+          ${hl ? '<path d="M108 18 L24 18 L24 90 L152 90" fill="none" stroke="#10b981" class="loop-highlight"/><path d="M168 90 L216 90 L216 18 L118 18" fill="none" stroke="#10b981" class="loop-highlight"/>' : ''}
+          <line x1="24" y1="18" x2="108" y2="18" stroke="#0f172a" stroke-width="2"/>
+          <line x1="108" y1="6" x2="108" y2="30" stroke="#0f172a" stroke-width="2"/>
+          <line x1="118" y1="11" x2="118" y2="25" stroke="#0f172a" stroke-width="4.5"/>
+          <line x1="118" y1="18" x2="216" y2="18" stroke="#0f172a" stroke-width="2"/>
+          <line x1="24" y1="18" x2="24" y2="90" stroke="#0f172a" stroke-width="2"/>
+          <line x1="216" y1="18" x2="216" y2="90" stroke="#0f172a" stroke-width="2"/>
+          <line x1="24" y1="90" x2="66" y2="90" stroke="#0f172a" stroke-width="2"/>
+          <circle cx="80" cy="90" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+          <line x1="71" y1="81" x2="89" y2="99" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="89" y1="81" x2="71" y2="99" stroke="#0f172a" stroke-width="1.8"/>
+          <line x1="93" y1="90" x2="152" y2="90" stroke="#0f172a" stroke-width="2"/>
+          <path d="M144 77 A16 16 0 0 1 176 77 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+          <line x1="152" y1="77" x2="152" y2="90" stroke="#0f172a" stroke-width="2"/>
+          <line x1="168" y1="77" x2="168" y2="90" stroke="#0f172a" stroke-width="2"/>
+          <line x1="168" y1="90" x2="216" y2="90" stroke="#0f172a" stroke-width="2"/>
+        </svg>`
+      },
+      {
+        id: 3,
+        ans: 'parallel',
+        titleEn: 'Diagram 4 (3 Lamps on 3 Branches)',
+        titleVn: 'Sơ Đồ 4 (3 Bóng trên 3 Nhánh)',
+        expEn: 'Correct! Parallel — 3 separate branches, each connected across the battery!',
+        expVn: 'Chính xác! Mạch song song — có 3 nhánh riêng biệt cùng nối vào nguồn điện!',
+        svg: (hl) => `<svg viewBox="0 0 240 112" class="w-56 h-24">
+          ${hl ? '<path d="M26 12 L26 42 L214 42 L214 12" fill="none" stroke="#0284c7" class="loop-highlight"/><path d="M26 12 L26 70 L214 70 L214 12" fill="none" stroke="#10b981" class="loop-highlight"/><path d="M26 12 L26 98 L214 98 L214 12" fill="none" stroke="#f59e0b" class="loop-highlight"/>' : ''}
+          <line x1="26" y1="12" x2="108" y2="12" stroke="#0f172a" stroke-width="2"/>
+          <line x1="108" y1="3" x2="108" y2="21" stroke="#0f172a" stroke-width="2"/>
+          <line x1="118" y1="7" x2="118" y2="17" stroke="#0f172a" stroke-width="4.5"/>
+          <line x1="118" y1="12" x2="214" y2="12" stroke="#0f172a" stroke-width="2"/>
+          <line x1="26" y1="12" x2="26" y2="98" stroke="#0f172a" stroke-width="2"/>
+          <line x1="214" y1="12" x2="214" y2="98" stroke="#0f172a" stroke-width="2"/>
+          ${[42, 70, 98].map((y, i) => `
+            ${i < 2 ? `<circle cx="26" cy="${y}" r="3" fill="#0f172a"/><circle cx="214" cy="${y}" r="3" fill="#0f172a"/>` : ''}
+            <line x1="26" y1="${y}" x2="109" y2="${y}" stroke="#0f172a" stroke-width="1.8"/>
+            <circle cx="120" cy="${y}" r="11" fill="#ffffff" stroke="#0f172a" stroke-width="1.8"/>
+            <line x1="112" y1="${y - 8}" x2="128" y2="${y + 8}" stroke="#0f172a" stroke-width="1.5"/>
+            <line x1="128" y1="${y - 8}" x2="112" y2="${y + 8}" stroke="#0f172a" stroke-width="1.5"/>
+            <line x1="131" y1="${y}" x2="214" y2="${y}" stroke="#0f172a" stroke-width="1.8"/>
+          `).join('')}
+        </svg>`
+      }
+    ];
+    const mbState = {};
+
+    function pickClassifier(id, choice) {
+      mbState[id] = choice;
+      renderModelB();
+    }
+
+    function renderModelB() {
+      const grid = document.getElementById('mb-grid');
+      grid.innerHTML = classifierCards.map(c => {
+        const picked = mbState[c.id];
+        const isCorrect = picked === c.ans;
+        return `
+          <div class="bg-slate-50 border-2 ${picked ? (isCorrect ? 'border-emerald-400 bg-emerald-50/50' : 'border-rose-400 bg-rose-50/40') : 'border-slate-200'} rounded-2xl p-4 flex flex-col items-center gap-3 transition">
+            <div class="font-black text-slate-800 text-sm">
+              <span class="lang-en">${c.titleEn}</span>
+              <span class="lang-vn">${c.titleVn}</span>
+            </div>
+            <div class="bg-white rounded-xl p-2 border border-slate-200">${c.svg(isCorrect)}</div>
+            <div class="grid grid-cols-2 gap-2 w-full">
+              <button onclick="pickClassifier(${c.id},'series')" class="py-2 rounded-xl font-black text-xs ${picked==='series' ? (isCorrect ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white') : 'bg-white border-2 border-slate-300 hover:border-sky-500 text-slate-800'}">
+                <span class="lang-en">Series</span><span class="lang-vn">Nối Tiếp</span>
+              </button>
+              <button onclick="pickClassifier(${c.id},'parallel')" class="py-2 rounded-xl font-black text-xs ${picked==='parallel' ? (isCorrect ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white') : 'bg-white border-2 border-slate-300 hover:border-sky-500 text-slate-800'}">
+                <span class="lang-en">Parallel</span><span class="lang-vn">Song Song</span>
+              </button>
+            </div>
+            ${picked ? `<div class="text-xs font-bold text-center ${isCorrect ? 'text-emerald-800' : 'text-rose-700'}">
+              ${isCorrect
+                ? `<span class="lang-en">✅ ${c.expEn}</span><span class="lang-vn">✅ ${c.expVn}</span>`
+                : `<span class="lang-en">❌ Try again! Count how many separate loops connect + to −.</span><span class="lang-vn">❌ Thử lại nhé! Hãy đếm xem có mấy vòng mạch riêng nối từ + sang −.</span>`}
+            </div>` : ''}
+          </div>`;
+      }).join('');
+    }
+
+    // ==================== 9 VISUAL BILINGUAL VOCABULARY CARDS ====================
+    const portalVocab = [
+      {
+        en: 'series circuit', vn: 'mạch điện nối tiếp',
+        defEn: '1 single loop; lamps share voltage and become dimmer.',
+        defVn: '1 vòng mạch duy nhất; các bóng chia hiệu điện thế nên tối hơn.',
+        svg: `<svg viewBox="0 0 180 76" class="w-36 h-16"><line x1="18" y1="14" x2="84" y2="14" stroke="#0f172a" stroke-width="2"/><line x1="84" y1="5" x2="84" y2="23" stroke="#0f172a" stroke-width="2"/><line x1="94" y1="9" x2="94" y2="19" stroke="#0f172a" stroke-width="4.5"/><line x1="94" y1="14" x2="162" y2="14" stroke="#0f172a" stroke-width="2"/><line x1="18" y1="14" x2="18" y2="60" stroke="#0f172a" stroke-width="2"/><line x1="162" y1="14" x2="162" y2="60" stroke="#0f172a" stroke-width="2"/><line x1="18" y1="60" x2="52" y2="60" stroke="#0f172a" stroke-width="2"/><circle cx="62" cy="60" r="10" fill="#fef08a" stroke="#0f172a" stroke-width="1.8"/><line x1="55" y1="53" x2="69" y2="67" stroke="#0f172a" stroke-width="1.5"/><line x1="69" y1="53" x2="55" y2="67" stroke="#0f172a" stroke-width="1.5"/><line x1="72" y1="60" x2="108" y2="60" stroke="#0f172a" stroke-width="2"/><circle cx="118" cy="60" r="10" fill="#fef08a" stroke="#0f172a" stroke-width="1.8"/><line x1="111" y1="53" x2="125" y2="67" stroke="#0f172a" stroke-width="1.5"/><line x1="125" y1="53" x2="111" y2="67" stroke="#0f172a" stroke-width="1.5"/><line x1="128" y1="60" x2="162" y2="60" stroke="#0f172a" stroke-width="2"/></svg>`
+      },
+      {
+        en: 'parallel circuit', vn: 'mạch điện song song',
+        defEn: '2+ branches; every branch gets full battery voltage.',
+        defVn: 'Từ 2 nhánh trở lên; mỗi nhánh đều nhận đủ hiệu điện thế của pin.',
+        svg: `<svg viewBox="0 0 180 76" class="w-36 h-16"><line x1="20" y1="12" x2="84" y2="12" stroke="#0f172a" stroke-width="2"/><line x1="84" y1="4" x2="84" y2="20" stroke="#0f172a" stroke-width="2"/><line x1="94" y1="7" x2="94" y2="17" stroke="#0f172a" stroke-width="4.5"/><line x1="94" y1="12" x2="160" y2="12" stroke="#0f172a" stroke-width="2"/><line x1="20" y1="12" x2="20" y2="64" stroke="#0f172a" stroke-width="2"/><line x1="160" y1="12" x2="160" y2="64" stroke="#0f172a" stroke-width="2"/><circle cx="20" cy="38" r="2.8" fill="#0f172a"/><circle cx="160" cy="38" r="2.8" fill="#0f172a"/><line x1="20" y1="38" x2="81" y2="38" stroke="#0f172a" stroke-width="2"/><circle cx="90" cy="38" r="9" fill="#fde047" stroke="#0f172a" stroke-width="1.8"/><line x1="84" y1="32" x2="96" y2="44" stroke="#0f172a" stroke-width="1.5"/><line x1="96" y1="32" x2="84" y2="44" stroke="#0f172a" stroke-width="1.5"/><line x1="99" y1="38" x2="160" y2="38" stroke="#0f172a" stroke-width="2"/><line x1="20" y1="64" x2="81" y2="64" stroke="#0f172a" stroke-width="2"/><circle cx="90" cy="64" r="9" fill="#fde047" stroke="#0f172a" stroke-width="1.8"/><line x1="84" y1="58" x2="96" y2="70" stroke="#0f172a" stroke-width="1.5"/><line x1="96" y1="58" x2="84" y2="70" stroke="#0f172a" stroke-width="1.5"/><line x1="99" y1="64" x2="160" y2="64" stroke="#0f172a" stroke-width="2"/></svg>`
+      },
+      {
+        en: 'branch', vn: 'nhánh mạch',
+        defEn: 'One separate pathway in a parallel circuit.',
+        defVn: 'Một đường đi riêng biệt trong mạch điện song song.',
+        svg: `<svg viewBox="0 0 180 76" class="w-36 h-16"><line x1="22" y1="12" x2="22" y2="64" stroke="#64748b" stroke-width="2"/><line x1="158" y1="12" x2="158" y2="64" stroke="#64748b" stroke-width="2"/><line x1="22" y1="26" x2="158" y2="26" stroke="#0284c7" stroke-width="3"/><line x1="22" y1="54" x2="158" y2="54" stroke="#10b981" stroke-width="3"/><text x="90" y="21" text-anchor="middle" font-size="10" font-weight="bold" fill="#0284c7">Branch 1</text><text x="90" y="49" text-anchor="middle" font-size="10" font-weight="bold" fill="#059669">Branch 2</text></svg>`
+      },
+      {
+        en: 'loop', vn: 'vòng mạch kín',
+        defEn: 'A complete unbroken path from + back to −.',
+        defVn: 'Một đường đi khép kín hoàn toàn từ cực + về cực −.',
+        svg: `<svg viewBox="0 0 180 76" class="w-36 h-16"><rect x="26" y="14" width="128" height="48" rx="4" fill="none" stroke="#10b981" stroke-width="3" class="flow-active"/><text x="90" y="42" text-anchor="middle" font-size="11" font-weight="bold" fill="#047857">COMPLETE LOOP</text></svg>`
+      },
+      {
+        en: 'brightness', vn: 'độ sáng',
+        defEn: 'How strongly a lamp shines (measured in lux).',
+        defVn: 'Mức độ phát sáng mạnh hay yếu của bóng đèn (đơn vị lux).',
+        svg: `<svg viewBox="0 0 180 76" class="w-36 h-16"><circle cx="52" cy="38" r="12" fill="#fed7aa" stroke="#d97706" stroke-width="2"/><text x="52" y="66" text-anchor="middle" font-size="10" font-weight="bold" fill="#64748b">Dim</text><circle cx="128" cy="38" r="22" fill="#fde047" opacity="0.45"/><circle cx="128" cy="38" r="12" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/><text x="128" y="66" text-anchor="middle" font-size="10" font-weight="bold" fill="#ca8a04">Bright</text></svg>`
+      },
+      {
+        en: 'voltage', vn: 'hiệu điện thế',
+        defEn: 'The electrical push supplied by cells or a battery.',
+        defVn: 'Lực đẩy điện do pin hoặc bộ pin cung cấp cho mạch điện.',
+        svg: `<svg viewBox="0 0 180 76" class="w-36 h-16"><line x1="20" y1="36" x2="64" y2="36" stroke="#0f172a" stroke-width="2"/><line x1="64" y1="18" x2="64" y2="54" stroke="#0284c7" stroke-width="2.5"/><line x1="74" y1="26" x2="74" y2="46" stroke="#0284c7" stroke-width="5"/><line x1="74" y1="36" x2="102" y2="36" stroke="#0f172a" stroke-width="2"/><line x1="102" y1="18" x2="102" y2="54" stroke="#0284c7" stroke-width="2.5"/><line x1="112" y1="26" x2="112" y2="46" stroke="#0284c7" stroke-width="5"/><line x1="112" y1="36" x2="160" y2="36" stroke="#0f172a" stroke-width="2"/><text x="90" y="69" text-anchor="middle" font-size="11" font-weight="bold" fill="#0284c7">3.0 V Push</text></svg>`
+      },
+      {
+        en: 'volt', vn: 'vôn (V)',
+        defEn: 'The scientific unit of voltage (symbol: V).',
+        defVn: 'Đơn vị khoa học dùng để đo hiệu điện thế (ký hiệu: V).',
+        svg: `<svg viewBox="0 0 180 76" class="w-36 h-16"><rect x="40" y="18" width="90" height="38" rx="6" fill="#0f172a"/><rect x="130" y="28" width="10" height="18" rx="2" fill="#f59e0b"/><text x="85" y="43" text-anchor="middle" font-size="18" font-weight="bold" fill="#fde047">1.5 V</text></svg>`
+      },
+      {
+        en: 'prediction', vn: 'dự đoán',
+        defEn: 'A scientific guess backed by a reason before testing.',
+        defVn: 'Phỏng đoán khoa học có kèm lý do trước khi làm thí nghiệm.',
+        svg: `<svg viewBox="0 0 180 76" class="w-36 h-16"><rect x="14" y="14" width="152" height="48" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><text x="90" y="42" text-anchor="middle" font-size="12" font-weight="bold" fill="#5b21b6">I predict...</text></svg>`
+      },
+      {
+        en: 'conclusion', vn: 'kết luận',
+        defEn: 'A summary of what your results proved at the end.',
+        defVn: 'Tổng kết những gì kết quả thí nghiệm đã chứng minh được.',
+        svg: `<svg viewBox="0 0 180 76" class="w-36 h-16"><rect x="14" y="14" width="152" height="48" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="2"/><text x="90" y="42" text-anchor="middle" font-size="12" font-weight="bold" fill="#065f46">Results show...</text></svg>`
+      }
+    ];
+
+    function buildPortalVocab() {
+      document.getElementById('portal-vocab-grid').innerHTML = portalVocab.map(v => `
+        <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 flex flex-col justify-between gap-2.5">
+          <div>
+            <div class="font-black text-slate-900 text-lg">${v.en}</div>
+            <div class="font-extrabold text-emerald-700 text-sm">${v.vn}</div>
+          </div>
+          <div class="bg-white rounded-xl p-2 border border-slate-200 flex justify-center">${v.svg}</div>
+          <p class="text-xs font-semibold text-slate-600">
+            <span class="lang-en">${v.defEn}</span>
+            <span class="lang-vn">${v.defVn}</span>
+          </p>
+          <div class="grid grid-cols-2 gap-1.5 pt-1">
+            <button onclick="speakText('${v.en.replace(/'/g, "\\'")}', 'en-GB')" class="py-1.5 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 font-black text-xs transition">🔊 EN</button>
+            <button onclick="speakText('${v.vn.replace(/'/g, "\\'")}', 'vi-VN')" class="py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-black text-xs transition">🔊 VN</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ==================== GAMIFIED 4-QUESTION HOME CHECK QUIZ ====================
+    const quizData = [
+      {
+        qEn: '1. Four ceiling spotlights in your kitchen are wired in PARALLEL. Spotlight 1 blows out. What happens to the other 3 spotlights?',
+        qVn: '1. Bốn đèn trần trong nhà bếp được mắc SONG SONG. Đèn số 1 bị cháy. Điều gì xảy ra với 3 đèn còn lại?',
+        opts: [
+          { en: 'All 3 go dark immediately', vn: 'Cả 3 đèn tắt ngay lập tức', ok: false },
+          { en: 'All 3 stay ON at the exact same brightness', vn: 'Cả 3 đèn vẫn SÁNG với độ sáng như cũ', ok: true },
+          { en: 'All 3 become half as bright', vn: 'Cả 3 đèn mờ đi một nửa', ok: false }
+        ],
+        expEn: 'Spot on! Each parallel spotlight has its own complete loop connected to the power supply.',
+        expVn: 'Chính xác! Mỗi đèn trong mạch song song đều có một vòng mạch kín riêng nối với nguồn điện.'
+      },
+      {
+        qEn: '2. A camping torch uses 1 cell (1.5 V) to light 1 bulb. You switch to a torch with 2 cells in series (3.0 V) and an identical bulb. How does the brightness change?',
+        qVn: '2. Đèn pin cắm trại dùng 1 viên pin (1.5 V) cho 1 bóng đèn. Nếu đổi sang đèn pin dùng 2 viên pin nối tiếp (3.0 V) với bóng giống hệt, độ sáng thay đổi thế nào?',
+        opts: [
+          { en: 'It shines brighter because the voltage doubled to 3.0 V', vn: 'Đèn sáng hơn vì hiệu điện thế tăng gấp đôi lên 3.0 V', ok: true },
+          { en: 'It shines dimmer', vn: 'Đèn sáng mờ hơn', ok: false },
+          { en: 'It stays the exact same brightness', vn: 'Độ sáng giữ nguyên không đổi', ok: false }
+        ],
+        expEn: 'Yes! More cells aligned properly provide higher voltage (electrical push), making the bulb shine brighter.',
+        expVn: 'Đúng rồi! Lắp thêm pin đúng chiều giúp tăng hiệu điện thế (lực đẩy điện), làm bóng đèn sáng rõ hơn.'
+      },
+      {
+        qEn: '3. Three identical lamps are connected in a single SERIES loop on a 3.0 V battery. Which statement is TRUE?',
+        qVn: '3. Ba bóng đèn giống hệt nhau được mắc NỐI TIẾP trên cùng một vòng mạch với pin 3.0 V. Phát biểu nào ĐÚNG?',
+        opts: [
+          { en: 'Lamp 1 is brightest and Lamp 3 is dimmest', vn: 'Bóng 1 sáng nhất và Bóng 3 mờ nhất', ok: false },
+          { en: 'All 3 lamps glow equally dimly (1.0 V each)', vn: 'Cả 3 bóng sáng mờ bằng nhau (1.0 V mỗi bóng)', ok: true },
+          { en: 'Each lamp gets the full 3.0 V', vn: 'Mỗi bóng đều nhận đủ 3.0 V', ok: false }
+        ],
+        expEn: 'Brilliant! In series, electricity is NOT used up by Lamp 1 — all 3 identical lamps share the 3.0 V equally.',
+        expVn: 'Tuyệt vời! Trong mạch nối tiếp, điện KHÔNG bị Bóng 1 dùng hết — cả 3 bóng chia đều hiệu điện thế 3.0 V.'
+      },
+      {
+        qEn: '4. What is the official Cambridge symbol for a single cell (1.5 V)?',
+        qVn: '4. Ký hiệu chuẩn Cambridge cho một viên pin đơn (1.5 V) là hình nào?',
+        opts: [
+          { en: 'A circle with an × inside', vn: 'Hình tròn có dấu × ở bên trong', ok: false },
+          { en: 'One tall thin line (+) and one short thick line (−) with a gap', vn: 'Một nét dài mảnh (+) và một nét ngắn đậm (−) có khoảng hở', ok: true },
+          { en: 'A semicircle dome with 2 vertical legs', vn: 'Hình bán nguyệt có 2 chân thẳng đứng', ok: false }
+        ],
+        expEn: 'Well done! Tall thin = positive (+), short thick = negative (−). Circle with × is a lamp, and semicircle with 2 legs is a buzzer.',
+        expVn: 'Xuất sắc! Nét dài mảnh là cực dương (+), nét ngắn đậm là cực âm (−). Hình tròn có dấu × là bóng đèn, bán nguyệt 2 chân là còi.'
+      }
+    ];
+
+    const quizAnswers = {};
+
+    function answerQuiz(qIdx, optIdx) {
+      if (quizAnswers[qIdx] !== undefined) return;
+      quizAnswers[qIdx] = optIdx;
+      renderQuiz();
+      const totalCorrect = quizData.reduce((acc, q, i) => acc + (quizAnswers[i] !== undefined && q.opts[quizAnswers[i]].ok ? 1 : 0), 0);
+      if (totalCorrect === quizData.length) fireConfetti();
+    }
+
+    function resetQuiz() {
+      Object.keys(quizAnswers).forEach(k => delete quizAnswers[k]);
+      renderQuiz();
+    }
+
+    function renderQuiz() {
+      const totalCorrect = quizData.reduce((acc, q, i) => acc + (quizAnswers[i] !== undefined && q.opts[quizAnswers[i]].ok ? 1 : 0), 0);
+      document.getElementById('quiz-score').textContent = totalCorrect;
+
+      document.getElementById('quiz-container').innerHTML = quizData.map((q, qi) => {
+        const picked = quizAnswers[qi];
+        const answered = picked !== undefined;
+        const wasRight = answered && q.opts[picked].ok;
+        return `
+          <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-4 space-y-3">
+            <p class="font-extrabold text-white text-sm sm:text-base">
+              <span class="lang-en">${q.qEn}</span>
+              <span class="lang-vn">${q.qVn}</span>
+            </p>
+            <div class="grid grid-cols-1 gap-2">
+              ${q.opts.map((o, oi) => {
+                let cls = 'text-left px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition border ';
+                if (!answered) {
+                  cls += 'bg-slate-800 hover:bg-slate-700 border-slate-600 text-slate-100';
+                } else if (o.ok) {
+                  cls += 'bg-emerald-600/30 border-emerald-400 text-emerald-200';
+                } else if (oi === picked) {
+                  cls += 'bg-rose-600/30 border-rose-400 text-rose-200';
+                } else {
+                  cls += 'bg-slate-900 border-slate-800 text-slate-500';
+                }
+                return `<button onclick="answerQuiz(${qi}, ${oi})" class="${cls}">
+                  <span class="lang-en">${o.en}</span>
+                  <span class="lang-vn">${o.vn}</span>
+                </button>`;
+              }).join('')}
+            </div>
+            ${answered ? `<div class="p-3 rounded-xl text-xs font-bold ${wasRight ? 'bg-emerald-950/90 border border-emerald-400/50 text-emerald-200' : 'bg-amber-950/90 border border-amber-400/50 text-amber-200'}">
+              <span class="lang-en">${wasRight ? '✅ ' : '💡 '}${q.expEn}</span>
+              <span class="lang-vn">${wasRight ? '✅ ' : '💡 '}${q.expVn}</span>
+            </div>` : ''}
+          </div>`;
+      }).join('');
+    }
+
+    // ==================== INIT ====================
+    renderModelA();
+    renderModelB();
+    buildPortalVocab();
+    renderQuiz();
+  </script>
+</body>
+</html>

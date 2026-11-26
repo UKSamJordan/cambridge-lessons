@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grade 4 Science — Week 17 Lesson 1: Unit 2 Sound Review Part 1 (2.1–2.3)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --primary: #0ea5e9;
+      --secondary: #4f46e5;
+      --accent: #f59e0b;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #eef2ff 50%, #fffbeb 100%);
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+
+    /* Auto-hiding fixed header [SoL: Cognitive Load Management] */
+    #topHeader {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    #topHeader.header-hidden {
+      transform: translateY(-108%);
+    }
+
+    /* Station active tab styling */
+    .station-tab.active-tab {
+      background: linear-gradient(135deg, #0284c7, #4f46e5);
+      color: #ffffff;
+      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.32);
+      transform: translateY(-1px);
+    }
+
+    /* 3D Flip Cards [SoL: Retrieval Practice] [SoL: Spaced Practice] [SoL: Interleaving] */
+    .flip-perspective {
+      perspective: 1200px;
+    }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1.5rem;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Full-screen I Do mode [SoL: Worked Examples] */
+    .fullscreen-ido {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 70 !important;
+      background: #f8fafc !important;
+      overflow-y: auto !important;
+      padding: 1.25rem 2rem !important;
+      border-radius: 0 !important;
+      max-width: none !important;
+      margin: 0 !important;
+    }
+
+    /* Organic particle animations [SoL: Dual Coding] */
+    @keyframes floatSlow {
+      0%, 100% { transform: translate(0px, 0px); }
+      33% { transform: translate(6px, -7px); }
+      66% { transform: translate(-5px, 5px); }
+    }
+    @keyframes slideLiquid {
+      0%, 100% { transform: translate(0px, 0px); }
+      50% { transform: translate(3px, -3px); }
+    }
+    @keyframes buzzSolid {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-3px); }
+      75% { transform: translateX(3px); }
+    }
+    .particle-liquid {
+      animation: slideLiquid 2.1s ease-in-out infinite;
+    }
+    .particle-gas {
+      animation: floatSlow 2.6s ease-in-out infinite;
+    }
+    .particle-vibe {
+      animation: buzzSolid 0.16s linear infinite !important;
+      background: #f59e0b !important;
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.85) !important;
+    }
+
+    /* Boards up pulse */
+    .boards-up-flash {
+      animation: boardsPulse 0.45s ease-in-out infinite alternate;
+    }
+    @keyframes boardsPulse {
+      from { transform: scale(1); box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
+      to { transform: scale(1.04); box-shadow: 0 0 32px 10px rgba(239,68,68,0.45); }
+    }
+
+    /* Confetti canvas */
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 120;
+    }
+
+    /* Range slider polish */
+    input[type="range"] {
+      accent-color: #4f46e5;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-14">
+
+  <!-- Confetti Overlay -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- AUTO-HIDING FIXED HEADER [SoL: Cognitive Load Management] -->
+  <header id="topHeader" class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b-2 border-sky-200 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <!-- Left: Enquiry & Simplified LO -->
+      <div class="flex items-center gap-3 min-w-[260px] flex-1">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white flex items-center justify-center text-2xl shadow-md shrink-0" aria-hidden="true">🔊</div>
+        <div class="leading-tight">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-900">Grade 4 Science • Stage 5 • Unit 2 Review (2.1–2.3)</span>
+            <span class="text-xs font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">Enquiry: "Why does sound travel fastest through solid wood, and how can soft materials protect our ears?"</span>
+          </div>
+          <p class="text-sm sm:text-base font-extrabold text-slate-900 mt-0.5">LO: Revise vibrations, sound travel, volume and muffling.</p>
+        </div>
+      </div>
+
+      <!-- Right: Scoreboard & Controls -->
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Team Red vs Team Blue -->
+        <div class="flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-xl border border-slate-200">
+          <button onclick="addScore('red', 1)" class="px-2 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-extrabold shadow-sm transition" title="Add 1 point to Team Red">🔴 <span id="hdrScoreRed">0</span></button>
+          <span class="text-xs font-black text-slate-400">VS</span>
+          <button onclick="addScore('blue', 1)" class="px-2 py-0.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold shadow-sm transition" title="Add 1 point to Team Blue">🔵 <span id="hdrScoreBlue">0</span></button>
+        </div>
+
+        <button id="btnWhiteboard" onclick="toggleWhiteboard()" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold shadow-sm transition" title="Open David's Board (W)">✏️ David's Board (W)</button>
+        <button id="btnTeacher" onclick="toggleTeacherDrawer()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-extrabold shadow-sm transition" title="Toggle Teacher Prompt Drawer (T)">👩‍🏫 Prompts (T)</button>
+        <button id="btnMute" onclick="toggleMute()" class="px-3 py-1.5 rounded-xl bg-indigo-100 hover:bg-indigo-200 text-indigo-900 text-xs font-extrabold transition" title="Mute/Unmute Sound Effects (M)">🔊 Sound On</button>
+      </div>
+    </div>
+
+    <!-- Station Navigation Bar (flex-wrap so tabs never squash) -->
+    <nav class="max-w-7xl mx-auto px-4 pb-2 flex flex-wrap items-center gap-1.5" aria-label="Lesson Stations">
+      <button onclick="switchStation(0)" data-tab="0" class="station-tab active-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition">0. 🎯 LO &amp; SC</button>
+      <button onclick="switchStation(1)" data-tab="1" class="station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition">1. ⚡ Flashback 3</button>
+      <button onclick="switchStation(2)" data-tab="2" class="station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition">2. 📖 Vocab &amp; Safety</button>
+      <button onclick="switchStation(3)" data-tab="3" class="station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition">3. 🎬 Visual I Do</button>
+      <button onclick="switchStation(4)" data-tab="4" class="station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition">4. 🧪 Sound &amp; dB Lab</button>
+      <button onclick="switchStation(5)" data-tab="5" class="station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition">5. ✅ SC Check</button>
+      <button onclick="switchStation(6)" data-tab="6" class="station-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition">6. 🏆 Quickfire</button>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 pt-32 sm:pt-28 space-y-6">
+
+    <!-- ===================================================================== -->
+    <!-- STATION 0: LEARNING OBJECTIVE & SUCCESS CRITERIA [SoL: Metacognition] -->
+    <!-- ===================================================================== -->
+    <section id="station-0" class="station-panel">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-br from-sky-600 via-indigo-600 to-violet-700 rounded-3xl p-8 sm:p-10 text-white shadow-xl relative overflow-hidden">
+          <div class="relative z-10 max-w-4xl">
+            <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur px-4 py-1.5 rounded-full text-sm font-bold mb-4">
+              <span>🔬 Cambridge Stage 5 Science • 5Ps.01, 5Ps.02, 5Ps.03, 5TWSp.04</span>
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-black tracking-tight leading-tight">Revise vibrations, sound travel, volume and muffling.</h1>
+            <p class="mt-4 text-lg sm:text-xl text-sky-100 font-semibold">Enquiry Question: "Why does sound travel fastest through solid wood, and how can soft materials protect our ears?"</p>
+          </div>
+        </div>
+
+        <!-- Must / Should / Could Cards [SoL: Cognitive Load Management] [SoL: Schema Building] -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white rounded-3xl p-7 border-4 border-emerald-400 shadow-lg flex flex-col justify-between">
+            <div>
+              <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 text-emerald-900 font-black text-sm uppercase tracking-wider mb-4">✅ MUST</div>
+              <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-snug">Explain how vibrations travel through solids, liquids and gases.</p>
+            </div>
+            <div class="mt-5 pt-4 border-t border-emerald-100 text-sm font-bold text-emerald-700">Focus: Particles passing vibrations</div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-7 border-4 border-amber-400 shadow-lg flex flex-col justify-between">
+            <div>
+              <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 text-amber-900 font-black text-sm uppercase tracking-wider mb-4">⭐ SHOULD</div>
+              <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-snug">Measure sound volume in decibels and compare muffling materials.</p>
+            </div>
+            <div class="mt-5 pt-4 border-t border-amber-100 text-sm font-bold text-amber-700">Focus: Sound level meter &amp; safe zones</div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-7 border-4 border-violet-400 shadow-lg flex flex-col justify-between">
+            <div>
+              <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-100 text-violet-900 font-black text-sm uppercase tracking-wider mb-4">🚀 COULD</div>
+              <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-snug">Design a fair test controlling distance, source and thickness.</p>
+            </div>
+            <div class="mt-5 pt-4 border-t border-violet-100 text-sm font-bold text-violet-700">Focus: Independent, dependent &amp; control variables</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 1: SPACED FLASHBACK 3 [SoL: Retrieval Practice] [SoL: Spaced Practice] [SoL: Interleaving] -->
+    <!-- ===================================================================== -->
+    <section id="station-1" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 bg-white rounded-3xl p-6 shadow-md border border-indigo-100">
+          <div>
+            <span class="text-xs font-black uppercase tracking-wider text-indigo-600">Spaced &amp; Interleaved Retrieval • 3 Earlier Units</span>
+            <h2 class="text-3xl font-black text-slate-900">⚡ Flashback 3 — Tap Each Card to Reveal!</h2>
+          </div>
+          <button onclick="resetFlashbacks()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm transition">🔄 Reset All Cards</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 3.2 Boiling vs Evaporation (5Cc.01) -->
+          <div class="flip-perspective h-[360px]">
+            <div class="flip-card w-full h-full cursor-pointer" onclick="toggleFlip(this)" role="button" tabindex="0" aria-label="Flip Card 1: Boiling vs Evaporation">
+              <div class="flip-inner">
+                <div class="flip-face bg-gradient-to-br from-rose-500 to-orange-500 text-white p-7 shadow-xl flex flex-col justify-between">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-white/25 text-xs font-black uppercase">Unit 3.2 • 5Cc.01</span>
+                    <span class="text-3xl">🫧</span>
+                  </div>
+                  <div>
+                    <p class="text-5xl sm:text-6xl font-black tracking-tight mb-3">100°C?</p>
+                    <p class="text-xl font-extrabold leading-snug">How is boiling different from evaporation?</p>
+                  </div>
+                  <p class="text-xs font-bold uppercase tracking-wider text-orange-100">👆 Tap to reveal answer</p>
+                </div>
+                <div class="flip-face flip-back bg-white border-4 border-orange-400 p-7 shadow-xl flex flex-col justify-between">
+                  <span class="px-3 py-1 rounded-full bg-orange-100 text-orange-900 text-xs font-black uppercase w-fit">Answer • Unit 3.2</span>
+                  <div class="space-y-3 text-slate-800">
+                    <p class="text-lg font-extrabold text-orange-700">Boiling:</p>
+                    <p class="text-base font-bold">Happens at 100°C throughout the whole liquid (bubbles of water vapour rise).</p>
+                    <p class="text-lg font-extrabold text-sky-700">Evaporation:</p>
+                    <p class="text-base font-bold">Happens at any temperature from the surface only.</p>
+                  </div>
+                  <p class="text-xs font-bold text-slate-400">Tap again to flip back</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 1.2 Germination (5Bs.01) -->
+          <div class="flip-perspective h-[360px]">
+            <div class="flip-card w-full h-full cursor-pointer" onclick="toggleFlip(this)" role="button" tabindex="0" aria-label="Flip Card 2: Germination">
+              <div class="flip-inner">
+                <div class="flip-face bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-7 shadow-xl flex flex-col justify-between">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-white/25 text-xs font-black uppercase">Unit 1.2 • 5Bs.01</span>
+                    <span class="text-3xl">🌱</span>
+                  </div>
+                  <div>
+                    <p class="text-5xl sm:text-6xl font-black tracking-tight mb-3">Seeds!</p>
+                    <p class="text-xl font-extrabold leading-snug">What 3 things does a seed need to germinate? Does it need light?</p>
+                  </div>
+                  <p class="text-xs font-bold uppercase tracking-wider text-emerald-100">👆 Tap to reveal answer</p>
+                </div>
+                <div class="flip-face flip-back bg-white border-4 border-emerald-400 p-7 shadow-xl flex flex-col justify-between">
+                  <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-black uppercase w-fit">Answer • Unit 1.2</span>
+                  <div class="space-y-3 text-slate-800">
+                    <p class="text-2xl font-black text-emerald-700">Water, Warmth &amp; Air!</p>
+                    <p class="text-base font-bold">NO — a seed does <span class="underline decoration-rose-500 decoration-2">NOT</span> need light to germinate! It uses the food store packed inside the seed until green leaves grow.</p>
+                  </div>
+                  <p class="text-xs font-bold text-slate-400">Tap again to flip back</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 3.1 Particle Model (5Cm.01) -->
+          <div class="flip-perspective h-[360px]">
+            <div class="flip-card w-full h-full cursor-pointer" onclick="toggleFlip(this)" role="button" tabindex="0" aria-label="Flip Card 3: Particle Model">
+              <div class="flip-inner">
+                <div class="flip-face bg-gradient-to-br from-indigo-600 to-violet-700 text-white p-7 shadow-xl flex flex-col justify-between">
+                  <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full bg-white/25 text-xs font-black uppercase">Unit 3.1 • 5Cm.01</span>
+                    <span class="text-3xl">⚛️</span>
+                  </div>
+                  <div>
+                    <p class="text-5xl sm:text-6xl font-black tracking-tight mb-3">S • L • G</p>
+                    <p class="text-xl font-extrabold leading-snug">How are particles arranged in a solid, a liquid and a gas?</p>
+                  </div>
+                  <p class="text-xs font-bold uppercase tracking-wider text-indigo-200">👆 Tap to reveal answer</p>
+                </div>
+                <div class="flip-face flip-back bg-white border-4 border-indigo-400 p-7 shadow-xl flex flex-col justify-between">
+                  <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-900 text-xs font-black uppercase w-fit">Answer • Unit 3.1 (Links to Today!)</span>
+                  <div class="space-y-2 text-slate-800 text-base font-bold">
+                    <p><span class="text-indigo-700 font-black">Solid:</span> Packed tightly in fixed rows, vibrating on the spot.</p>
+                    <p><span class="text-sky-700 font-black">Liquid:</span> Close together, able to slide past each other.</p>
+                    <p><span class="text-violet-700 font-black">Gas:</span> Far apart, moving freely and quickly in all directions.</p>
+                  </div>
+                  <p class="text-xs font-bold text-indigo-600">Bridge: This explains why sound races through solids!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 2: VOCABULARY MODAL + REAL-WORLD SCIENCE STRIP [SoL: Dual Coding] -->
+    <!-- SOLE VIETNAMESE EXCEPTION INSIDE VOCAB MODAL ONLY -->
+    <!-- ===================================================================== -->
+    <section id="station-2" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-md border border-sky-100 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-black uppercase tracking-wider text-sky-600">Scientific Vocabulary • Tap Any Word for Visual Model &amp; Audio</span>
+            <h2 class="text-3xl font-black text-slate-900">📖 Key Sound Words (Topics 2.1–2.3)</h2>
+          </div>
+          <span class="px-3.5 py-1.5 rounded-full bg-sky-100 text-sky-900 text-sm font-extrabold">10 Core Terms</span>
+        </div>
+
+        <!-- 10 Clickable English Vocab Tiles (Modal holds EN/VN dual coding) -->
+        <div id="vocabGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4"></div>
+
+        <!-- Real-World Science Strip at bottom of Station 2 [SoL: Schema Building] -->
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-sky-950 text-white rounded-3xl p-6 shadow-xl">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-3xl">🌍</span>
+            <div>
+              <h3 class="text-xl sm:text-2xl font-black">Real-World Science: Protecting Ears &amp; Soundproofing</h3>
+              <p class="text-xs sm:text-sm text-sky-200 font-semibold">How engineers use soft materials and smart designs to keep our hearing safe every day!</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/15">
+              <div class="text-2xl mb-1">🎧 Airport Ear Defenders</div>
+              <p class="text-sm text-sky-100 font-medium">Jet engines reach <strong class="text-amber-300">130 dB</strong>. Ground crew wear thick foam-lined ear defenders that trap air and absorb dangerous vibrations before they reach the eardrum.</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/15">
+              <div class="text-2xl mb-1">🚗 Car &amp; Motorbike Silencers</div>
+              <p class="text-sm text-sky-100 font-medium">Exhaust pipes contain a <strong class="text-amber-300">silencer</strong> (muffler) with acoustic chambers and fibreglass padding that weaken noisy engine vibrations on busy Hanoi streets.</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/15">
+              <div class="text-2xl mb-1">🏫 Classroom Acoustic Panels</div>
+              <p class="text-sm text-sky-100 font-medium">Soft fabric wall panels, curtains and carpets absorb bouncing sound waves instead of reflecting echoes, keeping our learning space calm and below <strong class="text-emerald-300">65 dB</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 3: FULL-SCREEN VISUAL I DO [SoL: Worked Examples] [SoL: CPA Progression] [SoL: Misconceptions] -->
+    <!-- ===================================================================== -->
+    <section id="station-3" class="station-panel hidden">
+      <div id="idoContainer" class="space-y-5">
+        <!-- I Do Header Controls -->
+        <div class="bg-white rounded-3xl p-5 shadow-md border border-indigo-100 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-black uppercase tracking-wider text-indigo-600">Teacher Modelling • Worked Examples</span>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900">🎬 Visual I Do — Particle Travel &amp; Fair Test Muffling</h2>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="selectMission(1)" id="btnMission1" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-extrabold text-sm shadow transition">Mission 1: Particle Relay</button>
+            <button onclick="selectMission(2)" id="btnMission2" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-sm transition">Mission 2: Fair Test Box</button>
+            <button onclick="openGiantModal()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm shadow transition">🔭 Giant Projection</button>
+            <button onclick="toggleFullScreenIdo()" id="btnFullIdo" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-sm shadow transition">⛶ Full Screen I Do</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <!-- Main Visual Canvas (8 cols) -->
+          <div class="lg:col-span-8 bg-white rounded-3xl p-6 shadow-lg border-2 border-indigo-100 space-y-5">
+
+            <!-- MISSION 1: SOLID VS LIQUID VS GAS PARTICLE RELAY -->
+            <div id="mission-1-view" class="space-y-5">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h3 class="text-2xl font-black text-slate-900">Mission 1: Solid vs Liquid vs Gas Particle Relay</h3>
+                  <p class="text-sm font-semibold text-slate-600">Select a medium and launch the knock wave to see how particle spacing controls sound travel!</p>
+                </div>
+                <button onclick="runMission1Wave()" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-black shadow-md transition">▶ Animate Vibration Wave</button>
+              </div>
+
+              <!-- Medium Picker -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <button onclick="setMission1Medium('solid')" id="m1-btn-solid" class="p-3 rounded-2xl border-2 border-indigo-600 bg-indigo-50 text-indigo-900 font-extrabold text-sm text-center transition">🪵 Solid (Wood)</button>
+                <button onclick="setMission1Medium('liquid')" id="m1-btn-liquid" class="p-3 rounded-2xl border-2 border-slate-200 bg-white hover:bg-sky-50 text-slate-800 font-extrabold text-sm text-center transition">💧 Liquid (Water)</button>
+                <button onclick="setMission1Medium('gas')" id="m1-btn-gas" class="p-3 rounded-2xl border-2 border-slate-200 bg-white hover:bg-amber-50 text-slate-800 font-extrabold text-sm text-center transition">💨 Gas (Air)</button>
+                <button onclick="setMission1Medium('vacuum')" id="m1-btn-vacuum" class="p-3 rounded-2xl border-2 border-slate-200 bg-white hover:bg-slate-100 text-slate-800 font-extrabold text-sm text-center transition">🌌 Vacuum (Space)</button>
+              </div>
+
+              <!-- Visual Particle Track (clean canvas, no floating text overlays inside animation area) -->
+              <div class="rounded-3xl border-2 border-slate-200 bg-slate-900 p-5 flex items-center gap-4 min-h-[210px]">
+                <div class="w-16 h-16 rounded-2xl bg-amber-400 text-slate-900 flex flex-col items-center justify-center font-black shrink-0 shadow-lg" id="m1SourceIcon">
+                  <span class="text-2xl">🔔</span>
+                  <span class="text-[10px]">SOURCE</span>
+                </div>
+                <div id="m1ParticleStage" class="flex-1 h-[160px] rounded-2xl bg-slate-800/90 border border-slate-700 p-3 flex items-center justify-around overflow-hidden"></div>
+                <div class="w-16 h-16 rounded-2xl bg-emerald-400 text-slate-900 flex flex-col items-center justify-center font-black shrink-0 shadow-lg" id="m1EarIcon">
+                  <span class="text-2xl">👂</span>
+                  <span class="text-[10px]">EAR</span>
+                </div>
+              </div>
+
+              <!-- Anchored Telemetry Dashboard BELOW Canvas -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <div>
+                  <div class="text-xs font-black uppercase text-slate-500">Medium Chosen</div>
+                  <div id="m1ReadoutMedium" class="text-lg font-black text-indigo-700">Solid (Wood)</div>
+                </div>
+                <div>
+                  <div class="text-xs font-black uppercase text-slate-500">Particle Spacing</div>
+                  <div id="m1ReadoutSpacing" class="text-lg font-black text-slate-900">Packed tightly together</div>
+                </div>
+                <div>
+                  <div class="text-xs font-black uppercase text-slate-500">Relay Speed Verdict</div>
+                  <div id="m1ReadoutSpeed" class="text-lg font-black text-emerald-700">FASTEST! Instant collisions</div>
+                </div>
+              </div>
+              <div class="bg-rose-50 border-l-4 border-rose-500 p-4 rounded-xl">
+                <p class="text-sm font-extrabold text-rose-900">🚨 Misconception Buster: Some pupils think air is fastest because "nothing is in the way". FALSE! Sound NEEDS particles to bump into each other. Empty space (vacuum) has ZERO particles, so sound stops dead!</p>
+              </div>
+            </div>
+
+            <!-- MISSION 2: FAIR TEST MUFFLING BOX VARIABLES -->
+            <div id="mission-2-view" class="hidden space-y-5">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h3 class="text-2xl font-black text-slate-900">Mission 2: Fair Test Muffling Box Variables</h3>
+                  <p class="text-sm font-semibold text-slate-600">Step through each variable to build a scientifically fair muffling investigation!</p>
+                </div>
+                <button onclick="cycleMission2Step()" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-black shadow-md transition">▶ Highlight Next Variable</button>
+              </div>
+
+              <!-- Clean Visual Fair Test Diagram SVG -->
+              <div class="rounded-3xl border-2 border-slate-200 bg-sky-50/70 p-4">
+                <svg viewBox="0 0 740 230" class="w-full h-auto" role="img" aria-label="Fair Test Muffling Box Setup">
+                  <!-- Table surface -->
+                  <rect x="20" y="185" width="700" height="18" rx="6" fill="#cbd5e1" stroke="#334155" stroke-width="2" />
+                  <!-- Wrapping material box -->
+                  <g id="svgWrapBox">
+                    <rect x="65" y="65" width="155" height="120" rx="16" fill="#fde68a" stroke="#d97706" stroke-width="4" stroke-dasharray="8 4" />
+                    <text x="142" y="54" text-anchor="middle" font-size="14" font-weight="800" fill="#92400e">WRAPPING MATERIAL (2 cm)</text>
+                  </g>
+                  <!-- Alarm clock inside -->
+                  <g id="svgAlarm">
+                    <circle cx="142" cy="128" r="36" fill="#ffffff" stroke="#0f172a" stroke-width="3" />
+                    <path d="M115 98 L128 88 M169 98 L156 88" stroke="#dc2626" stroke-width="5" stroke-linecap="round" />
+                    <line x1="142" y1="128" x2="142" y2="106" stroke="#0f172a" stroke-width="3" stroke-linecap="round" />
+                    <line x1="142" y1="128" x2="160" y2="132" stroke="#dc2626" stroke-width="3" stroke-linecap="round" />
+                    <text x="142" y="178" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">Same Alarm</text>
+                  </g>
+                  <!-- Sound waves travelling -->
+                  <path d="M235 110 Q250 128 235 146" fill="none" stroke="#0284c7" stroke-width="3.5" stroke-linecap="round" />
+                  <path d="M258 98 Q278 128 258 158" fill="none" stroke="#0284c7" stroke-width="3.5" stroke-linecap="round" opacity="0.75" />
+                  <path d="M282 88 Q305 128 282 168" fill="none" stroke="#0284c7" stroke-width="3.5" stroke-linecap="round" opacity="0.5" />
+                  <!-- 1 metre distance ruler -->
+                  <g id="svgRuler">
+                    <line x1="225" y1="172" x2="535" y2="172" stroke="#059669" stroke-width="4" />
+                    <line x1="225" y1="162" x2="225" y2="182" stroke="#059669" stroke-width="4" />
+                    <line x1="535" y1="162" x2="535" y2="182" stroke="#059669" stroke-width="4" />
+                    <rect x="318" y="156" width="124" height="24" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="2" />
+                    <text x="380" y="173" text-anchor="middle" font-size="13" font-weight="900" fill="#065f46">Distance = 1 m</text>
+                  </g>
+                  <!-- Sound level meter -->
+                  <g id="svgMeter">
+                    <rect x="545" y="70" width="115" height="115" rx="14" fill="#1e293b" stroke="#0f172a" stroke-width="3" />
+                    <circle cx="545" cy="112" r="14" fill="#64748b" stroke="#0f172a" stroke-width="2" />
+                    <rect x="562" y="88" width="82" height="44" rx="6" fill="#bef264" stroke="#3f6212" stroke-width="2" />
+                    <text x="603" y="117" text-anchor="middle" font-size="22" font-weight="900" fill="#1a2e05">64 dB</text>
+                    <text x="603" y="154" text-anchor="middle" font-size="11" font-weight="800" fill="#e2e8f0">Sound Level</text>
+                    <text x="603" y="169" text-anchor="middle" font-size="11" font-weight="800" fill="#e2e8f0">Meter</text>
+                  </g>
+                </svg>
+              </div>
+
+              <!-- Anchored Fair Test Variable Cards BELOW Diagram -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div id="m2CardChange" class="rounded-2xl p-4 border-2 border-amber-400 bg-amber-50 transition">
+                  <div class="text-xs font-black uppercase text-amber-800">1. CHANGE (Independent)</div>
+                  <p class="text-base font-extrabold text-slate-900 mt-1">The wrapping material</p>
+                  <p class="text-xs font-semibold text-slate-600 mt-1">Only change ONE thing (e.g. foil, newspaper, foam, cotton wool).</p>
+                </div>
+                <div id="m2CardMeasure" class="rounded-2xl p-4 border-2 border-sky-300 bg-white transition">
+                  <div class="text-xs font-black uppercase text-sky-800">2. MEASURE (Dependent)</div>
+                  <p class="text-base font-extrabold text-slate-900 mt-1">Sound volume in decibels (dB)</p>
+                  <p class="text-xs font-semibold text-slate-600 mt-1">Read clearly from the digital Sound Level Meter.</p>
+                </div>
+                <div id="m2CardSame" class="rounded-2xl p-4 border-2 border-emerald-300 bg-white transition">
+                  <div class="text-xs font-black uppercase text-emerald-800">3. KEEP SAME (Controls)</div>
+                  <p class="text-base font-extrabold text-slate-900 mt-1">Same alarm, 1 m distance, 2 cm thickness</p>
+                  <p class="text-xs font-semibold text-slate-600 mt-1">If distance changes too, the test is UNFAIR!</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Permanent Sidebar: Steps to Success & Safety (4 cols) [SoL: Cognitive Load Management] -->
+          <aside class="lg:col-span-4 bg-gradient-to-b from-indigo-900 to-slate-900 text-white rounded-3xl p-6 shadow-xl space-y-5">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-amber-400 text-slate-900 text-xs font-black uppercase">Permanent Checklist</span>
+              <h3 class="text-xl font-black mt-2">🧭 Steps to Success &amp; Safety</h3>
+            </div>
+            <ol class="space-y-3 text-sm font-bold">
+              <li class="flex gap-3 bg-white/10 p-3 rounded-xl">
+                <span class="w-6 h-6 rounded-full bg-sky-400 text-slate-900 font-black flex items-center justify-center shrink-0">1</span>
+                <span><strong>Link to Particles:</strong> Closer particles pass vibrations faster (Solid ➔ Liquid ➔ Gas).</span>
+              </li>
+              <li class="flex gap-3 bg-white/10 p-3 rounded-xl">
+                <span class="w-6 h-6 rounded-full bg-amber-400 text-slate-900 font-black flex items-center justify-center shrink-0">2</span>
+                <span><strong>Check Units:</strong> Always write sound volume in <strong>decibels (dB)</strong>.</span>
+              </li>
+              <li class="flex gap-3 bg-white/10 p-3 rounded-xl">
+                <span class="w-6 h-6 rounded-full bg-emerald-400 text-slate-900 font-black flex items-center justify-center shrink-0">3</span>
+                <span><strong>Fair Test Rule:</strong> Change ONE variable (material); keep source, distance &amp; thickness the same!</span>
+              </li>
+              <li class="flex gap-3 bg-white/10 p-3 rounded-xl">
+                <span class="w-6 h-6 rounded-full bg-rose-400 text-slate-900 font-black flex items-center justify-center shrink-0">4</span>
+                <span><strong>Ear Safety:</strong> Never shout or bang objects right next to a partner's ear. Keep classroom tests below 85 dB!</span>
+              </li>
+            </ol>
+            <div class="bg-sky-500/20 border border-sky-400/40 rounded-2xl p-4 text-xs font-bold text-sky-100">
+              💡 Classroom Desk Test (Zero Extra Kit!): Tap your desk gently while listening through air, then press one ear flat onto the wooden desk and tap with the same gentle force. Notice how much louder and clearer it sounds!
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 4: INTERACTIVE SOUND TRAVEL & DECIBEL MUFFLING LAB [SoL: CPA Progression] [SoL: Immediate Feedback] -->
+    <!-- ===================================================================== -->
+    <section id="station-4" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-md border border-sky-100 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-black uppercase tracking-wider text-sky-600">Interactive Virtual Science Lab • Dual Simulations</span>
+            <h2 class="text-3xl font-black text-slate-900">🧪 Sound Travel Racer &amp; Decibel Muffle-O-Meter</h2>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="scrollToLabPart('labPartA')" class="px-4 py-2 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 font-extrabold text-sm">Part A: Medium Racer</button>
+            <button onclick="scrollToLabPart('labPartB')" class="px-4 py-2 rounded-xl bg-indigo-100 hover:bg-indigo-200 text-indigo-900 font-extrabold text-sm">Part B: dB Muffle-O-Meter</button>
+          </div>
+        </div>
+
+        <!-- PART A: MEDIUM SPEED RACER -->
+        <div id="labPartA" class="bg-white rounded-3xl p-6 shadow-lg border-2 border-sky-200 space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-900 text-xs font-black uppercase">Part A • 5Ps.01 &amp; 5Ps.02</span>
+              <h3 class="text-2xl font-black text-slate-900 mt-1">🏁 Medium Speed Racer — Send a Sound Pulse!</h3>
+            </div>
+            <button onclick="sendLabPulse()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-black text-base shadow-lg transition">🔊 Send Sound Pulse!</button>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <button onclick="selectLabMedium('solid')" id="labMed-solid" class="p-3.5 rounded-2xl border-2 border-sky-600 bg-sky-50 font-extrabold text-sky-900 text-sm transition">🪵 Solid (Wood)</button>
+            <button onclick="selectLabMedium('liquid')" id="labMed-liquid" class="p-3.5 rounded-2xl border-2 border-slate-200 bg-white hover:bg-sky-50 font-extrabold text-slate-700 text-sm transition">💧 Liquid (Water)</button>
+            <button onclick="selectLabMedium('gas')" id="labMed-gas" class="p-3.5 rounded-2xl border-2 border-slate-200 bg-white hover:bg-sky-50 font-extrabold text-slate-700 text-sm transition">💨 Gas (Air)</button>
+            <button onclick="selectLabMedium('vacuum')" id="labMed-vacuum" class="p-3.5 rounded-2xl border-2 border-slate-200 bg-white hover:bg-sky-50 font-extrabold text-slate-700 text-sm transition">🌌 Vacuum (Space)</button>
+          </div>
+
+          <!-- Interactive Pulse Canvas (Clean visual container — NO text overlays inside!) -->
+          <div class="rounded-3xl bg-slate-900 border-2 border-slate-700 p-4 overflow-hidden">
+            <svg id="labPulseSvg" viewBox="0 0 800 150" class="w-full h-36" role="img" aria-label="Animated Sound Travel Medium Racer"></svg>
+          </div>
+
+          <!-- Anchored Telemetry Dashboard BELOW Canvas -->
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-slate-50 rounded-2xl p-4 border border-slate-200">
+            <div class="bg-white rounded-xl p-3 border border-slate-200">
+              <div class="text-xs font-black uppercase text-slate-500">Selected Medium</div>
+              <div id="labTelMed" class="text-lg font-black text-sky-700">Solid (Wood)</div>
+            </div>
+            <div class="bg-white rounded-xl p-3 border border-slate-200">
+              <div class="text-xs font-black uppercase text-slate-500">Approx. Speed</div>
+              <div id="labTelSpeed" class="text-lg font-black text-indigo-700">~3,500 m/s (Fastest!)</div>
+            </div>
+            <div class="bg-white rounded-xl p-3 border border-slate-200">
+              <div class="text-xs font-black uppercase text-slate-500">Pulse Status</div>
+              <div id="labTelStatus" class="text-lg font-black text-emerald-700">Ready to launch</div>
+            </div>
+            <div class="bg-white rounded-xl p-3 border border-slate-200">
+              <div class="text-xs font-black uppercase text-slate-500">Particle Reason</div>
+              <div id="labTelReason" class="text-sm font-bold text-slate-800">Tightly packed rows pass energy almost instantly.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PART B: DECIBEL MUFFLE-O-METER + FULLY LABELLED INTERACTIVE SVG BAR CHART -->
+        <div id="labPartB" class="bg-white rounded-3xl p-6 shadow-lg border-2 border-indigo-200 space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-900 text-xs font-black uppercase">Part B • 5Ps.03 &amp; 5TWSp.04</span>
+              <h3 class="text-2xl font-black text-slate-900 mt-1">🎛️ Decibel Muffle-O-Meter (90 dB Buzzer Test)</h3>
+            </div>
+            <button onclick="playBuzzerSample()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-black shadow-lg transition">🔔 Ring 90 dB Buzzer Now</button>
+          </div>
+
+          <!-- Material Buttons -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5" id="muffleMaterialButtons"></div>
+
+          <!-- Fair-Test Layer Thickness Slider (smooth targeted DOM updates — NEVER recreates input!) -->
+          <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
+            <div class="min-w-[220px] flex-1">
+              <label for="thicknessSlider" class="block text-sm font-black text-amber-950">Fair-Test Control Check — Layer Thickness: <span id="thicknessVal" class="text-indigo-700 text-lg">2 cm (Standard)</span></label>
+              <p class="text-xs font-bold text-amber-800">Keep at 2 cm for a fair test! Slide to 1 cm or 3 cm to see how changing thickness unfairly alters the reading.</p>
+            </div>
+            <input id="thicknessSlider" type="range" min="1" max="3" step="1" value="2" oninput="updateThickness(this.value)" class="w-48 sm:w-64 h-3 cursor-pointer" />
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            <!-- Left: Live Digital Sound Level Meter Visual (5 cols) -->
+            <div class="lg:col-span-5 bg-slate-900 text-white rounded-3xl p-6 flex flex-col justify-between space-y-5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black uppercase tracking-wider text-slate-400">Digital Sound Level Meter</span>
+                <span id="safetyBadge" class="px-3 py-1 rounded-full text-xs font-black bg-rose-600 text-white">DANGER &gt; 85 dB</span>
+              </div>
+
+              <!-- Visual Meter Screen -->
+              <div class="bg-lime-200 border-4 border-slate-700 rounded-2xl p-5 text-center text-slate-900 shadow-inner">
+                <div class="text-xs font-black uppercase tracking-widest text-lime-900">Measured Loudness</div>
+                <div class="text-6xl font-black tracking-tight my-1"><span id="meterDbValue">90</span> <span class="text-3xl">dB</span></div>
+                <div class="w-full h-4 bg-slate-800 rounded-full overflow-hidden mt-3">
+                  <div id="meterBarFill" class="h-full bg-rose-500 transition-all duration-300" style="width: 75%;"></div>
+                </div>
+                <div class="flex justify-between text-[11px] font-black text-slate-700 mt-1">
+                  <span>0 dB</span>
+                  <span>70 dB Safe</span>
+                  <span>85 dB Danger</span>
+                  <span>120 dB</span>
+                </div>
+              </div>
+
+              <!-- Anchored Muffle Telemetry -->
+              <div class="grid grid-cols-2 gap-3 text-sm">
+                <div class="bg-white/10 rounded-xl p-3">
+                  <div class="text-[11px] uppercase font-bold text-slate-400">Active Material</div>
+                  <div id="meterMatName" class="font-black text-white text-base">None (Bare Buzzer)</div>
+                </div>
+                <div class="bg-white/10 rounded-xl p-3">
+                  <div class="text-[11px] uppercase font-bold text-slate-400">Noise Reduced By</div>
+                  <div id="meterReduction" class="font-black text-emerald-300 text-base">0 dB quieter</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Fully Labelled Interactive SVG Bar Chart (7 cols) — NO NAKED GRAPHS! -->
+            <div class="lg:col-span-7 bg-slate-50 border-2 border-slate-200 rounded-3xl p-5 flex flex-col justify-between space-y-3">
+              <div>
+                <h4 class="text-lg font-black text-slate-900">📊 Material Wrapped Around 90 dB Buzzer vs Measured Sound Level (dB)</h4>
+                <p class="text-xs font-bold text-indigo-700">👀 How to Read: Find the material along the bottom (X-axis), go up to the top of its bar, and read across to the Sound Level in dB on the left (Y-axis). Tap or hover any bar for its exact coordinate!</p>
+              </div>
+
+              <svg id="muffleBarSvg" viewBox="0 0 640 270" class="w-full h-auto bg-white rounded-2xl border border-slate-200" role="img" aria-label="Interactive Bar Chart of Wrapping Materials vs Sound Level in Decibels"></svg>
+
+              <!-- Anchored Coordinate Readout Dashboard -->
+              <div class="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs font-black uppercase text-indigo-800">Selected Bar Readout:</span>
+                <span id="chartCoordReadout" class="text-sm font-black text-slate-900">Material: None (Bare) | Sound Level: 90 dB | Reduction: 0 dB</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Click-to-Reveal Particle Absorption Explainer [SoL: Elaborative Interrogation] [SoL: Dual Coding] -->
+          <div class="border-t-2 border-slate-100 pt-4">
+            <button onclick="toggleParticleExplainer()" class="w-full sm:w-auto px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black shadow transition">🔍 Click to Reveal: Why Do Cotton Wool &amp; Thick Foam Muffle Sound Best?</button>
+            <div id="particleExplainerBox" class="hidden mt-4 bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
+              <div class="space-y-2">
+                <h4 class="text-lg font-black text-emerald-950">Microscopic View: Soft Fibres + Trapped Air Pockets!</h4>
+                <p class="text-sm font-bold text-slate-800">1. Hard, smooth surfaces like <strong>thin foil</strong> reflect and pass vibrations straight through, so the buzzer stays loud (<span class="text-rose-700">84 dB</span>).</p>
+                <p class="text-sm font-bold text-slate-800">2. Soft, fluffy materials like <strong>cotton wool</strong> and <strong>thick foam</strong> are full of tangled fibres and tiny trapped air pockets.</p>
+                <p class="text-sm font-bold text-slate-800">3. Sound vibrations bounce around inside those tiny gaps and lose energy as gentle warmth — so much less vibration reaches our ears (<span class="text-emerald-700">48 dB — SAFE!</span>).</p>
+              </div>
+              <svg viewBox="0 0 360 150" class="w-full h-auto bg-white rounded-xl border border-emerald-200" role="img" aria-label="Diagram comparing hard foil vs soft cotton wool absorption">
+                <!-- Left: Hard foil -->
+                <rect x="10" y="12" width="160" height="126" rx="10" fill="#fef2f2" stroke="#fca5a5" stroke-width="2" />
+                <text x="90" y="30" text-anchor="middle" font-size="12" font-weight="900" fill="#991b1b">Hard Foil (84 dB)</text>
+                <rect x="85" y="42" width="12" height="80" fill="#94a3b8" stroke="#334155" stroke-width="1.5" />
+                <path d="M25 82 Q45 62 65 82 T85 82" fill="none" stroke="#dc2626" stroke-width="3" />
+                <path d="M100 82 Q120 65 140 82 T160 82" fill="none" stroke="#dc2626" stroke-width="2.5" />
+                <text x="90" y="132" text-anchor="middle" font-size="10" font-weight="800" fill="#7f1d1d">Waves pass straight through</text>
+                <!-- Right: Soft cotton wool -->
+                <rect x="190" y="12" width="160" height="126" rx="10" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="2" />
+                <text x="270" y="30" text-anchor="middle" font-size="12" font-weight="900" fill="#065f46">Cotton Wool (48 dB)</text>
+                <rect x="242" y="42" width="54" height="80" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="2" stroke-dasharray="4 3" />
+                <circle cx="256" cy="60" r="5" fill="#ffffff" stroke="#10b981" />
+                <circle cx="278" cy="72" r="6" fill="#ffffff" stroke="#10b981" />
+                <circle cx="260" cy="92" r="5" fill="#ffffff" stroke="#10b981" />
+                <circle cx="282" cy="105" r="5" fill="#ffffff" stroke="#10b981" />
+                <path d="M200 82 Q215 62 230 82 T245 82" fill="none" stroke="#dc2626" stroke-width="3" />
+                <path d="M298 82 Q314 78 330 82 T344 82" fill="none" stroke="#059669" stroke-width="1.8" />
+                <text x="270" y="132" text-anchor="middle" font-size="10" font-weight="800" fill="#065f46">Trapped air absorbs waves</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 5: SUCCESS CRITERIA WHITEBOARD CHECK [SoL: Metacognition] [SoL: Immediate Feedback] -->
+    <!-- ===================================================================== -->
+    <section id="station-5" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-md border border-emerald-200 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-black uppercase tracking-wider text-emerald-700">Formative Hinge Check • Mini-Whiteboards Up!</span>
+            <h2 class="text-3xl font-black text-slate-900">✅ Success Criteria Whiteboard Check</h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="px-5 py-2 rounded-2xl bg-emerald-100 border-2 border-emerald-400 text-emerald-950 font-black text-lg">
+              Progress: <span id="scMetCount">0 / 3 Met</span>
+            </div>
+            <button onclick="resetScChecks()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm font-bold">🔄 Reset</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Check 1: MUST -->
+          <div class="bg-white rounded-3xl p-6 border-4 border-emerald-400 shadow-lg flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 font-black text-xs uppercase">Check 1 • MUST</span>
+                <label class="inline-flex items-center gap-2 cursor-pointer font-black text-sm text-emerald-800">
+                  <input type="checkbox" class="sc-checkbox w-5 h-5 accent-emerald-600" onchange="updateScCounter()" />
+                  <span>Class Met</span>
+                </label>
+              </div>
+              <p class="text-xl font-extrabold text-slate-900">A pupil taps a wooden desk gently. Does the sound reach her ear faster through the solid wood or through the air? Explain using the word <span class="text-indigo-700 underline">particles</span>.</p>
+            </div>
+            <div class="space-y-2">
+              <button onclick="toggleScAnswer(1)" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm transition">👀 Reveal Model Answer</button>
+              <div id="scAns-1" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 text-sm font-bold text-emerald-950">
+                Through the <strong>solid wood</strong>! Particles in solid wood are packed tightly together, so they bump into neighbouring particles and pass the vibration along much faster than far-apart air particles.
+              </div>
+            </div>
+          </div>
+
+          <!-- Check 2: SHOULD -->
+          <div class="bg-white rounded-3xl p-6 border-4 border-amber-400 shadow-lg flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 font-black text-xs uppercase">Check 2 • SHOULD</span>
+                <label class="inline-flex items-center gap-2 cursor-pointer font-black text-sm text-amber-800">
+                  <input type="checkbox" class="sc-checkbox w-5 h-5 accent-amber-600" onchange="updateScCounter()" />
+                  <span>Class Met</span>
+                </label>
+              </div>
+              <p class="text-xl font-extrabold text-slate-900">A music speaker measures <strong>92 dB</strong>. After wrapping it in soft fleece, it measures <strong>57 dB</strong>. How many decibels quieter did it become, and is it now in the safe zone?</p>
+            </div>
+            <div class="space-y-2">
+              <button onclick="toggleScAnswer(2)" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-black text-sm transition">👀 Reveal Model Answer</button>
+              <div id="scAns-2" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-sm font-bold text-amber-950">
+                <strong>92 − 57 = 35 dB quieter!</strong> Yes — <strong>57 dB</strong> is safely below 70 dB (well below the 85 dB danger threshold).
+              </div>
+            </div>
+          </div>
+
+          <!-- Check 3: COULD -->
+          <div class="bg-white rounded-3xl p-6 border-4 border-violet-400 shadow-lg flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-violet-100 text-violet-900 font-black text-xs uppercase">Check 3 • COULD</span>
+                <label class="inline-flex items-center gap-2 cursor-pointer font-black text-sm text-violet-800">
+                  <input type="checkbox" class="sc-checkbox w-5 h-5 accent-violet-600" onchange="updateScCounter()" />
+                  <span>Class Met</span>
+                </label>
+              </div>
+              <p class="text-xl font-extrabold text-slate-900">Minh wants to test which cloth muffles a kitchen timer best. Name <strong>ONE variable he must change</strong> and <strong>TWO variables he must keep the same</strong>.</p>
+            </div>
+            <div class="space-y-2">
+              <button onclick="toggleScAnswer(3)" class="w-full py-2.5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-black text-sm transition">👀 Reveal Model Answer</button>
+              <div id="scAns-3" class="hidden bg-violet-50 border border-violet-200 rounded-xl p-3.5 text-sm font-bold text-violet-950">
+                <strong>Change:</strong> The type of cloth.<br/>
+                <strong>Keep the same (any 2):</strong> Same kitchen timer, same distance to the sound level meter, same cloth thickness / number of layers.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- STATION 6: QUICKFIRE CHECKPOINT CHALLENGE [SoL: Automaticity] [SoL: Retrieval Practice] -->
+    <!-- ===================================================================== -->
+    <section id="station-6" class="station-panel hidden">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-r from-indigo-700 via-violet-700 to-fuchsia-700 text-white rounded-3xl p-6 shadow-xl flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-black uppercase tracking-wider text-amber-300">Unit 2.1–2.3 Rapid Revision • 8 Checkpoint Questions</span>
+            <h2 class="text-3xl font-black">🏆 Quickfire Checkpoint Challenge</h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="bg-white/15 px-4 py-2 rounded-2xl text-center">
+              <div class="text-[10px] uppercase font-bold text-rose-200">Team Red</div>
+              <div id="qfScoreRed" class="text-2xl font-black">0</div>
+            </div>
+            <div class="bg-white/15 px-4 py-2 rounded-2xl text-center">
+              <div class="text-[10px] uppercase font-bold text-sky-200">Team Blue</div>
+              <div id="qfScoreBlue" class="text-2xl font-black">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-3xl p-8 shadow-xl border-2 border-indigo-100 space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <span id="qfCounter" class="px-4 py-1.5 rounded-full bg-indigo-100 text-indigo-900 font-black text-sm">Question 1 of 8</span>
+            <div class="flex items-center gap-3">
+              <span id="qfTimerBadge" class="px-5 py-2 rounded-2xl bg-slate-900 text-amber-300 font-black text-2xl tabular-nums">15s</span>
+              <button onclick="startQfTimer()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-black text-sm shadow transition">⏱️ Start 15s Timer</button>
+            </div>
+          </div>
+
+          <div id="qfBoardsUpBanner" class="hidden bg-rose-600 text-white text-center py-4 rounded-2xl font-black text-3xl tracking-wider boards-up-flash">
+            📣 BOARDS UP! SHOW YOUR ANSWERS!
+          </div>
+
+          <div class="min-h-[140px] flex items-center justify-center bg-slate-50 rounded-3xl p-8 border-2 border-slate-200 text-center">
+            <p id="qfQuestionText" class="text-2xl sm:text-4xl font-black text-slate-900 leading-snug"></p>
+          </div>
+
+          <div id="qfAnswerBox" class="hidden bg-emerald-50 border-4 border-emerald-400 rounded-2xl p-6 text-center">
+            <div class="text-xs font-black uppercase text-emerald-700 mb-1">Correct Scientific Answer</div>
+            <p id="qfAnswerText" class="text-2xl font-black text-emerald-950"></p>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div class="flex flex-wrap gap-2">
+              <button onclick="prevQf()" class="px-4 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-black text-sm">⬅️ Prev</button>
+              <button onclick="revealQfAnswer()" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow">👀 Reveal Answer</button>
+              <button onclick="nextQf()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm shadow">Next ➡️</button>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="addScore('red', 1)" class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-sm shadow">+1 🔴 Team Red</button>
+              <button onclick="addScore('blue', 1)" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-sm shadow">+1 🔵 Team Blue</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================================= -->
+  <!-- STATION 2 VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION) — z-[80]         -->
+  <!-- ======================================================================= -->
+  <div id="vocabModal" class="hidden fixed inset-0 z-[80] bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="vmTermEn">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border-4 border-sky-400 space-y-5 relative max-h-[92vh] overflow-y-auto">
+      <button onclick="closeVocabModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-700 font-black text-xl transition" aria-label="Close modal">✕</button>
+      <div class="flex flex-wrap items-center gap-3 pr-10">
+        <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-900 text-xs font-black uppercase">Stage 5 Sound Vocabulary</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+        <div>
+          <h3 id="vmTermEn" class="text-4xl font-black text-slate-900"></h3>
+          <p id="vmTermVn" class="text-2xl font-extrabold text-indigo-600 mt-1"></p>
+          <div class="flex flex-wrap gap-2 mt-4">
+            <button onclick="speakVocab('en')" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-sm shadow transition">🔊 Listen EN</button>
+            <button onclick="speakVocab('vn')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm shadow transition">🔊 Nghe VN</button>
+          </div>
+        </div>
+        <div id="vmSvgBox" class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-3 flex items-center justify-center min-h-[150px]"></div>
+      </div>
+      <div class="bg-sky-50 border-l-4 border-sky-500 rounded-xl p-4 space-y-1.5">
+        <p id="vmDefEn" class="text-base font-extrabold text-slate-900"></p>
+        <p id="vmDefVn" class="text-sm font-bold text-indigo-800"></p>
+      </div>
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-sm font-bold text-amber-950">
+        💬 Example: <span id="vmExample"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- GIANT PROJECTION MODAL — z-[80]                                         -->
+  <!-- ======================================================================= -->
+  <div id="giantModal" class="hidden fixed inset-0 z-[80] bg-slate-950/90 backdrop-blur flex items-center justify-center p-6" role="dialog" aria-modal="true">
+    <div class="bg-white rounded-3xl max-w-5xl w-full p-8 sm:p-12 shadow-2xl border-4 border-amber-400 relative space-y-6">
+      <button onclick="closeGiantModal()" class="absolute top-5 right-5 px-4 py-2 rounded-xl bg-slate-900 text-white font-black text-sm">✕ Close (Esc)</button>
+      <span class="px-4 py-1 rounded-full bg-amber-100 text-amber-900 font-black text-sm uppercase">Giant Projection Mode — Key Revision Rule</span>
+      <p id="giantText" class="text-4xl sm:text-6xl font-black text-slate-900 leading-tight"></p>
+      <p id="giantSub" class="text-xl sm:text-2xl font-bold text-indigo-700"></p>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- TEACHER PROMPT DRAWER (T) — z-[70]                                      -->
+  <!-- ======================================================================= -->
+  <aside id="teacherDrawer" class="hidden fixed top-0 right-0 bottom-0 w-full max-w-md bg-slate-900 text-white z-[70] shadow-2xl p-6 overflow-y-auto border-l-4 border-amber-400 space-y-5">
+    <div class="flex items-center justify-between border-b border-slate-700 pb-4">
+      <div>
+        <span class="text-xs font-black uppercase text-amber-400">Hidden Teacher Guide (Press T)</span>
+        <h3 class="text-xl font-black">👩‍🏫 Live Teaching &amp; Intervention Prompts</h3>
+      </div>
+      <button onclick="toggleTeacherDrawer()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-rose-600 font-black">✕</button>
+    </div>
+    <div class="space-y-4 text-sm">
+      <div class="bg-slate-800 rounded-2xl p-4 space-y-1.5">
+        <div class="font-black text-sky-300">1. Zero-Kit Desk Knock Demo (3 min)</div>
+        <p class="text-slate-200">Have partners sit at their wooden desk. Pupil A gently taps 20 cm away while Pupil B listens through air, then repeats with Pupil B's ear pressed flat on the wood. Ask: <em>"Why was the wood louder and clearer?"</em></p>
+      </div>
+      <div class="bg-slate-800 rounded-2xl p-4 space-y-1.5">
+        <div class="font-black text-rose-300">2. Red-Flag Misconception Watch</div>
+        <p class="text-slate-200">Watch for pupils saying <em>"Air is fastest because nothing blocks the sound."</em> Immediately replay Station 3 Mission 1 (Solid vs Gas vs Vacuum) and show dominoes knocking each other over!</p>
+      </div>
+      <div class="bg-slate-800 rounded-2xl p-4 space-y-1.5">
+        <div class="font-black text-emerald-300">3. EAL Sentence Stems (Display on Board)</div>
+        <p class="text-slate-200">• "Sound travels fastest through a solid because the particles are..."<br/>• "Cotton wool muffled the sound best because it has..."<br/>• "To make it a fair test, I only changed ___ and kept ___ the same."</p>
+      </div>
+      <div class="bg-slate-800 rounded-2xl p-4 space-y-1.5">
+        <div class="font-black text-amber-300">4. Keyboard Shortcuts</div>
+        <p class="text-slate-200"><code>←</code> / <code>→</code> Switch stations • <code>W</code> David's Board • <code>T</code> Prompts • <code>M</code> Mute • <code>Esc</code> Close modal / exit fullscreen.</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ======================================================================= -->
+  <!-- DAVID'S BOARD WHITEBOARD OVERLAY (W) — z-[75]                           -->
+  <!-- ======================================================================= -->
+  <div id="whiteboardOverlay" class="hidden fixed inset-0 z-[75] bg-slate-900/80 backdrop-blur-sm flex flex-col p-3 sm:p-5">
+    <div class="bg-white rounded-t-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-2 border-b-2 border-slate-200">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="font-black text-slate-900 text-base">✏️ David's Board (Sound Waves &amp; Particles)</span>
+        <button onclick="setPenColor('#0f172a')" class="w-7 h-7 rounded-full bg-slate-900 border-2 border-slate-300" title="Black"></button>
+        <button onclick="setPenColor('#dc2626')" class="w-7 h-7 rounded-full bg-red-600 border-2 border-slate-300" title="Red"></button>
+        <button onclick="setPenColor('#2563eb')" class="w-7 h-7 rounded-full bg-blue-600 border-2 border-slate-300" title="Blue"></button>
+        <button onclick="setPenColor('#059669')" class="w-7 h-7 rounded-full bg-emerald-600 border-2 border-slate-300" title="Green"></button>
+        <button onclick="setPenColor('#ffffff')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-extrabold text-slate-800">🧽 Eraser</button>
+        <button onclick="clearWhiteboard()" class="px-2.5 py-1 rounded-lg bg-rose-100 hover:bg-rose-200 text-xs font-extrabold text-rose-800">🗑️ Clear</button>
+      </div>
+      <button onclick="toggleWhiteboard()" class="px-4 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-black">✕ Close (W / Esc)</button>
+    </div>
+    <div id="wbCanvasWrap" class="flex-1 bg-white rounded-b-2xl relative overflow-hidden cursor-crosshair">
+      <canvas id="wbCanvas" class="w-full h-full block touch-none"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // GLOBAL AUDIO ENGINE (Offline Web Audio API) & STATE
+    // =========================================================================
+    let audioCtx = null;
+    let isMuted = false;
+    let currentStation = 0;
+    let scores = { red: 0, blue: 0 };
+
+    function ensureAudio() {
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) audioCtx = new Ctx();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playChime(freq = 660, duration = 0.14, type = 'sine', gainVal = 0.14) {
+      if (isMuted) return;
+      ensureAudio();
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playSuccessFanfare() {
+      playChime(523.25, 0.12, 'triangle', 0.15);
+      setTimeout(() => playChime(659.25, 0.12, 'triangle', 0.15), 110);
+      setTimeout(() => playChime(783.99, 0.24, 'triangle', 0.18), 220);
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      const btn = document.getElementById('btnMute');
+      btn.textContent = isMuted ? '🔇 Muted' : '🔊 Sound On';
+      btn.className = isMuted
+        ? 'px-3 py-1.5 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-extrabold transition'
+        : 'px-3 py-1.5 rounded-xl bg-indigo-100 hover:bg-indigo-200 text-indigo-900 text-xs font-extrabold transition';
+    }
+
+    // =========================================================================
+    // AUTO-HIDING HEADER ON SCROLL [SoL: Cognitive Load Management]
+    // =========================================================================
+    let lastScrollY = 0;
+    window.addEventListener('scroll', () => {
+      const hdr = document.getElementById('topHeader');
+      const cur = window.scrollY;
+      if (cur > lastScrollY && cur > 60) {
+        hdr.classList.add('header-hidden');
+      } else {
+        hdr.classList.remove('header-hidden');
+      }
+      lastScrollY = cur;
+    }, { passive: true });
+
+    // =========================================================================
+    // STATION NAVIGATION & KEYBOARD SHORTCUTS
+    // =========================================================================
+    function switchStation(idx) {
+      if (idx < 0 || idx > 6) return;
+      currentStation = idx;
+      document.querySelectorAll('.station-panel').forEach((sec, i) => {
+        sec.classList.toggle('hidden', i !== idx);
+      });
+      document.querySelectorAll('.station-tab').forEach((tab) => {
+        const tIdx = Number(tab.dataset.tab);
+        tab.classList.toggle('active-tab', tIdx === idx);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      playChime(520 + idx * 35, 0.08, 'sine', 0.08);
+    }
+
+    function anyModalOpen() {
+      return !document.getElementById('vocabModal').classList.contains('hidden') ||
+             !document.getElementById('giantModal').classList.contains('hidden') ||
+             !document.getElementById('whiteboardOverlay').classList.contains('hidden') ||
+             !document.getElementById('teacherDrawer').classList.contains('hidden') ||
+             document.getElementById('idoContainer').classList.contains('fullscreen-ido');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'Escape') {
+        if (!document.getElementById('vocabModal').classList.contains('hidden')) closeVocabModal();
+        if (!document.getElementById('giantModal').classList.contains('hidden')) closeGiantModal();
+        if (!document.getElementById('whiteboardOverlay').classList.contains('hidden')) toggleWhiteboard();
+        if (!document.getElementById('teacherDrawer').classList.contains('hidden')) toggleTeacherDrawer();
+        const ido = document.getElementById('idoContainer');
+        if (ido.classList.contains('fullscreen-ido')) toggleFullScreenIdo();
+        return;
+      }
+      if (e.key === 'w' || e.key === 'W') { toggleWhiteboard(); return; }
+      if (e.key === 't' || e.key === 'T') { toggleTeacherDrawer(); return; }
+      if (e.key === 'm' || e.key === 'M') { toggleMute(); return; }
+      if (!anyModalOpen()) {
+        if (e.key === 'ArrowRight') switchStation(Math.min(6, currentStation + 1));
+        if (e.key === 'ArrowLeft') switchStation(Math.max(0, currentStation - 1));
+      }
+    });
+
+    // =========================================================================
+    // SCOREBOARD & CONFETTI ENGINE
+    // =========================================================================
+    function addScore(team, pts) {
+      scores[team] += pts;
+      document.getElementById('hdrScoreRed').textContent = scores.red;
+      document.getElementById('hdrScoreBlue').textContent = scores.blue;
+      document.getElementById('qfScoreRed').textContent = scores.red;
+      document.getElementById('qfScoreBlue').textContent = scores.blue;
+      playSuccessFanfare();
+      launchConfetti();
+    }
+
+    function launchConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const palette = ['#0ea5e9', '#4f46e5', '#f59e0b', '#10b981', '#ef4444', '#ec4899'];
+      const pieces = Array.from({ length: 85 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 140,
+        w: 8 + Math.random() * 6,
+        h: 10 + Math.random() * 6,
+        vx: (Math.random() - 0.5) * 5,
+        vy: 3 + Math.random() * 4,
+        rot: Math.random() * Math.PI * 2,
+        vrot: (Math.random() - 0.5) * 0.25,
+        color: palette[Math.floor(Math.random() * palette.length)]
+      }));
+      let frames = 0;
+      function tick() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.x += p.vx; p.y += p.vy; p.rot += p.vrot;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        });
+        frames++;
+        if (frames < 95) requestAnimationFrame(tick);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      tick();
+    }
+
+    // =========================================================================
+    // STATION 1: FLASHBACK 3 FLIP CARDS
+    // =========================================================================
+    function toggleFlip(el) {
+      el.classList.toggle('flipped');
+      playChime(600, 0.09, 'triangle', 0.1);
+    }
+    function resetFlashbacks() {
+      document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
+      playChime(440, 0.08, 'sine', 0.08);
+    }
+
+    // =========================================================================
+    // STATION 2: BILINGUAL VOCABULARY DATA & MODAL (SOLE VN EXCEPTION)
+    // =========================================================================
+    const vocabList = [
+      {
+        en: 'vibrate', vn: 'rung động', icon: '〰️',
+        defEn: 'To shake very quickly backwards and forwards to make a sound.',
+        defVn: 'Lắc qua lắc lại rất nhanh để tạo ra âm thanh.',
+        ex: 'When you pluck a ruler on the edge of a desk, it starts to vibrate.',
+        svg: `<svg viewBox="0 0 180 110" class="w-40 h-28"><rect x="15" y="48" width="55" height="16" fill="#94a3b8" stroke="#0f172a" stroke-width="2"/><line x1="70" y1="56" x2="155" y2="34" stroke="#4f46e5" stroke-width="4" stroke-dasharray="4 3"/><line x1="70" y1="56" x2="158" y2="56" stroke="#0f172a" stroke-width="5"/><line x1="70" y1="56" x2="155" y2="78" stroke="#4f46e5" stroke-width="4" stroke-dasharray="4 3"/><path d="M150 24 Q165 56 150 88" fill="none" stroke="#f59e0b" stroke-width="3"/></svg>`
+      },
+      {
+        en: 'vibration', vn: 'sự rung động', icon: '🔔',
+        defEn: 'A rapid back-and-forth movement that passes sound energy through particles.',
+        defVn: 'Chuyển động qua lại nhanh giúp truyền năng lượng âm thanh qua các hạt vật chất.',
+        ex: 'You can feel the vibration of your throat when you hum softly.',
+        svg: `<svg viewBox="0 0 180 110" class="w-40 h-28"><circle cx="90" cy="55" r="22" fill="#fde047" stroke="#b45309" stroke-width="3"/><path d="M56 35 Q44 55 56 75 M42 26 Q26 55 42 84" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round"/><path d="M124 35 Q136 55 124 75 M138 26 Q154 55 138 84" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round"/></svg>`
+      },
+      {
+        en: 'particle', vn: 'hạt vật chất', icon: '⚛️',
+        defEn: 'A tiny piece of matter that makes up every solid, liquid and gas.',
+        defVn: 'Hạt siêu nhỏ cấu tạo nên mọi chất rắn, chất lỏng và chất khí.',
+        ex: 'Tightly packed solid particles pass sound vibrations faster than gas particles.',
+        svg: `<svg viewBox="0 0 180 110" class="w-40 h-28"><circle cx="40" cy="40" r="11" fill="#4f46e5"/><circle cx="64" cy="40" r="11" fill="#4f46e5"/><circle cx="88" cy="40" r="11" fill="#f59e0b"/><circle cx="40" cy="64" r="11" fill="#4f46e5"/><circle cx="64" cy="64" r="11" fill="#4f46e5"/><circle cx="88" cy="64" r="11" fill="#f59e0b"/><path d="M108 52 L145 52" stroke="#0ea5e9" stroke-width="4" stroke-linecap="round"/><polygon points="145,45 158,52 145,59" fill="#0ea5e9"/></svg>`
+      },
+      {
+        en: 'volume', vn: 'âm lượng (độ lớn âm thanh)', icon: '🔊',
+        defEn: 'How loud or quiet a sound is. Bigger vibrations make a louder volume.',
+        defVn: 'Độ to hay nhỏ của âm thanh. Rung động càng mạnh thì âm lượng càng lớn.',
+        ex: 'Hitting a drum harder increases its volume without changing its pitch.',
+        svg: `<svg viewBox="0 0 180 110" class="w-40 h-28"><polygon points="35,44 58,44 82,25 82,85 58,66 35,66" fill="#0284c7" stroke="#0f172a" stroke-width="2"/><path d="M98 42 Q108 55 98 68" fill="none" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/><path d="M114 30 Q130 55 114 80" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/><path d="M132 18 Q154 55 132 92" fill="none" stroke="#ef4444" stroke-width="4.5" stroke-linecap="round"/></svg>`
+      },
+      {
+        en: 'decibel (dB)', vn: 'đê-xi-ben (dB)', icon: '📏',
+        defEn: 'The scientific unit used to measure how loud a sound is.',
+        defVn: 'Đơn vị khoa học dùng để đo độ lớn của âm thanh.',
+        ex: 'Sounds louder than 85 dB can damage our ears if we listen for too long.',
+        svg: `<svg viewBox="0 0 180 110" class="w-40 h-28"><rect x="18" y="34" width="144" height="36" rx="10" fill="#ecfeff" stroke="#0284c7" stroke-width="3"/><text x="90" y="60" text-anchor="middle" font-size="24" font-weight="900" fill="#0369a1">85 dB</text><rect x="26" y="78" width="42" height="10" rx="4" fill="#10b981"/><rect x="70" y="78" width="40" height="10" rx="4" fill="#f59e0b"/><rect x="112" y="78" width="42" height="10" rx="4" fill="#ef4444"/></svg>`
+      },
+      {
+        en: 'sound level meter', vn: 'máy đo cường độ âm thanh', icon: '🎛️',
+        defEn: 'A scientific instrument that measures the volume of sound in decibels (dB).',
+        defVn: 'Dụng cụ khoa học đo độ lớn của âm thanh bằng đơn vị đê-xi-ben (dB).',
+        ex: 'We held the sound level meter exactly 1 metre away from the wrapped alarm.',
+        svg: `<svg viewBox="0 0 180 110" class="w-40 h-28"><rect x="52" y="22" width="76" height="78" rx="10" fill="#1e293b" stroke="#0f172a" stroke-width="2"/><circle cx="90" cy="14" r="9" fill="#64748b" stroke="#0f172a" stroke-width="2"/><rect x="64" y="34" width="52" height="28" rx="4" fill="#bef264"/><text x="90" y="54" text-anchor="middle" font-size="15" font-weight="900" fill="#1a2e05">62 dB</text><circle cx="76" cy="80" r="5" fill="#ef4444"/><circle cx="104" cy="80" r="5" fill="#38bdf8"/></svg>`
+      },
+      {
+        en: 'muffle', vn: 'làm giảm âm / chắn âm', icon: '🧣',
+        defEn: 'To make a sound quieter and softer by absorbing its vibrations with soft material.',
+        defVn: 'Làm cho âm thanh nhỏ và êm hơn bằng cách hấp thụ rung động nhờ vật liệu mềm.',
+        ex: 'Cotton wool and thick foam muffle an alarm clock much better than tin foil.',
+        svg: `<svg viewBox="0 0 180 110" class="w-40 h-28"><rect x="44" y="24" width="92" height="62" rx="16" fill="#d1fae5" stroke="#059669" stroke-width="3" stroke-dasharray="5 3"/><circle cx="90" cy="55" r="18" fill="#ffffff" stroke="#0f172a" stroke-width="2.5"/><text x="90" y="60" text-anchor="middle" font-size="14">⏰</text><path d="M142 48 Q148 55 142 62" fill="none" stroke="#059669" stroke-width="2.5"/></svg>`
+      },
+      {
+        en: 'ear defenders', vn: 'chụp tai chống ồn', icon: '🎧',
+        defEn: 'Thick, padded headphones worn over the ears to block dangerous loud noises.',
+        defVn: 'Chụp tai có đệm mút dày đeo lên tai để ngăn tiếng ồn lớn gây hại cho thính giác.',
+        ex: 'Airport workers wear ear defenders to protect their ears from 130 dB jet engines.',
+        svg: `<svg viewBox="0 0 180 110" class="w-40 h-28"><path d="M45 64 C45 18 135 18 135 64" fill="none" stroke="#0f172a" stroke-width="7" stroke-linecap="round"/><rect x="30" y="50" width="24" height="40" rx="10" fill="#f59e0b" stroke="#0f172a" stroke-width="2.5"/><rect x="126" y="50" width="24" height="40" rx="10" fill="#f59e0b" stroke="#0f172a" stroke-width="2.5"/></svg>`
+      },
+      {
+        en: 'silencer', vn: 'ống giảm thanh', icon: '🚗',
+        defEn: 'A special part fitted to a car or motorbike exhaust to muffle loud engine noise.',
+        defVn: 'Bộ phận đặc biệt lắp trên ống xả xe hơi hoặc xe máy để làm giảm tiếng ồn động cơ.',
+        ex: 'A motorbike with a broken silencer makes a dangerously loud roar.',
+        svg: `<svg viewBox="0 0 180 110" class="w-40 h-28"><rect x="15" y="48" width="38" height="14" fill="#64748b" stroke="#0f172a" stroke-width="2"/><rect x="53" y="34" width="76" height="42" rx="10" fill="#cbd5e1" stroke="#0f172a" stroke-width="2.5"/><line x1="75" y1="34" x2="75" y2="62" stroke="#475569" stroke-width="3"/><line x1="104" y1="48" x2="104" y2="76" stroke="#475569" stroke-width="3"/><rect x="129" y="48" width="32" height="14" fill="#64748b" stroke="#0f172a" stroke-width="2"/></svg>`
+      },
+      {
+        en: 'amplifier', vn: 'bộ khuếch đại âm thanh', icon: '📢',
+        defEn: 'A device (such as a megaphone or speaker) that makes a sound louder.',
+        defVn: 'Thiết bị (như loa phóng thanh) giúp làm cho âm thanh to và rõ hơn.',
+        ex: 'A coach uses a cone amplifier on the sports field so every player can hear.',
+        svg: `<svg viewBox="0 0 180 110" class="w-40 h-28"><polygon points="34,48 64,44 128,20 128,90 64,66 34,62" fill="#4f46e5" stroke="#0f172a" stroke-width="2.5"/><rect x="50" y="64" width="14" height="26" rx="4" fill="#0f172a"/><path d="M140 36 Q156 55 140 74" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/></svg>`
+      }
+    ];
+
+    let activeVocabIndex = 0;
+
+    function renderVocabGrid() {
+      const grid = document.getElementById('vocabGrid');
+      grid.innerHTML = vocabList.map((v, idx) => `
+        <button onclick="openVocabModal(${idx})" class="bg-white hover:bg-sky-50 border-2 border-slate-200 hover:border-sky-500 rounded-2xl p-5 shadow-sm hover:shadow-md transition text-left flex flex-col justify-between min-h-[126px]">
+          <div class="text-3xl">${v.icon}</div>
+          <div>
+            <div class="text-lg font-black text-slate-900 leading-tight">${v.en}</div>
+            <div class="text-xs font-bold text-sky-600 mt-1">Tap for Visual &amp; Audio ➔</div>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(idx) {
+      activeVocabIndex = idx;
+      const v = vocabList[idx];
+      document.getElementById('vmTermEn').textContent = v.en;
+      document.getElementById('vmTermVn').textContent = v.vn;
+      document.getElementById('vmDefEn').textContent = v.defEn;
+      document.getElementById('vmDefVn').textContent = v.defVn;
+      document.getElementById('vmExample').textContent = v.ex;
+      document.getElementById('vmSvgBox').innerHTML = v.svg;
+      document.getElementById('vocabModal').classList.remove('hidden');
+      playChime(620, 0.09, 'sine', 0.1);
+    }
+
+    function closeVocabModal() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('vocabModal').classList.add('hidden');
+    }
+
+    function speakVocab(lang) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const v = vocabList[activeVocabIndex];
+      const utt = new SpeechSynthesisUtterance(lang === 'en' ? `${v.en}. ${v.defEn}` : `${v.vn}. ${v.defVn}`);
+      utt.lang = lang === 'en' ? 'en-GB' : 'vi-VN';
+      utt.rate = 0.92;
+      window.speechSynthesis.speak(utt);
+    }
+
+    // =========================================================================
+    // STATION 3: VISUAL I DO (MISSION 1 PARTICLE RELAY & MISSION 2 FAIR TEST)
+    // =========================================================================
+    let m1Medium = 'solid';
+    let m1WaveTimer = null;
+    let currentMission = 1;
+    let m2Step = 0;
+
+    const m1Data = {
+      solid: {
+        name: 'Solid (Wood)', spacing: 'Packed tightly in fixed rows', speed: 'FASTEST! Instant collisions (~0.7s)',
+        speedColor: 'text-emerald-700', delay: 55
+      },
+      liquid: {
+        name: 'Liquid (Water)', spacing: 'Close together, sliding smoothly', speed: 'MEDIUM speed (~1.6s)',
+        speedColor: 'text-sky-700', delay: 145
+      },
+      gas: {
+        name: 'Gas (Air)', spacing: 'Far apart, random spaces', speed: 'SLOWER relay (~3.0s)',
+        speedColor: 'text-amber-700', delay: 320
+      },
+      vacuum: {
+        name: 'Vacuum (Outer Space)', spacing: 'ZERO particles at all!', speed: 'STOPS DEAD! Total silence',
+        speedColor: 'text-rose-700', delay: 0
+      }
+    };
+
+    function selectMission(num) {
+      currentMission = num;
+      document.getElementById('mission-1-view').classList.toggle('hidden', num !== 1);
+      document.getElementById('mission-2-view').classList.toggle('hidden', num !== 2);
+      document.getElementById('btnMission1').className = num === 1
+        ? 'px-4 py-2 rounded-xl bg-indigo-600 text-white font-extrabold text-sm shadow transition'
+        : 'px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-sm transition';
+      document.getElementById('btnMission2').className = num === 2
+        ? 'px-4 py-2 rounded-xl bg-indigo-600 text-white font-extrabold text-sm shadow transition'
+        : 'px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-sm transition';
+      playChime(580, 0.08);
+    }
+
+    function setMission1Medium(med) {
+      m1Medium = med;
+      if (m1WaveTimer) clearInterval(m1WaveTimer);
+      ['solid', 'liquid', 'gas', 'vacuum'].forEach(k => {
+        const b = document.getElementById('m1-btn-' + k);
+        b.className = k === med
+          ? 'p-3 rounded-2xl border-2 border-indigo-600 bg-indigo-50 text-indigo-900 font-extrabold text-sm text-center transition'
+          : 'p-3 rounded-2xl border-2 border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-extrabold text-sm text-center transition';
+      });
+      const d = m1Data[med];
+      document.getElementById('m1ReadoutMedium').textContent = d.name;
+      document.getElementById('m1ReadoutSpacing').textContent = d.spacing;
+      const spd = document.getElementById('m1ReadoutSpeed');
+      spd.textContent = d.speed;
+      spd.className = 'text-lg font-black ' + d.speedColor;
+      renderMission1Particles(med);
+    }
+
+    function renderMission1Particles(med) {
+      const stage = document.getElementById('m1ParticleStage');
+      stage.innerHTML = '';
+      if (med === 'vacuum') {
+        stage.innerHTML = '<div class="w-full h-full flex items-center justify-center"><div class="w-3 h-3 rounded-full bg-slate-600 opacity-30"></div></div>';
+        return;
+      }
+      if (med === 'solid') {
+        // 10 tightly packed columns of 3 particles
+        let html = '<div class="flex items-center justify-center gap-2 w-full">';
+        for (let c = 0; c < 10; c++) {
+          html += `<div class="flex flex-col gap-2" data-col="${c}">`;
+          for (let r = 0; r < 3; r++) {
+            html += `<div class="w-6 h-6 rounded-full bg-indigo-400 border-2 border-indigo-200 transition-all"></div>`;
+          }
+          html += '</div>';
+        }
+        html += '</div>';
+        stage.innerHTML = html;
+      } else if (med === 'liquid') {
+        // Organic staggered liquid particles (NOT a rigid grid)
+        let html = '<div class="flex items-end flex-wrap content-end justify-around w-full h-full gap-1 px-2">';
+        const offsets = [0, 8, 2, 10, 4, 9, 1, 7, 3, 8];
+        for (let c = 0; c < 8; c++) {
+          html += `<div class="flex flex-col gap-3 pb-${offsets[c] % 3}" data-col="${c}">`;
+          for (let r = 0; r < 3; r++) {
+            const delay = ((c * 3 + r) % 7) * 0.25;
+            html += `<div class="w-6 h-6 rounded-full bg-sky-400 border-2 border-sky-200 particle-liquid" style="animation-delay:${delay}s; margin-left:${(r % 2) * 8}px;"></div>`;
+          }
+          html += '</div>';
+        }
+        html += '</div>';
+        stage.innerHTML = html;
+      } else {
+        // Scattered gas particles
+        let html = '<div class="flex items-center justify-around w-full h-full px-3">';
+        const tops = [-36, 28, -14, 34, -30, 18];
+        for (let c = 0; c < 6; c++) {
+          const delay = c * 0.35;
+          html += `<div data-col="${c}" style="transform:translateY(${tops[c]}px)"><div class="w-5 h-5 rounded-full bg-amber-300 border-2 border-amber-100 particle-gas" style="animation-delay:${delay}s;"></div></div>`;
+        }
+        html += '</div>';
+        stage.innerHTML = html;
+      }
+    }
+
+    function runMission1Wave() {
+      if (m1WaveTimer) clearInterval(m1WaveTimer);
+      const stage = document.getElementById('m1ParticleStage');
+      const cols = Array.from(stage.querySelectorAll('[data-col]'));
+      cols.forEach(col => col.querySelectorAll('div').forEach(p => p.classList.remove('particle-vibe')));
+
+      if (m1Medium === 'vacuum') {
+        playChime(180, 0.12, 'sawtooth', 0.05);
+        document.getElementById('m1ReadoutSpeed').textContent = 'SILENT! Wave stopped at source — no particles!';
+        return;
+      }
+
+      playChime(440, 0.1, 'triangle', 0.14);
+      let idx = 0;
+      const delay = m1Data[m1Medium].delay;
+      m1WaveTimer = setInterval(() => {
+        if (idx > 0 && cols[idx - 1]) {
+          cols[idx - 1].querySelectorAll('div').forEach(p => p.classList.remove('particle-vibe'));
+        }
+        if (idx < cols.length) {
+          cols[idx].querySelectorAll('div').forEach(p => p.classList.add('particle-vibe'));
+          playChime(480 + idx * 35, 0.05, 'sine', 0.06);
+          idx++;
+        } else {
+          clearInterval(m1WaveTimer);
+          playSuccessFanfare();
+        }
+      }, delay);
+    }
+
+    function cycleMission2Step() {
+      m2Step = (m2Step + 1) % 3;
+      const cards = [
+        document.getElementById('m2CardChange'),
+        document.getElementById('m2CardMeasure'),
+        document.getElementById('m2CardSame')
+      ];
+      const activeStyles = [
+        'rounded-2xl p-4 border-4 border-amber-500 bg-amber-100 shadow-md scale-[1.02] transition',
+        'rounded-2xl p-4 border-4 border-sky-500 bg-sky-100 shadow-md scale-[1.02] transition',
+        'rounded-2xl p-4 border-4 border-emerald-500 bg-emerald-100 shadow-md scale-[1.02] transition'
+      ];
+      cards.forEach((c, i) => {
+        c.className = i === m2Step ? activeStyles[i] : 'rounded-2xl p-4 border-2 border-slate-200 bg-white opacity-75 transition';
+      });
+      playChime(540 + m2Step * 90, 0.1, 'triangle', 0.12);
+    }
+
+    function toggleFullScreenIdo() {
+      const box = document.getElementById('idoContainer');
+      const btn = document.getElementById('btnFullIdo');
+      const isFull = box.classList.toggle('fullscreen-ido');
+      btn.textContent = isFull ? '✕ Exit Full Screen' : '⛶ Full Screen I Do';
+    }
+
+    function openGiantModal() {
+      const gt = document.getElementById('giantText');
+      const gs = document.getElementById('giantSub');
+      if (currentMission === 1) {
+        gt.textContent = 'Solid (Fastest) ➔ Liquid ➔ Gas (Slowest) ➔ Vacuum (SILENT!)';
+        gs.textContent = 'Sound travels fastest through solid wood because its particles are packed tightly together!';
+      } else {
+        gt.textContent = 'Fair Test = Change ONLY Material!';
+        gs.textContent = 'Measure loudness in dB. Keep the same alarm, same 1 m distance, and same 2 cm layer thickness.';
+      }
+      document.getElementById('giantModal').classList.remove('hidden');
+      playChime(650, 0.12);
+    }
+
+    function closeGiantModal() {
+      document.getElementById('giantModal').classList.add('hidden');
+    }
+
+    // =========================================================================
+    // STATION 4: PART A (MEDIUM SPEED RACER) & PART B (DECIBEL MUFFLE-O-METER)
+    // =========================================================================
+    let labMedium = 'solid';
+    let labAnimId = null;
+
+    const labMedConfig = {
+      solid: { name: 'Solid (Wood)', speedLabel: '~3,500 m/s (Fastest!)', reason: 'Tightly packed rows pass energy almost instantly.', durationMs: 750, cols: 16, rows: 3, color: '#818cf8', freq: 520 },
+      liquid: { name: 'Liquid (Water)', speedLabel: '~1,500 m/s (Medium)', reason: 'Close particles slide and pass vibrations smoothly.', durationMs: 1650, cols: 11, rows: 3, color: '#38bdf8', freq: 410 },
+      gas: { name: 'Gas (Air)', speedLabel: '~340 m/s (Slowest)', reason: 'Far-apart gas particles take longer to collide.', durationMs: 3100, cols: 7, rows: 2, color: '#fbbf24', freq: 310 },
+      vacuum: { name: 'Vacuum (Space)', speedLabel: '0 m/s (SILENT!)', reason: 'Zero particles exist, so vibrations cannot travel.', durationMs: 0, cols: 0, rows: 0, color: '#94a3b8', freq: 0 }
+    };
+
+    function scrollToLabPart(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function selectLabMedium(med) {
+      labMedium = med;
+      if (labAnimId) cancelAnimationFrame(labAnimId);
+      ['solid', 'liquid', 'gas', 'vacuum'].forEach(k => {
+        const b = document.getElementById('labMed-' + k);
+        b.className = k === med
+          ? 'p-3.5 rounded-2xl border-2 border-sky-600 bg-sky-50 font-extrabold text-sky-900 text-sm transition'
+          : 'p-3.5 rounded-2xl border-2 border-slate-200 bg-white hover:bg-sky-50 font-extrabold text-slate-700 text-sm transition';
+      });
+      const cfg = labMedConfig[med];
+      document.getElementById('labTelMed').textContent = cfg.name;
+      document.getElementById('labTelSpeed').textContent = cfg.speedLabel;
+      document.getElementById('labTelStatus').textContent = 'Ready to launch';
+      document.getElementById('labTelReason').textContent = cfg.reason;
+      drawLabPulseSvg(-1);
+    }
+
+    function drawLabPulseSvg(waveX) {
+      const svg = document.getElementById('labPulseSvg');
+      const cfg = labMedConfig[labMedium];
+      let html = `
+        <rect x="14" y="42" width="54" height="66" rx="12" fill="#f59e0b" />
+        <text x="41" y="83" text-anchor="middle" font-size="28">🔔</text>
+        <rect x="732" y="42" width="54" height="66" rx="12" fill="#10b981" />
+        <text x="759" y="83" text-anchor="middle" font-size="28">👂</text>
+      `;
+      if (cfg.cols === 0) {
+        // Empty vacuum stars
+        html += `<circle cx="220" cy="40" r="2" fill="#475569"/><circle cx="410" cy="110" r="2" fill="#475569"/><circle cx="600" cy="52" r="2" fill="#475569"/>`;
+      } else {
+        const startX = 100, endX = 700;
+        const stepX = (endX - startX) / (cfg.cols - 1);
+        for (let c = 0; c < cfg.cols; c++) {
+          const baseX = startX + c * stepX;
+          for (let r = 0; r < cfg.rows; r++) {
+            let cy = cfg.rows === 3 ? (35 + r * 40) : (48 + r * 54);
+            let cx = baseX;
+            if (labMedium === 'liquid') {
+              cy += ((c + r) % 2 === 0 ? -7 : 7);
+              cx += (r % 2 === 1 ? 10 : -5);
+            } else if (labMedium === 'gas') {
+              cy += ((c * 17 + r * 29) % 24) - 12;
+              cx += ((c * 13 + r * 19) % 22) - 11;
+            }
+            const dist = waveX >= 0 ? Math.abs(cx - waveX) : 999;
+            const hit = dist < 36;
+            const shift = hit ? Math.sin(dist * 0.25) * 8 : 0;
+            const fill = hit ? '#fbbf24' : cfg.color;
+            const rad = hit ? 11 : 8;
+            html += `<circle cx="${(cx + shift).toFixed(1)}" cy="${cy.toFixed(1)}" r="${rad}" fill="${fill}" stroke="#ffffff" stroke-width="1.5" />`;
+          }
+        }
+        if (waveX >= 90 && waveX <= 715) {
+          html += `<line x1="${waveX}" y1="16" x2="${waveX}" y2="134" stroke="#f59e0b" stroke-width="3" stroke-dasharray="6 4" opacity="0.85" />`;
+        }
+      }
+      svg.innerHTML = html;
+    }
+
+    function sendLabPulse() {
+      if (labAnimId) cancelAnimationFrame(labAnimId);
+      const cfg = labMedConfig[labMedium];
+      if (labMedium === 'vacuum') {
+        document.getElementById('labTelStatus').textContent = 'NO SOUND! Blocked by empty space';
+        drawLabPulseSvg(-1);
+        return;
+      }
+      document.getElementById('labTelStatus').textContent = 'Vibration travelling...';
+      playChime(cfg.freq, 0.16, 'triangle', 0.16);
+      const t0 = performance.now();
+      function frame(now) {
+        const progress = Math.min(1, (now - t0) / cfg.durationMs);
+        const wx = 85 + progress * 635;
+        drawLabPulseSvg(wx);
+        if (progress < 1) {
+          labAnimId = requestAnimationFrame(frame);
+        } else {
+          document.getElementById('labTelStatus').textContent = `Reached Ear in ${(cfg.durationMs / 1000).toFixed(2)}s!`;
+          playChime(cfg.freq * 1.4, 0.18, 'sine', 0.14);
+          setTimeout(() => drawLabPulseSvg(-1), 500);
+        }
+      }
+      labAnimId = requestAnimationFrame(frame);
+    }
+
+    // PART B: DECIBEL MUFFLE-O-METER
+    const muffleMaterials = [
+      { id: 'none', name: 'None', fullName: 'None (Bare Buzzer)', baseDb: 90, emoji: '🔔', color: '#ef4444' },
+      { id: 'foil', name: 'Thin Foil', fullName: 'Thin Foil', baseDb: 84, emoji: '🪙', color: '#f97316' },
+      { id: 'paper', name: 'Newspaper', fullName: 'Newspaper', baseDb: 76, emoji: '📰', color: '#f59e0b' },
+      { id: 'bubble', name: 'Bubble Wrap', fullName: 'Bubble Wrap', baseDb: 64, emoji: '🫧', color: '#0ea5e9' },
+      { id: 'foam', name: 'Thick Foam', fullName: 'Thick Foam', baseDb: 52, emoji: '🧽', color: '#10b981' },
+      { id: 'cotton', name: 'Cotton Wool', fullName: 'Cotton Wool', baseDb: 48, emoji: '☁️', color: '#059669' }
+    ];
+
+    let activeMatId = 'none';
+    let currentThickness = 2; // 2 cm standard fair test
+
+    function getAdjustedDb(mat) {
+      if (mat.id === 'none') return 90;
+      const offset = (currentThickness - 2) * 4; // 1cm -> +4 dB louder, 3cm -> -4 dB quieter
+      return Math.max(36, Math.min(89, mat.baseDb - offset));
+    }
+
+    function renderMuffleButtons() {
+      const wrap = document.getElementById('muffleMaterialButtons');
+      wrap.innerHTML = muffleMaterials.map(m => {
+        const db = getAdjustedDb(m);
+        const active = m.id === activeMatId;
+        return `
+          <button onclick="selectMuffleMaterial('${m.id}')" class="p-3 rounded-2xl border-2 text-center transition ${active ? 'border-indigo-600 bg-indigo-50 shadow-md' : 'border-slate-200 bg-white hover:bg-slate-50'}">
+            <div class="text-2xl">${m.emoji}</div>
+            <div class="text-xs font-black text-slate-900 mt-1">${m.name}</div>
+            <div class="text-xs font-extrabold text-indigo-700">${db} dB</div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectMuffleMaterial(id) {
+      activeMatId = id;
+      updateMuffleUI();
+      playBuzzerSample();
+    }
+
+    function updateThickness(val) {
+      currentThickness = Number(val);
+      const label = currentThickness === 2 ? '2 cm (Standard Fair Test)' : `${currentThickness} cm (Changed!)`;
+      document.getElementById('thicknessVal').textContent = label;
+      updateMuffleUI();
+    }
+
+    function updateMuffleUI() {
+      renderMuffleButtons();
+      const mat = muffleMaterials.find(m => m.id === activeMatId);
+      const db = getAdjustedDb(mat);
+      const reduction = 90 - db;
+
+      document.getElementById('meterDbValue').textContent = db;
+      document.getElementById('meterMatName').textContent = mat.fullName;
+      document.getElementById('meterReduction').textContent = `${reduction} dB quieter`;
+
+      const bar = document.getElementById('meterBarFill');
+      bar.style.width = `${Math.min(100, (db / 120) * 100)}%`;
+
+      const badge = document.getElementById('safetyBadge');
+      if (db > 85) {
+        badge.textContent = 'DANGER > 85 dB';
+        badge.className = 'px-3 py-1 rounded-full text-xs font-black bg-rose-600 text-white';
+        bar.className = 'h-full bg-rose-500 transition-all duration-300';
+      } else if (db >= 70) {
+        badge.textContent = 'CAUTION (70–85 dB)';
+        badge.className = 'px-3 py-1 rounded-full text-xs font-black bg-amber-400 text-slate-900';
+        bar.className = 'h-full bg-amber-400 transition-all duration-300';
+      } else {
+        badge.textContent = 'SAFE < 70 dB';
+        badge.className = 'px-3 py-1 rounded-full text-xs font-black bg-emerald-500 text-white';
+        bar.className = 'h-full bg-emerald-500 transition-all duration-300';
+      }
+
+      document.getElementById('chartCoordReadout').textContent =
+        `Material: ${mat.fullName} | Sound Level: ${db} dB | Reduction: ${reduction} dB`;
+
+      renderMuffleBarChart();
+    }
+
+    function playBuzzerSample() {
+      if (isMuted) return;
+      ensureAudio();
+      if (!audioCtx) return;
+      const mat = muffleMaterials.find(m => m.id === activeMatId);
+      const db = getAdjustedDb(mat);
+      // Scale gain audibly from 44 dB (very soft) up to 90 dB (loud)
+      const norm = Math.max(0.05, (db - 38) / 52);
+      const gainLevel = 0.015 + Math.pow(norm, 2.2) * 0.24;
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(580, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(720, audioCtx.currentTime + 0.12);
+      osc.frequency.setValueAtTime(580, audioCtx.currentTime + 0.24);
+      gain.gain.setValueAtTime(gainLevel, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.42);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.42);
+    }
+
+    function renderMuffleBarChart() {
+      const svg = document.getElementById('muffleBarSvg');
+      const padL = 62, padR = 20, padT = 22, padB = 56;
+      const plotW = 640 - padL - padR;
+      const plotH = 270 - padT - padB;
+      const maxVal = 100;
+
+      let html = '';
+      // Gridlines and Y-axis ticks (0 to 100 dB)
+      for (let v = 0; v <= 100; v += 20) {
+        const y = padT + plotH - (v / maxVal) * plotH;
+        html += `<line x1="${padL}" y1="${y}" x2="${640 - padR}" y2="${y}" stroke="#e2e8f0" stroke-width="1.2" />`;
+        html += `<text x="${padL - 8}" y="${y + 4}" text-anchor="end" font-size="11" font-weight="800" fill="#334155">${v}</text>`;
+      }
+      // 85 dB danger dashed threshold line
+      const y85 = padT + plotH - (85 / maxVal) * plotH;
+      html += `<line x1="${padL}" y1="${y85}" x2="${640 - padR}" y2="${y85}" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="5 4" />`;
+      html += `<text x="${640 - padR - 4}" y="${y85 - 4}" text-anchor="end" font-size="10" font-weight="900" fill="#dc2626">85 dB Danger Line</text>`;
+
+      // Axes
+      html += `<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + plotH}" stroke="#0f172a" stroke-width="2" />`;
+      html += `<line x1="${padL}" y1="${padT + plotH}" x2="${640 - padR}" y2="${padT + plotH}" stroke="#0f172a" stroke-width="2" />`;
+
+      // Axis labels with units
+      html += `<text x="16" y="${padT + plotH / 2}" text-anchor="middle" font-size="12" font-weight="900" fill="#0f172a" transform="rotate(-90 16 ${padT + plotH / 2})">Sound Level (dB)</text>`;
+      html += `<text x="${padL + plotW / 2}" y="260" text-anchor="middle" font-size="12" font-weight="900" fill="#0f172a">Wrapping Material</text>`;
+
+      // Bars
+      const slotW = plotW / muffleMaterials.length;
+      const barW = slotW * 0.58;
+      muffleMaterials.forEach((m, i) => {
+        const db = getAdjustedDb(m);
+        const h = (db / maxVal) * plotH;
+        const x = padL + i * slotW + (slotW - barW) / 2;
+        const y = padT + plotH - h;
+        const isSel = m.id === activeMatId;
+        html += `
+          <g class="cursor-pointer" onclick="selectMuffleMaterial('${m.id}')" onmouseenter="hoverBarReadout('${m.id}')">
+            <rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="6" fill="${m.color}" stroke="${isSel ? '#0f172a' : 'none'}" stroke-width="${isSel ? '3' : '0'}" opacity="${isSel ? '1' : '0.82'}" />
+            <text x="${x + barW / 2}" y="${y - 6}" text-anchor="middle" font-size="12" font-weight="900" fill="#0f172a">${db}</text>
+            <text x="${x + barW / 2}" y="${padT + plotH + 17}" text-anchor="middle" font-size="11" font-weight="800" fill="#1e293b">${m.name}</text>
+          </g>
+        `;
+      });
+
+      svg.innerHTML = html;
+    }
+
+    function hoverBarReadout(id) {
+      const m = muffleMaterials.find(x => x.id === id);
+      const db = getAdjustedDb(m);
+      document.getElementById('chartCoordReadout').textContent =
+        `Hover Coordinate ➔ Material: ${m.fullName} | Sound Level: ${db} dB | Reduction: ${90 - db} dB`;
+    }
+
+    function toggleParticleExplainer() {
+      const box = document.getElementById('particleExplainerBox');
+      box.classList.toggle('hidden');
+      playChime(680, 0.1, 'triangle', 0.12);
+    }
+
+    // =========================================================================
+    // STATION 5: SUCCESS CRITERIA WHITEBOARD CHECK
+    // =========================================================================
+    function toggleScAnswer(n) {
+      document.getElementById('scAns-' + n).classList.toggle('hidden');
+      playChime(600, 0.09);
+    }
+
+    function updateScCounter() {
+      const checked = document.querySelectorAll('.sc-checkbox:checked').length;
+      document.getElementById('scMetCount').textContent = `${checked} / 3 Met`;
+      if (checked === 3) {
+        playSuccessFanfare();
+        launchConfetti();
+      } else {
+        playChime(520 + checked * 80, 0.08);
+      }
+    }
+
+    function resetScChecks() {
+      document.querySelectorAll('.sc-checkbox').forEach(cb => cb.checked = false);
+      [1, 2, 3].forEach(n => document.getElementById('scAns-' + n).classList.add('hidden'));
+      document.getElementById('scMetCount').textContent = '0 / 3 Met';
+    }
+
+    // =========================================================================
+    // STATION 6: QUICKFIRE CHECKPOINT CHALLENGE (8 FRESH QUESTIONS)
+    // =========================================================================
+    const qfQuestions = [
+      {
+        q: '1. You pluck a plastic ruler hanging off a desk and hear a buzz. What must the ruler be doing to make that sound?',
+        a: 'It must be VIBRATING (shaking rapidly backwards and forwards).'
+      },
+      {
+        q: '2. A dolphin clicks underwater. Does its sound travel faster through liquid water or through air? Why?',
+        a: 'Faster through LIQUID WATER — water particles are much closer together than air particles.'
+      },
+      {
+        q: '3. Above what decibel (dB) level can loud sounds start to damage human ears?',
+        a: 'Above 85 dB (decibels).'
+      },
+      {
+        q: '4. What is the difference between a MUFFLER (like ear defenders) and an AMPLIFIER (like a megaphone)?',
+        a: 'A muffler makes sound QUIETER (absorbs vibrations); an amplifier makes sound LOUDER.'
+      },
+      {
+        q: '5. What scientific instrument measures the loudness of sound, and what unit does it show?',
+        a: 'A Sound Level Meter, measuring in decibels (dB).'
+      },
+      {
+        q: '6. In a fair test comparing foam and foil around a buzzer, you change the material. Name ONE variable you must keep the same.',
+        a: 'Same buzzer (sound source), same distance to the meter, OR same layer thickness.'
+      },
+      {
+        q: '7. A bell rings inside a glass jar with all the air pumped out (a vacuum). Why can nobody hear it?',
+        a: 'There are NO PARTICLES inside a vacuum to pass the vibrations from the bell to our ears.'
+      },
+      {
+        q: '8. Why does soft foam with tiny trapped air pockets muffle a ringing alarm better than flat metal foil?',
+        a: 'Soft fibres and trapped air pockets absorb and trap the sound vibrations instead of passing them straight through.'
+      }
+    ];
+
+    let qfIndex = 0;
+    let qfTimerInterval = null;
+    let qfTimeLeft = 15;
+
+    function renderQf() {
+      const item = qfQuestions[qfIndex];
+      document.getElementById('qfCounter').textContent = `Question ${qfIndex + 1} of ${qfQuestions.length}`;
+      document.getElementById('qfQuestionText').textContent = item.q;
+      document.getElementById('qfAnswerText').textContent = item.a;
+      document.getElementById('qfAnswerBox').classList.add('hidden');
+      document.getElementById('qfBoardsUpBanner').classList.add('hidden');
+      clearInterval(qfTimerInterval);
+      qfTimeLeft = 15;
+      document.getElementById('qfTimerBadge').textContent = '15s';
+    }
+
+    function startQfTimer() {
+      clearInterval(qfTimerInterval);
+      qfTimeLeft = 15;
+      document.getElementById('qfBoardsUpBanner').classList.add('hidden');
+      document.getElementById('qfTimerBadge').textContent = `${qfTimeLeft}s`;
+      playChime(660, 0.08);
+      qfTimerInterval = setInterval(() => {
+        qfTimeLeft--;
+        document.getElementById('qfTimerBadge').textContent = `${qfTimeLeft}s`;
+        if (qfTimeLeft <= 3 && qfTimeLeft > 0) playChime(880, 0.07, 'square', 0.08);
+        if (qfTimeLeft <= 0) {
+          clearInterval(qfTimerInterval);
+          document.getElementById('qfBoardsUpBanner').classList.remove('hidden');
+          playChime(980, 0.28, 'sawtooth', 0.16);
+        }
+      }, 1000);
+    }
+
+    function revealQfAnswer() {
+      clearInterval(qfTimerInterval);
+      document.getElementById('qfAnswerBox').classList.remove('hidden');
+      playSuccessFanfare();
+    }
+
+    function nextQf() {
+      qfIndex = (qfIndex + 1) % qfQuestions.length;
+      renderQf();
+      playChime(540, 0.07);
+    }
+
+    function prevQf() {
+      qfIndex = (qfIndex - 1 + qfQuestions.length) % qfQuestions.length;
+      renderQf();
+      playChime(480, 0.07);
+    }
+
+    // =========================================================================
+    // TEACHER DRAWER & DAVID'S BOARD (Proper getBoundingClientRect() Resize!)
+    // =========================================================================
+    function toggleTeacherDrawer() {
+      document.getElementById('teacherDrawer').classList.toggle('hidden');
+    }
+
+    let wbDrawing = false;
+    let wbColor = '#0f172a';
+    let wbCtx = null;
+
+    function initWhiteboard() {
+      const canvas = document.getElementById('wbCanvas');
+      const wrap = document.getElementById('wbCanvasWrap');
+      const rect = wrap.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        const dpr = window.devicePixelRatio || 1;
+        const targetW = Math.floor(rect.width * dpr);
+        const targetH = Math.floor(rect.height * dpr);
+        if (canvas.width === targetW && canvas.height === targetH && wbCtx) return;
+        const snapshot = (canvas.width > 0 && canvas.height > 0 && wbCtx) ? canvas.toDataURL() : null;
+        canvas.width = targetW;
+        canvas.height = targetH;
+        wbCtx = canvas.getContext('2d');
+        wbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        wbCtx.lineCap = 'round';
+        wbCtx.lineJoin = 'round';
+        if (snapshot) {
+          const img = new Image();
+          img.onload = () => wbCtx.drawImage(img, 0, 0, rect.width, rect.height);
+          img.src = snapshot;
+        }
+      }
+    }
+
+    function toggleWhiteboard() {
+      const overlay = document.getElementById('whiteboardOverlay');
+      const wasHidden = overlay.classList.contains('hidden');
+      overlay.classList.toggle('hidden');
+      if (wasHidden) {
+        requestAnimationFrame(() => initWhiteboard());
+      }
+    }
+
+    function setPenColor(col) { wbColor = col; }
+    function clearWhiteboard() {
+      const canvas = document.getElementById('wbCanvas');
+      if (wbCtx) wbCtx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function bindWhiteboardEvents() {
+      const canvas = document.getElementById('wbCanvas');
+      function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      }
+      canvas.addEventListener('pointerdown', (e) => {
+        if (!wbCtx) initWhiteboard();
+        wbDrawing = true;
+        const p = getPos(e);
+        wbCtx.beginPath();
+        wbCtx.moveTo(p.x, p.y);
+      });
+      canvas.addEventListener('pointermove', (e) => {
+        if (!wbDrawing || !wbCtx) return;
+        const p = getPos(e);
+        wbCtx.strokeStyle = wbColor;
+        wbCtx.lineWidth = wbColor === '#ffffff' ? 24 : 4;
+        wbCtx.lineTo(p.x, p.y);
+        wbCtx.stroke();
+      });
+      window.addEventListener('pointerup', () => { wbDrawing = false; });
+      window.addEventListener('resize', () => {
+        if (!document.getElementById('whiteboardOverlay').classList.contains('hidden')) {
+          initWhiteboard();
+        }
+      });
+    }
+
+    // =========================================================================
+    // INITIALISE ON LOAD
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      renderVocabGrid();
+      setMission1Medium('solid');
+      selectLabMedium('solid');
+      updateMuffleUI();
+      renderQf();
+      bindWhiteboardEvents();
+    });
+  </script>
+</body>
+</html>

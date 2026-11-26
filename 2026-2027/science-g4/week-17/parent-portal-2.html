@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grade 4 Science — Parent Portal 2: Unit 2 Sound Test Revision (EN / VN)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800;900&display=swap');
+
+    body {
+      font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(180deg, #eff6ff 0%, #f5f3ff 50%, #ecfeff 100%);
+      color: #0f172a;
+      min-height: 100vh;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Fredoka', 'Nunito', sans-serif;
+    }
+
+    /* Language visibility toggled by body class */
+    body.mode-en .lang-vn { display: none !important; }
+    body.mode-vn .lang-en { display: none !important; }
+
+    /* Smooth slider styling */
+    input[type="range"].portal-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: #cbd5e1;
+      outline: none;
+    }
+    input[type="range"].portal-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #4f46e5;
+      border: 3px solid #ffffff;
+      box-shadow: 0 3px 8px rgba(79, 70, 229, 0.35);
+      cursor: pointer;
+    }
+
+    /* Confetti canvas */
+    #portal-confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+    }
+  </style>
+</head>
+<body class="mode-en antialiased pb-16">
+  <canvas id="portal-confetti"></canvas>
+
+  <!-- STICKY BILINGUAL HEADER -->
+  <header class="sticky top-0 z-50 bg-indigo-950/95 backdrop-blur-md text-white shadow-lg border-b-4 border-cyan-400">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span class="text-2xl sm:text-3xl shrink-0">🔊</span>
+        <div class="min-w-0">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-cyan-300 truncate">
+            <span class="lang-en">Grade 4 Science (Stage 5) &bull; Week 17 Lesson 2</span>
+            <span class="lang-vn">Khoa học Lớp 4 (Stage 5) &bull; Tuần 17 Tiết 2</span>
+          </div>
+          <div class="text-sm sm:text-base font-bold truncate">
+            <span class="lang-en">Unit 2 Sound — Test Revision Portal</span>
+            <span class="lang-vn">Ôn tập Kiểm tra Chương 2: Âm thanh</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bilingual Toggle Pill -->
+      <div class="flex items-center bg-slate-900 border border-indigo-700 rounded-full p-1 shrink-0">
+        <button id="btn-lang-en" onclick="setLanguage('en')" class="px-3 py-1.5 rounded-full text-xs sm:text-sm font-black bg-cyan-400 text-slate-950 shadow transition">🇬🇧 EN</button>
+        <button id="btn-lang-vn" onclick="setLanguage('vn')" class="px-3 py-1.5 rounded-full text-xs sm:text-sm font-black text-indigo-200 hover:text-white transition">🇻🇳 VN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 pt-6 space-y-8">
+
+    <!-- HERO BANNER -->
+    <section class="bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 text-white rounded-3xl p-6 sm:p-8 shadow-xl">
+      <span class="inline-block px-3.5 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase tracking-wider mb-3">
+        <span class="lang-en">Topics 2.1 – 2.4 Full Pre-Test Clinic</span>
+        <span class="lang-vn">Tổng hợp Chủ đề 2.1 – 2.4 Trước Kỳ Kiểm Tra</span>
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-3">
+        <span class="lang-en">Get 100% Ready for the Unit 2 Sound Test!</span>
+        <span class="lang-vn">Sẵn sàng 100% cho Bài Kiểm tra Chương 2: Âm thanh!</span>
+      </h1>
+      <p class="text-base sm:text-lg font-semibold text-indigo-50 leading-relaxed">
+        <span class="lang-en">Explore live sound waves together, bust the 4 biggest Cambridge exam traps, practise key bilingual vocabulary with audio, and take our 5-minute family pre-test challenge!</span>
+        <span class="lang-vn">Cùng con khám phá sóng âm trực tiếp, hóa giải 4 "bẫy" hay gặp nhất trong bài kiểm tra Cambridge, nghe từ vựng song ngữ và thử sức với bộ câu hỏi ôn tập 5 phút tại nhà!</span>
+      </p>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- INTERACTIVE MODEL A: LIVE VOLUME VS PITCH WAVE & SOUND MIXER -->
+    <!-- ============================================================ -->
+    <section class="bg-white rounded-3xl shadow-xl border-2 border-indigo-100 p-5 sm:p-7">
+      <div class="mb-4">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">
+          <span class="lang-en">Interactive Lab 1 &bull; Hands-On Sound Explorer</span>
+          <span class="lang-vn">Thí nghiệm Tương tác 1 &bull; Khám phá Âm thanh Trực tiếp</span>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-indigo-950">
+          <span class="lang-en">Live Volume vs Pitch Wave &amp; Sound Mixer</span>
+          <span class="lang-vn">Bộ Trộn Sóng Âm: Âm lượng vs Cao độ</span>
+        </h2>
+        <p class="text-sm font-bold text-slate-600 mt-1">
+          <span class="lang-en">Slide Vibration Size (Volume) and Vibration Speed (Pitch) separately — hear and see why LOUD does not mean HIGH!</span>
+          <span class="lang-vn">Kéo riêng từng thanh Độ lớn rung động (Âm lượng) và Tốc độ rung động (Cao độ) để nghe và thấy vì sao TO không đồng nghĩa với CAO!</span>
+        </p>
+      </div>
+
+      <!-- Wave Canvas ONLY -->
+      <div class="bg-slate-950 rounded-2xl p-3 border-4 border-indigo-500 mb-4">
+        <svg viewBox="0 0 600 180" class="w-full h-40">
+          <line x1="16" y1="90" x2="584" y2="90" stroke="#334155" stroke-width="2" stroke-dasharray="6,6"></line>
+          <path id="p-wave-path" d="" fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"></path>
+        </svg>
+      </div>
+
+      <!-- Dedicated Dual-Language Readout Dashboard BELOW canvas -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-indigo-50 border border-indigo-200 rounded-2xl p-3.5 mb-5">
+        <div class="bg-white rounded-xl p-2.5 text-center shadow-sm">
+          <div class="text-xs font-extrabold text-slate-500">
+            <span class="lang-en">Volume</span><span class="lang-vn">Âm lượng</span>
+          </div>
+          <div id="p-db-readout" class="text-xl font-black text-amber-600">65 dB</div>
+        </div>
+        <div class="bg-white rounded-xl p-2.5 text-center shadow-sm">
+          <div class="text-xs font-extrabold text-slate-500">
+            <span class="lang-en">Vibration Size</span><span class="lang-vn">Độ lớn rung</span>
+          </div>
+          <div class="text-sm sm:text-base font-black text-amber-700">
+            <span id="p-amp-en" class="lang-en">Medium</span>
+            <span id="p-amp-vn" class="lang-vn">Trung bình</span>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-2.5 text-center shadow-sm">
+          <div class="text-xs font-extrabold text-slate-500">
+            <span class="lang-en">Pitch</span><span class="lang-vn">Cao độ</span>
+          </div>
+          <div id="p-hz-readout" class="text-xl font-black text-indigo-600">440 Hz</div>
+        </div>
+        <div class="bg-white rounded-xl p-2.5 text-center shadow-sm">
+          <div class="text-xs font-extrabold text-slate-500">
+            <span class="lang-en">Vibration Speed</span><span class="lang-vn">Tốc độ rung</span>
+          </div>
+          <div class="text-sm sm:text-base font-black text-indigo-700">
+            <span id="p-spd-en" class="lang-en">Medium</span>
+            <span id="p-spd-vn" class="lang-vn">Trung bình</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Smooth Sliders (targeted updates, never destroyed!) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+          <label for="p-vol-slider" class="flex justify-between font-extrabold text-amber-950 text-sm mb-2">
+            <span>
+              <span class="lang-en">🔊 Vibration Size (Volume)</span>
+              <span class="lang-vn">🔊 Độ lớn rung động (Âm lượng)</span>
+            </span>
+            <span id="p-vol-lbl">65 dB</span>
+          </label>
+          <input id="p-vol-slider" type="range" min="30" max="100" value="65" class="portal-slider" oninput="updatePortalMixer()">
+          <div class="flex justify-between text-xs font-bold text-amber-800 mt-1">
+            <span><span class="lang-en">Quiet</span><span class="lang-vn">Nhỏ</span></span>
+            <span><span class="lang-en">Loud</span><span class="lang-vn">To</span></span>
+          </div>
+        </div>
+
+        <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4">
+          <label for="p-pitch-slider" class="flex justify-between font-extrabold text-indigo-950 text-sm mb-2">
+            <span>
+              <span class="lang-en">🎵 Vibration Speed (Pitch)</span>
+              <span class="lang-vn">🎵 Tốc độ rung động (Cao độ)</span>
+            </span>
+            <span id="p-pitch-lbl">440 Hz</span>
+          </label>
+          <input id="p-pitch-slider" type="range" min="180" max="880" value="440" class="portal-slider" oninput="updatePortalMixer()">
+          <div class="flex justify-between text-xs font-bold text-indigo-800 mt-1">
+            <span><span class="lang-en">Low pitch</span><span class="lang-vn">Âm trầm</span></span>
+            <span><span class="lang-en">High pitch</span><span class="lang-vn">Âm bổng</span></span>
+          </div>
+        </div>
+      </div>
+
+      <button id="p-tone-btn" onclick="togglePortalTone()" class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-lg shadow-lg transition">
+        <span class="lang-en">▶ Play Live Sound Tone</span>
+        <span class="lang-vn">▶ Phát Âm thanh Trực tiếp</span>
+      </button>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- INTERACTIVE MODEL B: BEAT THE EXAM TRAP! (4-CARD MYTH-BUSTER)-->
+    <!-- ============================================================ -->
+    <section class="bg-white rounded-3xl shadow-xl border-2 border-indigo-100 p-5 sm:p-7">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-rose-600">
+            <span class="lang-en">Interactive Lab 2 &bull; Common Misconceptions</span>
+            <span class="lang-vn">Thí nghiệm Tương tác 2 &bull; Hóa giải Lỗi sai Thường gặp</span>
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-indigo-950">
+            <span class="lang-en">Beat the Exam Trap! (Tap Each Card)</span>
+            <span class="lang-vn">Đánh bại 4 "Bẫy" Kiểm tra! (Chạm từng thẻ)</span>
+          </h2>
+        </div>
+        <div class="px-4 py-2 rounded-2xl bg-indigo-950 text-cyan-300 font-black text-sm">
+          <span id="trap-count">0</span> / 4
+          <span class="lang-en">Traps Busted</span>
+          <span class="lang-vn">Bẫy đã phá</span>
+        </div>
+      </div>
+
+      <div id="myth-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 10 VISUAL SVG BILINGUAL VOCABULARY CARDS + AUDIO             -->
+    <!-- ============================================================ -->
+    <section class="bg-white rounded-3xl shadow-xl border-2 border-indigo-100 p-5 sm:p-7">
+      <div class="mb-5">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-cyan-600">
+          <span class="lang-en">Key Assessment Words with Pronunciation</span>
+          <span class="lang-vn">Từ vựng Trọng tâm kèm Phát âm Chuẩn</span>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-indigo-950">
+          <span class="lang-en">10 Essential Sound Words (EN / VN Audio)</span>
+          <span class="lang-vn">10 Từ vựng Âm thanh Thiết yếu (Nghe Anh / Việt)</span>
+        </h2>
+      </div>
+
+      <div id="portal-vocab-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 3-TIER DINNER TABLE TALKS (5-MINUTE ORAL PRE-TEST QUIZ)      -->
+    <!-- ============================================================ -->
+    <section class="bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 rounded-3xl shadow-xl border-2 border-amber-300 p-5 sm:p-7">
+      <div class="mb-5">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">
+          <span class="lang-en">5-Minute Oral Pre-Test Coaching</span>
+          <span class="lang-vn">Hỏi đáp Nhanh 5 Phút Trên Bàn Ăn</span>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-amber-950">
+          <span class="lang-en">🍽️ 3-Tier Dinner Table Talks for Parents</span>
+          <span class="lang-vn">🍽️ 3 Cấp độ Trò chuyện Ôn bài cho Phụ huynh</span>
+        </h2>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Tier 1 -->
+        <div class="bg-white rounded-2xl p-4 border-2 border-emerald-300 shadow-sm">
+          <span class="inline-block px-3 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-extrabold text-xs mb-2">
+            <span class="lang-en">Tier 1 &bull; Warm-Up (Topics 2.1 &amp; 2.2)</span>
+            <span class="lang-vn">Cấp độ 1 &bull; Khởi động (Chủ đề 2.1 &amp; 2.2)</span>
+          </span>
+          <p class="font-extrabold text-slate-900 text-base mb-1.5">
+            <span class="lang-en">Ask your child: "What makes sound happen, and how can we muffle a loud alarm clock inside a box?"</span>
+            <span class="lang-vn">Hỏi con: "Điều gì tạo ra âm thanh, và làm sao để làm dịu tiếng đồng hồ báo thức kêu to trong hộp?"</span>
+          </p>
+          <p class="text-sm font-bold text-emerald-800 bg-emerald-50 rounded-xl p-2.5">
+            <span class="lang-en"><strong>Answer check:</strong> Sound is made by <em>vibrations</em>. Soft materials like foam, cotton wool or thick cloth absorb vibrations and muffle the volume (measured in decibels, dB).</span>
+            <span class="lang-vn"><strong>Gợi ý kiểm tra:</strong> Âm thanh tạo ra nhờ <em>sự rung động</em>. Vật liệu mềm như mút xốp, bông gòn hoặc vải dày hấp thụ rung động giúp giảm âm lượng (đo bằng đề-xi-ben, dB).</span>
+          </p>
+        </div>
+
+        <!-- Tier 2 -->
+        <div class="bg-white rounded-2xl p-4 border-2 border-amber-400 shadow-sm">
+          <span class="inline-block px-3 py-0.5 rounded-full bg-amber-100 text-amber-900 font-extrabold text-xs mb-2">
+            <span class="lang-en">Tier 2 &bull; Test-Ready (Topics 2.3 &amp; 2.4)</span>
+            <span class="lang-vn">Cấp độ 2 &bull; Sẵn sàng Kiểm tra (Chủ đề 2.3 &amp; 2.4)</span>
+          </span>
+          <p class="font-extrabold text-slate-900 text-base mb-1.5">
+            <span class="lang-en">Ask your child: "How do you make a guitar string play a higher pitch? What if you pour MORE water into a bottle and blow across the top?"</span>
+            <span class="lang-vn">Hỏi con: "Làm thế nào để dây đàn ghi-ta phát ra âm cao hơn? Còn nếu rót THÊM nước vào chai rồi thổi qua miệng chai thì âm cao hay thấp?"</span>
+          </p>
+          <p class="text-sm font-bold text-amber-900 bg-amber-50 rounded-xl p-2.5">
+            <span class="lang-en"><strong>Answer check:</strong> Make the string <em>shorter, tighter, or thinner</em> so it vibrates faster. More water leaves a <em>shorter air column</em> at the top, which vibrates faster = <em>higher pitch</em>!</span>
+            <span class="lang-vn"><strong>Gợi ý kiểm tra:</strong> Làm dây đàn <em>ngắn hơn, căng hơn hoặc mảnh hơn</em> để dây rung nhanh hơn. Nhiều nước hơn làm <em>cột không khí ngắn hơn</em> ➔ rung nhanh hơn ➔ <em>âm cao hơn</em>!</span>
+          </p>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="bg-white rounded-2xl p-4 border-2 border-fuchsia-400 shadow-sm">
+          <span class="inline-block px-3 py-0.5 rounded-full bg-fuchsia-100 text-fuchsia-900 font-extrabold text-xs mb-2">
+            <span class="lang-en">Tier 3 &bull; Star Challenge (Fair Test &amp; Anomalies)</span>
+            <span class="lang-vn">Cấp độ 3 &bull; Thử thách Điểm cao (Thí nghiệm Công bằng &amp; Kết quả Bất thường)</span>
+          </span>
+          <p class="font-extrabold text-slate-900 text-base mb-1.5">
+            <span class="lang-en">Ask your child: "If one bar on your pitch chart breaks the smooth pattern, what is it called and what must a good scientist do?"</span>
+            <span class="lang-vn">Hỏi con: "Nếu một cột trên biểu đồ cao độ không theo quy luật chung, nó gọi là gì và nhà khoa học cần làm gì?"</span>
+          </p>
+          <p class="text-sm font-bold text-fuchsia-900 bg-fuchsia-50 rounded-xl p-2.5">
+            <span class="lang-en"><strong>Answer check:</strong> It is an <em>anomalous result</em>. Circle it, predict what the value should be, and <em>repeat that measurement</em> while keeping all control variables the same!</span>
+            <span class="lang-vn"><strong>Gợi ý kiểm tra:</strong> Đó là <em>kết quả bất thường</em> (anomalous result). Khoanh tròn cột đó, dự đoán giá trị đúng theo quy luật và <em>đo lại lần thử đó</em> thật cẩn thận!</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- GAMIFIED 4-QUESTION INTERACTIVE PRE-TEST QUIZ WITH CONFETTI  -->
+    <!-- ============================================================ -->
+    <section class="bg-white rounded-3xl shadow-xl border-2 border-indigo-200 p-5 sm:p-7">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">
+            <span class="lang-en">3-Minute Family Home Check &bull; Topics 2.1–2.4</span>
+            <span class="lang-vn">Kiểm tra Nhanh 3 Phút tại Nhà &bull; Đủ 4 Chủ đề 2.1–2.4</span>
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-indigo-950">
+            <span class="lang-en">🏆 Unit 2 Pre-Test Challenge Quiz</span>
+            <span class="lang-vn">🏆 Thử thách Trước Kiểm tra Chương 2</span>
+          </h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="px-4 py-2 rounded-2xl bg-emerald-100 text-emerald-950 font-black text-base border border-emerald-300">
+            <span class="lang-en">Score:</span><span class="lang-vn">Điểm:</span> <span id="quiz-score">0</span> / 4
+          </div>
+          <button onclick="resetQuiz()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs">
+            <span class="lang-en">↺ Retry</span><span class="lang-vn">↺ Làm lại</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="quiz-container" class="space-y-5"></div>
+
+      <div id="quiz-win-banner" class="hidden mt-6 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-2xl p-5 text-center shadow-lg">
+        <div class="text-3xl mb-1">🎉🏆🌟</div>
+        <div class="text-2xl font-black">
+          <span class="lang-en">4 / 4 — Unit 2 Sound Champion! Ready for the Test!</span>
+          <span class="lang-vn">4 / 4 — Nhà Vô địch Âm thanh! Sẵn sàng cho Bài Kiểm tra!</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ============================================================
+    // 1. LANGUAGE TOGGLE & AUDIO HELPERS
+    // ============================================================
+    let currentLang = 'en';
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function setLanguage(lang) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      currentLang = lang;
+      document.body.classList.remove('mode-en', 'mode-vn');
+      document.body.classList.add('mode-' + lang);
+      document.getElementById('btn-lang-en').className = lang === 'en'
+        ? 'px-3 py-1.5 rounded-full text-xs sm:text-sm font-black bg-cyan-400 text-slate-950 shadow transition'
+        : 'px-3 py-1.5 rounded-full text-xs sm:text-sm font-black text-indigo-200 hover:text-white transition';
+      document.getElementById('btn-lang-vn').className = lang === 'vn'
+        ? 'px-3 py-1.5 rounded-full text-xs sm:text-sm font-black bg-cyan-400 text-slate-950 shadow transition'
+        : 'px-3 py-1.5 rounded-full text-xs sm:text-sm font-black text-indigo-200 hover:text-white transition';
+    }
+
+    function speakText(text, langCode) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = langCode;
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    function playChime(good) {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.connect(g);
+      g.connect(ctx.destination);
+      if (good) {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.08);
+        osc.frequency.setValueAtTime(783.99, now + 0.16);
+        g.gain.setValueAtTime(0.14, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.34);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } else {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(210, now);
+        osc.frequency.linearRampToValueAtTime(155, now + 0.2);
+        g.gain.setValueAtTime(0.1, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+        osc.start(now);
+        osc.stop(now + 0.23);
+      }
+    }
+
+    function launchPortalConfetti() {
+      const canvas = document.getElementById('portal-confetti');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const palette = ['#f43f5e', '#38bdf8', '#f59e0b', '#10b981', '#a855f7'];
+      const bits = Array.from({ length: 85 }, (_, i) => ({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 140,
+        w: 8 + Math.random() * 6,
+        h: 10 + Math.random() * 6,
+        vx: (Math.random() - 0.5) * 6,
+        vy: 3 + Math.random() * 5,
+        r: Math.random() * 360,
+        vr: (Math.random() - 0.5) * 12,
+        c: palette[i % palette.length]
+      }));
+      let f = 0;
+      function tick() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        bits.forEach(b => {
+          b.x += b.vx; b.y += b.vy; b.r += b.vr;
+          ctx.save();
+          ctx.translate(b.x, b.y);
+          ctx.rotate(b.r * Math.PI / 180);
+          ctx.fillStyle = b.c;
+          ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
+          ctx.restore();
+        });
+        f++;
+        if (f < 115) requestAnimationFrame(tick);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      tick();
+    }
+
+    // ============================================================
+    // 2. MODEL A: LIVE VOLUME VS PITCH WAVE & AUDIO MIXER
+    // ============================================================
+    let pOsc = null, pGain = null, pPlaying = false;
+    let pAmp = 42, pCycles = 5, pPhase = 0;
+
+    function updatePortalMixer() {
+      const db = Number(document.getElementById('p-vol-slider').value);
+      const hz = Number(document.getElementById('p-pitch-slider').value);
+
+      document.getElementById('p-vol-lbl').textContent = db + ' dB';
+      document.getElementById('p-pitch-lbl').textContent = hz + ' Hz';
+      document.getElementById('p-db-readout').textContent = db + ' dB';
+      document.getElementById('p-hz-readout').textContent = hz + ' Hz';
+
+      const ampEn = db < 50 ? 'Small (Quiet)' : db < 78 ? 'Medium' : 'BIG (Loud!)';
+      const ampVn = db < 50 ? 'Nhỏ (Êm)' : db < 78 ? 'Trung bình' : 'LỚN (To!)';
+      document.getElementById('p-amp-en').textContent = ampEn;
+      document.getElementById('p-amp-vn').textContent = ampVn;
+
+      const spdEn = hz < 350 ? 'Slow (Low)' : hz < 620 ? 'Medium' : 'FAST (High!)';
+      const spdVn = hz < 350 ? 'Chậm (Trầm)' : hz < 620 ? 'Trung bình' : 'NHANH (Cao!)';
+      document.getElementById('p-spd-en').textContent = spdEn;
+      document.getElementById('p-spd-vn').textContent = spdVn;
+
+      pAmp = 14 + ((db - 30) / 70) * 60;
+      pCycles = 2 + ((hz - 180) / 700) * 10;
+
+      if (pPlaying && pOsc && pGain && audioCtx) {
+        pOsc.frequency.setTargetAtTime(hz, audioCtx.currentTime, 0.03);
+        pGain.gain.setTargetAtTime(0.03 + ((db - 30) / 70) * 0.25, audioCtx.currentTime, 0.03);
+      }
+    }
+
+    function togglePortalTone() {
+      const btn = document.getElementById('p-tone-btn');
+      if (pPlaying) {
+        if (pOsc) { try { pOsc.stop(); pOsc.disconnect(); } catch (e) {} pOsc = null; }
+        if (pGain) { try { pGain.disconnect(); } catch (e) {} pGain = null; }
+        pPlaying = false;
+        btn.className = 'w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-lg shadow-lg transition';
+        btn.innerHTML = '<span class="lang-en">▶ Play Live Sound Tone</span><span class="lang-vn">▶ Phát Âm thanh Trực tiếp</span>';
+        return;
+      }
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const db = Number(document.getElementById('p-vol-slider').value);
+      const hz = Number(document.getElementById('p-pitch-slider').value);
+      pOsc = ctx.createOscillator();
+      pGain = ctx.createGain();
+      pOsc.type = 'sine';
+      pOsc.frequency.setValueAtTime(hz, ctx.currentTime);
+      pGain.gain.setValueAtTime(0.03 + ((db - 30) / 70) * 0.25, ctx.currentTime);
+      pOsc.connect(pGain);
+      pGain.connect(ctx.destination);
+      pOsc.start();
+      pPlaying = true;
+      btn.className = 'w-full py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-black text-lg shadow-lg transition';
+      btn.innerHTML = '<span class="lang-en">⏹ Stop Sound Tone</span><span class="lang-vn">⏹ Dừng Âm thanh</span>';
+    }
+
+    function animatePortalWave() {
+      pPhase += 0.1 + pCycles * 0.017;
+      const pts = [];
+      for (let x = 16; x <= 584; x += 4) {
+        const n = (x - 16) / 568;
+        const y = 90 + Math.sin(n * pCycles * Math.PI * 2 + pPhase) * pAmp;
+        pts.push((x === 16 ? 'M' : 'L') + x + ' ' + y.toFixed(1));
+      }
+      document.getElementById('p-wave-path').setAttribute('d', pts.join(' '));
+      requestAnimationFrame(animatePortalWave);
+    }
+
+    // ============================================================
+    // 3. MODEL B: 4-CARD INTERACTIVE MYTH-BUSTER
+    // ============================================================
+    const myths = [
+      {
+        icon: '🥁',
+        mythEn: 'Trap 1: "Hitting a drum harder gives a higher pitch!"',
+        mythVn: 'Bẫy 1: "Đánh trống mạnh hơn sẽ làm âm cao hơn!"',
+        truthEn: 'FALSE! Hitting harder makes BIGGER vibrations ➔ LOUDER VOLUME. Pitch stays the same!',
+        truthVn: 'SAI! Đánh mạnh hơn tạo rung động LỚN HƠN ➔ ÂM LƯỢNG TO HƠN. Cao độ vẫn giữ nguyên!'
+      },
+      {
+        icon: '🍾',
+        mythEn: 'Trap 2: "More water in a bottle gives a lower pitch when blowing!"',
+        mythVn: 'Bẫy 2: "Nhiều nước hơn trong chai làm âm thấp hơn khi thổi!"',
+        truthEn: 'FALSE! When blowing, the AIR vibrates. More water = SHORTER air column = FASTER vibrations = HIGHER pitch!',
+        truthVn: 'SAI! Khi thổi, CỘT KHÔNG KHÍ rung động. Nhiều nước = cột không khí NGẮN HƠN = rung NHANH HƠN = ÂM CAO HƠN!'
+      },
+      {
+        icon: '🚀',
+        mythEn: 'Trap 3: "Loud explosions can be heard across outer space!"',
+        mythVn: 'Bẫy 3: "Vụ nổ lớn có thể nghe thấy ngoài không gian vũ trụ!"',
+        truthEn: 'FALSE! Outer space has NO air or particles to vibrate, so sound CANNOT travel in space!',
+        truthVn: 'SAI! Ngoài vũ trụ KHÔNG có hạt vật chất để truyền rung động nên âm thanh KHÔNG thể truyền đi!'
+      },
+      {
+        icon: '📊',
+        mythEn: 'Trap 4: "Just ignore or rub out a weird bar on a bar chart!"',
+        mythVn: 'Bẫy 4: "Cứ bỏ qua hoặc xóa cột bất thường trên biểu đồ!"',
+        truthEn: 'FALSE! Circle the anomalous result, predict the pattern value, and REPEAT that trial carefully!',
+        truthVn: 'SAI! Hãy khoanh tròn kết quả bất thường, dự đoán giá trị theo quy luật và ĐO LẠI lần thử đó!'
+      }
+    ];
+    const bustedSet = new Set();
+
+    function initMyths() {
+      const grid = document.getElementById('myth-grid');
+      grid.innerHTML = myths.map((m, i) => `
+        <button onclick="bustMyth(${i})" id="myth-card-${i}" class="text-left rounded-2xl p-4 border-2 border-rose-300 bg-rose-50 hover:bg-rose-100 transition shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-3xl">${m.icon}</span>
+            <span id="myth-badge-${i}" class="px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-xs font-black">
+              <span class="lang-en">Tap to Bust!</span><span class="lang-vn">Chạm để phá bẫy!</span>
+            </span>
+          </div>
+          <p class="font-extrabold text-rose-950 text-base leading-snug">
+            <span class="lang-en">${m.mythEn}</span>
+            <span class="lang-vn">${m.mythVn}</span>
+          </p>
+          <div id="myth-truth-${i}" class="hidden mt-3 pt-3 border-t-2 border-emerald-400 text-sm font-extrabold text-emerald-950">
+            <span class="lang-en">✅ ${m.truthEn}</span>
+            <span class="lang-vn">✅ ${m.truthVn}</span>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    function bustMyth(i) {
+      const card = document.getElementById('myth-card-' + i);
+      const truth = document.getElementById('myth-truth-' + i);
+      const badge = document.getElementById('myth-badge-' + i);
+      truth.classList.remove('hidden');
+      card.className = 'text-left rounded-2xl p-4 border-2 border-emerald-500 bg-emerald-50 transition shadow-md';
+      badge.className = 'px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-xs font-black';
+      badge.innerHTML = '<span class="lang-en">✅ Busted!</span><span class="lang-vn">✅ Đã hóa giải!</span>';
+      if (!bustedSet.has(i)) {
+        bustedSet.add(i);
+        document.getElementById('trap-count').textContent = bustedSet.size;
+        playChime(true);
+        if (bustedSet.size === 4) launchPortalConfetti();
+      }
+    }
+
+    // ============================================================
+    // 4. 10 VISUAL SVG BILINGUAL VOCAB CARDS + EN/VN AUDIO
+    // ============================================================
+    const portalVocab = [
+      { en: 'pitch', vn: 'cao độ', defEn: 'How high or low a sound is (speed of vibration).', defVn: 'Độ cao hay trầm của âm thanh (tốc độ rung động).', svg: '<svg viewBox="0 0 120 44" class="w-24 h-10"><path d="M6 22 Q18 4 30 22 T54 22" fill="none" stroke="#0284c7" stroke-width="3"/><path d="M66 22 Q72 4 78 22 T90 22 T102 22 T114 22" fill="none" stroke="#e11d48" stroke-width="3"/></svg>' },
+      { en: 'volume', vn: 'âm lượng', defEn: 'How loud or quiet a sound is (size of vibration).', defVn: 'Độ to hay nhỏ của âm thanh (độ lớn rung động).', svg: '<svg viewBox="0 0 120 44" class="w-24 h-10"><path d="M8 22 Q20 14 32 22 T56 22" fill="none" stroke="#64748b" stroke-width="3"/><path d="M64 22 Q78 2 92 22 T116 22" fill="none" stroke="#f59e0b" stroke-width="4"/></svg>' },
+      { en: 'vibration', vn: 'sự rung động', defEn: 'Fast back-and-forth movement that makes sound.', defVn: 'Chuyển động rung qua lại nhanh tạo ra âm thanh.', svg: '<svg viewBox="0 0 120 44" class="w-24 h-10"><rect x="55" y="6" width="10" height="32" rx="3" fill="#4f46e5"/><path d="M44 10 Q38 22 44 34 M76 10 Q82 22 76 34" fill="none" stroke="#06b6d4" stroke-width="3"/></svg>' },
+      { en: 'decibel (dB)', vn: 'đề-xi-ben (dB)', defEn: 'The scientific unit used to measure sound volume.', defVn: 'Đơn vị khoa học dùng để đo âm lượng.', svg: '<svg viewBox="0 0 120 44" class="w-24 h-10"><rect x="28" y="4" width="64" height="36" rx="6" fill="#1e293b"/><rect x="35" y="10" width="50" height="18" rx="3" fill="#86efac"/><text x="60" y="23" text-anchor="middle" font-size="11" font-weight="900" fill="#064e3b">65 dB</text></svg>' },
+      { en: 'air column', vn: 'cột không khí', defEn: 'The air space inside a pipe or bottle that vibrates when blown.', defVn: 'Khoảng không khí trong ống hoặc chai rung lên khi thổi.', svg: '<svg viewBox="0 0 120 44" class="w-24 h-10"><rect x="46" y="4" width="28" height="36" rx="3" fill="#fef3c7" stroke="#0f172a" stroke-width="2"/><rect x="48" y="24" width="24" height="14" fill="#38bdf8"/></svg>' },
+      { en: 'tighten', vn: 'làm căng', defEn: 'Pulling a string tighter so it vibrates faster (higher pitch).', defVn: 'Siết dây căng hơn để rung nhanh hơn (âm cao hơn).', svg: '<svg viewBox="0 0 120 44" class="w-24 h-10"><line x1="20" y1="22" x2="100" y2="22" stroke="#dc2626" stroke-width="3.5"/><text x="8" y="27" font-size="14">⬅</text><text x="102" y="27" font-size="14">➔</text></svg>' },
+      { en: 'loosen', vn: 'nới lỏng', defEn: 'Making a string less tight so it vibrates slower (lower pitch).', defVn: 'Làm dây chùng xuống để rung chậm hơn (âm trầm hơn).', svg: '<svg viewBox="0 0 120 44" class="w-24 h-10"><path d="M16 18 Q60 38 104 18" fill="none" stroke="#2563eb" stroke-width="3.5"/></svg>' },
+      { en: 'muffle', vn: 'làm dịu âm thanh', defEn: 'Using soft materials to absorb vibrations and make sound quieter.', defVn: 'Dùng vật liệu mềm hấp thụ rung động để giảm tiếng ồn.', svg: '<svg viewBox="0 0 120 44" class="w-24 h-10"><rect x="34" y="5" width="52" height="34" rx="10" fill="#cbd5e1" stroke="#334155" stroke-width="2" stroke-dasharray="4,2"/><circle cx="60" cy="22" r="9" fill="#f59e0b"/></svg>' },
+      { en: 'anomalous result', vn: 'kết quả bất thường', defEn: 'A result that does not fit the pattern — circle and repeat it!', defVn: 'Kết quả lệch khỏi quy luật — hãy khoanh tròn và đo lại!', svg: '<svg viewBox="0 0 120 44" class="w-24 h-10"><rect x="16" y="10" width="14" height="28" fill="#3b82f6"/><rect x="36" y="18" width="14" height="20" fill="#3b82f6"/><rect x="56" y="8" width="14" height="30" fill="#f43f5e"/><rect x="76" y="28" width="14" height="10" fill="#3b82f6"/><rect x="96" y="32" width="14" height="6" fill="#3b82f6"/></svg>' },
+      { en: 'fair test', vn: 'thí nghiệm công bằng', defEn: 'Change only ONE variable and keep all other variables the same.', defVn: 'Chỉ thay đổi MỘT yếu tố và giữ nguyên mọi yếu tố khác.', svg: '<svg viewBox="0 0 120 44" class="w-24 h-10"><line x1="25" y1="20" x2="95" y2="20" stroke="#0f172a" stroke-width="3"/><polygon points="60,20 50,38 70,38" fill="#10b981"/><circle cx="32" cy="13" r="6" fill="#f59e0b"/><circle cx="88" cy="13" r="6" fill="#6366f1"/></svg>' }
+    ];
+
+    function initPortalVocab() {
+      const grid = document.getElementById('portal-vocab-grid');
+      grid.innerHTML = portalVocab.map((v, i) => `
+        <div class="bg-slate-50 border-2 border-indigo-100 rounded-2xl p-4 flex flex-col justify-between gap-3">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <div class="text-lg font-black text-indigo-950">${v.en}</div>
+              <div class="text-sm font-extrabold text-rose-600">${v.vn}</div>
+            </div>
+            <div class="bg-white rounded-xl p-1 border border-slate-200 shrink-0">${v.svg}</div>
+          </div>
+          <p class="text-xs sm:text-sm font-bold text-slate-700 leading-snug">
+            <span class="lang-en">${v.defEn}</span>
+            <span class="lang-vn">${v.defVn}</span>
+          </p>
+          <div class="flex gap-2">
+            <button onclick="speakText('${v.en.replace(/'/g, "\\'")}', 'en-GB')" class="flex-1 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs">🔊 EN</button>
+            <button onclick="speakText('${v.vn.replace(/'/g, "\\'")}', 'vi-VN')" class="flex-1 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs">🔊 VN</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ============================================================
+    // 5. GAMIFIED 4-QUESTION INTERACTIVE PRE-TEST QUIZ (TOPICS 2.1–2.4)
+    // ============================================================
+    const quizData = [
+      {
+        badgeEn: 'Topic 2.1 • Sound Travel', badgeVn: 'Chủ đề 2.1 • Sự truyền âm',
+        qEn: '1. You press your ear onto a long wooden table while your friend taps the far end gently. Why does the tap sound loud and clear?',
+        qVn: '1. Con áp tai lên bàn gỗ dài khi bạn gõ nhẹ ở đầu kia. Vì sao tiếng gõ nghe rất rõ và nhanh?',
+        opts: [
+          { en: 'A. Sound travels well through solid wood because its particles are packed closely.', vn: 'A. Âm thanh truyền rất tốt qua gỗ rắn vì các hạt xếp sát nhau.' },
+          { en: 'B. Sound can only travel through air, never through wood.', vn: 'B. Âm thanh chỉ truyền qua không khí, không truyền qua gỗ.' },
+          { en: 'C. Wood creates electricity that carries the tap.', vn: 'C. Gỗ tạo ra điện để mang tiếng gõ đi.' }
+        ],
+        correct: 0,
+        fbEn: 'Spot on! Sound travels fastest through solids because particles are packed tightly and pass vibrations quickly.',
+        fbVn: 'Chính xác! Âm thanh truyền nhanh nhất trong chất rắn vì các hạt xếp sát nhau và truyền rung động rất nhanh.'
+      },
+      {
+        badgeEn: 'Topic 2.2 • Volume & Muffling', badgeVn: 'Chủ đề 2.2 • Âm lượng & Giảm âm',
+        qEn: '2. Which material lined inside a box will MUFFLE a ringing alarm clock the best?',
+        qVn: '2. Vật liệu nào lót bên trong hộp sẽ LÀM DỊU tiếng đồng hồ báo thức tốt nhất?',
+        opts: [
+          { en: 'A. Thin aluminium foil', vn: 'A. Giấy bạc mỏng' },
+          { en: 'B. Thick soft foam and cotton wool', vn: 'B. Mút xốp dày mềm và bông gòn' },
+          { en: 'C. Hard glass plates', vn: 'C. Tấm kính cứng' }
+        ],
+        correct: 1,
+        fbEn: 'Brilliant! Soft, thick materials like foam and cotton wool absorb vibrations and reduce decibels (dB).',
+        fbVn: 'Tuyệt vời! Vật liệu mềm, dày như mút xốp và bông gòn hấp thụ rung động và giảm mức đề-xi-ben (dB).'
+      },
+      {
+        badgeEn: 'Topic 2.3 • Stringed Pitch', badgeVn: 'Chủ đề 2.3 • Cao độ đàn dây',
+        qEn: '3. A harp player wants to pluck the HIGHEST pitch note on their harp. Which string should they choose?',
+        qVn: '3. Nghệ sĩ đàn hạc muốn gảy nốt có CAO ĐỘ CAO NHẤT. Họ nên chọn dây đàn nào?',
+        opts: [
+          { en: 'A. The longest, thickest, loosest string', vn: 'A. Dây dài nhất, dày nhất và chùng nhất' },
+          { en: 'B. The shortest, thinnest, tightest string', vn: 'B. Dây ngắn nhất, mảnh nhất và căng nhất' },
+          { en: 'C. Any string, as long as they pluck it very hard', vn: 'C. Dây nào cũng được, miễn là gảy thật mạnh' }
+        ],
+        correct: 1,
+        fbEn: 'Yes! Short, thin, tight strings vibrate the fastest, producing the highest pitch.',
+        fbVn: 'Đúng rồi! Dây ngắn, mảnh và căng sẽ rung nhanh nhất, tạo ra âm cao nhất.'
+      },
+      {
+        badgeEn: 'Topic 2.4 • Air Columns & Anomalies', badgeVn: 'Chủ đề 2.4 • Cột không khí & Kết quả bất thường',
+        qEn: '4. Four drinking straws (6 cm, 10 cm, 14 cm, 18 cm) are blown across. Their pitch scores are: 9, 7, 9, 3. Which straw length gave the ANOMALOUS result?',
+        qVn: '4. Bốn ống hút dài 6 cm, 10 cm, 14 cm, 18 cm được thổi qua miệng có điểm cao độ lần lượt là: 9, 7, 9, 3. Ống hút nào cho KẾT QUẢ BẤT THƯỜNG?',
+        opts: [
+          { en: 'A. 6 cm (Score 9)', vn: 'A. 6 cm (Điểm 9)' },
+          { en: 'B. 14 cm (Score 9 — breaks the 9, 7, 5, 3 pattern!)', vn: 'B. 14 cm (Điểm 9 — phá vỡ quy luật 9, 7, 5, 3!)' },
+          { en: 'C. 18 cm (Score 3)', vn: 'C. 18 cm (Điểm 3)' }
+        ],
+        correct: 1,
+        fbEn: 'Champion! 14 cm should score around 5. Circle it and repeat the 14 cm trial!',
+        fbVn: 'Xuất sắc! Ống 14 cm đáng lẽ khoảng điểm 5. Hãy khoanh tròn và đo lại lần thử 14 cm!'
+      }
+    ];
+
+    let quizAnswers = [null, null, null, null];
+
+    function renderQuiz() {
+      const wrap = document.getElementById('quiz-container');
+      wrap.innerHTML = quizData.map((q, qi) => `
+        <div class="bg-slate-50 border-2 border-indigo-100 rounded-2xl p-4">
+          <span class="inline-block px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold mb-2">
+            <span class="lang-en">${q.badgeEn}</span><span class="lang-vn">${q.badgeVn}</span>
+          </span>
+          <p class="font-extrabold text-slate-900 text-base mb-3">
+            <span class="lang-en">${q.qEn}</span><span class="lang-vn">${q.qVn}</span>
+          </p>
+          <div class="space-y-2">
+            ${q.opts.map((o, oi) => {
+              let cls = 'w-full text-left px-4 py-2.5 rounded-xl border-2 font-bold text-sm transition ';
+              if (quizAnswers[qi] === null) {
+                cls += 'bg-white hover:bg-indigo-50 border-slate-200 text-slate-800';
+              } else if (oi === q.correct) {
+                cls += 'bg-emerald-100 border-emerald-500 text-emerald-950 font-extrabold';
+              } else if (quizAnswers[qi] === oi) {
+                cls += 'bg-rose-100 border-rose-500 text-rose-950';
+              } else {
+                cls += 'bg-white border-slate-200 text-slate-400';
+              }
+              return `<button onclick="answerQuiz(${qi}, ${oi})" ${quizAnswers[qi] !== null ? 'disabled' : ''} class="${cls}">
+                <span class="lang-en">${o.en}</span><span class="lang-vn">${o.vn}</span>
+              </button>`;
+            }).join('')}
+          </div>
+          ${quizAnswers[qi] !== null ? `
+            <div class="mt-3 p-3 rounded-xl text-sm font-extrabold ${quizAnswers[qi] === q.correct ? 'bg-emerald-50 text-emerald-900 border border-emerald-300' : 'bg-amber-50 text-amber-950 border border-amber-300'}">
+              <span class="lang-en">${quizAnswers[qi] === q.correct ? '✅ ' : '💡 '}${q.fbEn}</span>
+              <span class="lang-vn">${quizAnswers[qi] === q.correct ? '✅ ' : '💡 '}${q.fbVn}</span>
+            </div>` : ''}
+        </div>
+      `).join('');
+
+      const score = quizAnswers.filter((a, idx) => a === quizData[idx].correct).length;
+      document.getElementById('quiz-score').textContent = score;
+      const winBanner = document.getElementById('quiz-win-banner');
+      if (score === 4) winBanner.classList.remove('hidden');
+      else winBanner.classList.add('hidden');
+    }
+
+    function answerQuiz(qi, oi) {
+      if (quizAnswers[qi] !== null) return;
+      quizAnswers[qi] = oi;
+      const isRight = oi === quizData[qi].correct;
+      playChime(isRight);
+      renderQuiz();
+      const score = quizAnswers.filter((a, idx) => a === quizData[idx].correct).length;
+      if (score === 4) launchPortalConfetti();
+    }
+
+    function resetQuiz() {
+      quizAnswers = [null, null, null, null];
+      renderQuiz();
+    }
+
+    // ============================================================
+    // 6. INITIALISE
+    // ============================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      updatePortalMixer();
+      initMyths();
+      initPortalVocab();
+      renderQuiz();
+      animatePortalWave();
+    });
+  </script>
+</body>
+</html>

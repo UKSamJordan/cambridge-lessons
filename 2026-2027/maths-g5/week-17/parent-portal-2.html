@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Portal 2 — Compound Shapes &amp; Missing Lengths (EN / VN)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800;900&display=swap');
+
+    body {
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(155deg, #f0f9ff 0%, #eef2ff 50%, #fdf2f8 100%);
+      color: #0f172a;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: 'Fredoka', 'Nunito', sans-serif;
+    }
+
+    /* Language visibility helpers */
+    body.lang-en .vn-only { display: none !important; }
+    body.lang-vn .en-only { display: none !important; }
+    body.lang-en .both-sep, body.lang-vn .both-sep { display: none !important; }
+
+    .split-anim {
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
+    }
+
+    input[type="range"] {
+      accent-color: #4f46e5;
+      cursor: pointer;
+    }
+
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 95;
+    }
+  </style>
+</head>
+<body class="lang-both antialiased pb-14">
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- STICKY BILINGUAL HEADER -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-2 border-indigo-100 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-fuchsia-600 text-white flex items-center justify-center font-display font-bold text-lg shadow">
+          7.1
+        </div>
+        <div>
+          <p class="text-[11px] font-extrabold uppercase tracking-wider text-indigo-600">
+            <span class="en-only">Grade 5 Maths · Parent Portal</span>
+            <span class="vn-only">Toán Lớp 5 · Cổng Phụ Huynh</span>
+          </p>
+          <h1 class="text-sm sm:text-base font-display font-bold text-slate-900 leading-tight">
+            <span class="en-only">Compound Shapes &amp; Missing Lengths</span>
+            <span class="vn-only">Hình Ghép &amp; Tìm Độ Dài Còn Thiếu</span>
+          </h1>
+        </div>
+      </div>
+
+      <!-- Sticky Language Mode Toggle -->
+      <div class="flex items-center bg-slate-100 p-1 rounded-full border border-slate-200 shadow-inner">
+        <button type="button" id="btnBoth" onclick="setLang('both')" class="px-3 py-1 rounded-full text-xs font-extrabold bg-indigo-600 text-white shadow transition">🇬🇧 + 🇻🇳</button>
+        <button type="button" id="btnEn" onclick="setLang('en')" class="px-3 py-1 rounded-full text-xs font-extrabold text-slate-700 hover:bg-white transition">🇬🇧 EN</button>
+        <button type="button" id="btnVn" onclick="setLang('vn')" class="px-3 py-1 rounded-full text-xs font-extrabold text-slate-700 hover:bg-white transition">🇻🇳 VN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 pt-6 space-y-8">
+
+    <!-- HERO BANNER -->
+    <section class="rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 text-white p-6 sm:p-8 shadow-xl">
+      <div class="space-y-3">
+        <span class="inline-block px-3.5 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase tracking-wide">
+          Week 17 · Lesson 2 · Cambridge Stage 6 (6Gg.03)
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-display font-bold leading-tight">
+          <span class="en-only block">Solve compound area and missing-length triangle problems.</span>
+          <span class="vn-only block text-amber-200 text-2xl sm:text-3xl mt-1">Giải bài toán diện tích hình ghép và tìm cạnh còn thiếu của tam giác vuông.</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 text-sm font-semibold">
+          <div class="en-only bg-white/15 backdrop-blur rounded-2xl p-4">
+            <strong>What your child learnt today:</strong> Calculating right-angled triangle areas with decimals, splitting compound shapes (like house walls or flags) into rectangles and triangles, and <strong>doubling the triangle's area first</strong> to find a missing base or height.
+          </div>
+          <div class="vn-only bg-white/15 backdrop-blur rounded-2xl p-4">
+            <strong>Con đã học gì hôm nay:</strong> Tính diện tích hình tam giác vuông có số thập phân, tách hình ghép (như tường nhà, lá cờ) thành hình chữ nhật và tam giác vuông, và <strong>gấp đôi diện tích trước rồi mới chia</strong> để tìm cạnh còn thiếu.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         2 BESPOKE INTERACTIVE VISUAL MODELS (2-COL ON DESKTOP)
+         ===================================================================== -->
+    <section class="space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🎮</span>
+        <div>
+          <h2 class="text-2xl font-display font-bold text-slate-900">
+            <span class="en-only">Explore Together — Interactive Models</span>
+            <span class="vn-only text-indigo-700 block sm:inline sm:ml-2">Cùng Con Khám Phá Mô Hình Tương Tác</span>
+          </h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- INTERACTIVE MODEL A: COMPOUND HOUSE-GABLE AREA SPLITTER -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-indigo-200 shadow-lg space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold uppercase">Model A</span>
+              <h3 class="text-xl font-display font-bold text-slate-900 mt-1">
+                <span class="en-only block">🏠 House-Gable Area Splitter</span>
+                <span class="vn-only block text-indigo-700 text-base">🏠 Tách Diện Tích Tường Nhà Hình Ghép</span>
+              </h3>
+            </div>
+            <button type="button" id="portalSplitBtn" onclick="togglePortalSplit()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs shadow transition">
+              ✂️ Split / Tách hình
+            </button>
+          </div>
+
+          <div class="bg-slate-50 rounded-2xl p-3 border border-slate-200">
+            <svg viewBox="0 0 360 220" class="w-full h-48">
+              <g id="pRoofGrp" class="split-anim">
+                <polygon id="pRoofPoly" points="75,112 265,112 265,52" fill="rgba(245,158,11,0.4)" stroke="#b45309" stroke-width="3.5"/>
+                <rect id="pRoofSq" x="253" y="100" width="12" height="12" fill="none" stroke="#b45309" stroke-width="2.5"/>
+                <text id="pRoofTxt" x="210" y="96" text-anchor="middle" fill="#92400e" font-weight="900" font-size="14">12 m²</text>
+                <text id="pLblR" x="298" y="86" text-anchor="middle" fill="#b45309" font-weight="900" font-size="13">3 m</text>
+              </g>
+              <line id="pSplitLine" x1="70" y1="112" x2="270" y2="112" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6 4"/>
+              <g id="pWallGrp" class="split-anim">
+                <rect id="pWallRect" x="75" y="112" width="190" height="76" fill="rgba(59,130,246,0.32)" stroke="#1d4ed8" stroke-width="3.5"/>
+                <text id="pWallTxt" x="170" y="156" text-anchor="middle" fill="#1e3a8a" font-weight="900" font-size="15">40 m²</text>
+                <text id="pLblH" x="45" y="154" text-anchor="middle" fill="#1d4ed8" font-weight="900" font-size="13">5 m</text>
+                <text id="pLblW" x="170" y="208" text-anchor="middle" fill="#0f172a" font-weight="900" font-size="14">8 m</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="space-y-2.5 text-sm font-extrabold">
+            <div>
+              <div class="flex justify-between">
+                <label for="pSliderW"><span class="en-only">Wall Width</span><span class="both-sep"> / </span><span class="vn-only">Chiều rộng tường</span></label>
+                <span id="pValW" class="text-indigo-700">8 m</span>
+              </div>
+              <input id="pSliderW" type="range" min="4" max="12" step="0.5" value="8" oninput="updatePortalHouse()" class="w-full">
+            </div>
+            <div>
+              <div class="flex justify-between">
+                <label for="pSliderH"><span class="en-only">Wall Height</span><span class="both-sep"> / </span><span class="vn-only">Chiều cao tường</span></label>
+                <span id="pValH" class="text-blue-700">5 m</span>
+              </div>
+              <input id="pSliderH" type="range" min="2" max="7" step="0.5" value="5" oninput="updatePortalHouse()" class="w-full">
+            </div>
+            <div>
+              <div class="flex justify-between">
+                <label for="pSliderR"><span class="en-only">Roof Height</span><span class="both-sep"> / </span><span class="vn-only">Chiều cao mái</span></label>
+                <span id="pValR" class="text-amber-700">3 m</span>
+              </div>
+              <input id="pSliderR" type="range" min="2" max="7" step="0.5" value="3" oninput="updatePortalHouse()" class="w-full">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-2.5">
+              <p class="text-[11px] font-extrabold text-blue-700">Rectangle</p>
+              <p id="pRectFormula" class="text-xs font-bold text-slate-600">8 × 5</p>
+              <p id="pRectOut" class="text-lg font-display font-bold text-blue-900">40 m²</p>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5">
+              <p class="text-[11px] font-extrabold text-amber-800">Triangle</p>
+              <p id="pTriFormula" class="text-xs font-bold text-slate-600">8 × 3 ÷ 2</p>
+              <p id="pTriOut" class="text-lg font-display font-bold text-amber-900">12 m²</p>
+            </div>
+            <div class="bg-emerald-600 text-white rounded-xl p-2.5 shadow">
+              <p class="text-[11px] font-extrabold text-emerald-100">Total / Tổng</p>
+              <p class="text-xs font-bold text-emerald-100">Rect + Tri</p>
+              <p id="pTotalOut" class="text-lg font-display font-bold">52 m²</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE MODEL B: REVERSE MISSING-SIDE "REBUILD THE RECTANGLE!" -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-purple-200 shadow-lg space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 text-xs font-extrabold uppercase">Model B</span>
+              <h3 class="text-xl font-display font-bold text-slate-900 mt-1">
+                <span class="en-only block">🔄 Rebuild the Rectangle!</span>
+                <span class="vn-only block text-purple-700 text-base">🔄 Gấp Đôi Để Tạo Lại Hình Chữ Nhật!</span>
+              </h3>
+            </div>
+            <button type="button" id="pRevBtn" onclick="togglePortalRev()" class="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs shadow transition">
+              ×2 Rebuild Rectangle
+            </button>
+          </div>
+
+          <div class="bg-purple-50 rounded-2xl p-3 border border-purple-200">
+            <svg viewBox="0 0 360 205" class="w-full h-44">
+              <g id="pTwinGrp" class="split-anim" style="opacity:0.1; transform: translate(24px,-18px);">
+                <polygon points="75,35 285,35 285,165" fill="rgba(168,85,247,0.35)" stroke="#7e22ce" stroke-width="3" stroke-dasharray="6 4"/>
+                <text id="pTwinAreaTxt" x="215" y="88" text-anchor="middle" fill="#6b21a8" font-weight="900" font-size="16">+ 24 cm²</text>
+              </g>
+              <polygon points="75,165 285,165 75,35" fill="rgba(124,58,237,0.45)" stroke="#4c1d95" stroke-width="3.5"/>
+              <rect x="75" y="149" width="16" height="16" fill="none" stroke="#4c1d95" stroke-width="2.5"/>
+              <text id="pMainAreaTxt" x="145" y="132" text-anchor="middle" fill="#ffffff" font-weight="900" font-size="16">Area = 24 cm²</text>
+              <text id="pMainBaseTxt" x="180" y="192" text-anchor="middle" fill="#0f172a" font-weight="900" font-size="15">Base = 8 cm</text>
+              <text id="pMainHeightTxt" x="34" y="105" text-anchor="middle" fill="#b91c1c" font-weight="900" font-size="16">h = ?</text>
+            </svg>
+          </div>
+
+          <!-- Quick Presets -->
+          <div class="flex flex-wrap gap-1.5 justify-center">
+            <button type="button" onclick="setPortalRevPreset(18, 6)" class="px-3 py-1 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-900 font-extrabold text-xs">Area 18, Base 6</button>
+            <button type="button" onclick="setPortalRevPreset(24, 8)" class="px-3 py-1 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-900 font-extrabold text-xs">Area 24, Base 8</button>
+            <button type="button" onclick="setPortalRevPreset(30, 10)" class="px-3 py-1 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-900 font-extrabold text-xs">Area 30, Base 10</button>
+            <button type="button" onclick="setPortalRevPreset(36, 9)" class="px-3 py-1 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-900 font-extrabold text-xs">Area 36, Base 9</button>
+          </div>
+
+          <div class="space-y-2 text-sm font-extrabold">
+            <div>
+              <div class="flex justify-between">
+                <label for="pRevArea"><span class="en-only">Triangle Area</span><span class="both-sep"> / </span><span class="vn-only">Diện tích tam giác</span></label>
+                <span id="pRevValArea" class="text-purple-700">24 cm²</span>
+              </div>
+              <input id="pRevArea" type="range" min="12" max="48" step="6" value="24" oninput="updatePortalRev()" class="w-full">
+            </div>
+            <div>
+              <div class="flex justify-between">
+                <label for="pRevBase"><span class="en-only">Known Base</span><span class="both-sep"> / </span><span class="vn-only">Cạnh đáy đã biết</span></label>
+                <span id="pRevValBase" class="text-indigo-700">8 cm</span>
+              </div>
+              <input id="pRevBase" type="range" min="4" max="12" step="1" value="8" oninput="updatePortalRev()" class="w-full">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5 text-center">
+            <div class="bg-purple-100 border border-purple-300 rounded-xl p-2.5">
+              <p class="text-[11px] font-extrabold text-purple-800"><span class="en-only">Step 1: ×2 Double</span><span class="both-sep"> / </span><span class="vn-only">Bước 1: Gấp đôi</span></p>
+              <p id="pRevOut1" class="text-lg font-display font-bold text-purple-950">24 × 2 = 48 cm²</p>
+            </div>
+            <div class="bg-emerald-100 border border-emerald-400 rounded-xl p-2.5">
+              <p class="text-[11px] font-extrabold text-emerald-800"><span class="en-only">Step 2: ÷ Base</span><span class="both-sep"> / </span><span class="vn-only">Bước 2: Chia đáy</span></p>
+              <p id="pRevOut2" class="text-lg font-display font-bold text-emerald-950">48 ÷ 8 = 6 cm</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         VISUAL SVG BILINGUAL VOCABULARY CARDS (EN + VN AUDIO)
+         ===================================================================== -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-2xl font-display font-bold text-slate-900">
+          <span class="en-only">🗣️ Visual Bilingual Vocabulary</span>
+          <span class="vn-only text-violet-700 block sm:inline sm:ml-2">Từ Vựng Song Ngữ Kèm Âm Thanh</span>
+        </h2>
+        <p class="text-sm font-bold text-slate-600">
+          <span class="en-only">Tap 🔊 EN or 🔊 VN to practise pronunciation together.</span>
+          <span class="vn-only"> Nhấn nút loa để nghe phát âm tiếng Anh chuẩn Anh và tiếng Việt.</span>
+        </p>
+      </div>
+      <div id="portalVocabGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- =====================================================================
+         3-TIER DINNER TABLE TALKS
+         ===================================================================== -->
+    <section class="bg-white rounded-3xl p-6 border-2 border-amber-200 shadow-lg space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">🍜</span>
+        <div>
+          <h2 class="text-2xl font-display font-bold text-slate-900">
+            <span class="en-only">Dinner Table Talks (3-Tier Family Prompts)</span>
+            <span class="vn-only text-amber-700 block sm:inline sm:ml-2">Gợi Ý Trò Chuyện Bên Mâm Cơm</span>
+          </h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4 space-y-2">
+          <span class="px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-900 text-xs font-extrabold">🟢 Tier 1 · Everyday Spotter</span>
+          <p class="en-only text-sm font-bold text-slate-800">"Look at our living room plus that angled hallway corner. How could we split the floor into a rectangle and a right-angled triangle to estimate the tiles?"</p>
+          <p class="vn-only text-sm font-semibold text-emerald-950">"Con nhìn sàn phòng khách cộng thêm góc hành lang vát chéo kìa. Mình tách thành 1 hình chữ nhật và 1 hình tam giác vuông thế nào để tính số gạch lát nhỉ?"</p>
+        </div>
+
+        <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 space-y-2">
+          <span class="px-2.5 py-0.5 rounded-full bg-amber-200 text-amber-900 text-xs font-extrabold">🟠 Tier 2 · House Painter</span>
+          <p class="en-only text-sm font-bold text-slate-800">"If we paint a wall (6 m × 4 m) plus a triangular roof gable (base 6 m, height 2 m), how many square metres is that? Why don't we measure the sloping roof edge?"</p>
+          <p class="vn-only text-sm font-semibold text-amber-950">"Nếu sơn bức tường (6 m × 4 m) và phần mái tam giác (đáy 6 m, cao 2 m), tổng diện tích là bao nhiêu m²? Tại sao mình không dùng cạnh mái xiên để nhân?"</p>
+        </div>
+
+        <div class="bg-purple-50 border-2 border-purple-200 rounded-2xl p-4 space-y-2">
+          <span class="px-2.5 py-0.5 rounded-full bg-purple-200 text-purple-900 text-xs font-extrabold">🟣 Tier 3 · Teach the Parent!</span>
+          <p class="en-only text-sm font-bold text-slate-800">"If a triangle's area is 20 cm² and its base is 5 cm, why is the height NOT 4 cm? Explain the 'Double First' trick to me!"</p>
+          <p class="vn-only text-sm font-semibold text-purple-950">"Nếu diện tích tam giác là 20 cm² và cạnh đáy là 5 cm, tại sao chiều cao KHÔNG phải là 4 cm? Con giảng lại mẹo 'Gấp đôi trước' cho bố mẹ nghe nhé!"</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         GAMIFIED 4-QUESTION INTERACTIVE HOME CHECK QUIZ
+         ===================================================================== -->
+    <section class="bg-gradient-to-br from-indigo-900 via-violet-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-xs font-extrabold uppercase">🏆 3-Minute Home Check</span>
+          <h2 class="text-2xl sm:text-3xl font-display font-bold mt-2">
+            <span class="en-only">Interactive 4-Question Challenge</span>
+            <span class="vn-only text-amber-200 block sm:inline sm:ml-2">Thử Thách 4 Câu Hỏi Nhanh</span>
+          </h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <div id="quizScoreBadge" class="px-4 py-2 rounded-2xl bg-white/15 border border-white/25 font-display font-bold text-xl">
+            Score: 0 / 4
+          </div>
+          <button type="button" onclick="resetQuiz()" class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-xs font-extrabold">↺ Retry</button>
+        </div>
+      </div>
+
+      <div id="quizContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+  </main>
+
+  <script>
+    // =========================================================================
+    // LANGUAGE SWITCHER (WITH speechSynthesis.cancel())
+    // =========================================================================
+    function setLang(mode) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.body.classList.remove('lang-both', 'lang-en', 'lang-vn');
+      document.body.classList.add(`lang-${mode}`);
+
+      const map = { both: 'btnBoth', en: 'btnEn', vn: 'btnVn' };
+      Object.entries(map).forEach(([k, id]) => {
+        const el = document.getElementById(id);
+        if (k === mode) {
+          el.className = 'px-3 py-1 rounded-full text-xs font-extrabold bg-indigo-600 text-white shadow transition';
+        } else {
+          el.className = 'px-3 py-1 rounded-full text-xs font-extrabold text-slate-700 hover:bg-white transition';
+        }
+      });
+    }
+
+    // =========================================================================
+    // CONFETTI CELEBRATION
+    // =========================================================================
+    function launchConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const cols = ['#4f46e5', '#f59e0b', '#10b981', '#ec4899', '#0ea5e9', '#a855f7'];
+      const parts = Array.from({ length: 75 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -15 - Math.random() * 80,
+        r: 4 + Math.random() * 5,
+        dx: (Math.random() - 0.5) * 5,
+        dy: 3 + Math.random() * 4,
+        rot: Math.random() * Math.PI * 2,
+        drot: (Math.random() - 0.5) * 0.2,
+        col: cols[Math.floor(Math.random() * cols.length)]
+      }));
+      let frame = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        parts.forEach(p => {
+          p.x += p.dx;
+          p.y += p.dy;
+          p.rot += p.drot;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = p.col;
+          ctx.fillRect(-p.r, -p.r / 2, p.r * 2, p.r);
+          ctx.restore();
+        });
+        frame++;
+        if (frame < 95) requestAnimationFrame(draw);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      draw();
+    }
+
+    function fmtNum(n) {
+      return Number.isInteger(n) ? String(n) : String(Number(n.toFixed(2)));
+    }
+
+    // =========================================================================
+    // INTERACTIVE MODEL A: HOUSE-GABLE SPLITTER (SMOOTH TARGETED UPDATES)
+    // =========================================================================
+    let pIsSplit = false;
+    function togglePortalSplit() {
+      pIsSplit = !pIsSplit;
+      document.getElementById('pRoofGrp').style.transform = pIsSplit ? 'translateY(-16px)' : 'translateY(0)';
+      document.getElementById('pWallGrp').style.transform = pIsSplit ? 'translateY(10px)' : 'translateY(0)';
+      document.getElementById('portalSplitBtn').textContent = pIsSplit ? '🔗 Rejoin / Ghép lại' : '✂️ Split / Tách hình';
+    }
+
+    function updatePortalHouse() {
+      const w = parseFloat(document.getElementById('pSliderW').value);
+      const h = parseFloat(document.getElementById('pSliderH').value);
+      const r = parseFloat(document.getElementById('pSliderR').value);
+
+      const rectA = w * h;
+      const triA = (w * r) / 2;
+      const total = rectA + triA;
+
+      document.getElementById('pValW').textContent = `${fmtNum(w)} m`;
+      document.getElementById('pValH').textContent = `${fmtNum(h)} m`;
+      document.getElementById('pValR').textContent = `${fmtNum(r)} m`;
+
+      document.getElementById('pRectFormula').textContent = `${fmtNum(w)} × ${fmtNum(h)}`;
+      document.getElementById('pRectOut').textContent = `${fmtNum(rectA)} m²`;
+      document.getElementById('pTriFormula').textContent = `${fmtNum(w)} × ${fmtNum(r)} ÷ 2`;
+      document.getElementById('pTriOut').textContent = `${fmtNum(triA)} m²`;
+      document.getElementById('pTotalOut').textContent = `${fmtNum(total)} m²`;
+
+      const pxW = 86 + ((w - 4) / 8) * 124;
+      const pxH = 38 + ((h - 2) / 5) * 56;
+      const pxR = 28 + ((r - 2) / 5) * 52;
+
+      const x0 = 175 - pxW / 2;
+      const x1 = x0 + pxW;
+      const yBottom = 188;
+      const yMid = yBottom - pxH;
+      const yTop = Math.max(18, yMid - pxR);
+
+      const rectEl = document.getElementById('pWallRect');
+      rectEl.setAttribute('x', x0);
+      rectEl.setAttribute('y', yMid);
+      rectEl.setAttribute('width', pxW);
+      rectEl.setAttribute('height', pxH);
+
+      document.getElementById('pRoofPoly').setAttribute('points', `${x0},${yMid} ${x1},${yMid} ${x1},${yTop}`);
+      const sq = document.getElementById('pRoofSq');
+      sq.setAttribute('x', x1 - 12);
+      sq.setAttribute('y', yMid - 12);
+
+      const sp = document.getElementById('pSplitLine');
+      sp.setAttribute('x1', x0 - 6);
+      sp.setAttribute('y1', yMid);
+      sp.setAttribute('x2', x1 + 6);
+      sp.setAttribute('y2', yMid);
+
+      document.getElementById('pLblW').textContent = `${fmtNum(w)} m`;
+      const lblH = document.getElementById('pLblH');
+      lblH.setAttribute('x', Math.max(26, x0 - 24));
+      lblH.setAttribute('y', yMid + pxH / 2 + 4);
+      lblH.textContent = `${fmtNum(h)} m`;
+
+      const lblR = document.getElementById('pLblR');
+      lblR.setAttribute('x', Math.min(334, x1 + 24));
+      lblR.setAttribute('y', (yTop + yMid) / 2 + 4);
+      lblR.textContent = `${fmtNum(r)} m`;
+
+      const wt = document.getElementById('pWallTxt');
+      wt.setAttribute('x', (x0 + x1) / 2);
+      wt.setAttribute('y', yMid + pxH / 2 + 5);
+      wt.textContent = `${fmtNum(rectA)} m²`;
+
+      const rt = document.getElementById('pRoofTxt');
+      rt.setAttribute('x', x0 + pxW * 0.68);
+      rt.setAttribute('y', yMid - Math.min(16, pxR * 0.34));
+      rt.textContent = `${fmtNum(triA)} m²`;
+    }
+
+    // =========================================================================
+    // INTERACTIVE MODEL B: REBUILD THE RECTANGLE TOOL
+    // =========================================================================
+    let pRevShown = false;
+    function setPortalRevPreset(area, base) {
+      document.getElementById('pRevArea').value = area;
+      document.getElementById('pRevBase').value = base;
+      updatePortalRev();
+    }
+
+    function togglePortalRev() {
+      pRevShown = !pRevShown;
+      const g = document.getElementById('pTwinGrp');
+      const btn = document.getElementById('pRevBtn');
+      if (pRevShown) {
+        g.style.opacity = '1';
+        g.style.transform = 'translate(0, 0)';
+        btn.textContent = '↺ Reset Triangle';
+      } else {
+        g.style.opacity = '0.1';
+        g.style.transform = 'translate(24px, -18px)';
+        btn.textContent = '×2 Rebuild Rectangle';
+      }
+      updatePortalRev();
+    }
+
+    function updatePortalRev() {
+      const area = parseFloat(document.getElementById('pRevArea').value);
+      const base = parseFloat(document.getElementById('pRevBase').value);
+      const dbl = area * 2;
+      const h = dbl / base;
+
+      document.getElementById('pRevValArea').textContent = `${fmtNum(area)} cm²`;
+      document.getElementById('pRevValBase').textContent = `${fmtNum(base)} cm`;
+      document.getElementById('pMainAreaTxt').textContent = `Area = ${fmtNum(area)} cm²`;
+      document.getElementById('pTwinAreaTxt').textContent = `+ ${fmtNum(area)} cm²`;
+      document.getElementById('pMainBaseTxt').textContent = `Base = ${fmtNum(base)} cm`;
+      document.getElementById('pRevOut1').textContent = `${fmtNum(area)} × 2 = ${fmtNum(dbl)} cm²`;
+      document.getElementById('pRevOut2').textContent = `${fmtNum(dbl)} ÷ ${fmtNum(base)} = ${fmtNum(h)} cm`;
+
+      const ht = document.getElementById('pMainHeightTxt');
+      ht.textContent = pRevShown ? `h = ${fmtNum(h)} cm` : 'h = ?';
+      ht.setAttribute('fill', pRevShown ? '#047857' : '#b91c1c');
+    }
+
+    // =========================================================================
+    // VISUAL SVG BILINGUAL VOCABULARY CARDS WITH WEB SPEECH API
+    // =========================================================================
+    const vocabCards = [
+      {
+        en: 'compound shape', vn: 'hình ghép',
+        defEn: 'A shape formed by joining two or more simpler shapes without overlaps.',
+        defVn: 'Hình được ghép từ hai hay nhiều hình đơn giản không chồng lấp.',
+        svg: `<svg viewBox="0 0 180 76" class="h-16 mx-auto"><rect x="24" y="24" width="76" height="42" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="2.5"/><polygon points="100,24 100,66 154,66" fill="#fde68a" stroke="#b45309" stroke-width="2.5"/><line x1="100" y1="24" x2="100" y2="66" stroke="#dc2626" stroke-width="2" stroke-dasharray="4 3"/></svg>`
+      },
+      {
+        en: 'decompose', vn: 'tách hình',
+        defEn: 'Split a compound shape into rectangles and right-angled triangles.',
+        defVn: 'Chia hình ghép thành hình chữ nhật và tam giác vuông để dễ tính.',
+        svg: `<svg viewBox="0 0 180 76" class="h-16 mx-auto"><rect x="16" y="24" width="64" height="40" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2.5"/><text x="93" y="50" text-anchor="middle" font-size="18" font-weight="900" fill="#dc2626">+</text><polygon points="108,24 108,64 162,64" fill="#fef3c7" stroke="#b45309" stroke-width="2.5"/></svg>`
+      },
+      {
+        en: 'perpendicular height', vn: 'chiều cao vuông góc',
+        defEn: 'The straight height meeting the base at a 90° right angle.',
+        defVn: 'Chiều cao thẳng đứng tạo với cạnh đáy góc vuông 90°.',
+        svg: `<svg viewBox="0 0 180 76" class="h-16 mx-auto"><polygon points="36,64 146,64 36,14" fill="#d1fae5" stroke="#047857" stroke-width="2.5"/><line x1="36" y1="14" x2="36" y2="64" stroke="#dc2626" stroke-width="3.5"/><rect x="36" y="52" width="12" height="12" fill="none" stroke="#dc2626" stroke-width="2"/></svg>`
+      },
+      {
+        en: 'sloping side', vn: 'cạnh xiên (cạnh huyền)',
+        defEn: 'The slanted side opposite 90° — do NOT multiply by this for area.',
+        defVn: 'Cạnh nghiêng dài nhất đối diện góc vuông — KHÔNG dùng để nhân diện tích.',
+        svg: `<svg viewBox="0 0 180 76" class="h-16 mx-auto"><polygon points="36,64 146,64 36,14" fill="#ffe4e6" stroke="#be123c" stroke-width="2"/><line x1="36" y1="14" x2="146" y2="64" stroke="#e11d48" stroke-width="4"/><text x="108" y="32" text-anchor="middle" font-size="11" font-weight="900" fill="#be123c">Ignore ✗</text></svg>`
+      },
+      {
+        en: 'missing length', vn: 'độ dài còn thiếu',
+        defEn: 'An unknown base or height found by working backwards from area.',
+        defVn: 'Cạnh đáy hoặc chiều cao chưa biết cần tìm ngược từ diện tích.',
+        svg: `<svg viewBox="0 0 180 76" class="h-16 mx-auto"><polygon points="44,64 144,64 44,14" fill="#ede9fe" stroke="#6d28d9" stroke-width="2.5"/><text x="26" y="44" text-anchor="middle" font-size="16" font-weight="900" fill="#dc2626">?</text><text x="86" y="52" text-anchor="middle" font-size="11" font-weight="800" fill="#4c1d95">Area = 24</text></svg>`
+      },
+      {
+        en: 'inverse operation', vn: 'phép tính ngược',
+        defEn: 'Opposite steps: ×2 undoes ÷2, and ÷ undoes ×.',
+        defVn: 'Phép tính đảo ngược: ×2 ngược với ÷2, và chia ngược với nhân.',
+        svg: `<svg viewBox="0 0 180 76" class="h-16 mx-auto"><rect x="14" y="20" width="54" height="34" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/><text x="41" y="41" text-anchor="middle" font-size="11" font-weight="900" fill="#0369a1">Area</text><rect x="112" y="20" width="54" height="34" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><text x="139" y="41" text-anchor="middle" font-size="11" font-weight="900" fill="#5b21b6">Side</text><text x="90" y="34" text-anchor="middle" font-size="10" font-weight="900" fill="#059669">×2 ÷ →</text><text x="90" y="52" text-anchor="middle" font-size="10" font-weight="900" fill="#0284c7">← × ÷2</text></svg>`
+      },
+      {
+        en: 'double', vn: 'gấp đôi (×2)',
+        defEn: 'Multiply by 2 to rebuild a full rectangle from a triangle.',
+        defVn: 'Nhân với 2 để ghép lại thành hình chữ nhật đầy đủ từ tam giác.',
+        svg: `<svg viewBox="0 0 180 76" class="h-16 mx-auto"><polygon points="36,64 144,64 36,16" fill="#c084fc" stroke="#6b21a8" stroke-width="2.5"/><polygon points="36,16 144,16 144,64" fill="#f3e8ff" stroke="#7e22ce" stroke-width="2" stroke-dasharray="4 3"/><text x="90" y="45" text-anchor="middle" font-size="12" font-weight="900" fill="#4c1d95">×2</text></svg>`
+      },
+      {
+        en: 'unit squared', vn: 'đơn vị vuông (cm², m²)',
+        defEn: 'Square units used to measure flat surface area.',
+        defVn: 'Đơn vị đo diện tích mặt phẳng, viết số 2 nhỏ trên đầu (cm², m²).',
+        svg: `<svg viewBox="0 0 180 76" class="h-16 mx-auto"><rect x="64" y="12" width="52" height="52" fill="#ccfbf1" stroke="#0f766e" stroke-width="2.5"/><text x="90" y="43" text-anchor="middle" font-size="14" font-weight="900" fill="#0f766e">1 cm²</text></svg>`
+      },
+      {
+        en: 'cut-out', vn: 'phần cắt bỏ',
+        defEn: 'A triangular corner removed — subtract its area from the full rectangle.',
+        defVn: 'Góc tam giác bị cắt đi — lấy diện tích hình chữ nhật lớn trừ phần cắt.',
+        svg: `<svg viewBox="0 0 180 76" class="h-16 mx-auto"><rect x="28" y="14" width="124" height="50" fill="#fed7aa" stroke="#c2410c" stroke-width="2.5"/><polygon points="110,14 152,14 152,50" fill="#ffffff" stroke="#dc2626" stroke-width="2" stroke-dasharray="4 3"/></svg>`
+      }
+    ];
+
+    function speakText(text, lang) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      u.rate = 0.94;
+      window.speechSynthesis.speak(u);
+    }
+
+    function renderPortalVocab() {
+      const grid = document.getElementById('portalVocabGrid');
+      grid.innerHTML = vocabCards.map((v, i) => `
+        <div class="bg-white rounded-2xl p-4 border-2 border-indigo-100 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-2.5">
+          <div>
+            <div class="bg-slate-50 rounded-xl p-2 border border-slate-100 mb-2">${v.svg}</div>
+            <h3 class="text-lg font-display font-bold text-slate-900">${v.en}</h3>
+            <p class="text-base font-display font-bold text-violet-700">${v.vn}</p>
+            <p class="en-only text-xs font-bold text-slate-600 mt-1">${v.defEn}</p>
+            <p class="vn-only text-xs font-semibold text-slate-600 mt-1">${v.defVn}</p>
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button type="button" onclick="speakText(vocabCards[${i}].en, 'en-GB')" class="flex-1 py-1.5 rounded-xl bg-indigo-100 hover:bg-indigo-200 text-indigo-900 font-extrabold text-xs">🔊 EN</button>
+            <button type="button" onclick="speakText(vocabCards[${i}].vn, 'vi-VN')" class="flex-1 py-1.5 rounded-xl bg-violet-100 hover:bg-violet-200 text-violet-900 font-extrabold text-xs">🔊 VN</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // =========================================================================
+    // GAMIFIED 4-QUESTION INTERACTIVE HOME CHECK QUIZ
+    // =========================================================================
+    const quizItems = [
+      {
+        qEn: '1. Find the area of a right-angled triangle with base 5.5 cm and perpendicular height 4 cm.',
+        qVn: '1. Tính diện tích hình tam giác vuông có cạnh đáy 5.5 cm và chiều cao vuông góc 4 cm.',
+        options: ['9.5 cm²', '11 cm²', '22 cm²', '14 cm²'],
+        correct: 1,
+        expEn: 'Correct! 5.5 × 4 = 22 cm², then halve: 22 ÷ 2 = 11 cm² (or 5.5 × 2 = 11 cm²).',
+        expVn: 'Chính xác! 5.5 × 4 = 22 cm², chia đôi: 22 ÷ 2 = 11 cm².'
+      },
+      {
+        qEn: '2. A right-angled triangle has Area = 35 cm² and base = 10 cm. What is its missing height?',
+        qVn: '2. Một tam giác vuông có Diện tích = 35 cm² và đáy = 10 cm. Chiều cao còn thiếu là bao nhiêu?',
+        options: ['3.5 cm', '7 cm', '14 cm', '25 cm'],
+        correct: 1,
+        expEn: 'Spot on! Rebuild the rectangle first: 35 × 2 = 70 cm², then 70 ÷ 10 = 7 cm.',
+        expVn: 'Xuất sắc! Gấp đôi trước: 35 × 2 = 70 cm², sau đó 70 ÷ 10 = 7 cm.'
+      },
+      {
+        qEn: '3. A compound shape joins a 9 cm × 6 cm rectangle and a right-angled triangle (base 4 cm, height 6 cm). Find total area.',
+        qVn: '3. Hình ghép gồm hình chữ nhật 9 cm × 6 cm và tam giác vuông (đáy 4 cm, cao 6 cm). Tính tổng diện tích.',
+        options: ['66 cm²', '78 cm²', '60 cm²', '54 cm²'],
+        correct: 0,
+        expEn: 'Brilliant! Rectangle = 9 × 6 = 54 cm²; Triangle = 4 × 6 ÷ 2 = 12 cm²; Total = 54 + 12 = 66 cm².',
+        expVn: 'Tuyệt vời! Hình chữ nhật = 54 cm²; Tam giác = 4 × 6 ÷ 2 = 12 cm²; Tổng = 66 cm².'
+      },
+      {
+        qEn: '4. A right-angled triangle (base 4 cm, height 5 cm) is cut out of a 10 cm × 5 cm rectangle. Find the remaining shaded area.',
+        qVn: '4. Cắt bỏ 1 góc tam giác vuông (đáy 4 cm, cao 5 cm) khỏi hình chữ nhật 10 cm × 5 cm. Tính diện tích phần còn lại.',
+        options: ['30 cm²', '60 cm²', '40 cm²', '45 cm²'],
+        correct: 2,
+        expEn: 'Great thinking! Full rectangle = 50 cm²; Cut-out triangle = 4 × 5 ÷ 2 = 10 cm²; Remaining = 50 − 10 = 40 cm².',
+        expVn: 'Rất thông minh! Hình chữ nhật lớn = 50 cm²; Phần cắt tam giác = 4 × 5 ÷ 2 = 10 cm²; Còn lại = 50 − 10 = 40 cm².'
+      }
+    ];
+
+    let quizAnswered = [null, null, null, null];
+
+    function renderQuiz() {
+      const wrap = document.getElementById('quizContainer');
+      wrap.innerHTML = quizItems.map((item, qIdx) => `
+        <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-5 flex flex-col justify-between space-y-3">
+          <div>
+            <p class="en-only font-extrabold text-base leading-snug text-white">${item.qEn}</p>
+            <p class="vn-only font-bold text-sm leading-snug text-amber-200 mt-1">${item.qVn}</p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            ${item.options.map((opt, oIdx) => `
+              <button type="button" id="qBtn-${qIdx}-${oIdx}" onclick="answerQuiz(${qIdx}, ${oIdx})" class="py-2.5 px-3 rounded-xl bg-white text-slate-900 hover:bg-amber-200 font-extrabold text-sm shadow transition">
+                ${opt}
+              </button>
+            `).join('')}
+          </div>
+          <div id="qFeed-${qIdx}" class="hidden rounded-xl p-3 text-xs font-extrabold"></div>
+        </div>
+      `).join('');
+      updateQuizScore();
+    }
+
+    function answerQuiz(qIdx, oIdx) {
+      if (quizAnswered[qIdx] !== null) return;
+      const item = quizItems[qIdx];
+      const isRight = oIdx === item.correct;
+      quizAnswered[qIdx] = isRight;
+
+      item.options.forEach((_, idx) => {
+        const btn = document.getElementById(`qBtn-${qIdx}-${idx}`);
+        btn.disabled = true;
+        if (idx === item.correct) {
+          btn.className = 'py-2.5 px-3 rounded-xl bg-emerald-500 text-white font-extrabold text-sm shadow';
+        } else if (idx === oIdx && !isRight) {
+          btn.className = 'py-2.5 px-3 rounded-xl bg-rose-500 text-white font-extrabold text-sm shadow';
+        } else {
+          btn.className = 'py-2.5 px-3 rounded-xl bg-white/30 text-white/70 font-bold text-sm';
+        }
+      });
+
+      const fb = document.getElementById(`qFeed-${qIdx}`);
+      fb.classList.remove('hidden');
+      fb.className = `rounded-xl p-3 text-xs font-extrabold ${isRight ? 'bg-emerald-500/25 border border-emerald-400 text-emerald-100' : 'bg-rose-500/25 border border-rose-400 text-rose-100'}`;
+      fb.innerHTML = `<span class="en-only block">${isRight ? '✅ ' : '💡 '}${item.expEn}</span><span class="vn-only block mt-1 text-amber-200">${isRight ? '✅ ' : '💡 '}${item.expVn}</span>`;
+
+      updateQuizScore();
+      if (isRight) launchConfetti();
+    }
+
+    function updateQuizScore() {
+      const score = quizAnswered.filter(v => v === true).length;
+      const done = quizAnswered.filter(v => v !== null).length;
+      const badge = document.getElementById('quizScoreBadge');
+      badge.textContent = done === 4 && score === 4 ? '🌟 Perfect 4 / 4!' : `Score: ${score} / 4`;
+    }
+
+    function resetQuiz() {
+      quizAnswered = [null, null, null, null];
+      renderQuiz();
+    }
+
+    // =========================================================================
+    // INIT
+    // =========================================================================
+    updatePortalHouse();
+    updatePortalRev();
+    renderPortalVocab();
+    renderQuiz();
+  </script>
+</body>
+</html>

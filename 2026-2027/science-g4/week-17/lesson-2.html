@@ -1,0 +1,2114 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grade 4 Science — Week 17 Lesson 2: Unit 2 Sound Clinic &amp; Assessment Readiness</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800;900&display=swap');
+
+    :root {
+      --indigo-deep: #1e1b4b;
+      --cyan-pop: #06b6d4;
+      --amber-pop: #f59e0b;
+      --emerald-pop: #10b981;
+      --rose-pop: #f43f5e;
+    }
+
+    body {
+      font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #eef2ff 50%, #fdf4ff 100%);
+      color: #0f172a;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: 'Fredoka', 'Nunito', sans-serif;
+    }
+
+    /* Auto-hiding fixed header */
+    #top-header {
+      transition: transform 0.3s ease-in-out;
+      z-index: 50;
+    }
+    #top-header.header-hidden {
+      transform: translateY(-110%);
+    }
+
+    /* 3D Flip Cards for Station 1 Flashback 3 */
+    .flip-scene {
+      perspective: 1100px;
+      height: 350px;
+      cursor: pointer;
+    }
+    .flip-card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .flip-card.is-flipped {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.5rem;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Organic vibrating air particle animations */
+    @keyframes vibrateSlow {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(4px, -2px); }
+      50% { transform: translate(-4px, 2px); }
+      75% { transform: translate(3px, 1px); }
+    }
+    @keyframes vibrateFast {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(7px, -4px); }
+      50% { transform: translate(-7px, 4px); }
+      75% { transform: translate(5px, -2px); }
+    }
+    .particle-dot {
+      border-radius: 9999px;
+      animation-name: vibrateSlow;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-in-out;
+    }
+    .particles-fast .particle-dot {
+      animation-name: vibrateFast;
+    }
+
+    /* Fullscreen I Do mode */
+    .ido-fullscreen-active {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 65 !important;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%) !important;
+      padding: 1.5rem 2rem !important;
+      overflow-y: auto !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+      max-width: none !important;
+    }
+    .ido-fullscreen-active .ido-fs-light {
+      color: #f8fafc !important;
+    }
+
+    /* Custom clean range slider */
+    input[type="range"].sound-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: #cbd5e1;
+      outline: none;
+    }
+    input[type="range"].sound-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #4f46e5;
+      border: 3px solid #ffffff;
+      box-shadow: 0 3px 10px rgba(79, 70, 229, 0.4);
+      cursor: pointer;
+    }
+
+    /* Confetti canvas */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 95;
+    }
+
+    /* Boards Up pulse */
+    @keyframes boardsPop {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+    .boards-up-pulse {
+      animation: boardsPop 0.65s ease-in-out infinite;
+    }
+
+    /* David's Board grid overlay */
+    .wb-grid {
+      background-image: radial-gradient(#94a3b8 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-indigo-200">
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- AUTO-HIDING FIXED TOP HEADER -->
+  <header id="top-header" class="fixed top-0 left-0 right-0 bg-indigo-950/95 backdrop-blur-md text-white shadow-xl border-b-4 border-cyan-400">
+    <div class="max-w-7xl mx-auto px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-indigo-500 flex items-center justify-center text-2xl shadow-md shrink-0">🔊</div>
+        <div class="min-w-0">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-cyan-300 truncate">
+            Grade 4 Science (Stage 5) &bull; Week 17 Lesson 2 &bull; Unit 2 Sound Clinic (5Ps.01–03, 5TWSa.02)
+          </div>
+          <div class="text-sm sm:text-base font-bold text-white leading-tight truncate" title="How can we master every Unit 2 Sound test trap — volume, pitch, travel and anomalies?">
+            Enquiry: How can we master every Unit 2 Sound test trap — volume, pitch, travel and anomalies?
+          </div>
+          <div class="text-xs text-amber-300 font-bold">
+            LO: Synthesise pitch, volume, patterns and test strategies.
+          </div>
+        </div>
+      </div>
+
+      <!-- Scoreboard + Utility Controls -->
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="flex items-center gap-1.5 bg-slate-900/80 border border-slate-700 rounded-xl px-2.5 py-1">
+          <button onclick="addScore('red', 1)" class="px-2 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-xs font-extrabold transition" title="Add 1 point to Team Red">Red: <span id="hdr-red-score">0</span> +</button>
+          <span class="text-slate-400 font-bold text-xs">vs</span>
+          <button onclick="addScore('blue', 1)" class="px-2 py-0.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-xs font-extrabold transition" title="Add 1 point to Team Blue">Blue: <span id="hdr-blue-score">0</span> +</button>
+          <button onclick="resetScores()" class="text-slate-400 hover:text-white text-xs px-1" title="Reset team scores">↺</button>
+        </div>
+
+        <button id="btn-board" onclick="toggleWhiteboard()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm shadow transition" title="Open David's Board (W)">
+          ✏️ Board (W)
+        </button>
+        <button id="btn-teacher" onclick="toggleTeacherDrawer()" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs sm:text-sm shadow transition" title="Teacher Prompt Drawer (T)">
+          📋 Guide (T)
+        </button>
+        <button id="btn-mute" onclick="toggleMute()" class="px-3 py-1.5 rounded-xl bg-indigo-800 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm border border-indigo-600 transition" title="Mute / Unmute SFX (M)">
+          🔊 SFX (M)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="pt-24 pb-16 px-3 sm:px-6 max-w-7xl mx-auto">
+
+    <!-- STATION NAVIGATION BAR (flex-wrap so tabs never squash) -->
+    <nav aria-label="Lesson Stations" class="bg-white/90 backdrop-blur rounded-2xl shadow-md border-2 border-indigo-100 p-2 mb-6">
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        <button onclick="goStation(0)" id="tab-0" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition">0. LO &amp; SC</button>
+        <button onclick="goStation(1)" id="tab-1" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition">1. Flashback 3</button>
+        <button onclick="goStation(2)" id="tab-2" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition">2. Exam Vocab</button>
+        <button onclick="goStation(3)" id="tab-3" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition">3. I Do: 3 Traps</button>
+        <button onclick="goStation(4)" id="tab-4" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition">4. Sound Arena</button>
+        <button onclick="goStation(5)" id="tab-5" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition">5. SC Check</button>
+        <button onclick="goStation(6)" id="tab-6" class="station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition">6. Quickfire 🏆</button>
+      </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- STATION 0: LEARNING OBJECTIVE & SUCCESS CRITERIA             -->
+    <!-- [SoL: Cognitive Load Management] [SoL: Schema Building]      -->
+    <!-- ============================================================ -->
+    <section id="station-0" class="station-panel">
+      <div class="bg-white rounded-3xl shadow-xl border-2 border-indigo-100 p-6 sm:p-10">
+        <div class="text-center max-w-4xl mx-auto">
+          <span class="inline-block px-4 py-1.5 rounded-full bg-indigo-100 text-indigo-800 font-extrabold text-sm uppercase tracking-wider mb-4">
+            Unit 2 Sound Review &bull; Full Sound Clinic &amp; Assessment Readiness
+          </span>
+          <h1 class="text-4xl sm:text-5xl font-bold text-indigo-950 mb-4 leading-tight">
+            Synthesise pitch, volume, patterns and test strategies.
+          </h1>
+          <p class="text-lg sm:text-xl text-slate-600 font-bold mb-8">
+            Enquiry Question: <span class="text-indigo-700">"How can we master every Unit 2 Sound test trap — volume, pitch, travel and anomalies?"</span>
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+          <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border-4 border-emerald-400 rounded-3xl p-6 shadow-md">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-11 h-11 rounded-2xl bg-emerald-500 text-white font-black text-xl flex items-center justify-center shadow">M</span>
+              <h2 class="text-2xl font-bold text-emerald-900">Must</h2>
+            </div>
+            <p class="text-xl font-extrabold text-slate-800 leading-snug">
+              Separate volume (size) from pitch (speed of vibration).
+            </p>
+          </div>
+
+          <div class="bg-gradient-to-br from-amber-50 to-orange-50 border-4 border-amber-400 rounded-3xl p-6 shadow-md">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-11 h-11 rounded-2xl bg-amber-500 text-white font-black text-xl flex items-center justify-center shadow">S</span>
+              <h2 class="text-2xl font-bold text-amber-900">Should</h2>
+            </div>
+            <p class="text-xl font-extrabold text-slate-800 leading-snug">
+              Predict pitch changes in strings and blown air columns.
+            </p>
+          </div>
+
+          <div class="bg-gradient-to-br from-fuchsia-50 to-purple-50 border-4 border-fuchsia-400 rounded-3xl p-6 shadow-md">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-11 h-11 rounded-2xl bg-fuchsia-600 text-white font-black text-xl flex items-center justify-center shadow">C</span>
+              <h2 class="text-2xl font-bold text-fuchsia-900">Could</h2>
+            </div>
+            <p class="text-xl font-extrabold text-slate-800 leading-snug">
+              Spot anomalous chart bars and write 2-mark explanations.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-wrap items-center justify-between gap-4 bg-indigo-50 rounded-2xl p-4 border border-indigo-200">
+          <div class="flex flex-wrap gap-2 text-xs font-extrabold text-indigo-900">
+            <span class="px-3 py-1 bg-white rounded-full border border-indigo-200">5Ps.01 Vibrations &amp; Travel</span>
+            <span class="px-3 py-1 bg-white rounded-full border border-indigo-200">5Ps.02 Volume &amp; dB</span>
+            <span class="px-3 py-1 bg-white rounded-full border border-indigo-200">5Ps.03 Changing Pitch</span>
+            <span class="px-3 py-1 bg-white rounded-full border border-indigo-200">5TWSa.02 Patterns &amp; Anomalies</span>
+          </div>
+          <button onclick="goStation(1)" class="px-6 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold shadow-lg transition">
+            Start Flashback 3 ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 1: SPACED FLASHBACK 3 (3 EARLIER UNITS)              -->
+    <!-- [SoL: Spaced Practice] [SoL: Retrieval Practice] [SoL: Interleaving] -->
+    <!-- ============================================================ -->
+    <section id="station-1" class="station-panel hidden">
+      <div class="bg-white rounded-3xl shadow-xl border-2 border-indigo-100 p-6 sm:p-8">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Spaced &amp; Interleaved Retrieval</span>
+            <h2 class="text-3xl font-bold text-indigo-950">Flashback 3: Earlier Stage 5 Units</h2>
+            <p class="text-slate-600 font-bold">Write your answers on mini-whiteboards first, then tap each card to flip and check!</p>
+          </div>
+          <button onclick="flipAllFlashbacks(false)" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-sm transition">
+            ↺ Reset Cards
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Card 1: Unit 3.4 Solutions (5Cc.03) -->
+          <div class="flip-scene" onclick="toggleFlip(this)">
+            <div class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-sky-500 to-blue-700 text-white shadow-xl border-4 border-sky-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-extrabold uppercase">Unit 3.4 &bull; Solutions (5Cc.03)</span>
+                  <span class="text-3xl">🧂</span>
+                </div>
+                <div class="text-center my-auto px-2">
+                  <div class="text-6xl mb-3">💧+🧂</div>
+                  <p class="text-2xl font-extrabold leading-snug">
+                    Salt is fully dissolved in water. How can we get the solid salt back?
+                  </p>
+                </div>
+                <div class="text-center text-xs font-extrabold uppercase tracking-wider text-sky-200">
+                  Tap card to reveal answer ↻
+                </div>
+              </div>
+              <div class="flip-face flip-back bg-gradient-to-br from-emerald-500 to-teal-700 text-white shadow-xl border-4 border-emerald-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-extrabold uppercase">Unit 3.4 Answer</span>
+                  <span class="text-3xl">✅</span>
+                </div>
+                <div class="text-center my-auto px-2">
+                  <p class="text-3xl font-black mb-3 text-amber-200">Evaporate the water!</p>
+                  <p class="text-lg font-bold leading-snug">
+                    Heat the salt solution gently. The liquid water turns into water vapour and escapes into the air, leaving solid salt crystals behind.
+                  </p>
+                </div>
+                <div class="text-center text-xs font-extrabold text-emerald-100">Tap to flip back ↻</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Unit 1.4 Plant Life Cycle (5Bs.02) -->
+          <div class="flip-scene" onclick="toggleFlip(this)">
+            <div class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-emerald-500 to-green-700 text-white shadow-xl border-4 border-emerald-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-extrabold uppercase">Unit 1.4 &bull; Plant Life Cycle (5Bs.02)</span>
+                  <span class="text-3xl">🌻</span>
+                </div>
+                <div class="text-center my-auto px-2">
+                  <div class="text-6xl mb-3">🌱➔🌸</div>
+                  <p class="text-2xl font-extrabold leading-snug">
+                    Name the 5 stages of a flowering plant's life cycle in the correct order!
+                  </p>
+                </div>
+                <div class="text-center text-xs font-extrabold uppercase tracking-wider text-emerald-200">
+                  Tap card to reveal answer ↻
+                </div>
+              </div>
+              <div class="flip-face flip-back bg-gradient-to-br from-teal-600 to-cyan-700 text-white shadow-xl border-4 border-cyan-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-extrabold uppercase">Unit 1.4 Answer</span>
+                  <span class="text-3xl">✅</span>
+                </div>
+                <div class="text-center my-auto px-2">
+                  <p class="text-xl font-black mb-3 text-amber-200">5 Stages in Order:</p>
+                  <p class="text-xl font-extrabold leading-relaxed">
+                    1. Germination ➔<br>
+                    2. Growth ➔<br>
+                    3. Pollination ➔<br>
+                    4. Fertilisation ➔<br>
+                    5. Seed dispersal
+                  </p>
+                </div>
+                <div class="text-center text-xs font-extrabold text-cyan-100">Tap to flip back ↻</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Unit 3.3 Condensation (5Cc.01) -->
+          <div class="flip-scene" onclick="toggleFlip(this)">
+            <div class="flip-card">
+              <div class="flip-face bg-gradient-to-br from-purple-600 to-indigo-700 text-white shadow-xl border-4 border-purple-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-extrabold uppercase">Unit 3.3 &bull; Condensation (5Cc.01)</span>
+                  <span class="text-3xl">🥤</span>
+                </div>
+                <div class="text-center my-auto px-2">
+                  <div class="text-6xl mb-3">🧊🥤💧</div>
+                  <p class="text-2xl font-extrabold leading-snug">
+                    Why do liquid water droplets appear on the outside of a cold drink can?
+                  </p>
+                </div>
+                <div class="text-center text-xs font-extrabold uppercase tracking-wider text-purple-200">
+                  Tap card to reveal answer ↻
+                </div>
+              </div>
+              <div class="flip-face flip-back bg-gradient-to-br from-indigo-600 to-blue-800 text-white shadow-xl border-4 border-indigo-300">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-extrabold uppercase">Unit 3.3 Answer</span>
+                  <span class="text-3xl">✅</span>
+                </div>
+                <div class="text-center my-auto px-2">
+                  <p class="text-3xl font-black mb-3 text-amber-200">Condensation!</p>
+                  <p class="text-lg font-bold leading-snug">
+                    Water vapour in the warm air hits the cold can, cools down, and turns into liquid water droplets.
+                  </p>
+                </div>
+                <div class="text-center text-xs font-extrabold text-indigo-100">Tap to flip back ↻</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 2: EXAM VOCABULARY + REAL-WORLD SOUND CAREERS        -->
+    <!-- [SoL: Dual Coding] [SoL: Schema Building]                    -->
+    <!-- ============================================================ -->
+    <section id="station-2" class="station-panel hidden">
+      <div class="bg-white rounded-3xl shadow-xl border-2 border-indigo-100 p-6 sm:p-8">
+        <div class="mb-6">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Key Assessment Language</span>
+          <h2 class="text-3xl font-bold text-indigo-950">Unit 2 Sound Vocabulary Clinic</h2>
+          <p class="text-slate-600 font-bold">Tap any exam word to open its visual diagram, simple definition, and bilingual audio card.</p>
+        </div>
+
+        <!-- 10 English-only clickable tiles (Vietnamese isolated strictly inside modal!) -->
+        <div id="vocab-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8"></div>
+
+        <!-- Real-World Sound Careers Strip (100% English) -->
+        <div class="bg-gradient-to-r from-indigo-950 via-indigo-900 to-sky-900 rounded-3xl p-6 text-white shadow-lg">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-2xl">🌍</span>
+            <h3 class="text-2xl font-bold text-cyan-300">Real-World Sound Careers</h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white/10 border border-white/20 rounded-2xl p-4">
+              <div class="text-3xl mb-2">🎛️</div>
+              <h4 class="text-lg font-extrabold text-amber-300 mb-1">Sound Engineers</h4>
+              <p class="text-sm text-indigo-100 font-semibold leading-snug">
+                Measure concert volume in decibels (dB) so music is clear and safe for ears, balancing high and low pitches on mixing desks.
+              </p>
+            </div>
+            <div class="bg-white/10 border border-white/20 rounded-2xl p-4">
+              <div class="text-3xl mb-2">🎻</div>
+              <h4 class="text-lg font-extrabold text-amber-300 mb-1">Musical Instrument Makers</h4>
+              <p class="text-sm text-indigo-100 font-semibold leading-snug">
+                Carefully choose string thickness, tension and wooden air chambers so guitars, flutes and violins hit exact musical pitches.
+              </p>
+            </div>
+            <div class="bg-white/10 border border-white/20 rounded-2xl p-4">
+              <div class="text-3xl mb-2">🏛️</div>
+              <h4 class="text-lg font-extrabold text-amber-300 mb-1">Acoustic Architects</h4>
+              <p class="text-sm text-indigo-100 font-semibold leading-snug">
+                Design cinemas, concert halls and classrooms using soft foam panels and heavy curtains to muffle unwanted echoes.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 3: FULL-SCREEN VISUAL I DO — 3 BIGGEST EXAM TRAPS    -->
+    <!-- [SoL: Worked Examples] [SoL: Misconceptions]                 -->
+    <!-- ============================================================ -->
+    <section id="station-3" class="station-panel hidden">
+      <div id="ido-container" class="bg-white rounded-3xl shadow-xl border-2 border-indigo-100 p-6 sm:p-8 transition-all">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-rose-600 ido-fs-light">Teacher Worked Examples &bull; Beat the Misconception!</span>
+            <h2 class="text-3xl font-bold text-indigo-950 ido-fs-light">The 3 Biggest Unit 2 Exam Traps</h2>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="selectTrap(1)" id="trap-btn-1" class="trap-tab px-4 py-2 rounded-xl font-extrabold text-sm transition">Trap 1: Volume vs Pitch</button>
+            <button onclick="selectTrap(2)" id="trap-btn-2" class="trap-tab px-4 py-2 rounded-xl font-extrabold text-sm transition">Trap 2: Water &amp; Air Column</button>
+            <button onclick="selectTrap(3)" id="trap-btn-3" class="trap-tab px-4 py-2 rounded-xl font-extrabold text-sm transition">Trap 3: Anomalous Bars</button>
+            <button onclick="toggleIdoFullscreen()" id="btn-ido-fs" class="px-4 py-2 rounded-xl bg-indigo-950 hover:bg-indigo-800 text-cyan-300 border-2 border-cyan-400 font-extrabold text-sm shadow transition">
+              ⛶ Full Screen I Do
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <!-- Permanent Steps to Success Sidebar -->
+          <aside class="lg:col-span-1 bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-5 flex flex-col justify-between">
+            <div>
+              <h3 class="text-lg font-extrabold text-indigo-950 mb-3 flex items-center gap-2">
+                <span>🎯</span> Exam Clinic Steps
+              </h3>
+              <ol class="space-y-3 text-sm font-bold text-slate-700">
+                <li class="flex gap-2">
+                  <span class="w-6 h-6 rounded-full bg-indigo-600 text-white text-xs font-black flex items-center justify-center shrink-0">1</span>
+                  <span><strong>Ask:</strong> Is it <em>LOUDER/QUIETER</em> (Volume) or <em>HIGHER/LOWER</em> (Pitch)?</span>
+                </li>
+                <li class="flex gap-2">
+                  <span class="w-6 h-6 rounded-full bg-cyan-600 text-white text-xs font-black flex items-center justify-center shrink-0">2</span>
+                  <span><strong>Name what vibrates:</strong> string, drum skin, metal bar, or <em>air column</em>.</span>
+                </li>
+                <li class="flex gap-2">
+                  <span class="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-black flex items-center justify-center shrink-0">3</span>
+                  <span><strong>Link vibration:</strong> Bigger = Louder; Faster = Higher pitch.</span>
+                </li>
+                <li class="flex gap-2">
+                  <span class="w-6 h-6 rounded-full bg-amber-600 text-white text-xs font-black flex items-center justify-center shrink-0">4</span>
+                  <span><strong>Check charts:</strong> Circle any bar breaking the smooth trend and say <em>"Repeat that trial!"</em></span>
+                </li>
+              </ol>
+            </div>
+            <div class="mt-5 p-3 bg-white rounded-xl border border-indigo-200 text-xs font-extrabold text-indigo-900">
+              💡 Tip: Press <kbd class="px-1.5 py-0.5 bg-slate-200 rounded">Esc</kbd> anytime to exit Full Screen mode.
+            </div>
+          </aside>
+
+          <!-- Trap Content Stage -->
+          <div class="lg:col-span-3">
+            <!-- TRAP 1: VOLUME VS PITCH -->
+            <div id="trap-panel-1" class="trap-panel bg-slate-50 border-2 border-slate-200 rounded-2xl p-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                <div class="bg-rose-50 border-2 border-rose-400 rounded-2xl p-4">
+                  <div class="text-xs font-black uppercase text-rose-600 mb-1">❌ Common Exam Trap</div>
+                  <p class="text-lg font-extrabold text-rose-950">"Hitting a drum harder makes a higher pitch!"</p>
+                </div>
+                <div class="bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-4">
+                  <div class="text-xs font-black uppercase text-emerald-700 mb-1">✅ Golden Cambridge Truth</div>
+                  <p class="text-lg font-extrabold text-emerald-950">
+                    Hit harder = <span class="underline">BIGGER</span> vibrations = <strong>LOUDER volume</strong>.<br>
+                    Shorter / tighter / thinner = <span class="underline">FASTER</span> vibrations = <strong>HIGHER pitch</strong>!
+                  </p>
+                </div>
+              </div>
+
+              <!-- Animated Wave Comparison SVG + Playable Web Audio -->
+              <div class="bg-slate-900 rounded-2xl p-4 border-2 border-indigo-500">
+                <svg id="trap1-wave-svg" viewBox="0 0 640 160" class="w-full h-36">
+                  <line x1="20" y1="80" x2="620" y2="80" stroke="#475569" stroke-width="2" stroke-dasharray="6,6"></line>
+                  <path id="trap1-wave-path" d="" fill="none" stroke="#22d3ee" stroke-width="5" stroke-linecap="round"></path>
+                </svg>
+              </div>
+              <!-- Dashboard cleanly outside animation canvas -->
+              <div class="mt-4 bg-white border border-slate-200 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <div id="trap1-label" class="text-lg font-extrabold text-indigo-950">Click a button to HEAR &amp; SEE why Loud ≠ High!</div>
+                  <div id="trap1-sub" class="text-sm font-bold text-slate-600">Compare the height (volume) and squashed closeness (pitch) of the waves.</div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <button onclick="playTrap1Demo(220, 0.08, 22, 3, 'Soft + Low Pitch', 'Small wave height (quiet) &amp; slow vibrations (low pitch).')" class="px-3.5 py-2 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 font-extrabold text-sm">🔈 Soft Low</button>
+                  <button onclick="playTrap1Demo(220, 0.35, 62, 3, 'LOUD + Low Pitch', 'BIG wave height (loud!) — still slow vibrations (SAME low pitch!).')" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-sm">🔊 Loud Low</button>
+                  <button onclick="playTrap1Demo(660, 0.08, 22, 9, 'Soft + HIGH Pitch', 'Small wave height (quiet) — FAST vibrations (high pitch!).')" class="px-3.5 py-2 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 font-extrabold text-sm">🔈 Soft High</button>
+                  <button onclick="playTrap1Demo(660, 0.35, 62, 9, 'LOUD + HIGH Pitch', 'BIG wave height (loud!) AND FAST vibrations (high pitch!).')" class="px-3.5 py-2 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-extrabold text-sm">🔊 Loud High</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- TRAP 2: MORE WATER = SHORTER AIR COLUMN WHEN BLOWING -->
+            <div id="trap-panel-2" class="trap-panel hidden bg-slate-50 border-2 border-slate-200 rounded-2xl p-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                <div class="bg-rose-50 border-2 border-rose-400 rounded-2xl p-4">
+                  <div class="text-xs font-black uppercase text-rose-600 mb-1">❌ Common Exam Trap</div>
+                  <p class="text-lg font-extrabold text-rose-950">"More water in the bottle makes a deeper, lower sound when you blow!"</p>
+                </div>
+                <div class="bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-4">
+                  <div class="text-xs font-black uppercase text-emerald-700 mb-1">✅ Golden Cambridge Truth</div>
+                  <p class="text-lg font-extrabold text-emerald-950">
+                    When you <strong>BLOW</strong>, the <strong>AIR</strong> vibrates! More water leaves a <span class="underline">SHORTER air column</span> ➔ <strong>FASTER</strong> vibrations ➔ <strong>HIGHER pitch</strong>!
+                  </p>
+                </div>
+              </div>
+
+              <!-- 3 Interactive Bottles SVG -->
+              <div class="bg-white rounded-2xl border-2 border-cyan-200 p-4">
+                <svg viewBox="0 0 600 220" class="w-full h-52">
+                  <!-- Bottle A: 4cm water, 16cm air -->
+                  <g class="cursor-pointer" onclick="playBottleTrap('A', 262, 'Bottle A (4 cm water ➔ 16 cm AIR column)', 'LONG air column vibrates SLOWLY ➔ LOWEST pitch!')">
+                    <rect x="65" y="30" width="90" height="160" rx="12" fill="#fef3c7" stroke="#0f172a" stroke-width="4"></rect>
+                    <rect x="67" y="158" width="86" height="30" rx="6" fill="#38bdf8"></rect>
+                    <text x="110" y="95" text-anchor="middle" font-size="14" font-weight="800" fill="#b45309">16 cm AIR</text>
+                    <text x="110" y="114" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">(LONG)</text>
+                    <text x="110" y="177" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0c4a6e">4 cm water</text>
+                    <text x="110" y="210" text-anchor="middle" font-size="15" font-weight="900" fill="#0f172a">Bottle A 🔊</text>
+                  </g>
+                  <!-- Bottle B: 10cm water, 10cm air -->
+                  <g class="cursor-pointer" onclick="playBottleTrap('B', 392, 'Bottle B (10 cm water ➔ 10 cm AIR column)', 'MEDIUM air column vibrates at MEDIUM speed ➔ MEDIUM pitch!')">
+                    <rect x="255" y="30" width="90" height="160" rx="12" fill="#fef3c7" stroke="#0f172a" stroke-width="4"></rect>
+                    <rect x="257" y="110" width="86" height="78" rx="6" fill="#38bdf8"></rect>
+                    <text x="300" y="68" text-anchor="middle" font-size="14" font-weight="800" fill="#b45309">10 cm AIR</text>
+                    <text x="300" y="86" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">(MEDIUM)</text>
+                    <text x="300" y="155" text-anchor="middle" font-size="12" font-weight="800" fill="#0c4a6e">10 cm water</text>
+                    <text x="300" y="210" text-anchor="middle" font-size="15" font-weight="900" fill="#0f172a">Bottle B 🔊</text>
+                  </g>
+                  <!-- Bottle C: 16cm water, 4cm air -->
+                  <g class="cursor-pointer" onclick="playBottleTrap('C', 659, 'Bottle C (16 cm water ➔ 4 cm AIR column)', 'SHORT air column vibrates FASTEST ➔ HIGHEST pitch!')">
+                    <rect x="445" y="30" width="90" height="160" rx="12" fill="#fef3c7" stroke="#0f172a" stroke-width="4"></rect>
+                    <rect x="447" y="62" width="86" height="126" rx="6" fill="#38bdf8"></rect>
+                    <text x="490" y="51" text-anchor="middle" font-size="13" font-weight="900" fill="#b45309">4 cm AIR!</text>
+                    <text x="490" y="135" text-anchor="middle" font-size="12" font-weight="800" fill="#0c4a6e">16 cm water</text>
+                    <text x="490" y="210" text-anchor="middle" font-size="15" font-weight="900" fill="#0f172a">Bottle C 🔊</text>
+                  </g>
+                  <!-- Blowing arrows -->
+                  <text x="110" y="20" text-anchor="middle" font-size="13" font-weight="800" fill="#0284c7">💨 Blow across top</text>
+                  <text x="300" y="20" text-anchor="middle" font-size="13" font-weight="800" fill="#0284c7">💨 Blow across top</text>
+                  <text x="490" y="20" text-anchor="middle" font-size="13" font-weight="800" fill="#0284c7">💨 Blow across top</text>
+                </svg>
+              </div>
+              <div id="trap2-readout" class="mt-4 bg-amber-50 border-2 border-amber-300 rounded-2xl p-4">
+                <div id="trap2-title" class="text-lg font-extrabold text-amber-950">Tap Bottle A, B, or C to blow across the top!</div>
+                <div id="trap2-desc" class="text-sm font-bold text-amber-900">Watch the yellow highlighted AIR space above the blue water.</div>
+              </div>
+            </div>
+
+            <!-- TRAP 3: ANOMALOUS BAR CHART -->
+            <div id="trap-panel-3" class="trap-panel hidden bg-slate-50 border-2 border-slate-200 rounded-2xl p-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="bg-rose-50 border-2 border-rose-400 rounded-2xl p-4">
+                  <div class="text-xs font-black uppercase text-rose-600 mb-1">❌ Common Exam Trap</div>
+                  <p class="text-base font-extrabold text-rose-950">"Ignore the strange bar or pretend it did not happen!"</p>
+                </div>
+                <div class="bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-4">
+                  <div class="text-xs font-black uppercase text-emerald-700 mb-1">✅ Golden Cambridge Truth</div>
+                  <p class="text-base font-extrabold text-emerald-950">1. Circle the anomalous bar. 2. Predict the true value. 3. Say: <strong>"Repeat that trial!"</strong></p>
+                </div>
+              </div>
+
+              <!-- Labelled Interactive Graph (NO naked graphs!) -->
+              <div class="bg-white rounded-2xl border-2 border-indigo-200 p-4">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                  <div class="text-sm font-extrabold text-indigo-950">Ruler Overhang Length vs Pitch Score (Worked Example)</div>
+                  <div class="text-xs font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full">How to Read: Read overhang (cm) along X, then height on Y (1 = lowest, 10 = highest). Tap any bar!</div>
+                </div>
+                <svg viewBox="0 0 600 220" class="w-full h-52">
+                  <!-- Grid lines -->
+                  <line x1="70" y1="30" x2="560" y2="30" stroke="#e2e8f0" stroke-width="1"></line>
+                  <line x1="70" y1="60" x2="560" y2="60" stroke="#e2e8f0" stroke-width="1"></line>
+                  <line x1="70" y1="90" x2="560" y2="90" stroke="#e2e8f0" stroke-width="1"></line>
+                  <line x1="70" y1="120" x2="560" y2="120" stroke="#e2e8f0" stroke-width="1"></line>
+                  <line x1="70" y1="150" x2="560" y2="150" stroke="#e2e8f0" stroke-width="1"></line>
+                  <!-- Axes -->
+                  <line x1="70" y1="20" x2="70" y2="180" stroke="#0f172a" stroke-width="3"></line>
+                  <line x1="70" y1="180" x2="560" y2="180" stroke="#0f172a" stroke-width="3"></line>
+                  <!-- Y labels -->
+                  <text x="60" y="34" text-anchor="end" font-size="12" font-weight="700">10</text>
+                  <text x="60" y="64" text-anchor="end" font-size="12" font-weight="700">8</text>
+                  <text x="60" y="94" text-anchor="end" font-size="12" font-weight="700">6</text>
+                  <text x="60" y="124" text-anchor="end" font-size="12" font-weight="700">4</text>
+                  <text x="60" y="154" text-anchor="end" font-size="12" font-weight="700">2</text>
+                  <text x="60" y="184" text-anchor="end" font-size="12" font-weight="700">0</text>
+                  <text x="20" y="105" text-anchor="middle" font-size="12" font-weight="800" fill="#1e1b4b" transform="rotate(-90 20 105)">Pitch Score (1–10)</text>
+
+                  <!-- Bars: 5cm->10, 10cm->8, 15cm->9 (ANOMALY), 20cm->4, 25cm->2 -->
+                  <g class="cursor-pointer" onclick="inspectTrap3Bar('5 cm', 10, false)">
+                    <rect x="95" y="30" width="60" height="150" rx="6" fill="#4f46e5"></rect>
+                    <text x="125" y="25" text-anchor="middle" font-size="12" font-weight="800">10</text>
+                    <text x="125" y="198" text-anchor="middle" font-size="13" font-weight="800">5 cm</text>
+                  </g>
+                  <g class="cursor-pointer" onclick="inspectTrap3Bar('10 cm', 8, false)">
+                    <rect x="190" y="60" width="60" height="120" rx="6" fill="#4f46e5"></rect>
+                    <text x="220" y="55" text-anchor="middle" font-size="12" font-weight="800">8</text>
+                    <text x="220" y="198" text-anchor="middle" font-size="13" font-weight="800">10 cm</text>
+                  </g>
+                  <g class="cursor-pointer" onclick="inspectTrap3Bar('15 cm', 9, true)">
+                    <rect x="285" y="45" width="60" height="135" rx="6" fill="#f43f5e" stroke="#9f1239" stroke-width="3"></rect>
+                    <ellipse id="trap3-circle" cx="315" cy="112" rx="44" ry="74" fill="none" stroke="#f59e0b" stroke-width="4" stroke-dasharray="8,4" class="hidden"></ellipse>
+                    <text x="315" y="39" text-anchor="middle" font-size="12" font-weight="900" fill="#be123c">9 ?!</text>
+                    <text x="315" y="198" text-anchor="middle" font-size="13" font-weight="900" fill="#be123c">15 cm</text>
+                  </g>
+                  <g class="cursor-pointer" onclick="inspectTrap3Bar('20 cm', 4, false)">
+                    <rect x="380" y="120" width="60" height="60" rx="6" fill="#4f46e5"></rect>
+                    <text x="410" y="115" text-anchor="middle" font-size="12" font-weight="800">4</text>
+                    <text x="410" y="198" text-anchor="middle" font-size="13" font-weight="800">20 cm</text>
+                  </g>
+                  <g class="cursor-pointer" onclick="inspectTrap3Bar('25 cm', 2, false)">
+                    <rect x="475" y="150" width="60" height="30" rx="6" fill="#4f46e5"></rect>
+                    <text x="505" y="145" text-anchor="middle" font-size="12" font-weight="800">2</text>
+                    <text x="505" y="198" text-anchor="middle" font-size="13" font-weight="800">25 cm</text>
+                  </g>
+                  <text x="315" y="216" text-anchor="middle" font-size="13" font-weight="800" fill="#1e1b4b">Ruler Overhang Length (cm)</text>
+                </svg>
+              </div>
+              <div id="trap3-readout" class="mt-3 bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-sm font-extrabold text-indigo-950">
+                Coordinate Readout: Tap any bar above to inspect whether it fits the smooth downward pattern!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 4: INTERACTIVE 4-ZONE UNIT 2 SOUND MASTERY ARENA     -->
+    <!-- [SoL: CPA Progression] [SoL: Elaborative Interrogation] [SoL: Immediate Feedback] -->
+    <!-- ============================================================ -->
+    <section id="station-4" class="station-panel hidden">
+      <div class="bg-white rounded-3xl shadow-xl border-2 border-indigo-100 p-6 sm:p-8">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Interactive Lab &amp; Simulation Studio</span>
+            <h2 class="text-3xl font-bold text-indigo-950">4-Zone Unit 2 Sound Mastery Arena</h2>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="selectZone(1)" id="zone-btn-1" class="zone-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition">1. Wave &amp; Audio Mixer</button>
+            <button onclick="selectZone(2)" id="zone-btn-2" class="zone-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition">2. String vs Wind</button>
+            <button onclick="selectZone(3)" id="zone-btn-3" class="zone-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition">3. Anomaly Clinic</button>
+            <button onclick="selectZone(4)" id="zone-btn-4" class="zone-tab px-3.5 py-2 rounded-xl font-extrabold text-sm transition">4. 2-Mark Builder</button>
+          </div>
+        </div>
+
+        <!-- ZONE 1: VOLUME VS PITCH LIVE WAVE & WEB AUDIO MIXER -->
+        <div id="zone-panel-1" class="zone-panel">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2">
+              <!-- Animation Canvas ONLY (zero dynamic text inside canvas!) -->
+              <div class="bg-slate-950 rounded-2xl p-4 border-4 border-indigo-500 shadow-inner">
+                <svg viewBox="0 0 640 200" class="w-full h-48">
+                  <line x1="20" y1="100" x2="620" y2="100" stroke="#334155" stroke-width="2" stroke-dasharray="6,6"></line>
+                  <path id="mixer-wave-path" d="" fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"></path>
+                </svg>
+              </div>
+              <!-- Dedicated Readout Dashboard cleanly BELOW canvas -->
+              <div class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-4">
+                <div class="bg-white rounded-xl p-3 text-center shadow-sm">
+                  <div class="text-xs font-extrabold uppercase text-slate-500">Volume Level</div>
+                  <div id="mixer-db-val" class="text-2xl font-black text-amber-600">65 dB</div>
+                </div>
+                <div class="bg-white rounded-xl p-3 text-center shadow-sm">
+                  <div class="text-xs font-extrabold uppercase text-slate-500">Vibration Size</div>
+                  <div id="mixer-amp-desc" class="text-lg font-black text-amber-700">Medium</div>
+                </div>
+                <div class="bg-white rounded-xl p-3 text-center shadow-sm">
+                  <div class="text-xs font-extrabold uppercase text-slate-500">Pitch Frequency</div>
+                  <div id="mixer-hz-val" class="text-2xl font-black text-indigo-600">440 Hz</div>
+                </div>
+                <div class="bg-white rounded-xl p-3 text-center shadow-sm">
+                  <div class="text-xs font-extrabold uppercase text-slate-500">Vibration Speed</div>
+                  <div id="mixer-pitch-desc" class="text-lg font-black text-indigo-700">Medium</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Controls Panel (sliders never destroyed on input!) -->
+            <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 flex flex-col justify-between gap-5">
+              <div class="space-y-5">
+                <div>
+                  <label for="slider-vol" class="flex justify-between font-extrabold text-amber-900 mb-2">
+                    <span>🔊 Vibration Size (Volume)</span>
+                    <span id="lbl-vol-num">65 dB</span>
+                  </label>
+                  <input id="slider-vol" type="range" min="30" max="100" value="65" class="sound-slider" oninput="updateMixer()">
+                  <div class="flex justify-between text-xs font-bold text-slate-500 mt-1">
+                    <span>Quiet (30 dB)</span><span>Loud (100 dB)</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label for="slider-pitch" class="flex justify-between font-extrabold text-indigo-900 mb-2">
+                    <span>🎵 Vibration Speed (Pitch)</span>
+                    <span id="lbl-pitch-num">440 Hz</span>
+                  </label>
+                  <input id="slider-pitch" type="range" min="180" max="880" value="440" class="sound-slider" oninput="updateMixer()">
+                  <div class="flex justify-between text-xs font-bold text-slate-500 mt-1">
+                    <span>Low Pitch (180 Hz)</span><span>High Pitch (880 Hz)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-2.5">
+                <button id="btn-mixer-tone" onclick="toggleMixerTone()" class="w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-lg shadow-lg transition">
+                  ▶ Play Live Sound Tone
+                </button>
+                <button onclick="toggleParticleExplainer()" class="w-full py-2.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-extrabold text-sm transition">
+                  🔬 Reveal Air Particle Mechanism
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Click-to-reveal organic particle/mechanism explainer anchored below -->
+          <div id="particle-explainer" class="hidden mt-5 bg-gradient-to-r from-emerald-50 to-cyan-50 border-2 border-emerald-300 rounded-2xl p-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
+              <div>
+                <h3 class="text-xl font-bold text-emerald-950 mb-2">How Air Particles Carry Volume &amp; Pitch</h3>
+                <p class="text-sm font-bold text-slate-700 leading-relaxed">
+                  Sound travels when a vibrating source bumps neighbouring air particles back and forth.
+                  <strong>Bigger back-and-forth swings</strong> pass more energy ➔ <strong>louder volume</strong>.
+                  <strong>Faster back-and-forth shakes</strong> hit your eardrum more often per second ➔ <strong>higher pitch</strong>!
+                </p>
+              </div>
+              <div id="organic-particles-box" class="bg-white border-2 border-emerald-200 rounded-2xl p-3 h-28 flex flex-wrap content-end justify-around gap-2 overflow-hidden">
+                <!-- Populated organically via JS with staggered durations & delays -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ZONE 2: STRING VS WIND QUICK COMPARATOR -->
+        <div id="zone-panel-2" class="zone-panel hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Stringed Instrument Lab -->
+            <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-5">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-2xl font-bold text-amber-950">🎸 Stringed Instrument</h3>
+                <span class="px-3 py-1 bg-amber-200 text-amber-950 rounded-full text-xs font-extrabold">String Vibrates</span>
+              </div>
+              <div class="bg-white rounded-xl border border-amber-200 p-4 mb-4">
+                <svg viewBox="0 0 360 90" class="w-full h-24">
+                  <rect x="20" y="15" width="16" height="60" rx="4" fill="#78350f"></rect>
+                  <rect id="str-bridge" x="320" y="15" width="16" height="60" rx="4" fill="#78350f"></rect>
+                  <line id="str-line" x1="36" y1="45" x2="320" y2="45" stroke="#d97706" stroke-width="5" stroke-linecap="round"></line>
+                </svg>
+              </div>
+              <div class="grid grid-cols-3 gap-2 mb-4">
+                <button onclick="setStringProp('len')" id="btn-str-len" class="py-2 px-2 rounded-xl bg-white border-2 border-amber-400 font-extrabold text-xs text-amber-950">Length: Long</button>
+                <button onclick="setStringProp('ten')" id="btn-str-ten" class="py-2 px-2 rounded-xl bg-white border-2 border-amber-400 font-extrabold text-xs text-amber-950">Tension: Loose</button>
+                <button onclick="setStringProp('thk')" id="btn-str-thk" class="py-2 px-2 rounded-xl bg-white border-2 border-amber-400 font-extrabold text-xs text-amber-950">Width: Thick</button>
+              </div>
+              <button onclick="pluckStringDemo()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold shadow transition">
+                🎵 Pluck String!
+              </button>
+              <div id="str-readout" class="mt-3 bg-white rounded-xl p-3 text-sm font-extrabold text-amber-950 border border-amber-200">
+                Current setting: Long, Loose, Thick ➔ Slow vibrations ➔ Low pitch (196 Hz).
+              </div>
+            </div>
+
+            <!-- Wind Instrument Lab -->
+            <div class="bg-cyan-50 border-2 border-cyan-300 rounded-2xl p-5">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-2xl font-bold text-cyan-950">🪈 Blown Water Bottle (20 cm)</h3>
+                <span class="px-3 py-1 bg-cyan-200 text-cyan-950 rounded-full text-xs font-extrabold">Air Column Vibrates</span>
+              </div>
+              <div class="bg-white rounded-xl border border-cyan-200 p-3 mb-4 flex justify-center">
+                <svg viewBox="0 0 255 140" class="h-32">
+                  <rect x="70" y="14" width="80" height="116" rx="10" fill="#fef3c7" stroke="#0f172a" stroke-width="3"></rect>
+                  <rect id="wind-water-rect" x="72" y="72" width="76" height="56" rx="4" fill="#0ea5e9"></rect>
+                  <line x1="160" y1="14" x2="160" y2="72" id="wind-air-bracket" stroke="#b45309" stroke-width="3"></line>
+                  <text id="wind-air-svg-lbl" x="170" y="48" font-size="13" font-weight="800" fill="#b45309">10 cm air</text>
+                </svg>
+              </div>
+              <div class="mb-3">
+                <label for="slider-water" class="flex justify-between text-xs font-extrabold text-cyan-950 mb-1">
+                  <span>Water Depth (in 20 cm bottle)</span>
+                  <span id="lbl-water-cm">10 cm water / 10 cm air</span>
+                </label>
+                <input id="slider-water" type="range" min="2" max="16" value="10" class="sound-slider" oninput="updateWindBottle()">
+              </div>
+              <button onclick="blowBottleDemo()" class="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-extrabold shadow transition">
+                💨 Blow Across Top!
+              </button>
+              <div id="wind-readout" class="mt-3 bg-white rounded-xl p-3 text-sm font-extrabold text-cyan-950 border border-cyan-200">
+                10 cm water ➔ 10 cm air column ➔ Medium vibration speed (545 Hz).
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ZONE 3: ANOMALY BAR-CHART CLINIC (FRESH DATA: Tube lengths 10, 15, 20, 25, 30 cm -> 9, 7, 9 [anomaly], 3, 1) -->
+        <div id="zone-panel-3" class="zone-panel hidden">
+          <div class="bg-slate-50 border-2 border-indigo-200 rounded-2xl p-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div>
+                <h3 class="text-2xl font-bold text-indigo-950">Spot the Anomalous Bar!</h3>
+                <p class="text-sm font-bold text-slate-600">Title: <strong>Panpipe Tube Length vs Pitch Score</strong> &bull; How to Read: Find Tube Length (cm) on X, Pitch Score (1–10) on Y, then tap the odd bar out!</p>
+              </div>
+              <button onclick="resetAnomalyGame()" class="px-3.5 py-1.5 rounded-xl bg-white border border-slate-300 font-extrabold text-xs text-slate-700 hover:bg-slate-100">↺ Reset Chart</button>
+            </div>
+
+            <div class="bg-white rounded-2xl border-2 border-slate-200 p-4">
+              <svg viewBox="0 0 640 245" class="w-full h-60">
+                <text x="340" y="18" text-anchor="middle" font-size="15" font-weight="900" fill="#1e1b4b">Panpipe Tube Length vs Pitch Score</text>
+                <!-- Horizontal grid lines -->
+                <line x1="80" y1="35" x2="600" y2="35" stroke="#e2e8f0" stroke-width="1"></line>
+                <line x1="80" y1="67" x2="600" y2="67" stroke="#e2e8f0" stroke-width="1"></line>
+                <line x1="80" y1="99" x2="600" y2="99" stroke="#e2e8f0" stroke-width="1"></line>
+                <line x1="80" y1="131" x2="600" y2="131" stroke="#e2e8f0" stroke-width="1"></line>
+                <line x1="80" y1="163" x2="600" y2="163" stroke="#e2e8f0" stroke-width="1"></line>
+                <!-- Axes -->
+                <line x1="80" y1="30" x2="80" y2="195" stroke="#0f172a" stroke-width="3"></line>
+                <line x1="80" y1="195" x2="600" y2="195" stroke="#0f172a" stroke-width="3"></line>
+                <!-- Y-axis ticks (0 to 10, 16px per unit, y = 195 - val*16) -->
+                <text x="70" y="39" text-anchor="end" font-size="12" font-weight="700">10</text>
+                <text x="70" y="71" text-anchor="end" font-size="12" font-weight="700">8</text>
+                <text x="70" y="103" text-anchor="end" font-size="12" font-weight="700">6</text>
+                <text x="70" y="135" text-anchor="end" font-size="12" font-weight="700">4</text>
+                <text x="70" y="167" text-anchor="end" font-size="12" font-weight="700">2</text>
+                <text x="70" y="199" text-anchor="end" font-size="12" font-weight="700">0</text>
+                <text x="22" y="115" text-anchor="middle" font-size="12" font-weight="800" fill="#1e1b4b" transform="rotate(-90 22 115)">Pitch Score (1–10)</text>
+
+                <!-- Bars: 10->9 (y=51,h=144), 15->7 (y=83,h=112), 20->9 ANOMALY (y=51,h=144), 25->3 (y=147,h=48), 30->1 (y=179,h=16) -->
+                <g class="cursor-pointer" onclick="pickAnomalyBar(10, 9, false)">
+                  <rect id="anom-bar-10" x="110" y="51" width="64" height="144" rx="6" fill="#0284c7"></rect>
+                  <text x="142" y="45" text-anchor="middle" font-size="13" font-weight="800">9</text>
+                  <text x="142" y="214" text-anchor="middle" font-size="13" font-weight="800">10 cm</text>
+                </g>
+                <g class="cursor-pointer" onclick="pickAnomalyBar(15, 7, false)">
+                  <rect id="anom-bar-15" x="210" y="83" width="64" height="112" rx="6" fill="#0284c7"></rect>
+                  <text x="242" y="77" text-anchor="middle" font-size="13" font-weight="800">7</text>
+                  <text x="242" y="214" text-anchor="middle" font-size="13" font-weight="800">15 cm</text>
+                </g>
+                <g class="cursor-pointer" onclick="pickAnomalyBar(20, 9, true)">
+                  <rect id="anom-bar-20" x="310" y="51" width="64" height="144" rx="6" fill="#0284c7"></rect>
+                  <circle id="anom-ring" cx="342" cy="123" r="56" fill="none" stroke="#f43f5e" stroke-width="5" stroke-dasharray="9,5" class="hidden"></circle>
+                  <text x="342" y="45" text-anchor="middle" font-size="13" font-weight="800">9</text>
+                  <text x="342" y="214" text-anchor="middle" font-size="13" font-weight="800">20 cm</text>
+                </g>
+                <g class="cursor-pointer" onclick="pickAnomalyBar(25, 3, false)">
+                  <rect id="anom-bar-25" x="410" y="147" width="64" height="48" rx="6" fill="#0284c7"></rect>
+                  <text x="442" y="141" text-anchor="middle" font-size="13" font-weight="800">3</text>
+                  <text x="442" y="214" text-anchor="middle" font-size="13" font-weight="800">25 cm</text>
+                </g>
+                <g class="cursor-pointer" onclick="pickAnomalyBar(30, 1, false)">
+                  <rect id="anom-bar-30" x="510" y="179" width="64" height="16" rx="4" fill="#0284c7"></rect>
+                  <text x="542" y="173" text-anchor="middle" font-size="13" font-weight="800">1</text>
+                  <text x="542" y="214" text-anchor="middle" font-size="13" font-weight="800">30 cm</text>
+                </g>
+                <text x="342" y="236" text-anchor="middle" font-size="13" font-weight="800" fill="#1e1b4b">Tube Length (cm)</text>
+              </svg>
+            </div>
+            <div id="anomaly-feedback" class="mt-4 bg-white border-2 border-indigo-200 rounded-xl p-4 font-extrabold text-indigo-950">
+              Coordinate Readout: Click the bar that does NOT fit the steady pattern!
+            </div>
+          </div>
+        </div>
+
+        <!-- ZONE 4: GOLDEN EXAM SENTENCE BUILDER -->
+        <div id="zone-panel-4" class="zone-panel hidden">
+          <div class="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-2xl p-6">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div>
+                <h3 class="text-2xl font-bold text-indigo-950">Golden 2-Mark Exam Sentence Builder</h3>
+                <p class="text-sm font-bold text-slate-600">Tap the blocks in order (Cause ➔ Vibration ➔ Result) to earn full 2/2 marks!</p>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="loadSentenceTask(0)" id="sent-tab-0" class="px-3 py-1.5 rounded-xl font-extrabold text-xs bg-indigo-600 text-white">Q1: Guitar String</button>
+                <button onclick="loadSentenceTask(1)" id="sent-tab-1" class="px-3 py-1.5 rounded-xl font-extrabold text-xs bg-white text-indigo-800 border border-indigo-200">Q2: Triangle Volume</button>
+                <button onclick="loadSentenceTask(2)" id="sent-tab-2" class="px-3 py-1.5 rounded-xl font-extrabold text-xs bg-white text-indigo-800 border border-indigo-200">Q3: Blown Bottle</button>
+              </div>
+            </div>
+
+            <div id="sentence-prompt" class="bg-white rounded-2xl p-4 border-2 border-indigo-300 text-xl font-extrabold text-indigo-950 mb-4"></div>
+
+            <!-- Answer Drop Zone -->
+            <div class="bg-white rounded-2xl p-4 border-2 border-dashed border-indigo-400 min-h-[72px] flex flex-wrap items-center gap-2 mb-4" id="sentence-assembled">
+              <span class="text-slate-400 font-bold text-sm">Tap blocks below to build your Golden 2-Mark Sentence...</span>
+            </div>
+
+            <!-- Clickable Tile Bank -->
+            <div id="sentence-bank" class="flex flex-wrap gap-3 mb-4"></div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div id="sentence-feedback" class="text-base font-extrabold text-indigo-900"></div>
+              <button onclick="resetSentenceTask()" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-sm">↺ Clear Blocks</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 5: SUCCESS CRITERIA WHITEBOARD CHECK (0 / 3 MET)     -->
+    <!-- [SoL: Metacognition] [SoL: Retrieval Practice]               -->
+    <!-- ============================================================ -->
+    <section id="station-5" class="station-panel hidden">
+      <div class="bg-white rounded-3xl shadow-xl border-2 border-indigo-100 p-6 sm:p-8">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-600">Pre-Quiz Mastery Gate</span>
+            <h2 class="text-3xl font-bold text-indigo-950">✅ Success Criteria Whiteboard Check</h2>
+            <p class="text-slate-600 font-bold">Students answer on mini-whiteboards first. Reveal and tick each criterion once the class nails it!</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <div id="sc-counter" class="px-5 py-2.5 rounded-2xl bg-indigo-950 text-cyan-300 font-black text-xl shadow">
+              0 / 3 Met
+            </div>
+            <button onclick="resetScChecks()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-sm">↺ Reset</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Check 1: Must -->
+          <div class="bg-emerald-50 border-2 border-emerald-300 rounded-3xl p-5 flex flex-col justify-between">
+            <div>
+              <span class="inline-block px-3 py-1 rounded-full bg-emerald-600 text-white text-xs font-extrabold uppercase mb-3">1. Must &bull; Volume vs Pitch</span>
+              <p class="text-lg font-extrabold text-slate-900 mb-4">
+                Linh taps a xylophone bar much more gently. Does the pitch change, or does the volume change? Write the vibration reason!
+              </p>
+              <div id="sc-ans-1" class="hidden bg-white border-2 border-emerald-400 rounded-2xl p-3 text-sm font-extrabold text-emerald-950 mb-4">
+                ✅ <strong>Volume becomes quieter</strong> because the vibrations are <strong>smaller</strong>. The pitch stays the same!
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="revealSc(1)" class="flex-1 py-2 rounded-xl bg-white hover:bg-emerald-100 border-2 border-emerald-400 text-emerald-900 font-extrabold text-sm">👁️ Reveal</button>
+              <button onclick="toggleScMet(1)" id="sc-met-1" class="flex-1 py-2 rounded-xl bg-slate-200 hover:bg-emerald-500 hover:text-white text-slate-800 font-extrabold text-sm transition">☐ Mark Met</button>
+            </div>
+          </div>
+
+          <!-- Check 2: Should -->
+          <div class="bg-amber-50 border-2 border-amber-300 rounded-3xl p-5 flex flex-col justify-between">
+            <div>
+              <span class="inline-block px-3 py-1 rounded-full bg-amber-600 text-white text-xs font-extrabold uppercase mb-3">2. Should &bull; Air Columns</span>
+              <p class="text-lg font-extrabold text-slate-900 mb-4">
+                Tube X has <strong>14 cm of air</strong> and Tube Y has <strong>6 cm of air</strong>. Which makes the higher pitch when blown, and why?
+              </p>
+              <div id="sc-ans-2" class="hidden bg-white border-2 border-amber-400 rounded-2xl p-3 text-sm font-extrabold text-amber-950 mb-4">
+                ✅ <strong>Tube Y</strong> makes the higher pitch because its <strong>shorter air column vibrates faster</strong>!
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="revealSc(2)" class="flex-1 py-2 rounded-xl bg-white hover:bg-amber-100 border-2 border-amber-400 text-amber-900 font-extrabold text-sm">👁️ Reveal</button>
+              <button onclick="toggleScMet(2)" id="sc-met-2" class="flex-1 py-2 rounded-xl bg-slate-200 hover:bg-emerald-500 hover:text-white text-slate-800 font-extrabold text-sm transition">☐ Mark Met</button>
+            </div>
+          </div>
+
+          <!-- Check 3: Could -->
+          <div class="bg-fuchsia-50 border-2 border-fuchsia-300 rounded-3xl p-5 flex flex-col justify-between">
+            <div>
+              <span class="inline-block px-3 py-1 rounded-full bg-fuchsia-600 text-white text-xs font-extrabold uppercase mb-3">3. Could &bull; Anomaly Clinic</span>
+              <p class="text-lg font-extrabold text-slate-900 mb-4">
+                Sound meter readings at 1 m, 2 m, 3 m, 4 m, 5 m are: <strong>72 dB, 64 dB, 81 dB, 48 dB, 40 dB</strong>. Spot the anomaly and state what to do!
+              </p>
+              <div id="sc-ans-3" class="hidden bg-white border-2 border-fuchsia-400 rounded-2xl p-3 text-sm font-extrabold text-fuchsia-950 mb-4">
+                ✅ <strong>81 dB at 3 m</strong> is anomalous (expected ~56 dB). <strong>Repeat the 3 m trial</strong> keeping the sound source the same!
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="revealSc(3)" class="flex-1 py-2 rounded-xl bg-white hover:bg-fuchsia-100 border-2 border-fuchsia-400 text-fuchsia-900 font-extrabold text-sm">👁️ Reveal</button>
+              <button onclick="toggleScMet(3)" id="sc-met-3" class="flex-1 py-2 rounded-xl bg-slate-200 hover:bg-emerald-500 hover:text-white text-slate-800 font-extrabold text-sm transition">☐ Mark Met</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATION 6: UNIT 2 CHAMPIONSHIP QUICKFIRE (10 QUESTIONS)      -->
+    <!-- [SoL: Automaticity] [SoL: Immediate Feedback] [SoL: Interleaving] -->
+    <!-- ============================================================ -->
+    <section id="station-6" class="station-panel hidden">
+      <div class="bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 rounded-3xl shadow-2xl border-4 border-amber-400 p-6 sm:p-8 text-white">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-300">Topics 2.1, 2.2, 2.3 &amp; 2.4 Synthesis</span>
+            <h2 class="text-3xl sm:text-4xl font-bold text-white">🏆 Unit 2 Championship Quickfire</h2>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-4 py-1.5 rounded-full bg-white/15 font-extrabold text-sm" id="qf-progress">Question 1 / 10</span>
+            <select id="qf-duration" class="bg-slate-800 border border-slate-600 rounded-xl px-3 py-1.5 text-sm font-extrabold text-cyan-300">
+              <option value="10">10s Timer</option>
+              <option value="15" selected>15s Timer</option>
+              <option value="20">20s Timer</option>
+            </select>
+            <button onclick="startQfTimer()" class="px-4 py-1.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black text-sm shadow">⏱️ Start Timer</button>
+          </div>
+        </div>
+
+        <!-- Timer Bar & Boards Up Banner -->
+        <div class="mb-5">
+          <div class="flex justify-between items-center mb-1.5">
+            <span id="qf-topic-badge" class="px-3 py-1 rounded-full bg-indigo-600 text-xs font-extrabold uppercase">Topic 2.1</span>
+            <span id="qf-timer-text" class="text-2xl font-black text-amber-300">15s</span>
+          </div>
+          <div class="w-full h-3.5 bg-slate-800 rounded-full overflow-hidden">
+            <div id="qf-timer-bar" class="h-full bg-gradient-to-r from-emerald-400 via-amber-400 to-rose-500 transition-all duration-300" style="width: 100%;"></div>
+          </div>
+          <div id="qf-boards-up" class="hidden mt-3 text-center py-2.5 rounded-2xl bg-amber-400 text-slate-950 font-black text-2xl sm:text-3xl boards-up-pulse">
+            🙌 BOARDS UP! SHOW YOUR ANSWERS! 🙌
+          </div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="bg-white/10 backdrop-blur border-2 border-white/20 rounded-3xl p-6 sm:p-8 text-center mb-5 min-h-[180px] flex flex-col justify-center">
+          <p id="qf-question" class="text-2xl sm:text-3xl font-extrabold leading-snug text-white"></p>
+          <div id="qf-answer-box" class="hidden mt-5 bg-emerald-500/20 border-2 border-emerald-400 rounded-2xl p-4">
+            <div class="text-xs font-black uppercase text-emerald-300 mb-1">Model Cambridge Answer</div>
+            <p id="qf-answer" class="text-xl sm:text-2xl font-black text-amber-200"></p>
+          </div>
+        </div>
+
+        <!-- Action & Team Score Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex gap-2">
+            <button onclick="prevQf()" class="px-4 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 font-extrabold text-sm">⬅ Prev</button>
+            <button onclick="revealQfAnswer()" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-sm shadow">👁️ Reveal Answer</button>
+            <button onclick="nextQf()" class="px-4 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-400 font-extrabold text-sm">Next ➔</button>
+          </div>
+
+          <div class="flex items-center gap-2 bg-slate-950/70 border border-slate-700 rounded-2xl p-2">
+            <button onclick="addScore('red', 1)" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 font-black text-sm shadow">🔴 Team Red +1 (<span id="qf-red-score">0</span>)</button>
+            <button onclick="addScore('blue', 1)" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 font-black text-sm shadow">🔵 Team Blue +1 (<span id="qf-blue-score">0</span>)</button>
+            <button onclick="launchConfetti(); playSfx('win');" class="px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm" title="Celebrate Winner!">🎉</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- STATION 2 VOCABULARY MODAL (SOLE VIETNAMESE EXCEPTION)       -->
+  <!-- z-[80] so it always floats cleanly above header & content    -->
+  <!-- ============================================================ -->
+  <div id="vocab-modal" class="fixed inset-0 z-[80] hidden bg-slate-950/75 backdrop-blur-sm p-4 flex items-center justify-center" onclick="if(event.target===this) closeVocabModal()">
+    <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border-4 border-indigo-400 overflow-hidden">
+      <div class="bg-indigo-950 text-white px-6 py-4 flex items-center justify-between">
+        <div>
+          <span class="text-xs font-extrabold uppercase text-cyan-300">Bilingual Sound Vocabulary Card</span>
+          <h3 id="vm-en" class="text-3xl font-bold"></h3>
+        </div>
+        <button onclick="closeVocabModal()" class="w-10 h-10 rounded-full bg-white/15 hover:bg-rose-500 text-white font-black text-xl transition">✕</button>
+      </div>
+      <div class="p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-indigo-50 rounded-2xl p-4 mb-4 border border-indigo-200">
+          <div>
+            <div class="text-xs font-extrabold uppercase text-indigo-500">Vietnamese Translation</div>
+            <div id="vm-vn" class="text-2xl font-black text-indigo-950"></div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="speakCurrentVocab('en-GB')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-sm shadow">🔊 Listen (EN)</button>
+            <button onclick="speakCurrentVocab('vi-VN')" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-sm shadow">🔊 Nghe (VN)</button>
+          </div>
+        </div>
+
+        <div id="vm-svg" class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 flex justify-center mb-4"></div>
+
+        <div class="space-y-2">
+          <p id="vm-def" class="text-lg font-extrabold text-slate-800"></p>
+          <p id="vm-tip" class="text-sm font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-xl px-3.5 py-2"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- DAVID'S BOARD WHITEBOARD OVERLAY (W) — z-[75]                -->
+  <!-- ============================================================ -->
+  <div id="whiteboard-modal" class="fixed inset-0 z-[75] hidden bg-slate-950/80 backdrop-blur-sm p-3 sm:p-6 flex flex-col">
+    <div class="bg-white rounded-3xl flex-1 flex flex-col overflow-hidden border-4 border-emerald-400 shadow-2xl">
+      <div class="bg-slate-900 text-white px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">✏️</span>
+          <span class="font-display text-xl font-bold text-emerald-300">David's Board — Sound Wave &amp; Air Column Sketchpad</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="setWbColor('#0f172a')" class="w-7 h-7 rounded-full bg-slate-950 border-2 border-white" title="Black"></button>
+          <button onclick="setWbColor('#ef4444')" class="w-7 h-7 rounded-full bg-red-500 border-2 border-white" title="Red"></button>
+          <button onclick="setWbColor('#2563eb')" class="w-7 h-7 rounded-full bg-blue-600 border-2 border-white" title="Blue"></button>
+          <button onclick="setWbColor('#10b981')" class="w-7 h-7 rounded-full bg-emerald-500 border-2 border-white" title="Green"></button>
+          <button onclick="setWbEraser()" class="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-extrabold">🧹 Eraser</button>
+          <button onclick="toggleWbGrid()" class="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-extrabold">⊞ Grid</button>
+          <button onclick="clearWb()" class="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold">🗑️ Clear</button>
+          <button onclick="toggleWhiteboard()" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-black">✕ Close (W)</button>
+        </div>
+      </div>
+      <div id="wb-canvas-wrap" class="relative flex-1 bg-white wb-grid overflow-hidden">
+        <canvas id="wb-canvas" class="w-full h-full touch-none cursor-crosshair block"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TEACHER PROMPT DRAWER (T) — z-[70]                           -->
+  <!-- ============================================================ -->
+  <aside id="teacher-drawer" class="fixed top-0 right-0 bottom-0 w-full max-w-md z-[70] bg-slate-950 text-white shadow-2xl border-l-4 border-amber-400 transform translate-x-full transition-transform duration-300 overflow-y-auto p-6">
+    <div class="flex items-center justify-between mb-5 border-b border-slate-800 pb-3">
+      <h3 class="text-2xl font-bold text-amber-300">📋 Teacher Prompt Drawer</h3>
+      <button onclick="toggleTeacherDrawer()" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 font-black text-sm">✕ (T)</button>
+    </div>
+    <div class="space-y-4 text-sm font-semibold text-slate-200">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+        <div class="text-cyan-300 font-extrabold uppercase text-xs mb-1">70-Minute Clinic Pacing</div>
+        <ul class="space-y-1.5 list-disc pl-4">
+          <li><strong>0–8 min:</strong> Station 0 LO/SC + Station 1 Flashback 3 (Units 3.4, 1.4, 3.3).</li>
+          <li><strong>8–15 min:</strong> Station 2 Exam Vocab &amp; Real-World Sound Careers.</li>
+          <li><strong>15–28 min:</strong> Station 3 Full-Screen I Do (3 Exam Traps — play Loud Low vs Soft High!).</li>
+          <li><strong>28–42 min:</strong> Station 4 Sound Mastery Arena (all 4 zones — call volunteers to the board!).</li>
+          <li><strong>42–58 min:</strong> Independent Worksheet 2 (Pre-Test Diagnostic Practice, 22 marks).</li>
+          <li><strong>58–70 min:</strong> Station 5 SC Check (`0/3 Met`) + Station 6 Quickfire Championship!</li>
+        </ul>
+      </div>
+      <div class="bg-rose-950/60 border border-rose-500/40 rounded-2xl p-4">
+        <div class="text-rose-300 font-extrabold uppercase text-xs mb-1">If They Aren't Getting It (Live Pivot)</div>
+        <p class="leading-relaxed">
+          <strong>Red-Flag Hinge:</strong> Learners still say "more water = lower pitch when blowing."<br>
+          <strong>Teacher Support Table:</strong> Hold up a ruler beside a real clear bottle with water — physically point to the empty AIR space above the water and measure it in cm so they see "more water = LESS air."
+        </p>
+      </div>
+      <div class="bg-emerald-950/60 border border-emerald-500/40 rounded-2xl p-4">
+        <div class="text-emerald-300 font-extrabold uppercase text-xs mb-1">Keyboard Shortcuts</div>
+        <p><kbd class="px-1.5 py-0.5 bg-slate-800 rounded">←</kbd> / <kbd class="px-1.5 py-0.5 bg-slate-800 rounded">→</kbd> Change station &bull; <kbd class="px-1.5 py-0.5 bg-slate-800 rounded">W</kbd> David's Board &bull; <kbd class="px-1.5 py-0.5 bg-slate-800 rounded">T</kbd> Teacher Guide &bull; <kbd class="px-1.5 py-0.5 bg-slate-800 rounded">M</kbd> Mute &bull; <kbd class="px-1.5 py-0.5 bg-slate-800 rounded">Esc</kbd> Exit modal / Full Screen.</p>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    // ============================================================
+    // 1. GLOBAL STATE, AUDIO ENGINE & AUTO-HIDING HEADER
+    // ============================================================
+    let currentStation = 0;
+    let isMuted = false;
+    let redScore = 0;
+    let blueScore = 0;
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playSfx(type) {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === 'click') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(760, now + 0.06);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      } else if (type === 'good') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.09);
+        osc.frequency.setValueAtTime(783.99, now + 0.18);
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.36);
+        osc.start(now);
+        osc.stop(now + 0.37);
+      } else if (type === 'bad') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.linearRampToValueAtTime(160, now + 0.22);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } else if (type === 'alarm') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(880, now);
+        osc.frequency.setValueAtTime(660, now + 0.14);
+        osc.frequency.setValueAtTime(880, now + 0.28);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+        osc.start(now);
+        osc.stop(now + 0.46);
+      } else if (type === 'win') {
+        const notes = [523.25, 659.25, 783.99, 1046.5];
+        notes.forEach((f, idx) => {
+          const o = ctx.createOscillator();
+          const g = ctx.createGain();
+          o.type = 'triangle';
+          o.frequency.setValueAtTime(f, now + idx * 0.09);
+          g.gain.setValueAtTime(0.14, now + idx * 0.09);
+          g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.25);
+          o.connect(g);
+          g.connect(ctx.destination);
+          o.start(now + idx * 0.09);
+          o.stop(now + idx * 0.09 + 0.26);
+        });
+      }
+    }
+
+    function playTone(freq, vol = 0.2, duration = 0.7, waveType = 'sine') {
+      if (isMuted) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = waveType;
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(vol, now + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + duration + 0.04);
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      const btn = document.getElementById('btn-mute');
+      btn.textContent = isMuted ? '🔇 Muted (M)' : '🔊 SFX (M)';
+      if (isMuted) stopMixerTone();
+    }
+
+    // Auto-hiding header on scroll
+    let lastScrollY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      const hdr = document.getElementById('top-header');
+      if (currentScroll > lastScrollY && currentScroll > 60) {
+        hdr.classList.add('header-hidden');
+      } else {
+        hdr.classList.remove('header-hidden');
+      }
+      lastScrollY = currentScroll;
+    });
+
+    // Team Scores + Confetti
+    function addScore(team, delta) {
+      if (team === 'red') redScore += delta;
+      if (team === 'blue') blueScore += delta;
+      syncScoreUI();
+      playSfx('good');
+      if (delta > 0 && (redScore % 3 === 0 || blueScore % 3 === 0)) launchConfetti();
+    }
+    function resetScores() {
+      redScore = 0;
+      blueScore = 0;
+      syncScoreUI();
+    }
+    function syncScoreUI() {
+      document.getElementById('hdr-red-score').textContent = redScore;
+      document.getElementById('hdr-blue-score').textContent = blueScore;
+      const qr = document.getElementById('qf-red-score');
+      const qb = document.getElementById('qf-blue-score');
+      if (qr) qr.textContent = redScore;
+      if (qb) qb.textContent = blueScore;
+    }
+
+    function launchConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const pieces = [];
+      const palette = ['#f43f5e', '#38bdf8', '#f59e0b', '#10b981', '#a855f7', '#ec4899'];
+      for (let i = 0; i < 95; i++) {
+        pieces.push({
+          x: Math.random() * canvas.width,
+          y: -20 - Math.random() * 140,
+          w: 8 + Math.random() * 6,
+          h: 10 + Math.random() * 8,
+          vx: (Math.random() - 0.5) * 6,
+          vy: 3 + Math.random() * 5,
+          rot: Math.random() * 360,
+          vrot: (Math.random() - 0.5) * 12,
+          fill: palette[i % palette.length]
+        });
+      }
+      let frame = 0;
+      function step() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += p.vrot;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rot * Math.PI) / 180);
+          ctx.fillStyle = p.fill;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        });
+        frame++;
+        if (frame < 120) requestAnimationFrame(step);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      step();
+    }
+
+    // ============================================================
+    // 2. STATION SWITCHING & GUARDED KEYBOARD SHORTCUTS
+    // ============================================================
+    function goStation(idx) {
+      if (idx < 0 || idx > 6) return;
+      stopMixerTone();
+      currentStation = idx;
+      for (let i = 0; i <= 6; i++) {
+        const panel = document.getElementById('station-' + i);
+        const tab = document.getElementById('tab-' + i);
+        if (i === idx) {
+          panel.classList.remove('hidden');
+          tab.className = 'station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm bg-indigo-600 text-white shadow-md transition';
+        } else {
+          panel.classList.add('hidden');
+          tab.className = 'station-tab px-3.5 py-2 rounded-xl font-extrabold text-sm bg-slate-100 hover:bg-indigo-100 text-slate-700 transition';
+        }
+      }
+      playSfx('click');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function isAnyModalOpen() {
+      const vm = !document.getElementById('vocab-modal').classList.contains('hidden');
+      const wb = !document.getElementById('whiteboard-modal').classList.contains('hidden');
+      const td = !document.getElementById('teacher-drawer').classList.contains('translate-x-full');
+      const fs = document.getElementById('ido-container').classList.contains('ido-fullscreen-active');
+      return vm || wb || td || fs;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const tag = document.activeElement ? document.activeElement.tagName : '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+      if (e.key === 'Escape') {
+        closeVocabModal();
+        if (!document.getElementById('whiteboard-modal').classList.contains('hidden')) toggleWhiteboard();
+        if (!document.getElementById('teacher-drawer').classList.contains('translate-x-full')) toggleTeacherDrawer();
+        if (document.getElementById('ido-container').classList.contains('ido-fullscreen-active')) toggleIdoFullscreen();
+        return;
+      }
+      if (e.key === 'w' || e.key === 'W') { toggleWhiteboard(); return; }
+      if (e.key === 't' || e.key === 'T') { toggleTeacherDrawer(); return; }
+      if (e.key === 'm' || e.key === 'M') { toggleMute(); return; }
+
+      if (!isAnyModalOpen()) {
+        if (e.key === 'ArrowRight') goStation(Math.min(6, currentStation + 1));
+        if (e.key === 'ArrowLeft') goStation(Math.max(0, currentStation - 1));
+      }
+    });
+
+    // ============================================================
+    // 3. STATION 1: FLASHBACK 3 FLIP CARDS
+    // ============================================================
+    function toggleFlip(sceneEl) {
+      const card = sceneEl.querySelector('.flip-card');
+      card.classList.toggle('is-flipped');
+      playSfx('click');
+    }
+    function flipAllFlashbacks(state) {
+      document.querySelectorAll('#station-1 .flip-card').forEach(c => {
+        if (state) c.classList.add('is-flipped');
+        else c.classList.remove('is-flipped');
+      });
+    }
+
+    // ============================================================
+    // 4. STATION 2: BILINGUAL VOCABULARY MODAL (SOLE VN EXCEPTION)
+    // ============================================================
+    const vocabList = [
+      {
+        en: 'pitch', vn: 'cao độ', icon: '🎵',
+        def: 'How high or low a sound is — caused by how fast an object vibrates.',
+        tip: 'Exam link: Faster vibrations = higher pitch; slower vibrations = lower pitch.',
+        svg: '<svg viewBox="0 0 260 80" class="w-64 h-20"><path d="M10 40 Q25 10 40 40 T70 40 T100 40" fill="none" stroke="#0284c7" stroke-width="4"/><text x="55" y="72" text-anchor="middle" font-size="11" font-weight="800" fill="#0369a1">Slow = Low Pitch</text><path d="M145 40 Q152 10 159 40 T173 40 T187 40 T201 40 T215 40 T229 40 T243 40" fill="none" stroke="#e11d48" stroke-width="4"/><text x="194" y="72" text-anchor="middle" font-size="11" font-weight="800" fill="#be123c">Fast = High Pitch</text></svg>'
+      },
+      {
+        en: 'volume', vn: 'âm lượng', icon: '🔊',
+        def: 'How loud or quiet a sound is — caused by the size of the vibrations.',
+        tip: 'Exam link: Bigger vibrations = louder volume; smaller vibrations = quieter volume.',
+        svg: '<svg viewBox="0 0 260 80" class="w-64 h-20"><path d="M15 40 Q35 28 55 40 T95 40" fill="none" stroke="#64748b" stroke-width="4"/><text x="55" y="72" text-anchor="middle" font-size="11" font-weight="800" fill="#475569">Small = Quiet</text><path d="M145 40 Q168 5 191 40 T237 40" fill="none" stroke="#f59e0b" stroke-width="5"/><text x="191" y="72" text-anchor="middle" font-size="11" font-weight="800" fill="#b45309">Big = Loud</text></svg>'
+      },
+      {
+        en: 'vibration', vn: 'sự rung động', icon: '〰️',
+        def: 'A quick back-and-forth movement of an object or particles that makes sound.',
+        tip: 'Exam link: No vibration means no sound!',
+        svg: '<svg viewBox="0 0 260 80" class="w-64 h-20"><rect x="115" y="14" width="12" height="52" rx="4" fill="#4f46e5"/><path d="M98 20 Q88 40 98 60 M84 26 Q76 40 84 54" fill="none" stroke="#06b6d4" stroke-width="3"/><path d="M144 20 Q154 40 144 60 M158 26 Q166 40 158 54" fill="none" stroke="#06b6d4" stroke-width="3"/></svg>'
+      },
+      {
+        en: 'decibel (dB)', vn: 'đề-xi-ben (dB)', icon: '📟',
+        def: 'The scientific unit used on a sound level meter to measure volume.',
+        tip: 'Exam link: Quiet library ≈ 35 dB; loud traffic ≈ 85 dB.',
+        svg: '<svg viewBox="0 0 260 80" class="w-64 h-20"><rect x="85" y="10" width="90" height="60" rx="10" fill="#1e293b"/><rect x="97" y="18" width="66" height="28" rx="4" fill="#86efac"/><text x="130" y="38" text-anchor="middle" font-size="16" font-weight="900" fill="#064e3b">72 dB</text><circle cx="130" cy="58" r="5" fill="#f43f5e"/></svg>'
+      },
+      {
+        en: 'air column', vn: 'cột không khí', icon: '🪈',
+        def: 'The space of air inside a pipe, flute or bottle that vibrates when you blow.',
+        tip: 'Exam link: Shorter air column = faster vibrations = higher pitch!',
+        svg: '<svg viewBox="0 0 260 80" class="w-64 h-20"><rect x="30" y="12" width="38" height="58" rx="4" fill="#fef3c7" stroke="#0f172a" stroke-width="2.5"/><rect x="32" y="48" width="34" height="20" fill="#38bdf8"/><text x="96" y="34" font-size="12" font-weight="800" fill="#b45309">⬅ Air vibrates here!</text><text x="96" y="56" font-size="11" font-weight="700" fill="#0369a1">⬅ Water below</text></svg>'
+      },
+      {
+        en: 'tighten', vn: 'làm căng / siết chặt', icon: '🔧',
+        def: 'Pulling a string or drum skin tighter so it vibrates faster and makes a higher pitch.',
+        tip: 'Exam link: Turning a guitar peg tighter raises the pitch.',
+        svg: '<svg viewBox="0 0 260 80" class="w-64 h-20"><line x1="40" y1="40" x2="220" y2="40" stroke="#dc2626" stroke-width="4"/><text x="24" y="45" font-size="16" font-weight="900">⬅</text><text x="226" y="45" font-size="16" font-weight="900">➔</text><text x="130" y="68" text-anchor="middle" font-size="12" font-weight="800" fill="#b91c1c">Tighter = Faster = Higher</text></svg>'
+      },
+      {
+        en: 'loosen', vn: 'nới lỏng', icon: '🎻',
+        def: 'Making a string or drum skin less tight so it vibrates more slowly and makes a lower pitch.',
+        tip: 'Exam link: Looser string = slower vibrations = lower pitch.',
+        svg: '<svg viewBox="0 0 260 80" class="w-64 h-20"><path d="M40 38 Q130 58 220 38" fill="none" stroke="#2563eb" stroke-width="4"/><text x="130" y="70" text-anchor="middle" font-size="12" font-weight="800" fill="#1d4ed8">Looser = Slower = Lower</text></svg>'
+      },
+      {
+        en: 'muffle', vn: 'làm dịu / giảm âm', icon: '🎧',
+        def: 'To make a sound quieter by wrapping or blocking it with soft, sound-absorbing materials.',
+        tip: 'Exam link: Foam, cotton wool and heavy velvet curtains muffle sound well.',
+        svg: '<svg viewBox="0 0 260 80" class="w-64 h-20"><rect x="90" y="14" width="80" height="52" rx="14" fill="#cbd5e1" stroke="#334155" stroke-width="3" stroke-dasharray="5,3"/><circle cx="130" cy="40" r="14" fill="#f59e0b"/><text x="130" y="45" text-anchor="middle" font-size="14">🔔</text></svg>'
+      },
+      {
+        en: 'anomalous result', vn: 'kết quả bất thường', icon: '📊',
+        def: 'A measurement that does not fit the pattern of the other results in a table or chart.',
+        tip: 'Exam link: Circle it, predict what it should be, and REPEAT that trial!',
+        svg: '<svg viewBox="0 0 260 80" class="w-64 h-20"><rect x="45" y="18" width="24" height="50" fill="#3b82f6"/><rect x="85" y="30" width="24" height="38" fill="#3b82f6"/><rect x="125" y="14" width="24" height="54" fill="#f43f5e"/><circle cx="137" cy="41" r="22" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="4,3"/><rect x="165" y="48" width="24" height="20" fill="#3b82f6"/><rect x="205" y="58" width="24" height="10" fill="#3b82f6"/></svg>'
+      },
+      {
+        en: 'fair test', vn: 'thí nghiệm công bằng', icon: '⚖️',
+        def: 'An investigation where you change only ONE variable and keep all other variables the same.',
+        tip: 'Exam link: Same force, same distance, same material = fair test!',
+        svg: '<svg viewBox="0 0 260 80" class="w-64 h-20"><line x1="65" y1="36" x2="195" y2="36" stroke="#0f172a" stroke-width="4"/><polygon points="130,36 116,68 144,68" fill="#10b981"/><circle cx="75" cy="26" r="10" fill="#f59e0b"/><circle cx="185" cy="26" r="10" fill="#6366f1"/></svg>'
+      }
+    ];
+
+    let activeVocabIndex = 0;
+
+    function initVocabGrid() {
+      const grid = document.getElementById('vocab-grid');
+      grid.innerHTML = vocabList.map((v, i) => `
+        <button onclick="openVocabModal(${i})" class="group bg-gradient-to-br from-indigo-50 to-sky-50 hover:from-indigo-600 hover:to-blue-600 border-2 border-indigo-200 hover:border-indigo-500 rounded-2xl p-4 text-center shadow-sm hover:shadow-lg transition-all">
+          <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">${v.icon}</div>
+          <div class="text-base sm:text-lg font-extrabold text-indigo-950 group-hover:text-white">${v.en}</div>
+          <div class="text-xs font-bold text-indigo-500 group-hover:text-cyan-200 mt-1">Tap for card 🔊</div>
+        </button>
+      `).join('');
+    }
+
+    function openVocabModal(i) {
+      activeVocabIndex = i;
+      const v = vocabList[i];
+      document.getElementById('vm-en').textContent = v.icon + ' ' + v.en;
+      document.getElementById('vm-vn').textContent = v.vn;
+      document.getElementById('vm-svg').innerHTML = v.svg;
+      document.getElementById('vm-def').textContent = v.def;
+      document.getElementById('vm-tip').textContent = '💡 ' + v.tip;
+      document.getElementById('vocab-modal').classList.remove('hidden');
+      playSfx('click');
+    }
+
+    function closeVocabModal() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('vocab-modal').classList.add('hidden');
+    }
+
+    function speakCurrentVocab(lang) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const v = vocabList[activeVocabIndex];
+      const utter = new SpeechSynthesisUtterance(lang === 'vi-VN' ? v.vn : v.en);
+      utter.lang = lang;
+      utter.rate = 0.92;
+      window.speechSynthesis.speak(utter);
+    }
+
+    // ============================================================
+    // 5. STATION 3: FULL-SCREEN I DO (3 EXAM TRAPS)
+    // ============================================================
+    function selectTrap(n) {
+      for (let i = 1; i <= 3; i++) {
+        const panel = document.getElementById('trap-panel-' + i);
+        const btn = document.getElementById('trap-btn-' + i);
+        if (i === n) {
+          panel.classList.remove('hidden');
+          btn.className = 'trap-tab px-4 py-2 rounded-xl font-extrabold text-sm bg-rose-600 text-white shadow transition';
+        } else {
+          panel.classList.add('hidden');
+          btn.className = 'trap-tab px-4 py-2 rounded-xl font-extrabold text-sm bg-slate-100 hover:bg-rose-100 text-slate-800 transition';
+        }
+      }
+      playSfx('click');
+    }
+
+    function toggleIdoFullscreen() {
+      const box = document.getElementById('ido-container');
+      const btn = document.getElementById('btn-ido-fs');
+      const active = box.classList.toggle('ido-fullscreen-active');
+      btn.textContent = active ? '✕ Exit Full Screen (Esc)' : '⛶ Full Screen I Do';
+      playSfx('click');
+    }
+
+    function drawSineWavePath(elId, amp, cycles, width, midY, phase) {
+      const pts = [];
+      for (let x = 20; x <= width - 20; x += 4) {
+        const norm = (x - 20) / (width - 40);
+        const y = midY + Math.sin(norm * cycles * Math.PI * 2 + phase) * amp;
+        pts.push((x === 20 ? 'M' : 'L') + x + ' ' + y.toFixed(1));
+      }
+      document.getElementById(elId).setAttribute('d', pts.join(' '));
+    }
+
+    let trap1Amp = 36, trap1Cycles = 4, trap1Phase = 0;
+    function playTrap1Demo(freq, gainVol, amp, cycles, title, sub) {
+      trap1Amp = amp;
+      trap1Cycles = cycles;
+      document.getElementById('trap1-label').textContent = title;
+      document.getElementById('trap1-sub').textContent = sub;
+      playTone(freq, gainVol, 0.85, 'sine');
+    }
+
+    function playBottleTrap(letter, freq, title, desc) {
+      document.getElementById('trap2-title').textContent = '🎵 ' + title;
+      document.getElementById('trap2-desc').textContent = desc;
+      playTone(freq, 0.22, 0.8, 'triangle');
+    }
+
+    function inspectTrap3Bar(len, score, isAnomaly) {
+      const readout = document.getElementById('trap3-readout');
+      const ring = document.getElementById('trap3-circle');
+      if (isAnomaly) {
+        ring.classList.remove('hidden');
+        readout.className = 'mt-3 bg-emerald-100 border-2 border-emerald-500 rounded-xl p-3 text-sm font-extrabold text-emerald-950';
+        readout.textContent = `✅ ANOMALY FOUND at (${len}, Score ${score})! Expected score ≈ 6. Exam action: Circle this bar and REPEAT the 15 cm ruler trial!`;
+        playSfx('good');
+      } else {
+        readout.className = 'mt-3 bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-sm font-extrabold text-indigo-950';
+        readout.textContent = `Coordinate (${len}, Pitch Score ${score}): Fits the pattern (longer overhang ➔ lower pitch). Keep looking for the odd bar out!`;
+        playSfx('click');
+      }
+    }
+
+    // ============================================================
+    // 6. STATION 4: 4-ZONE UNIT 2 SOUND MASTERY ARENA
+    // ============================================================
+    function selectZone(n) {
+      if (n !== 1) stopMixerTone();
+      for (let i = 1; i <= 4; i++) {
+        const panel = document.getElementById('zone-panel-' + i);
+        const btn = document.getElementById('zone-btn-' + i);
+        if (i === n) {
+          panel.classList.remove('hidden');
+          btn.className = 'zone-tab px-3.5 py-2 rounded-xl font-extrabold text-sm bg-indigo-600 text-white shadow transition';
+        } else {
+          panel.classList.add('hidden');
+          btn.className = 'zone-tab px-3.5 py-2 rounded-xl font-extrabold text-sm bg-slate-100 hover:bg-indigo-100 text-slate-700 transition';
+        }
+      }
+      playSfx('click');
+    }
+
+    // Zone 1: Live Mixer (smooth targeted DOM updates!)
+    let mixerOsc = null;
+    let mixerGain = null;
+    let mixerPlaying = false;
+    let mixerAmp = 45;
+    let mixerCycles = 5;
+    let mixerPhase = 0;
+
+    function updateMixer() {
+      const db = Number(document.getElementById('slider-vol').value);
+      const hz = Number(document.getElementById('slider-pitch').value);
+      document.getElementById('lbl-vol-num').textContent = db + ' dB';
+      document.getElementById('lbl-pitch-num').textContent = hz + ' Hz';
+      document.getElementById('mixer-db-val').textContent = db + ' dB';
+      document.getElementById('mixer-hz-val').textContent = hz + ' Hz';
+
+      document.getElementById('mixer-amp-desc').textContent = db < 50 ? 'Small (Quiet)' : db < 78 ? 'Medium' : 'BIG (Loud!)';
+      document.getElementById('mixer-pitch-desc').textContent = hz < 350 ? 'Slow (Low)' : hz < 620 ? 'Medium' : 'FAST (High!)';
+
+      mixerAmp = 14 + ((db - 30) / 70) * 66;
+      mixerCycles = 2 + ((hz - 180) / 700) * 10;
+
+      const pBox = document.getElementById('organic-particles-box');
+      if (hz > 560) pBox.classList.add('particles-fast');
+      else pBox.classList.remove('particles-fast');
+
+      if (mixerPlaying && mixerOsc && mixerGain && audioCtx) {
+        mixerOsc.frequency.setTargetAtTime(hz, audioCtx.currentTime, 0.03);
+        const gVal = isMuted ? 0 : 0.03 + ((db - 30) / 70) * 0.28;
+        mixerGain.gain.setTargetAtTime(gVal, audioCtx.currentTime, 0.03);
+      }
+    }
+
+    function toggleMixerTone() {
+      if (mixerPlaying) {
+        stopMixerTone();
+        return;
+      }
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const db = Number(document.getElementById('slider-vol').value);
+      const hz = Number(document.getElementById('slider-pitch').value);
+      mixerOsc = ctx.createOscillator();
+      mixerGain = ctx.createGain();
+      mixerOsc.type = 'sine';
+      mixerOsc.frequency.setValueAtTime(hz, ctx.currentTime);
+      mixerGain.gain.setValueAtTime(isMuted ? 0 : 0.03 + ((db - 30) / 70) * 0.28, ctx.currentTime);
+      mixerOsc.connect(mixerGain);
+      mixerGain.connect(ctx.destination);
+      mixerOsc.start();
+      mixerPlaying = true;
+      const btn = document.getElementById('btn-mixer-tone');
+      btn.textContent = '⏹ Stop Live Sound Tone';
+      btn.className = 'w-full py-3 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-lg shadow-lg transition';
+    }
+
+    function stopMixerTone() {
+      if (mixerOsc) {
+        try { mixerOsc.stop(); mixerOsc.disconnect(); } catch (e) {}
+        mixerOsc = null;
+      }
+      if (mixerGain) {
+        try { mixerGain.disconnect(); } catch (e) {}
+        mixerGain = null;
+      }
+      mixerPlaying = false;
+      const btn = document.getElementById('btn-mixer-tone');
+      if (btn) {
+        btn.textContent = '▶ Play Live Sound Tone';
+        btn.className = 'w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-lg shadow-lg transition';
+      }
+    }
+
+    function toggleParticleExplainer() {
+      document.getElementById('particle-explainer').classList.toggle('hidden');
+      playSfx('click');
+    }
+
+    function initOrganicParticles() {
+      const box = document.getElementById('organic-particles-box');
+      const dots = [];
+      for (let i = 0; i < 24; i++) {
+        const dur = (0.45 + (i % 5) * 0.14).toFixed(2);
+        const del = ((i * 0.09) % 0.7).toFixed(2);
+        const size = 12 + (i % 3) * 3;
+        dots.push(`<span class="particle-dot bg-cyan-500/80 border border-cyan-700" style="width:${size}px;height:${size}px;animation-duration:${dur}s;animation-delay:${del}s;"></span>`);
+      }
+      box.innerHTML = dots.join('');
+    }
+
+    // Continuous smooth wave animation loop
+    function animateWaves() {
+      trap1Phase += 0.12 + trap1Cycles * 0.015;
+      mixerPhase += 0.1 + mixerCycles * 0.018;
+      drawSineWavePath('trap1-wave-path', trap1Amp, trap1Cycles, 640, 80, trap1Phase);
+      drawSineWavePath('mixer-wave-path', mixerAmp, mixerCycles, 640, 100, mixerPhase);
+      requestAnimationFrame(animateWaves);
+    }
+
+    // Zone 2: String vs Wind Comparator
+    const strState = { short: false, tight: false, thin: false };
+    function setStringProp(key) {
+      if (key === 'len') strState.short = !strState.short;
+      if (key === 'ten') strState.tight = !strState.tight;
+      if (key === 'thk') strState.thin = !strState.thin;
+
+      document.getElementById('btn-str-len').textContent = 'Length: ' + (strState.short ? 'Short' : 'Long');
+      document.getElementById('btn-str-ten').textContent = 'Tension: ' + (strState.tight ? 'Tight' : 'Loose');
+      document.getElementById('btn-str-thk').textContent = 'Width: ' + (strState.thin ? 'Thin' : 'Thick');
+
+      const bridgeX = strState.short ? 210 : 320;
+      document.getElementById('str-bridge').setAttribute('x', bridgeX);
+      const line = document.getElementById('str-line');
+      line.setAttribute('x2', bridgeX);
+      line.setAttribute('stroke-width', strState.thin ? '2.5' : '7');
+      line.setAttribute('stroke', strState.tight ? '#dc2626' : '#d97706');
+
+      const hz = getStringFreq();
+      const speed = hz < 300 ? 'Slow vibrations ➔ Low pitch' : hz < 520 ? 'Medium vibrations ➔ Medium pitch' : 'FAST vibrations ➔ HIGH pitch!';
+      document.getElementById('str-readout').textContent =
+        `Current setting: ${strState.short ? 'Short' : 'Long'}, ${strState.tight ? 'Tight' : 'Loose'}, ${strState.thin ? 'Thin' : 'Thick'} ➔ ${speed} (${hz} Hz).`;
+      pluckStringDemo();
+    }
+    function getStringFreq() {
+      let f = 196;
+      if (strState.short) f += 160;
+      if (strState.tight) f += 150;
+      if (strState.thin) f += 170;
+      return f;
+    }
+    function pluckStringDemo() {
+      playTone(getStringFreq(), 0.24, 0.7, 'triangle');
+    }
+
+    function updateWindBottle() {
+      const water = Number(document.getElementById('slider-water').value);
+      const air = 20 - water;
+      document.getElementById('lbl-water-cm').textContent = `${water} cm water / ${air} cm air`;
+      const waterPx = Math.round((water / 20) * 112);
+      const waterY = 128 - waterPx;
+      document.getElementById('wind-water-rect').setAttribute('y', waterY);
+      document.getElementById('wind-water-rect').setAttribute('height', waterPx);
+      document.getElementById('wind-air-bracket').setAttribute('y2', waterY);
+      document.getElementById('wind-air-svg-lbl').setAttribute('y', Math.max(26, Math.round((14 + waterY) / 2)));
+      document.getElementById('wind-air-svg-lbl').textContent = air + ' cm air';
+
+      const hz = Math.round(220 + ((20 - air) / 16) * 520);
+      const desc = air <= 6 ? 'SHORT air column ➔ FAST vibrations ➔ HIGH pitch!' : air >= 14 ? 'LONG air column ➔ SLOW vibrations ➔ LOW pitch!' : 'Medium air column ➔ Medium pitch.';
+      document.getElementById('wind-readout').textContent = `${water} cm water ➔ ${air} cm air column ➔ ${desc} (${hz} Hz).`;
+    }
+    function blowBottleDemo() {
+      const water = Number(document.getElementById('slider-water').value);
+      const air = 20 - water;
+      const hz = Math.round(220 + ((20 - air) / 16) * 520);
+      playTone(hz, 0.22, 0.75, 'sine');
+    }
+
+    // Zone 3: Anomaly Bar-Chart Clinic
+    function pickAnomalyBar(len, score, isAnomaly) {
+      const fb = document.getElementById('anomaly-feedback');
+      const ring = document.getElementById('anom-ring');
+      if (isAnomaly) {
+        document.getElementById('anom-bar-20').setAttribute('fill', '#f43f5e');
+        ring.classList.remove('hidden');
+        fb.className = 'mt-4 bg-emerald-100 border-2 border-emerald-500 rounded-xl p-4 font-extrabold text-emerald-950';
+        fb.textContent = '🎉 SPOT ON! Tube 20 cm (Pitch Score 9) is the ANOMALOUS result! Looking at 9, 7, __, 3, 1, the true pitch score should be 5. Action: Repeat the 20 cm trial!';
+        playSfx('win');
+        launchConfetti();
+      } else {
+        fb.className = 'mt-4 bg-amber-100 border-2 border-amber-400 rounded-xl p-4 font-extrabold text-amber-950';
+        fb.textContent = `Coordinate (${len} cm, Pitch Score ${score}): That bar fits the pattern (every +5 cm drops pitch score by 2). Try another bar!`;
+        playSfx('bad');
+      }
+    }
+    function resetAnomalyGame() {
+      document.getElementById('anom-bar-20').setAttribute('fill', '#0284c7');
+      document.getElementById('anom-ring').classList.add('hidden');
+      const fb = document.getElementById('anomaly-feedback');
+      fb.className = 'mt-4 bg-white border-2 border-indigo-200 rounded-xl p-4 font-extrabold text-indigo-950';
+      fb.textContent = 'Coordinate Readout: Click the bar that does NOT fit the steady pattern!';
+    }
+
+    // Zone 4: Golden Exam Sentence Builder
+    const sentenceTasks = [
+      {
+        prompt: 'Q1 [2 marks]: Explain why pressing a finger on a guitar fret to shorten the string changes the sound.',
+        correct: ['Shortening the string', 'makes it vibrate faster,', 'so the pitch becomes higher.'],
+        shuffled: ['so the pitch becomes higher.', 'Shortening the string', 'makes it vibrate faster,', 'so the volume gets louder.']
+      },
+      {
+        prompt: 'Q2 [2 marks]: Explain why striking a metal triangle harder makes a different sound.',
+        correct: ['Striking harder creates', 'bigger vibrations,', 'so the volume becomes louder.'],
+        shuffled: ['bigger vibrations,', 'so the pitch rises.', 'Striking harder creates', 'so the volume becomes louder.']
+      },
+      {
+        prompt: 'Q3 [2 marks]: Explain why pouring more water into a bottle changes the pitch when you blow across the top.',
+        correct: ['More water leaves a shorter air column', 'which vibrates faster,', 'producing a higher pitch.'],
+        shuffled: ['producing a higher pitch.', 'which vibrates slower,', 'More water leaves a shorter air column', 'which vibrates faster,']
+      }
+    ];
+    let activeSentIdx = 0;
+    let chosenBlocks = [];
+
+    function loadSentenceTask(idx) {
+      activeSentIdx = idx;
+      chosenBlocks = [];
+      for (let i = 0; i < 3; i++) {
+        const b = document.getElementById('sent-tab-' + i);
+        b.className = i === idx
+          ? 'px-3 py-1.5 rounded-xl font-extrabold text-xs bg-indigo-600 text-white'
+          : 'px-3 py-1.5 rounded-xl font-extrabold text-xs bg-white text-indigo-800 border border-indigo-200';
+      }
+      renderSentenceTask();
+    }
+
+    function renderSentenceTask() {
+      const task = sentenceTasks[activeSentIdx];
+      document.getElementById('sentence-prompt').textContent = task.prompt;
+      const assembled = document.getElementById('sentence-assembled');
+      if (chosenBlocks.length === 0) {
+        assembled.innerHTML = '<span class="text-slate-400 font-bold text-sm">Tap 3 blocks below in order (watch out for 1 distractor trap!)...</span>';
+      } else {
+        assembled.innerHTML = chosenBlocks.map(txt =>
+          `<span class="px-3.5 py-2 rounded-xl bg-indigo-600 text-white font-extrabold text-base shadow">${txt}</span>`
+        ).join(' ');
+      }
+      const bank = document.getElementById('sentence-bank');
+      bank.innerHTML = task.shuffled.map((txt, idx) => {
+        const used = chosenBlocks.includes(txt);
+        return `<button onclick="addSentenceBlock(${idx})" ${used ? 'disabled' : ''} class="px-4 py-2.5 rounded-xl border-2 font-extrabold text-sm transition ${used ? 'bg-slate-200 text-slate-400 border-slate-200 cursor-not-allowed' : 'bg-white hover:bg-amber-100 text-indigo-950 border-indigo-300 shadow-sm'}">${txt}</button>`;
+      }).join('');
+
+      const fb = document.getElementById('sentence-feedback');
+      if (chosenBlocks.length === 3) {
+        const isRight = chosenBlocks.every((val, i) => val === task.correct[i]);
+        if (isRight) {
+          fb.textContent = '🌟 FULL 2/2 MARKS! Clear Cause ➔ Vibration ➔ Result!';
+          fb.className = 'text-base font-black text-emerald-700';
+          playSfx('good');
+        } else {
+          fb.textContent = '⚠️ Almost! Check the order or spot the distractor trap, then click Clear Blocks.';
+          fb.className = 'text-base font-black text-rose-600';
+          playSfx('bad');
+        }
+      } else {
+        fb.textContent = `Blocks chosen: ${chosenBlocks.length} / 3`;
+        fb.className = 'text-sm font-extrabold text-indigo-800';
+      }
+    }
+
+    function addSentenceBlock(shuffledIdx) {
+      if (chosenBlocks.length >= 3) return;
+      const txt = sentenceTasks[activeSentIdx].shuffled[shuffledIdx];
+      if (!chosenBlocks.includes(txt)) {
+        chosenBlocks.push(txt);
+        playSfx('click');
+        renderSentenceTask();
+      }
+    }
+    function resetSentenceTask() {
+      chosenBlocks = [];
+      renderSentenceTask();
+    }
+
+    // ============================================================
+    // 7. STATION 5: SUCCESS CRITERIA WHITEBOARD CHECK (0 / 3 MET)
+    // ============================================================
+    const scMet = { 1: false, 2: false, 3: false };
+    function revealSc(n) {
+      document.getElementById('sc-ans-' + n).classList.remove('hidden');
+      playSfx('click');
+    }
+    function toggleScMet(n) {
+      scMet[n] = !scMet[n];
+      const btn = document.getElementById('sc-met-' + n);
+      if (scMet[n]) {
+        btn.textContent = '✅ Met!';
+        btn.className = 'flex-1 py-2 rounded-xl bg-emerald-600 text-white font-extrabold text-sm shadow transition';
+        playSfx('good');
+      } else {
+        btn.textContent = '☐ Mark Met';
+        btn.className = 'flex-1 py-2 rounded-xl bg-slate-200 hover:bg-emerald-500 hover:text-white text-slate-800 font-extrabold text-sm transition';
+      }
+      const count = Object.values(scMet).filter(Boolean).length;
+      document.getElementById('sc-counter').textContent = `${count} / 3 Met`;
+      if (count === 3) launchConfetti();
+    }
+    function resetScChecks() {
+      [1, 2, 3].forEach(n => {
+        scMet[n] = false;
+        document.getElementById('sc-ans-' + n).classList.add('hidden');
+        const btn = document.getElementById('sc-met-' + n);
+        btn.textContent = '☐ Mark Met';
+        btn.className = 'flex-1 py-2 rounded-xl bg-slate-200 hover:bg-emerald-500 hover:text-white text-slate-800 font-extrabold text-sm transition';
+      });
+      document.getElementById('sc-counter').textContent = '0 / 3 Met';
+    }
+
+    // ============================================================
+    // 8. STATION 6: UNIT 2 CHAMPIONSHIP QUICKFIRE (10 QUESTIONS)
+    // ============================================================
+    const qfQuestions = [
+      { topic: 'Topic 2.1 • Vibrations', q: 'You strike a tuning fork and dip it in water — water splashes everywhere! What does this prove?', a: 'Sound is made by vibrations (the tuning fork prongs are vibrating rapidly).' },
+      { topic: 'Topic 2.1 • Travel', q: 'Why does sound travel faster through a solid steel rail than through air?', a: 'Particles in a solid are packed closer together, so vibrations pass along faster.' },
+      { topic: 'Topic 2.2 • Volume', q: 'What instrument and unit do scientists use to measure how loud a sound is?', a: 'A sound level meter, measured in decibels (dB).' },
+      { topic: 'Topic 2.2 • Muffling', q: 'Factory workers wear ear defenders lined with thick soft foam. How do they protect ears?', a: 'The soft foam absorbs and muffles vibrations, reducing the volume reaching the ear.' },
+      { topic: 'Topic 2.3 • Pitch', q: 'A drum skin is tightened with a key. Does the pitch become higher or lower, and why?', a: 'Higher pitch — the tighter drum skin vibrates faster.' },
+      { topic: 'Topic 2.3 • Stringed', q: 'A ukulele has 4 strings of the same length. Which string gives the LOWEST pitch: thickest or thinnest?', a: 'The thickest string — it is heavier so it vibrates more slowly.' },
+      { topic: 'Topic 2.4 • Wind', q: 'Two wind-chime tubes are blown across. Tube 1 is 12 cm long; Tube 2 is 28 cm long. Which has the higher pitch?', a: 'Tube 1 (12 cm) — the shorter air column vibrates faster.' },
+      { topic: 'Topic 2.1 • Space', q: 'True or False: Sound can travel across outer space if the explosion is loud enough. Explain!', a: 'FALSE! Outer space is a vacuum with no particles to vibrate and carry sound.' },
+      { topic: 'Topic 2.4 • Fair Test', q: 'When testing how string length affects pitch, name ONE control variable you must keep the same.', a: 'Keep string thickness, string tightness (tension), or plucking force the same.' },
+      { topic: '5TWSa.02 • Anomalies', q: 'On a bar chart, one result jumps way above the smooth downward pattern. Name it and state what to do!', a: 'An anomalous result — circle it and repeat that trial carefully to check.' }
+    ];
+
+    let qfIdx = 0;
+    let qfTimerId = null;
+    let qfTimeLeft = 15;
+
+    function renderQf() {
+      stopQfTimer();
+      const item = qfQuestions[qfIdx];
+      document.getElementById('qf-progress').textContent = `Question ${qfIdx + 1} / ${qfQuestions.length}`;
+      document.getElementById('qf-topic-badge').textContent = item.topic;
+      document.getElementById('qf-question').textContent = item.q;
+      document.getElementById('qf-answer').textContent = item.a;
+      document.getElementById('qf-answer-box').classList.add('hidden');
+      document.getElementById('qf-boards-up').classList.add('hidden');
+      const dur = Number(document.getElementById('qf-duration').value);
+      qfTimeLeft = dur;
+      document.getElementById('qf-timer-text').textContent = dur + 's';
+      document.getElementById('qf-timer-bar').style.width = '100%';
+    }
+
+    function startQfTimer() {
+      stopQfTimer();
+      const dur = Number(document.getElementById('qf-duration').value);
+      qfTimeLeft = dur;
+      document.getElementById('qf-boards-up').classList.add('hidden');
+      document.getElementById('qf-timer-text').textContent = qfTimeLeft + 's';
+      document.getElementById('qf-timer-bar').style.width = '100%';
+      playSfx('click');
+
+      qfTimerId = setInterval(() => {
+        qfTimeLeft--;
+        document.getElementById('qf-timer-text').textContent = Math.max(0, qfTimeLeft) + 's';
+        document.getElementById('qf-timer-bar').style.width = Math.max(0, (qfTimeLeft / dur) * 100) + '%';
+        if (qfTimeLeft <= 0) {
+          stopQfTimer();
+          document.getElementById('qf-boards-up').classList.remove('hidden');
+          playSfx('alarm');
+        }
+      }, 1000);
+    }
+
+    function stopQfTimer() {
+      if (qfTimerId) {
+        clearInterval(qfTimerId);
+        qfTimerId = null;
+      }
+    }
+
+    function revealQfAnswer() {
+      stopQfTimer();
+      document.getElementById('qf-answer-box').classList.remove('hidden');
+      playSfx('good');
+    }
+    function nextQf() {
+      qfIdx = (qfIdx + 1) % qfQuestions.length;
+      renderQf();
+      playSfx('click');
+    }
+    function prevQf() {
+      qfIdx = (qfIdx - 1 + qfQuestions.length) % qfQuestions.length;
+      renderQf();
+      playSfx('click');
+    }
+
+    // ============================================================
+    // 9. DAVID'S BOARD WHITEBOARD (PROPER getBoundingClientRect RESIZE)
+    // ============================================================
+    let wbDrawing = false;
+    let wbColor = '#0f172a';
+    let wbWidth = 4;
+    let wbEraser = false;
+
+    function toggleWhiteboard() {
+      const modal = document.getElementById('whiteboard-modal');
+      const willOpen = modal.classList.contains('hidden');
+      modal.classList.toggle('hidden');
+      if (willOpen) {
+        requestAnimationFrame(() => resizeWbCanvas());
+      }
+      playSfx('click');
+    }
+
+    function resizeWbCanvas() {
+      const wrap = document.getElementById('wb-canvas-wrap');
+      const canvas = document.getElementById('wb-canvas');
+      if (!wrap || !canvas) return;
+      const rect = wrap.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+
+      // Save existing drawing before resize
+      const temp = document.createElement('canvas');
+      temp.width = canvas.width || rect.width;
+      temp.height = canvas.height || rect.height;
+      if (canvas.width > 0 && canvas.height > 0) {
+        temp.getContext('2d').drawImage(canvas, 0, 0);
+      }
+
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (temp.width > 0 && temp.height > 0) {
+        ctx.drawImage(temp, 0, 0, rect.width, rect.height);
+      }
+    }
+
+    function initWhiteboardEvents() {
+      const canvas = document.getElementById('wb-canvas');
+      const getPos = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - rect.left, y: clientY - rect.top };
+      };
+      const start = (e) => {
+        e.preventDefault();
+        wbDrawing = true;
+        const ctx = canvas.getContext('2d');
+        const p = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+      };
+      const move = (e) => {
+        if (!wbDrawing) return;
+        e.preventDefault();
+        const ctx = canvas.getContext('2d');
+        const p = getPos(e);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = wbEraser ? '#ffffff' : wbColor;
+        ctx.lineWidth = wbEraser ? 26 : wbWidth;
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+      };
+      const end = () => { wbDrawing = false; };
+
+      canvas.addEventListener('mousedown', start);
+      canvas.addEventListener('mousemove', move);
+      window.addEventListener('mouseup', end);
+      canvas.addEventListener('touchstart', start, { passive: false });
+      canvas.addEventListener('touchmove', move, { passive: false });
+      window.addEventListener('touchend', end);
+      window.addEventListener('resize', () => {
+        if (!document.getElementById('whiteboard-modal').classList.contains('hidden')) {
+          resizeWbCanvas();
+        }
+      });
+    }
+
+    function setWbColor(c) { wbColor = c; wbEraser = false; }
+    function setWbEraser() { wbEraser = true; }
+    function toggleWbGrid() { document.getElementById('wb-canvas-wrap').classList.toggle('wb-grid'); }
+    function clearWb() {
+      const canvas = document.getElementById('wb-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function toggleTeacherDrawer() {
+      document.getElementById('teacher-drawer').classList.toggle('translate-x-full');
+      playSfx('click');
+    }
+
+    // ============================================================
+    // 10. INITIALISE APP
+    // ============================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      initVocabGrid();
+      initOrganicParticles();
+      initWhiteboardEvents();
+      goStation(0);
+      selectTrap(1);
+      selectZone(1);
+      updateMixer();
+      updateWindBottle();
+      loadSentenceTask(0);
+      renderQf();
+      animateWaves();
+    });
+  </script>
+</body>
+</html>
